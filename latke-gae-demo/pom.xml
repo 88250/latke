@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.b3log.latke.demo</groupId>
+    <artifactId>gae-demo</artifactId>
+    <version>0.5.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Latke GAE Demos</name>
+    <modules>
+        <module>hello</module>
+    </modules>
+    
+    <properties>
+        <servlet.version>2.5</servlet.version>
+        <latke.version>0.5.0-SNAPSHOT</latke.version>
+        <gae.version>1.6.2.1</gae.version>
+        <freemarker-gae.version>2.3.18</freemarker-gae.version>
+        
+        <maven-gae-plugin.version>0.9.2</maven-gae-plugin.version>
+        <gae.dev_sever.port>8080</gae.dev_sever.port>
+        
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
+    <dependencyManagement>
+        <dependencies>
+        
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${servlet.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        
+            <dependency>
+                <groupId>org.b3log</groupId>
+                <artifactId>latke</artifactId>
+                <version>${latke.version}</version>
+                <exclusions>
+                    <exclusion><!-- Using GAE Mail Service instead -->
+                        <artifactId>mail</artifactId>
+                        <groupId>javax.mail</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>freemarker</artifactId>
+                        <groupId>org.freemarker</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.b3log</groupId>
+                <artifactId>latke-gae</artifactId>
+                <version>0.5.0-SNAPSHOT</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker-gae</artifactId>
+                <version>${freemarker-gae.version}</version>
+            </dependency>
+        
+        </dependencies>
+    </dependencyManagement>
+    
+    <build>
+        <plugins>  
+            <plugin>
+                <groupId>net.kindleit</groupId>
+                <artifactId>maven-gae-plugin</artifactId>
+                <version>${maven-gae-plugin.version}</version>
+                <configuration>
+                    <serverId>appengine.google.com</serverId>
+                    <sdkDir>${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}</sdkDir>
+                    <appDir>${project.build.directory}/${project.build.finalName}</appDir>
+                    <port>${gae.dev_sever.port}</port>
+                    <!-- TODO: http://code.google.com/p/googleappengine/issues/detail?id=6928#c7 -->
+                    <jvmFlags>
+                        <jvmFlag>-Dappengine.user.timezone=UTC</jvmFlag>
+                    </jvmFlags>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>m2-release</id>
+            <name>88250 at Google Maven repository of releases</name>
+            <url>http://m2-repos.googlecode.com/svn/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>m2-snapshot</id>
+            <name>88250 at Google Maven repository of snapshots</name>
+            <url>http://m2-repos.googlecode.com/svn/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:10</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>m2-release</id>
+            <name>88250 at Google Maven repository of releases</name>
+            <url>http://m2-repos.googlecode.com/svn/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>m2-snapshot</id>
+            <name>88250 at Google Maven repository of snapshots</name>
+            <url>http://m2-repos.googlecode.com/svn/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:10</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+</project>
