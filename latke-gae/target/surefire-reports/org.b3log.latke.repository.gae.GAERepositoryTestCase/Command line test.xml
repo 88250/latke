@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite hostname="daniel-THINK" name="org.b3log.latke.repository.gae.GAERepositoryTestCase" tests="1" failures="0" timestamp="1 Jul 2012 13:46:30 GMT" time="0.722" errors="0">
+  <testcase name="add" time="0.534" classname="org.b3log.latke.repository.gae.GAERepositoryTestCase"/>
+</testsuite>
