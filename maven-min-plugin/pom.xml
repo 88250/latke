@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Description: Latke Min Plugin POM.
+    Version: 1.0.0.0, Jun 11, 2012
+    Author: Liang Ding
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.b3log.latke</groupId>
+    <artifactId>maven-min-plugin</artifactId>
+    <version>0.5.0-SNAPSHOT</version>
+    <packaging>maven-plugin</packaging>
+
+    <name>Latke Min Plugin</name>
+    <description>Latke application JavaScript and CSS files compression.</description>
+    <inceptionYear>2011</inceptionYear>
+    
+     <!-- Properties -->
+    <properties>
+        <maven-plugin-api.version>3.0.3</maven-plugin-api.version>
+        <yuicompressor.version>
+            2.4.6
+        </yuicompressor.version>
+        <!-- maven plugin -->
+        <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
+    <organization>
+        <name>B3log</name>
+        <url>http://www.b3log.org</url>
+    </organization>
+    
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>DL88250@gmail.com</id>
+            <name>Liang Ding</name>
+            <email>DL88250@gmail.com</email>
+            <url>http://88250.b3log.org</url>
+            <roles>
+                <role>Lead</role>
+                <role>Initial Committer</role>
+            </roles>
+            <organization>B3log</organization>
+            <organizationUrl>http://www.b3log.org</organizationUrl>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
+
+    <distributionManagement>
+        <repository>
+            <id>m2-release</id>
+            <name>Maven Repository at Google</name>
+            <url>https://m2-repos.googlecode.com/svn/release</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>m2-snapshot</id>
+            <name>Maven Repository at Google</name>
+            <url>https://m2-repos.googlecode.com/svn/snapshot</url>
+            <uniqueVersion>true</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>${maven-plugin-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.yahoo.platform.yui</groupId>
+            <artifactId>yuicompressor</artifactId>
+            <version>${yuicompressor.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>etc/*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    
+        <plugins>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>${maven-license-plugin.version}</version>
+                <configuration>
+                    <basedir>${basedir}</basedir>
+                    <header>src/main/resources/etc/header.txt</header>
+                    <quiet>false</quiet>
+                    <failIfMissing>true</failIfMissing>
+                    <aggregate>true</aggregate>
+                    <strictCheck>true</strictCheck>
+                    <includes>
+                        <include>**/src/*/java/**/*.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/src/main/java/**/package-info.java</exclude>
+                    </excludes>
+
+                    <useDefaultExcludes>true</useDefaultExcludes>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                    </mapping>
+                    <useDefaultMapping>true</useDefaultMapping>
+                    <properties>
+                        <year>2011, 2012</year>
+                        <devTeam>B3log Team</devTeam>
+                    </properties>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
