@@ -40,7 +40,7 @@ import org.b3log.latke.util.Stopwatchs;
  * Front controller for HTTP request dispatching.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.9, May 11, 2012
+ * @version 1.0.2.0, Aug 10, 2012
  */
 public final class HTTPRequestDispatcher extends HttpServlet {
 
@@ -159,9 +159,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             }
         }
 
-        //move the encoding configuration to filter/EncodingFilter 
-        //request.setCharacterEncoding("UTF-8");
-        //response.setCharacterEncoding("UTF-8");
+        // Encoding configuration to filter/EncodingFilter 
 
         final HTTPRequestContext context = new HTTPRequestContext();
         context.setRequest(request);

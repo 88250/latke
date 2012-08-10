@@ -16,7 +16,6 @@
 package org.b3log.latke.servlet.filter;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -25,28 +24,30 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- *
  * General EncodingFilter.
- * Configured in web.xml filter.
- * init param requestEncoding & responseEncoding
+ * 
+ * <p>
+ * Configured in web.xml filter. Init param requestEncoding & responseEncoding.
+ * </p>
  * 
  * @author ArmstrongCN
- * @version 0.1, Aug 10, 2012
+ * @version 1.0.0.0, Aug 10, 2012
  */
-public class EncodingFilter  implements Filter{
-    
-    private String requestEncoding="UTF-8";
-    private String responseEncoding="UTF-8";
-    
+public final class EncodingFilter implements Filter {
+
     /**
-     * Logger.
+     * Request encoding.
      */
-    private static final Logger LOGGER = Logger.getLogger(EncodingFilter.class.getName());
+    private String requestEncoding = "UTF-8";
+    /**
+     * Response encoding.
+     */
+    private String responseEncoding = "UTF-8";
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
-        requestEncoding=filterConfig.getInitParameter("requestEncoding");
-        responseEncoding=filterConfig.getInitParameter("responseEncoding");
+        requestEncoding = filterConfig.getInitParameter("requestEncoding");
+        responseEncoding = filterConfig.getInitParameter("responseEncoding");
     }
 
     /**
@@ -71,6 +72,4 @@ public class EncodingFilter  implements Filter{
     @Override
     public void destroy() {
     }
-
-   
 }
