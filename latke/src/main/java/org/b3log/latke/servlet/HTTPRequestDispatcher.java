@@ -159,9 +159,9 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             }
         }
 
-        request.setCharacterEncoding("UTF-8");
-
-        response.setCharacterEncoding("UTF-8");
+        //move the encoding configuration to filter/EncodingFilter 
+        //request.setCharacterEncoding("UTF-8");
+        //response.setCharacterEncoding("UTF-8");
 
         final HTTPRequestContext context = new HTTPRequestContext();
         context.setRequest(request);
