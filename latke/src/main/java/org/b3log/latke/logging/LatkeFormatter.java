@@ -217,8 +217,7 @@ public final class LatkeFormatter extends Formatter {
         }
 
         // %T
-        arguments[INDEX_THREAD_ID] = Integer.valueOf(record.getThreadID()).
-                toString();
+        arguments[INDEX_THREAD_ID] = Integer.valueOf(record.getThreadID()).toString();
         // %n
         arguments[INDEX_LOGGER_NAME] = record.getLoggerName();
 
@@ -236,8 +235,7 @@ public final class LatkeFormatter extends Formatter {
         arguments[INDEX_LINE_NUM] = Integer.toString(lineNumber);
 
         synchronized (messageFormat) {
-            final StringBuilder stringBuilder = new StringBuilder(
-                    messageFormat.format(arguments));
+            final StringBuilder stringBuilder = new StringBuilder(messageFormat.format(arguments));
             if (record.getThrown() != null) {
                 try {
                     final StringWriter stringWriter = new StringWriter();
