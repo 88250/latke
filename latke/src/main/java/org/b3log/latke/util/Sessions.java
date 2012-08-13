@@ -56,7 +56,13 @@ public final class Sessions {
      *
      * @param request the specified request
      * @param response the specified response
-     * @param user the specified user
+     * @param user the specified user, for example,
+     * <pre>
+     * {
+     *     "userEmail": "",
+     *     "userPassword": ""
+     * }
+     * </pre>
      */
     public static void login(final HttpServletRequest request, final HttpServletResponse response, final JSONObject user) {
         final HttpSession session = request.getSession(false);
