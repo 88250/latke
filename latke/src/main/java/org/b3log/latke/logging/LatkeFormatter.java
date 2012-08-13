@@ -59,7 +59,7 @@ import java.util.logging.LogRecord;
  *
  * @author Samuel Halliday
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.8, Dec 2, 2010
+ * @version 1.0.0.9, Aug 12, 2012
  */
 public final class LatkeFormatter extends Formatter {
 
@@ -183,7 +183,8 @@ public final class LatkeFormatter extends Formatter {
             if ("Jdk14Log.java".equals(fileName)
                 || "JDK14LoggerAdapter.java".equals(fileName)
                 || "Logger.java".equals(fileName)
-                || "DirectJDKLog.java".equals(fileName)) {
+                || "DirectJDKLog.java".equals(fileName)
+                || "JDK14LoggerFactory.java".equals(fileName)) {
                 currentCallerDepth = i;
 
                 if (i < stackTrace.length - 1) { // look ahead one
@@ -194,7 +195,8 @@ public final class LatkeFormatter extends Formatter {
                     if (!"Jdk14Log.java".equals(fileName)
                         && !"JDK14LoggerAdapter.java".equals(fileName)
                         && !"Logger.java".equals(fileName)
-                        && !"DirectJDKLog.java".equals(fileName)) {
+                        && !"DirectJDKLog.java".equals(fileName)
+                        && !"JDK14LoggerFactory.java".equals(fileName)) {
                         currentCallerDepth++;
                         className = stackTraceElement.getClassName();
                         break;
