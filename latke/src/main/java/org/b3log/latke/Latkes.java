@@ -33,7 +33,7 @@ import org.b3log.latke.util.Strings;
  * </p>
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.7, May 29, 2012
+ * @version 1.0.1.8, Aug 14, 2012
  * @see #initRuntimeEnv()
  * @see #getServePath()
  * @see #getStaticServePath()
@@ -474,12 +474,10 @@ public final class Latkes {
      * @see RuntimeEnv
      */
     public static void initRuntimeEnv() {
-        setRuntimeMode(RuntimeMode.DEVELOPMENT); // Defaults to dev mode
-
         LOGGER.log(Level.FINEST, "Initializes runtime environment from configuration file");
-        final String value = LATKE_PROPS.getProperty("runtimeEnv");
-        if (null != value) {
-            runtimeEnv = RuntimeEnv.valueOf(value);
+        final String runtimeEnvValue = LATKE_PROPS.getProperty("runtimeEnv");
+        if (null != runtimeEnvValue) {
+            runtimeEnv = RuntimeEnv.valueOf(runtimeEnvValue);
         }
 
         if (null == runtimeEnv) {
@@ -493,7 +491,15 @@ public final class Latkes {
             }
         }
 
-        LOGGER.log(Level.INFO, "Latke is running on [{0}]", Latkes.getRuntimeEnv());
+        final String runtimeModeValue = LATKE_PROPS.getProperty("runtimeMode");
+        if (null != runtimeModeValue) {
+            runtimeMode = RuntimeMode.valueOf(runtimeModeValue);
+        } else {
+            LOGGER.log(Level.FINEST, "Can't parse runtime mode in latke.properties, default to [DEVELOPMENT]");
+            runtimeMode = RuntimeMode.DEVELOPMENT;
+        }
+
+        LOGGER.log(Level.INFO, "Latke is running on [{0}] with mode [{1}]", new Object[]{Latkes.getRuntimeEnv(), Latkes.getRuntimeMode()});
 
         if (RuntimeEnv.LOCAL == runtimeEnv) {
             // Read local database configurations
