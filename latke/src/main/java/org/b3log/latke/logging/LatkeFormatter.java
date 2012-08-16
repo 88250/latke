@@ -36,7 +36,7 @@ import java.util.logging.LogRecord;
  *   <li>{@code %m} - message</li>
  *   <li>{@code %L} - log level</li>
  *   <li>{@code %n} - name of the logger</li>
- *   <li>{@code %t} - a timestamp (in ISO-8601 "yyyy-MM-dd HH:mm:ss Z" format)</li>
+ *   <li>{@code %t} - a timestamp ("yyyy-MM-dd HH:mm:ss" format)</li>
  *   <li>{@code %M} - source method name (if available, otherwise "?")</li>
  *   <li>{@code %c} - source class name (if available, otherwise "?")</li>
  *   <li>{@code %C} - source simple class name (if available, otherwise "?")</li>
@@ -59,7 +59,7 @@ import java.util.logging.LogRecord;
  *
  * @author Samuel Halliday
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.9, Aug 12, 2012
+ * @version 1.0.1.0, Aug 16, 2012
  */
 public final class LatkeFormatter extends Formatter {
 
@@ -72,9 +72,9 @@ public final class LatkeFormatter extends Formatter {
      */
     private final MessageFormat messageFormat;
     /**
-     * Simple date format, (yyyy-MM-dd HH:mm:ss Z).
+     * Simple date format, (yyyy-MM-dd HH:mm:ss).
      */
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     /**
      * Index of %m.
      */
