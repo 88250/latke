@@ -33,7 +33,7 @@ import org.b3log.latke.util.Callstacks;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.4, Apr 11, 2012
+ * @version 1.0.0.5, Apr 23, 2012
  */
 public final class Connections {
 
@@ -60,6 +60,8 @@ public final class Connections {
             config.setMaxConnectionsPerPartition(Integer.valueOf(Latkes.getLocalProperty("jdbc.maxConnCnt")));
             config.setPartitionCount(1);
 
+            config.setDisableJMX(true);
+            
             connectionPool = new BoneCP(config);
 
             LOGGER.info("Initialized connection pool");
