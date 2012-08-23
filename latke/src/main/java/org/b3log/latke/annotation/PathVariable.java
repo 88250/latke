@@ -22,20 +22,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that an annotated type for HTTP servlet request processing.
+ * Indicates that a method parameter should be bound to a URI template variable. 
  * 
- * <p>
- * A request processor is the C (controller) of MVC pattern, which has some 
- * methods for requests processing, see {@link RequestProcessing} for more 
- * details.
- * </p>
- *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Jul 17, 2011
+ * @version 1.0.0.0, Aug 23, 2011
  * @see RequestProcessing
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RequestProcessor {
+public @interface PathVariable {
+
+    /** 
+     * The URI template variable to bind to. 
+     */
+    String value() default "";
 }
