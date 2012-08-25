@@ -24,7 +24,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * General EncodingFilter.
+ * General encoding filter.
  * 
  * <p>
  * Configured in web.xml filter. Init param requestEncoding & responseEncoding.
@@ -51,21 +51,20 @@ public final class EncodingFilter implements Filter {
     }
 
     /**
-     * Set the request and response encoding to a given charset. 
+     * Sets the request and response encoding to a given charset. 
      *
      * @param request the specified request
      * @param response the specified response
      * @param chain filter chain
      * @throws IOException io exception
      * @throws ServletException servlet exception
-     * 
-     * @see web.xml filter
      */
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
         request.setCharacterEncoding(requestEncoding);
         response.setCharacterEncoding(responseEncoding);
+        
         chain.doFilter(request, response);
     }
 
