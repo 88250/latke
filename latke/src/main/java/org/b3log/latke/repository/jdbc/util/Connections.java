@@ -112,6 +112,10 @@ public final class Connections {
             } else if ("c3p0".equals(poolType)) {
                 LOGGER.log(Level.FINE, "Initializing database connection pool [c3p0]");
 
+                // Disable JMX
+                System.setProperty("com.mchange.v2.c3p0.management.ManagementCoordinator",
+                                   "com.mchange.v2.c3p0.management.NullManagementCoordinator");
+
                 c3p0 = new ComboPooledDataSource();
                 c3p0.setUser(userName);
                 c3p0.setPassword(password);
@@ -165,7 +169,7 @@ public final class Connections {
         if (null != boneCP) {
             boneCP.shutdown();
         }
-        
+
         LOGGER.info("Shutdowns connection pool sucessfully");
     }
 
