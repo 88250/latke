@@ -19,6 +19,7 @@ import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,9 +64,17 @@ public final class Connections {
      */
     private static int transactionIsolationInt;
     /**
-     * Auto commit.
+     * JDBC URL.
      */
-    private static boolean autoCommit = false;
+    private static String url;
+    /**
+     * JDBC user name.
+     */
+    private static String userName;
+    /**
+     * JDBC password.
+     */
+    private static String password;
 
     static {
         try {
@@ -74,9 +83,9 @@ public final class Connections {
 
             poolType = Latkes.getLocalProperty("jdbc.pool");
 
-            final String url = Latkes.getLocalProperty("jdbc.URL");
-            final String userName = Latkes.getLocalProperty("jdbc.username");
-            final String password = Latkes.getLocalProperty("jdbc.password");
+            url = Latkes.getLocalProperty("jdbc.URL");
+            userName = Latkes.getLocalProperty("jdbc.username");
+            password = Latkes.getLocalProperty("jdbc.password");
             final int minConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.minConnCnt"));
             final int maxConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.maxConnCnt"));
             transactionIsolation = Latkes.getLocalProperty("jdbc.transactionIsolation");
@@ -98,7 +107,7 @@ public final class Connections {
                 LOGGER.log(Level.FINE, "Initializing database connection pool [BoneCP]");
 
                 final BoneCPConfig config = new BoneCPConfig();
-                config.setDefaultAutoCommit(autoCommit);
+                config.setDefaultAutoCommit(false);
                 config.setDefaultTransactionIsolation(transactionIsolation);
                 config.setJdbcUrl(url);
                 config.setUsername(userName);
@@ -125,6 +134,8 @@ public final class Connections {
                 c3p0.setMinPoolSize(minConnCnt);
                 c3p0.setMaxPoolSize(maxConnCnt);
                 c3p0.setMaxStatementsPerConnection(maxConnCnt);
+            } else if ("none".equals(poolType)) {
+                LOGGER.info("Do not use database connection pool");
             }
 
             LOGGER.info("Initialized connection pool");
@@ -154,9 +165,10 @@ public final class Connections {
                        new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
             final Connection ret = c3p0.getConnection();
             ret.setTransactionIsolation(transactionIsolationInt);
-            ret.setAutoCommit(autoCommit);
 
             return ret;
+        } else if ("none".equals(poolType)) {
+            return DriverManager.getConnection(url, userName, password);
         }
 
         throw new IllegalStateException("Not found database connection pool [" + poolType + "]");
