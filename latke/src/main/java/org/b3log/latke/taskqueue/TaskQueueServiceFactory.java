@@ -23,7 +23,7 @@ import org.b3log.latke.RuntimeEnv;
  * Task queue service factory.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Nov 15, 2011
+ * @version 1.0.0.1, Aug 27, 2012
  */
 public final class TaskQueueServiceFactory {
 
@@ -46,6 +46,7 @@ public final class TaskQueueServiceFactory {
             Class<TaskQueueService> serviceClass = null;
 
             switch (runtimeEnv) {
+                case BAE:
                 case LOCAL:
                     serviceClass = (Class<TaskQueueService>) Class.forName(
                             "org.b3log.latke.taskqueue.local.LocalTaskQueueService");

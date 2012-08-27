@@ -23,7 +23,7 @@ import org.b3log.latke.RuntimeEnv;
  * Mail service factory.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Aug 8, 2011
+ * @version 1.0.0.1, Aug 27, 2012
  */
 @SuppressWarnings("unchecked")
 public final class MailServiceFactory {
@@ -46,6 +46,7 @@ public final class MailServiceFactory {
             Class<MailService> mailServiceClass = null;
 
             switch (runtimeEnv) {
+                case BAE:
                 case LOCAL:
                     mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.local.LocalMailService");
                     MAIL_SERVICE = mailServiceClass.newInstance();

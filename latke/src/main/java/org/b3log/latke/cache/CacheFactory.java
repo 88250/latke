@@ -30,7 +30,7 @@ import org.b3log.latke.RuntimeEnv;
  * Cache factory.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.8, May 3, 2012
+ * @version 1.0.0.9, Aug 27, 2012
  */
 public final class CacheFactory {
 
@@ -48,12 +48,12 @@ public final class CacheFactory {
      */
     public static synchronized void removeAll() {
         RuntimeEnv runtime = Latkes.getRuntime("cache");
-        
+
         if (RuntimeEnv.LOCAL == Latkes.getRuntimeEnv()) { // Always LOCAL cache if runs on a standard servlet container
             runtime = RuntimeEnv.LOCAL;
         }
-        
-         switch (runtime) {
+
+        switch (runtime) {
             case GAE:
                 final Iterator<Cache<String, ?>> iterator = CACHES.values().iterator();
                 if (iterator.hasNext()) {
@@ -63,6 +63,7 @@ public final class CacheFactory {
                 }
 
                 break;
+            case BAE:
             case LOCAL:
                 // Clears cache one by one
                 for (final Map.Entry<String, Cache<String, ?>> entry : CACHES.entrySet()) {

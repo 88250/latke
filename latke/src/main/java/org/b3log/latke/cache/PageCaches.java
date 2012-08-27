@@ -57,7 +57,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.2, Aug 9, 2012
+ * @version 1.0.2.3, Aug 27, 2012
  * @since 0.3.1
  */
 @SuppressWarnings("unchecked")
@@ -133,7 +133,7 @@ public final class PageCaches {
     static {
         CACHE = (Cache<String, Serializable>) CacheFactory.getCache(PAGE_CACHE_NAME);
         final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
-        if (runtimeEnv.equals(RuntimeEnv.LOCAL)) {
+        if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
             CACHE.setMaxCount(MAX_CACHEABLE_PAGE_CNT);
             LOGGER.log(Level.INFO, "Initialized page cache[maxCount={0}]", MAX_CACHEABLE_PAGE_CNT);
         }

@@ -33,7 +33,7 @@ import org.b3log.latke.util.Strings;
  * </p>
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.8, Aug 14, 2012
+ * @version 1.0.1.9, Aug 27, 2012
  * @see #initRuntimeEnv()
  * @see #getServePath()
  * @see #getStaticServePath()
@@ -353,13 +353,13 @@ public final class Latkes {
      * Gets context path.
      * 
      * <p>
-     * If Latke runs on GAE, returns "" always, returns the value of "contextPath" property in latke.properties otherwise.
+     * If Latke runs on xAE, returns "" always, returns the value of "contextPath" property in latke.properties otherwise.
      * </p>
      * 
      * @return context path
      */
     public static String getContextPath() {
-        if (RuntimeEnv.GAE == getRuntimeEnv()) {
+        if (RuntimeEnv.GAE == getRuntimeEnv() || RuntimeEnv.BAE == getRuntimeEnv()) {
             return "";
         }
 
@@ -374,13 +374,13 @@ public final class Latkes {
      * Gets static path.
      * 
      * <p>
-     * If Latke runs on GAE, returns "" always, returns the value of "staticPath" property in latke.properties otherwise.
+     * If Latke runs on xAE, returns "" always, returns the value of "staticPath" property in latke.properties otherwise.
      * </p>
      * 
      * @return static path
      */
     public static String getStaticPath() {
-        if (RuntimeEnv.GAE == getRuntimeEnv()) {
+        if (RuntimeEnv.GAE == getRuntimeEnv() || RuntimeEnv.BAE == getRuntimeEnv()) {
             return "";
         }
 
@@ -550,8 +550,9 @@ public final class Latkes {
      * @return runtime database
      */
     public static RuntimeDatabase getRuntimeDatabase() {
-        if (RuntimeEnv.LOCAL != getRuntimeEnv()) {
-            throw new RuntimeException("Underlying database can be specified when Latke runs on Local environment only");
+        if (RuntimeEnv.LOCAL != runtimeEnv || RuntimeEnv.BAE != runtimeEnv) {
+            throw new RuntimeException("Underlying database can be specified when Latke runs on [Local] / [BAE] environment only, "
+                                       + "current runtime enviornment [" + runtimeEnv + ']');
         }
 
         final String runtimeDatabase = LOCAL_PROPS.getProperty("runtimeDatabase");
