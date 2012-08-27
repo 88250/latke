@@ -38,7 +38,7 @@ import org.w3c.dom.NodeList;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, May 2, 2012
+ * @version 1.0.0.2, Aug 27, 2012
  */
 public final class CronService {
 
@@ -79,6 +79,8 @@ public final class CronService {
 
                     break;
                 case GAE:
+                    break;
+                case BAE:
                     break;
                 default:
                     throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");

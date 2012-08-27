@@ -17,6 +17,7 @@ package org.b3log.latke.repository.jdbc.util;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -33,7 +34,7 @@ import org.b3log.latke.util.Callstacks;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.5, Apr 23, 2012
+ * @version 1.0.0.6, Aug 27, 2012
  */
 public final class Connections {
 
@@ -42,27 +43,85 @@ public final class Connections {
      */
     private static final Logger LOGGER = Logger.getLogger(Connections.class.getName());
     /**
-     * Connection pool.
+     * Pool type.
      */
-    private static BoneCP connectionPool;
+    private static String poolType;
+    /**
+     * Connection pool - BoneCP.
+     */
+    private static BoneCP boneCP;
+    /**
+     * Connection pool - c3p0.
+     */
+    private static ComboPooledDataSource c3p0;
+    /**
+     * Transaction isolation.
+     */
+    private static String transactionIsolation;
+    /**
+     * Transaction isolation integer value.
+     */
+    private static int transactionIsolationInt;
+    /**
+     * Auto commit.
+     */
+    private static boolean autoCommit = false;
 
     static {
         try {
-            Class.forName(Latkes.getLocalProperty("jdbc.driver"));
+            final String driver = Latkes.getLocalProperty("jdbc.driver");
+            Class.forName(driver);
 
-            final BoneCPConfig config = new BoneCPConfig();
-            config.setDefaultAutoCommit(false);
-            config.setDefaultTransactionIsolation(Latkes.getLocalProperty("jdbc.transactionIsolation"));
-            config.setJdbcUrl(Latkes.getLocalProperty("jdbc.URL"));
-            config.setUsername(Latkes.getLocalProperty("jdbc.username"));
-            config.setPassword(Latkes.getLocalProperty("jdbc.password"));
-            config.setMinConnectionsPerPartition(Integer.valueOf(Latkes.getLocalProperty("jdbc.minConnCnt")));
-            config.setMaxConnectionsPerPartition(Integer.valueOf(Latkes.getLocalProperty("jdbc.maxConnCnt")));
-            config.setPartitionCount(1);
+            poolType = Latkes.getLocalProperty("jdbc.pool");
 
-            config.setDisableJMX(true);
-            
-            connectionPool = new BoneCP(config);
+            final String url = Latkes.getLocalProperty("jdbc.URL");
+            final String userName = Latkes.getLocalProperty("jdbc.username");
+            final String password = Latkes.getLocalProperty("jdbc.password");
+            final int minConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.minConnCnt"));
+            final int maxConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.maxConnCnt"));
+            transactionIsolation = Latkes.getLocalProperty("jdbc.transactionIsolation");
+            if ("NONE".equals(transactionIsolation)) {
+                transactionIsolationInt = Connection.TRANSACTION_NONE;
+            } else if ("READ_COMMITTED".equals(transactionIsolation)) {
+                transactionIsolationInt = Connection.TRANSACTION_READ_COMMITTED;
+            } else if ("READ_UNCOMMITTED".equals(transactionIsolation)) {
+                transactionIsolationInt = Connection.TRANSACTION_READ_UNCOMMITTED;
+            } else if ("REPEATABLE_READ".equals(transactionIsolation)) {
+                transactionIsolationInt = Connection.TRANSACTION_REPEATABLE_READ;
+            } else if ("SERIALIZABLE".equals(transactionIsolation)) {
+                transactionIsolationInt = Connection.TRANSACTION_SERIALIZABLE;
+            } else {
+                throw new IllegalStateException("Undefined transaction isolation [" + transactionIsolation + ']');
+            }
+
+            if ("BoneCP".equals(poolType)) {
+                LOGGER.log(Level.FINE, "Initializing database connection pool [BoneCP]");
+
+                final BoneCPConfig config = new BoneCPConfig();
+                config.setDefaultAutoCommit(autoCommit);
+                config.setDefaultTransactionIsolation(transactionIsolation);
+                config.setJdbcUrl(url);
+                config.setUsername(userName);
+                config.setPassword(password);
+                config.setMinConnectionsPerPartition(minConnCnt);
+                config.setMaxConnectionsPerPartition(maxConnCnt);
+                config.setPartitionCount(1);
+                config.setDisableJMX(true);
+
+                boneCP = new BoneCP(config);
+            } else if ("c3p0".equals(poolType)) {
+                LOGGER.log(Level.FINE, "Initializing database connection pool [c3p0]");
+
+                c3p0 = new ComboPooledDataSource();
+                c3p0.setUser(userName);
+                c3p0.setPassword(password);
+                c3p0.setJdbcUrl(url);
+                c3p0.setDriverClass(driver);
+                c3p0.setInitialPoolSize(minConnCnt);
+                c3p0.setMinPoolSize(minConnCnt);
+                c3p0.setMaxPoolSize(maxConnCnt);
+                c3p0.setMaxStatementsPerConnection(maxConnCnt);
+            }
 
             LOGGER.info("Initialized connection pool");
         } catch (final Exception e) {
@@ -81,19 +140,32 @@ public final class Connections {
             Callstacks.printCallstack(Level.FINEST, new String[]{"org.b3log"}, null);
         }
 
-        LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                   new Object[]{connectionPool.getTotalCreatedConnections(),
-                                connectionPool.getTotalFree(),
-                                connectionPool.getTotalLeased()});
+        if ("BoneCP".equals(poolType)) {
+            LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
+                       new Object[]{boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
 
-        return connectionPool.getConnection();
+            return boneCP.getConnection();
+        } else if ("c3p0".equals(poolType)) {
+            LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
+                       new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
+            final Connection ret = c3p0.getConnection();
+            ret.setTransactionIsolation(transactionIsolationInt);
+            ret.setAutoCommit(autoCommit);
+
+            return ret;
+        }
+
+        throw new IllegalStateException("Not found database connection pool [" + poolType + "]");
     }
 
     /**
      * Shutdowns the connection pool.
      */
     public static void shutdownConnectionPool() {
-        connectionPool.shutdown();
+        if (null != boneCP) {
+            boneCP.shutdown();
+        }
+        
         LOGGER.info("Shutdowns connection pool sucessfully");
     }
 
