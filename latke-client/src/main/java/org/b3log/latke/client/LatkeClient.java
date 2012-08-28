@@ -116,8 +116,8 @@ public final class LatkeClient {
 //            "C:/b3log_backup", "-w", "true"};
 // Restore Test:
         args = new String[]{
-            "-h", "-restore", "-verbose", "-s", "localhost:8080", "-u", "test", "-p", "1", "-backup_dir",
-            "C:/b3log_backup", "-w", "true"};
+            "-h", "-backup", "-verbose", "-s", "demo.b3log.org:80", "-u", "b3log.solo@gmail.com", "-p", "b3logsolo", "-backup_dir",
+            "C:/b3log_backup"};
 
         final Options options = getOptions();
 

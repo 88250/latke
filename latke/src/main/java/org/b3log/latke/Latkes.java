@@ -27,11 +27,6 @@ import org.b3log.latke.util.Strings;
 /**
  * Latke framework configuration utility facade.
  * 
- * <p>
- * If the application runs on {@linkplain RuntimeEnv#LOCAL local environment},
- * please set {@linkplain #repositoryPath} before setting up your application.
- * </p>
- * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.1.9, Aug 27, 2012
  * @see #initRuntimeEnv()
