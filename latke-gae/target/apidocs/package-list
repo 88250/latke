@@ -1,7 +1,0 @@
-org.b3log.latke.cache.gae
-org.b3log.latke.image.gae
-org.b3log.latke.mail.gae
-org.b3log.latke.repository.gae
-org.b3log.latke.taskqueue.gae
-org.b3log.latke.urlfetch.gae
-org.b3log.latke.user.gae
