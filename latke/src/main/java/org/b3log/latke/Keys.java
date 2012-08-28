@@ -23,7 +23,7 @@ import java.util.Map;
  * This class defines framework (non-functional) keys.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.5, Aug 9, 2012
+ * @version 1.0.2.6, Aug 28, 2012
  */
 public final class Keys {
 
@@ -75,6 +75,10 @@ public final class Keys {
      * Key of page cache key.
      */
     public static final String PAGE_CACHE_KEY = "pageCacheKey";
+    /**
+     * Key of page type.
+     */
+    public static final String PAGE_TYPE = "pageType";
     /**
      * Key of template directory name.
      */
