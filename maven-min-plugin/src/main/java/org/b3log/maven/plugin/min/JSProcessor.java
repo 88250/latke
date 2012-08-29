@@ -33,7 +33,7 @@ import org.codehaus.plexus.util.IOUtil;
  * Processor for compressing JavaScript sources.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.2, Sep 3, 2011
+ * @version 1.0.0.3, Aug 29, 2012
  */
 public class JSProcessor extends SourcesProcessor {
 
@@ -43,10 +43,7 @@ public class JSProcessor extends SourcesProcessor {
     private boolean disableOptimizations;
     private List<String> adminJSs;
 
-    public JSProcessor(final Log logger,
-                       final String srcDir, final String targetDir,
-                       final String suffix,
-                       final List<String> adminJSs) {
+    public JSProcessor(final Log logger, final String srcDir, final String targetDir, final String suffix, final List<String> adminJSs) {
         super(logger, srcDir, targetDir, suffix);
         this.adminJSs = adminJSs;
     }
@@ -67,41 +64,27 @@ public class JSProcessor extends SourcesProcessor {
             processAdminJS(srcDir);
 
             final File[] srcFiles = srcDir.listFiles(new FileFilter() {
-
                 @Override
                 public boolean accept(final File file) {
-                    return !file.isDirectory();
+                    return !file.isDirectory() && !file.getName().endsWith(getSuffix() + ".js");
                 }
             });
 
             for (int i = 0; i < srcFiles.length; i++) {
                 final File src = srcFiles[i];
-                final String targetPath = getTargetDir() + File.separator
-                                          + src.getName().substring(0,
-                                                                    src.getName().
+                final String targetPath = getTargetDir() + File.separator + src.getName().substring(0, src.getName().
                         length() - ".js".length()) + getSuffix() + ".js";
                 final File target = new File(targetPath);
 
-                getLogger().info("Minimizing [srcPath=" + src.getPath()
-                                 + ", targetPath=" + targetPath + "]");
-                final Reader reader = new InputStreamReader(
-                        new FileInputStream(src), "UTF-8");
+                getLogger().info("Minimizing [srcPath=" + src.getPath() + ", targetPath=" + targetPath + "]");
+                final Reader reader = new InputStreamReader(new FileInputStream(src), "UTF-8");
 
-                final FileOutputStream writerStream = new FileOutputStream(
-                        target);
-                final Writer writer = new OutputStreamWriter(writerStream,
-                                                             "UTF-8");
+                final FileOutputStream writerStream = new FileOutputStream(target);
+                final Writer writer = new OutputStreamWriter(writerStream, "UTF-8");
 
-                final JavaScriptCompressor compressor =
-                        new JavaScriptCompressor(
-                        reader, new JavaScriptErrorReporter(
-                        getLogger(), src.getName()));
-                compressor.compress(
-                        writer, -1,
-                        munge,
-                        verbose,
-                        preserveAllSemiColons,
-                        disableOptimizations);
+                final JavaScriptCompressor compressor = new JavaScriptCompressor(
+                        reader, new JavaScriptErrorReporter(getLogger(), src.getName()));
+                compressor.compress(writer, -1, munge, verbose, preserveAllSemiColons, disableOptimizations);
 
                 reader.close();
                 writer.close();
@@ -115,43 +98,30 @@ public class JSProcessor extends SourcesProcessor {
         if (adminJSs.isEmpty()) {
             return;
         }
-        
+
         final File adminDir = new File(srcDir + File.separator + "admin");
 
         final List<File> adminJSList = new ArrayList<File>();
         for (final String adminJS : adminJSs) {
-            final File adminJSFile = new File(adminDir.getPath()
-                                              + File.separator
-                                              + adminJS);
+            final File adminJSFile = new File(adminDir.getPath() + File.separator + adminJS);
             adminJSList.add(adminJSFile);
         }
 
         final File latkeAdminJS = merge(adminJSList);
 
         final File latkeMinAdminJS =
-                new File(getTargetDir() + File.separator + "admin"
-                         + File.separator + "latkeAdmin" + getSuffix() + ".js");
+                new File(getTargetDir() + File.separator + "admin" + File.separator + "latkeAdmin" + getSuffix() + ".js");
 
-        getLogger().info("Minimizing [srcPath=" + latkeAdminJS.getPath()
-                         + ", targetPath=" + latkeMinAdminJS.getPath() + "]");
+        getLogger().info("Minimizing [srcPath=" + latkeAdminJS.getPath() + ", targetPath=" + latkeMinAdminJS.getPath() + "]");
 
         final Reader reader = new InputStreamReader(
                 new FileInputStream(latkeAdminJS), "UTF-8");
-        final FileOutputStream writerStream = new FileOutputStream(
-                latkeMinAdminJS);
-        final Writer writer = new OutputStreamWriter(writerStream,
-                                                     "UTF-8");
+        final FileOutputStream writerStream = new FileOutputStream(latkeMinAdminJS);
+        final Writer writer = new OutputStreamWriter(writerStream, "UTF-8");
 
-        final JavaScriptCompressor compressor =
-                new JavaScriptCompressor(
-                reader, new JavaScriptErrorReporter(
-                getLogger(), latkeAdminJS.getName()));
-        compressor.compress(
-                writer, -1,
-                munge,
-                verbose,
-                preserveAllSemiColons,
-                disableOptimizations);
+        final JavaScriptCompressor compressor = new JavaScriptCompressor(
+                reader, new JavaScriptErrorReporter(getLogger(), latkeAdminJS.getName()));
+        compressor.compress(writer, -1, munge, verbose, preserveAllSemiColons, disableOptimizations);
 
         reader.close();
         writer.close();
@@ -161,22 +131,18 @@ public class JSProcessor extends SourcesProcessor {
         if (files.isEmpty()) {
             return null;
         }
-        
-        final File ret = new File(getTargetDir() + File.separator + "admin"
-                                  + File.separator + "latkeAdmin.js");
-        final File adminTargetDir = new File(getTargetDir()
-                                             + File.separator + "admin");
+
+        final File ret = new File(getTargetDir() + File.separator + "admin" + File.separator + "latkeAdmin.js");
+        final File adminTargetDir = new File(getTargetDir() + File.separator + "admin");
         if (!adminTargetDir.exists()) {
             adminTargetDir.mkdir();
         }
 
-        final FileOutputStream fileOutputStream =
-                new FileOutputStream(ret);
+        final FileOutputStream fileOutputStream = new FileOutputStream(ret);
 
         final StringBuilder sb = new StringBuilder("Merged [\r\n  ");
         for (int i = 0; i < files.size(); i++) {
-            final FileInputStream fileInputStream =
-                    new FileInputStream(files.get(i));
+            final FileInputStream fileInputStream = new FileInputStream(files.get(i));
             IOUtil.copy(fileInputStream, fileOutputStream);
 
             fileInputStream.close();

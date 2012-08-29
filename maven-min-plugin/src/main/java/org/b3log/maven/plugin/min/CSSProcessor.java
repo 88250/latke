@@ -31,13 +31,11 @@ import java.io.OutputStreamWriter;
  * Processor for compressing CSS sources.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, Aug 23, 2011 
+ * @version 1.0.0.2, Aug 29, 2012
  */
 public final class CSSProcessor extends SourcesProcessor {
 
-    public CSSProcessor(final Log logger,
-                        final String srcDir, final String targetDir,
-                        final String suffix) {
+    public CSSProcessor(final Log logger, final String srcDir, final String targetDir, final String suffix) {
         super(logger, srcDir, targetDir, suffix);
     }
 
@@ -55,30 +53,23 @@ public final class CSSProcessor extends SourcesProcessor {
         try {
             final File srcDir = getSrcDir();
             final File[] srcFiles = srcDir.listFiles(new FileFilter() {
-
                 @Override
                 public boolean accept(final File file) {
-                    return !file.isDirectory();
+                    return !file.isDirectory() && !file.getName().endsWith(getSuffix() + ".css");
                 }
             });
 
             for (int i = 0; i < srcFiles.length; i++) {
                 final File src = srcFiles[i];
-                final String targetPath = getTargetDir() + File.separator
-                                          + src.getName().substring(0,
-                                                                    src.getName().
+                final String targetPath = getTargetDir() + File.separator + src.getName().substring(0, src.getName().
                         length() - ".css".length()) + getSuffix() + ".css";
                 final File target = new File(targetPath);
 
-                getLogger().info("Minimizing [srcPath=" + src.getPath()
-                                 + ", targetPath=" + targetPath + "]");
-                final Reader reader = new InputStreamReader(
-                        new FileInputStream(src), "UTF-8");
+                getLogger().info("Minimizing [srcPath=" + src.getPath() + ", targetPath=" + targetPath + "]");
+                final Reader reader = new InputStreamReader(new FileInputStream(src), "UTF-8");
 
-                final FileOutputStream writerStream = new FileOutputStream(
-                        target);
-                final Writer writer = new OutputStreamWriter(writerStream,
-                                                             "UTF-8");
+                final FileOutputStream writerStream = new FileOutputStream(target);
+                final Writer writer = new OutputStreamWriter(writerStream, "UTF-8");
 
                 final CssCompressor compressor = new CssCompressor(reader);
                 compressor.compress(writer, -1);
