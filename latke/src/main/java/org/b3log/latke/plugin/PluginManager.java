@@ -327,7 +327,6 @@ public final class PluginManager {
             }
 
             LOGGER.log(Level.FINER, "Loading event listener[className={0}]", eventListenerClassName);
-            LOGGER.log(Level.FINEST, "Loading event listener[class={0}]", eventListenerClassName);
 
             final Class<?> eventListenerClass = classLoader.loadClass(eventListenerClassName);
             final Method getInstance = eventListenerClass.getMethod("getInstance");
