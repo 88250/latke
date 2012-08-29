@@ -2,3 +2,5 @@
 /latke-client/target/
 /latke-repository-mysql/target/
 /latke-gae/target/
+/maven-min-plugin/target/
+/latke-gae-demo/target/
