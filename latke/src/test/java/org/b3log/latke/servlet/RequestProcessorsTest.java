@@ -27,31 +27,40 @@ import org.b3log.latke.testhelper.VirtualObject;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 3, 2012
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class RequestProcessorsTest extends TestCase {
+    
+    static{
+        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
+        final VirtualObject  requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
+        final HashSet hashSet  = (HashSet<?>) requestProcessors.getValue("processorMethods");
+        hashSet.add(registerServiceAndMethod(service, "/string", "getString"));
+    }
 
     /**
-     * test {@link RequestProcessors}.invoke method.
+     * registerServiceAndMethod for a dispath mapping for UT.
+     * @param service the ServiceHolder
+     * @param uriPattern the uriPattern
+     * @param methodName the methodName
+     * @return the processorMethod in {@link RequestProcessors}
      */
-    @SuppressWarnings("unchecked")
-    public void testInvoke() {
-        
-        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
-        
+    private static Object registerServiceAndMethod(
+            final VirtualObject service, final String uriPattern, final String methodName) {
         final VirtualObject processorMethod = new VirtualObject("org.b3log.latke.servlet.RequestProcessors$ProcessorMethod");
-        processorMethod.setValue("uriPattern", "/string");
+        processorMethod.setValue("uriPattern", uriPattern);
         processorMethod.setValue("withContextPath", false);
         processorMethod.setValue("uriPatternMode", URIPatternMode.ANT_PATH);
         processorMethod.setValue("method", HTTPRequestMethod.GET.name());
         processorMethod.setValue("processorClass", service.getInstanceClass());
-        processorMethod.setValue("processorMethod", service.getInstanceMethod("getString", new Class<?>[]{}));
-       
-        
-        final VirtualObject  requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
-        @SuppressWarnings("rawtypes")
-        final HashSet hashSet  = (HashSet<?>) requestProcessors.getValue("processorMethods");
-        hashSet.add(processorMethod.getInstance());
-        
-
+        processorMethod.setValue("processorMethod", service.getInstanceMethod(methodName, new Class<?>[]{}));
+        return processorMethod.getInstance();
+    }
+    
+    /**
+     * test {@link RequestProcessors}.invoke method.
+     */
+    public void testInvoke() {
+     
        final String requestURI = "/string";
        final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
        Assert.assertEquals("string", ret);
