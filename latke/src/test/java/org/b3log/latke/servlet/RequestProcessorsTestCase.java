@@ -28,13 +28,14 @@ import org.b3log.latke.testhelper.VirtualObject;
  * @version 1.0.0.1, Sep 3, 2012
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class RequestProcessorsTest extends TestCase {
+public class RequestProcessorsTestCase extends TestCase {
     
     static{
         final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
         final VirtualObject  requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
         final HashSet hashSet  = (HashSet<?>) requestProcessors.getValue("processorMethods");
         hashSet.add(registerServiceAndMethod(service, "/string", "getString"));
+        hashSet.add(registerServiceAndMethod(service, "/string/{1}/{2}", "getString"));
     }
 
     /**
@@ -57,13 +58,23 @@ public class RequestProcessorsTest extends TestCase {
     }
     
     /**
-     * test {@link RequestProcessors}.invoke method.
+     * test {@link RequestProcessors}.invoke method(1) esay test.
      */
-    public void testInvoke() {
+    public void testInvokeEasy() {
      
        final String requestURI = "/string";
        final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
        Assert.assertEquals("string", ret);
+        
+    }
+    /**
+     * test {@link RequestProcessors}.invoke method(1) esay test.
+     */
+    public void testInvokeEasyParams() {
+        
+        final String requestURI = "/string/1/2";
+        final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
+        Assert.assertEquals("string", ret);
         
     }
 }
