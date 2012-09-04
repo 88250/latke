@@ -18,7 +18,9 @@ package org.b3log.latke.urlfetch;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 
 /**
@@ -26,7 +28,7 @@ import org.b3log.latke.servlet.HTTPRequestMethod;
  * {@link URLFetchService}. 
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, Aug 9, 2011
+ * @version 1.0.1.0, Sep 4, 2012
  */
 public final class HTTPRequest {
 
@@ -38,6 +40,11 @@ public final class HTTPRequest {
      * Payload. 
      */
     private byte[] payload;
+    /**
+     * Payload map.
+     */
+    // XXX: payload abstraction
+    private Map<String, String> payloadMap = new HashMap<String, String>();
     /**
      * Request method.
      */
@@ -66,10 +73,41 @@ public final class HTTPRequest {
     }
 
     /**
-     * Gets the payload ({@linkplain HTTPRequestMethod#POST POST} data body).
+     * Gets payload map.
      * 
-     * <p>Certain HTTP methods ({@linkplain HTTPRequestMethod#GET GET}) will 
-     * not have any payload, and this method will return {@code null}.</p>
+     * <p>
+     * Certain HTTP methods ({@linkplain HTTPRequestMethod#GET GET}) will 
+     * NOT have any payload, and this method will return an empty map.
+     * </p>
+     * 
+     * @return payload map
+     */
+    public Map<String, String> getPayloadMap() {
+        return Collections.unmodifiableMap(payloadMap);
+    }
+
+    /**
+     * Adds the specified name and value to payload map.
+     * 
+     * <p>
+     * This method should NOT be called for certain HTTP methods 
+     * (e.g. {@link HTTPRequestMethod#GET GET}).
+     * </p>
+     * 
+     * @param name the specified name
+     * @param value the specified value
+     */
+    public void addPayloadEntry(final String name, final String value) {
+        payloadMap.put(name, value);
+    }
+
+    /**
+     * Gets the payload ({@link HTTPRequestMethod#POST POST} data body).
+     * 
+     * <p>
+     * Certain HTTP methods ({@linkplain HTTPRequestMethod#GET GET}) will 
+     * NOT have any payload, and this method will return {@code null}.
+     * </p>
      * 
      * @return payload
      */
@@ -81,8 +119,8 @@ public final class HTTPRequest {
      * Sets the payload with the specified payload.
      * 
      * <p>
-     * This method should not be called for certain HTTP methods 
-     * (e.g. {@linkplain HTTPRequestMethod#GET}).
+     * This method should NOT be called for certain HTTP methods 
+     * (e.g. {@link HTTPRequestMethod#GET GET}).
      * </p>
      * 
      * @param payload the specified payload

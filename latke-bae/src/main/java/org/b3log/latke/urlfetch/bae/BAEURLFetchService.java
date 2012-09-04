@@ -17,7 +17,10 @@ package org.b3log.latke.urlfetch.bae;
 
 import com.baidu.bae.api.fetchurl.BaeFetchurl;
 import com.baidu.bae.api.fetchurl.BaeFetchurlFactory;
+import com.baidu.bae.api.fetchurl.BasicNameValuePair;
+import com.baidu.bae.api.fetchurl.NameValuePair;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -49,9 +52,18 @@ public final class BAEURLFetchService implements URLFetchService {
 
         addHeaders(baeFetchurl, request);
 
-        final HTTPRequestMethod requestMethod = request.getRequestMethod();
-        if (HTTPRequestMethod.POST == requestMethod) {
-            throw new UnsupportedOperationException("Latke BAE [URLFetch Service] dose not support POST at present");
+        if (HTTPRequestMethod.POST == request.getRequestMethod()) {
+            final Map<String, String> payloadMap = request.getPayloadMap();
+
+            if (!payloadMap.isEmpty()) {
+                final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+                for (final Map.Entry<String, String> payload : payloadMap.entrySet()) {
+                    nameValuePairs.add(new BasicNameValuePair(payload.getKey(), payload.getValue()));
+                }
+
+                baeFetchurl.setPostData(nameValuePairs);
+            }
         }
 
         baeFetchurl.fetch(request.getURL().toString(), request.getRequestMethod().name());
