@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.util.Callstacks;
 
 /**
@@ -35,7 +36,7 @@ import org.b3log.latke.util.Callstacks;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.6, Aug 27, 2012
+ * @version 1.0.0.7, Sep 4, 2012
  */
 public final class Connections {
 
@@ -81,7 +82,11 @@ public final class Connections {
             final String driver = Latkes.getLocalProperty("jdbc.driver");
             Class.forName(driver);
 
-            poolType = Latkes.getLocalProperty("jdbc.pool");
+            if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) {
+                poolType = "none";
+            } else {
+                poolType = Latkes.getLocalProperty("jdbc.pool");
+            }
 
             url = Latkes.getLocalProperty("jdbc.URL");
             userName = Latkes.getLocalProperty("jdbc.username");

@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.urlfetch.gae;
+package org.b3log.latke.urlfetch.bae;
 
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.baidu.bae.api.fetchurl.BaeFetchurl;
+import com.baidu.bae.api.fetchurl.BaeFetchurlFactory;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPHeader;
 import org.b3log.latke.urlfetch.HTTPRequest;
@@ -28,107 +31,87 @@ import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 
 /**
- * Google App Engine URL fetch service.
+ * Baidu App Engine URL fetch service.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, Nov 4, 2011
+ * @version 1.0.0.0, Sep 4, 2012
  */
-public final class GAEURLFetchService implements URLFetchService {
+public final class BAEURLFetchService implements URLFetchService {
 
     /**
-     * URL fetch service.
+     * Logger.
      */
-    private static final com.google.appengine.api.urlfetch.URLFetchService URL_FETCH_SERVICE =
-            URLFetchServiceFactory.getURLFetchService();
-    /**
-     * Default fetch timeout, measures in seconds.
-     */
-    private static final double DEFAULT_TIMEOUT = 5D;
+    private static final Logger LOGGER = Logger.getLogger(BAEURLFetchService.class.getName());
 
     @Override
     public HTTPResponse fetch(final HTTPRequest request) throws IOException {
-        final com.google.appengine.api.urlfetch.HTTPRequest gaeHTTPRequest = toGAEHTTPRequest(request);
-        final com.google.appengine.api.urlfetch.HTTPResponse gaeHTTPResponse = URL_FETCH_SERVICE.fetch(gaeHTTPRequest);
+        final BaeFetchurl baeFetchurl = BaeFetchurlFactory.getBaeFetchurl();
 
-        return toHTTPResponse(gaeHTTPResponse);
+        addHeaders(baeFetchurl, request);
+
+        final HTTPRequestMethod requestMethod = request.getRequestMethod();
+        if (HTTPRequestMethod.POST == requestMethod) {
+            throw new UnsupportedOperationException("Latke BAE [URLFetch Service] dose not support POST at present");
+        }
+
+        baeFetchurl.fetch(request.getURL().toString(), request.getRequestMethod().name());
+
+        return toHTTPResponse(baeFetchurl);
     }
 
     /**
      * {@inheritDoc}
      * 
-     * @return future <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/urlfetch/HTTPResponse.html">
-     * GAE response</a>
+     * <p>
+     * <b>Note</b>: Dose <em>NOT</em> support async URL fetch at present, calls this method is equivalent to call 
+     * {@link #fetch(org.b3log.latke.urlfetch.HTTPRequest)}.
+     * </p>
      */
     @Override
     public Future<?> fetchAsync(final HTTPRequest request) {
-        final com.google.appengine.api.urlfetch.HTTPRequest gaeHTTPRequest = toGAEHTTPRequest(request);
+        final FutureTask<HTTPResponse> futureTask = new FutureTask<HTTPResponse>(new Callable<HTTPResponse>() {
+            @Override
+            public HTTPResponse call() throws Exception {
+                return fetch(request);
+            }
+        });
 
-        return URL_FETCH_SERVICE.fetchAsync(gaeHTTPRequest);
+        // no pool
+        futureTask.run();
+
+        return futureTask;
     }
 
     /**
-     * Converts the specified Google App Engine HTTP response to a HTTP response.
+     * Converts the specified BAE fetchurl to a HTTP response.
      * 
-     * @param response the specified Google App Engine HTTP response
+     * @param baeFetchurl the specified BAE fetchurl
      * @return HTTP response
      */
-    private static HTTPResponse toHTTPResponse(
-            final com.google.appengine.api.urlfetch.HTTPResponse response) {
+    private static HTTPResponse toHTTPResponse(final BaeFetchurl baeFetchurl) {
         final HTTPResponse ret = new HTTPResponse();
 
-        ret.setContent(response.getContent());
-        ret.setFinalURL(response.getFinalUrl());
-        ret.setResponseCode(response.getResponseCode());
+        ret.setContent(baeFetchurl.getResponseBody().getBytes());
+        ret.setResponseCode(baeFetchurl.getHttpCode());
 
-        final List<com.google.appengine.api.urlfetch.HTTPHeader> gaeHTTPHeaders = response.getHeaders();
-        for (final com.google.appengine.api.urlfetch.HTTPHeader gaeHTTPHeader : gaeHTTPHeaders) {
-            final HTTPHeader header = new HTTPHeader(gaeHTTPHeader.getName(), gaeHTTPHeader.getValue());
-            ret.addHeader(header);
+        final Map<String, String> responseHeader = baeFetchurl.getResponseHeader();
+        for (final Map.Entry<String, String> header : responseHeader.entrySet()) {
+            ret.addHeader(new HTTPHeader(header.getKey(), header.getValue()));
         }
 
         return ret;
     }
 
     /**
-     * Converts the specified HTTP request to a Google App Engine HTTP request.
+     * Adds the HTTP headers for the specified BAE Fetchurl from the specified request.
      * 
-     * @param request the specified HTTP request
-     * @return GAE HTTP request
+     * @param baeFetchurl the specified BAE Fetchurl
+     * @param request the specified request
      */
-    private static com.google.appengine.api.urlfetch.HTTPRequest toGAEHTTPRequest(final HTTPRequest request) {
-        final URL url = request.getURL();
-        final HTTPRequestMethod requestMethod = request.getRequestMethod();
-
-        com.google.appengine.api.urlfetch.HTTPRequest ret = null;
-
-        switch (requestMethod) {
-            case GET:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url);
-                break;
-            case DELETE:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.DELETE);
-                break;
-            case HEAD:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.HEAD);
-                break;
-            case POST:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.POST);
-                break;
-            case PUT:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.PUT);
-                break;
-            default:
-                throw new RuntimeException("Unsupported HTTP request method[" + requestMethod.name() + "]");
-        }
-
+    private static void addHeaders(final BaeFetchurl baeFetchurl, final HTTPRequest request) {
         final List<HTTPHeader> headers = request.getHeaders();
         for (final HTTPHeader header : headers) {
-            ret.addHeader(new com.google.appengine.api.urlfetch.HTTPHeader(header.getName(), header.getValue()));
+            baeFetchurl.setHeader(header.getName(), header.getValue());
         }
-
-        ret.setPayload(request.getPayload());
-        ret.getFetchOptions().setDeadline(DEFAULT_TIMEOUT);
-
-        return ret;
     }
 }
