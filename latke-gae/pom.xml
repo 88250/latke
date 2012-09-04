@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke implementation for GAE.
-    Version: 1.0.2.9, Jun 27, 2012
+    Version: 1.0.3.0, Sep 4, 2012
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <version>0.5.0-SNAPSHOT</version>
     <name>Latke GAE</name>
-    <url>http://latke.googlecode.com</url>
+    <url>https://github.com/b3log/b3log-latke</url>
     <description>Latke implementation for GAE.</description>
     <inceptionYear>2010</inceptionYear>
 
@@ -60,8 +60,8 @@
     </developers>
 
     <issueManagement>
-        <system>Google Code Issues</system>
-        <url>http://code.google.com/p/latke/issues/list</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/b3log/b3log-latke/issues</url>
     </issueManagement>
 
     <mailingLists>
@@ -73,9 +73,7 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:svn:http://latke.googlecode.com/svn/trunk/latke-gae</connection>
-        <developerConnection>scm:svn:https://latke.googlecode.com/svn/trunk/latke-gae</developerConnection>
-        <url>http://code.google.com/p/latke/source/browse/#svn/trunk/latke-gae</url>
+        <url>https://github.com/b3log/b3log-latkee</url>
     </scm>
 
     <reporting>
