@@ -29,5 +29,15 @@ public class MockService {
     public String getString() {
         return "string";
     }
+    
+    /**
+     * getString.
+     * @param id id
+     * @param name name
+     * @return a String
+     */
+    public String getString(final Integer id, final String name){
+        return "string1";
+    }
 
 }
