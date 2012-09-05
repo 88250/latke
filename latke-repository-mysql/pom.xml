@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke Repository (MySQL).
-    Version: 1.0.0.1, Feb 10, 2012
+    Version: 1.0.0.2, Sep 4, 2012
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -20,10 +20,6 @@
     <!-- Version -->
     <properties>
         <org.b3log.latke.version>0.5.0-SNAPSHOT</org.b3log.latke.version>
-        <!-- JDBC Drivers -->
-        <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
-        <!-- JDBC Connection Pool -->
-        <bonecp.version>0.7.1.RELEASE</bonecp.version>
         <!-- Logging -->
         <slf4j.version>1.5.10</slf4j.version>
         <!-- Maven Plugin -->
@@ -134,18 +130,6 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
-
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql-connector-java.version}</version>
-            </dependency>
-            
-            <dependency>
-                <groupId>com.jolbox</groupId>
-                <artifactId>bonecp</artifactId>
-                <version>${bonecp.version}</version>
-            </dependency>
             
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -167,16 +151,6 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.jolbox</groupId>
-            <artifactId>bonecp</artifactId>
         </dependency>
         
         <dependency>

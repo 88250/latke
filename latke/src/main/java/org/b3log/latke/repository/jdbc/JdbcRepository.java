@@ -56,7 +56,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.8, Aug 27, 2012
+ * @version 1.0.0.9, Sep 3, 2012
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -303,6 +303,10 @@ public final class JdbcRepository implements Repository {
      * @throws JSONException jsonObject
      */
     private JSONObject getNeedUpdateJsonObject(final JSONObject oldJsonObject, final JSONObject jsonObject) throws JSONException {
+        if (null == oldJsonObject) {
+            return jsonObject;
+        }
+        
         final JSONObject needUpdateJsonObject = new JSONObject();
 
         final Iterator<String> keys = jsonObject.keys();

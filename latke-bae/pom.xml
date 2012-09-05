@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Description: Latke implementation for GAE.
-    Version: 1.0.3.0, Sep 4, 2012
+    Description: Latke implementation for BAE.
+    Version: 1.0.0.0, Sep 4, 2012
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -9,19 +9,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
-    <artifactId>latke-gae</artifactId>
+    <artifactId>latke-bae</artifactId>
     <packaging>jar</packaging>
     <version>0.5.0-SNAPSHOT</version>
-    <name>Latke GAE</name>
+    <name>Latke BAE</name>
     <url>https://github.com/b3log/b3log-latke</url>
-    <description>Latke implementation for GAE.</description>
-    <inceptionYear>2010</inceptionYear>
+    <description>Latke implementation for BAE.</description>
+    <inceptionYear>2012</inceptionYear>
 
     <!-- Version -->
     <properties>
         <servlet.version>2.5</servlet.version>
         <org.b3log.latke.version>0.5.0-SNAPSHOT</org.b3log.latke.version>
-        <gae.version>1.7.0</gae.version>
         <!-- Maven Plugin -->
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
         <maven-checkstyle-plugin.version>2.5</maven-checkstyle-plugin.version>
@@ -115,38 +114,17 @@
                 <artifactId>latke</artifactId>
                 <version>${org.b3log.latke.version}</version>
             </dependency>
+            
+            <dependency>
+                <groupId>org.b3log</groupId>
+                <artifactId>latke-repository-mysql</artifactId>
+                <version>${org.b3log.latke.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-api-1.0-sdk</artifactId>
-                <version>${gae.version}</version>
-            </dependency>
-            
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-api-labs</artifactId>
-                <version>${gae.version}</version>
-                <scope>test</scope>
-            </dependency>
-            
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-api-stubs</artifactId>
-                <version>${gae.version}</version>
-                <scope>test</scope>
-            </dependency>
-            
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-testing</artifactId>
-                <version>${gae.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -163,31 +141,45 @@
             <groupId>org.b3log</groupId>
             <artifactId>latke</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>org.b3log</groupId>
+            <artifactId>latke-repository-mysql</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.1</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.1</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.bae.api</groupId>
+            <artifactId>bae-api</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/config/lib/bae-api-1.0.0.jar</systemPath>
+        </dependency> 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.1.3</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-1.0-sdk</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-labs</artifactId>
-        </dependency>
-            
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-stubs</artifactId>
-        </dependency>
-            
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-testing</artifactId>
         </dependency>
 
     </dependencies>
