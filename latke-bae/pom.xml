@@ -95,7 +95,7 @@
         <snapshotRepository>
             <id>m2-snapshot</id>
             <name>Maven Repository at Google</name>
-            <url>https://m2-repos.googlecode.com/svn/snapshot</url>
+            <url>svn:https://m2-repos.googlecode.com/svn/snapshot</url>
             <uniqueVersion>true</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
@@ -325,12 +325,16 @@
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.7</version>
-                <configuration>
-                    <updateReleaseInfo>true</updateReleaseInfo>
-                </configuration>
             </plugin>
-
         </plugins>
+        
+        <extensions>
+            <extension>
+                <groupId>org.jvnet.wagon-svn</groupId>
+                <artifactId>wagon-svn</artifactId>
+                <version>1.12</version>
+            </extension>
+        </extensions>
     </build>
 
     <repositories>
@@ -345,6 +349,6 @@
                 <enabled>true</enabled>
             </releases>
         </repository>
-
+        
     </repositories>
 </project>
