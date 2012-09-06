@@ -34,7 +34,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 1.0.1.9, Sep 5, 2012
+ * @version 1.0.2.0, Sep 6, 2012
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -83,7 +83,7 @@ public final class Requests {
     private static final Pattern SEARCH_ENGINE_BOT_USER_AGENT_PATTERN =
             Pattern.compile(
             "Baiduspider|Googlebot|Feedfetcher-Google|Yahoo|YodaoBot|Sosospider|Sogou|bingbot|adidxbot|msnbot|AppEngine-Google"
-            + "|magpie-crawler|Xianguo.com|RssBandit|Doubanbot|JianKongBao Monitor|BAE Online Platform",
+            + "|magpie-crawler|Xianguo.com|RssBandit|Doubanbot|JianKongBao Monitor|BAE Online Platform|YoudaoFeedFetcher",
             Pattern.CASE_INSENSITIVE);
     /**
      * Cookie expiry of "visited".
