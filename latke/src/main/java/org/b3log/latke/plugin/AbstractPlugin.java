@@ -54,7 +54,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.2, May 4, 2012
+ * @version 1.0.1.3, Sep 6, 2012
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -254,6 +254,7 @@ public abstract class AbstractPlugin implements Serializable {
      * The default data model variable values includes: 
      *   <ul>
      *     <li>{@code Keys.SERVER.*}</li>
+     *     <li>{@code Keys.RUNTIME.*}</li>
      *   </ul>
      * </p>
      * 
@@ -262,6 +263,7 @@ public abstract class AbstractPlugin implements Serializable {
      */
     private void fillDefault(final Map<String, Object> dataModel) {
         Keys.fillServer(dataModel);
+        Keys.fillRuntime(dataModel);
     }
 
     /**
