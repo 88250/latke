@@ -23,7 +23,7 @@ import java.util.Map;
  * This class defines framework (non-functional) keys.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.6, Aug 28, 2012
+ * @version 1.0.2.7, Sep 6, 2012
  */
 public final class Keys {
 
@@ -135,6 +135,23 @@ public final class Keys {
     }
 
     /**
+     * Fills the runtime info into the specified data model.
+     * 
+     * <p>
+     *   <ul>
+     *     <li>{@value org.b3log.latke.Keys.Runtime#RUNTIME_ENV}</li>
+     *     <li>{@value org.b3log.latke.Keys.Runtime#RUNTIME_MODE}</li>
+     *   </ul>
+     * </p>
+     * 
+     * @param dataModel the specified data model
+     */
+    public static void fillRuntime(final Map<String, Object> dataModel) {
+        dataModel.put(Runtime.RUNTIME_ENV, Latkes.getRuntimeEnv().name());
+        dataModel.put(Runtime.RUNTIME_MODE, Latkes.getRuntimeMode().name());
+    }
+
+    /**
      * This class defines HTTP request keys.
      *
      * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
@@ -235,6 +252,30 @@ public final class Keys {
          * Private constructor.
          */
         private Server() {
+        }
+    }
+
+    /**
+     * This class defines runtime keys.
+     *
+     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @version 1.0.0.0, Sep 6, 2012
+     */
+    public static final class Runtime {
+
+        /**
+         * Key of runtime environment.
+         */
+        public static final String RUNTIME_ENV = "runtimeEnv";
+        /**
+         * Key of runtime mode.
+         */
+        public static final String RUNTIME_MODE = "runtimeMode";
+
+        /**
+         * Private constructor.
+         */
+        private Runtime() {
         }
     }
 
