@@ -82,8 +82,8 @@ public final class Requests {
      */
     private static final Pattern SEARCH_ENGINE_BOT_USER_AGENT_PATTERN =
             Pattern.compile(
-            "Baiduspider|Googlebot|-Google|Yahoo|YodaoBot|Sosospider|Sogou|bingbot|adidxbot|msnbot|AcoonBot"
-            + "|magpie-crawler|Xianguo.com|RssBandit|Doubanbot|JianKongBao Monitor|BAE Online Platform|YoudaoFeedFetcher|360Spider"
+            "spider|bot|fetcher|crawler"
+            + "|google|yahoo|sogou|youdao|Xianguo.com|RssBandit|JianKongBao Monitor|BAE Online Platform"
             + "|B3log",
             Pattern.CASE_INSENSITIVE);
     /**
