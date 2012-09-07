@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke web framework project.
-    Version: 1.0.7.6, Aug 27, 2012
+    Version: 1.0.7.7, Sep 7, 2012
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -19,7 +19,7 @@
     <!-- Version -->
     <properties>
         <servlet.version>2.5</servlet.version>
-        <freemarker.version>2.3.18</freemarker.version>
+        <freemarker.version>2.3.19</freemarker.version>
         <javax.mail.version>1.4</javax.mail.version>
         <commons-io.version>1.4</commons-io.version>
         <commons-lang.version>2.5</commons-lang.version>

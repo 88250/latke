@@ -30,7 +30,7 @@ import org.b3log.latke.RuntimeEnv;
  * Cache factory.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.9, Aug 27, 2012
+ * @version 1.0.1.0, Sep 7, 2012
  */
 public final class CacheFactory {
 
@@ -101,8 +101,14 @@ public final class CacheFactory {
                     case GAE:
                         final Class<Cache<String, ?>> gaeMemcache = (Class<Cache<String, ?>>) Class.forName(
                                 "org.b3log.latke.cache.gae.Memcache");
-                        final Constructor<Cache<String, ?>> constructor = gaeMemcache.getConstructor(String.class);
-                        ret = constructor.newInstance(cacheName);
+                        final Constructor<Cache<String, ?>> gaeMemcacheConstructor = gaeMemcache.getConstructor(String.class);
+                        ret = gaeMemcacheConstructor.newInstance(cacheName);
+                        break;
+                    case BAE:
+                        final Class<Cache<String, ?>> baeMemcache = (Class<Cache<String, ?>>) Class.forName(
+                                "org.b3log.latke.cache.bae.Memcache");
+                        final Constructor<Cache<String, ?>> baeMemcacheConstructor = baeMemcache.getConstructor(String.class);
+                        ret = baeMemcacheConstructor.newInstance(cacheName);
                         break;
                     default:
                         throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");

@@ -13,6 +13,7 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>json</word>
         <word>Memcache</word>
         <word>memcache</word>
+        <word>memcached</word>
         <word>Serializer</word>
         <word>xml</word>
     </spellchecker-wordlist>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke implementation for BAE.
-    Version: 1.0.0.0, Sep 4, 2012
+    Version: 1.0.0.1, Sep 7, 2012
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -167,6 +167,13 @@
             <version>1.0.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/src/main/config/lib/bae-api-1.0.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.bae.api</groupId>
+            <artifactId>java-cache-lib</artifactId>
+            <version>1.0.0.0.2</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/config/lib/java-cache-lib-1.0.0.2.jar</systemPath>
         </dependency> 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
