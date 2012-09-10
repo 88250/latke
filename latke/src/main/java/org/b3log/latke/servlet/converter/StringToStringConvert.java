@@ -1,4 +1,4 @@
-package org.b3log.latke.servlet.filter.converter;
+package org.b3log.latke.servlet.converter;
 
 public class StringToStringConvert implements IStringConvert<String> {
 

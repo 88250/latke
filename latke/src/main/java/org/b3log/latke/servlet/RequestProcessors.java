@@ -39,7 +39,6 @@ import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.annotation.Annotation;
 
-import javax.crypto.spec.PSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,8 +46,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.annotation.RequestProcessing;
 import org.b3log.latke.annotation.RequestProcessor;
-import org.b3log.latke.servlet.filter.converter.StringConverter;
+import org.b3log.latke.servlet.converter.StringConverter;
 import org.b3log.latke.util.AntPathMatcher;
+import org.b3log.latke.util.ReflectHelper;
 import org.b3log.latke.util.RegexPathMatcher;
 
 /**
@@ -106,8 +106,8 @@ public final class RequestProcessors {
 
             final List<Object> args = new ArrayList<Object>();
             final Class<?>[] parameterTypes = processorMethod.getParameterTypes();
-            //wrong
-            final TypeVariable<Method>[] typeVariable = processorMethod.getTypeParameters();
+            final String[] parameterName = processMethod.getMethodParamNames();
+          
             //TODO need Optimization
             Map<String, String> pathVariableValueMap = processMethod.pathVariableValueMap(requestURI);
             for (int i = 0; i < parameterTypes.length; i++) {
@@ -118,8 +118,8 @@ public final class RequestProcessors {
                     args.add(i, context.getRequest());
                 } else if (paramClass.equals(HttpServletResponse.class)) {
                     args.add(i, context.getResponse());
-                } else if( pathVariableValueMap.containsKey(typeVariable[i].getName())){
-                	args.add(i,StringConverter.converter(pathVariableValueMap.get(typeVariable[i].getName()), paramClass));
+                } else if( pathVariableValueMap.containsKey(parameterName[i])){
+                	args.add(i,StringConverter.converter(pathVariableValueMap.get(parameterName[i]), paramClass));
                 }
                 
             }
@@ -540,7 +540,7 @@ public final class RequestProcessors {
          */
         public void analysis() {
         	mappingString = handleMappingString();
-        	
+        	methodParamNames = ReflectHelper.getMethodVariableNames(processorClass, processorMethod.getName());
 		}
         
         /**
@@ -552,9 +552,20 @@ public final class RequestProcessors {
          * the posSpan in pattern. 
          */
         private List<Integer> posSpan  = new ArrayList<Integer>();
-     
-
+        
         /**
+         * the Names in method.
+         */
+        private String[] methodParamNames;
+        
+		/**
+		 * @return the methodParamNames
+		 */
+		public String[] getMethodParamNames() {
+			return methodParamNames;
+		}
+
+		/**
          * using regex to get the mappingString,if no matching return the orgin uriPattern.
          * @return the mappingString.
          */
