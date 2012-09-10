@@ -34,7 +34,8 @@ public class RequestProcessorsTest extends TestCase {
         final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
         final VirtualObject  requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
         final HashSet hashSet  = (HashSet<?>) requestProcessors.getValue("processorMethods");
-        hashSet.add(registerServiceAndMethod(service, "/string", "getString"));
+        hashSet.add(registerServiceAndMethod(service, "/string", "getString",new Class<?>[]{}));
+        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1",new Class<?>[]{Integer.class,String.class}));
     }
 
     /**
@@ -43,21 +44,27 @@ public class RequestProcessorsTest extends TestCase {
      * @param uriPattern the uriPattern
      * @param methodName the methodName
      * @return the processorMethod in {@link RequestProcessors}
+     *      
      */
     private static Object registerServiceAndMethod(
-            final VirtualObject service, final String uriPattern, final String methodName) {
+            final VirtualObject service, final String uriPattern, final String methodName, final Class<?>[] clazz) {
         final VirtualObject processorMethod = new VirtualObject("org.b3log.latke.servlet.RequestProcessors$ProcessorMethod");
         processorMethod.setValue("uriPattern", uriPattern);
         processorMethod.setValue("withContextPath", false);
         processorMethod.setValue("uriPatternMode", URIPatternMode.ANT_PATH);
         processorMethod.setValue("method", HTTPRequestMethod.GET.name());
         processorMethod.setValue("processorClass", service.getInstanceClass());
-        processorMethod.setValue("processorMethod", service.getInstanceMethod(methodName, new Class<?>[]{}));
+        processorMethod.setValue("processorMethod", service.getInstanceMethod(methodName, clazz));
+        try {
+			processorMethod.getInstanceMethod("analysis", new Class[]{}).invoke(processorMethod.getInstance(), null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  
         return processorMethod.getInstance();
     }
     
     /**
-     * test {@link RequestProcessors}.invoke method.
+     * test {@link RequestProcessors}.invoke method(easy one).
      */
     public void testInvoke() {
      
@@ -66,4 +73,18 @@ public class RequestProcessorsTest extends TestCase {
        Assert.assertEquals("string", ret);
         
     }
+    
+    /**
+     * test {@link RequestProcessors}.invoke method(using pattern).
+     */
+    public void testInvokePattern() {
+    	
+    	final String requestURI = "/string/11/tom";
+    	final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
+    	Assert.assertEquals("11tom", ret);
+    	
+    }
+    
+    
+    
 }

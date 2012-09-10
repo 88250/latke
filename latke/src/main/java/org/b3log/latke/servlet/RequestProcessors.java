@@ -18,6 +18,7 @@ package org.b3log.latke.servlet;
 import java.io.DataInputStream;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -31,15 +32,22 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.annotation.Annotation;
+
+import javax.crypto.spec.PSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.annotation.RequestProcessing;
 import org.b3log.latke.annotation.RequestProcessor;
+import org.b3log.latke.servlet.filter.converter.StringConverter;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.RegexPathMatcher;
 
@@ -98,6 +106,10 @@ public final class RequestProcessors {
 
             final List<Object> args = new ArrayList<Object>();
             final Class<?>[] parameterTypes = processorMethod.getParameterTypes();
+            //wrong
+            final TypeVariable<Method>[] typeVariable = processorMethod.getTypeParameters();
+            //TODO need Optimization
+            Map<String, String> pathVariableValueMap = processMethod.pathVariableValueMap(requestURI);
             for (int i = 0; i < parameterTypes.length; i++) {
                 final Class<?> paramClass = parameterTypes[i];
                 if (paramClass.equals(HTTPRequestContext.class)) {
@@ -106,7 +118,10 @@ public final class RequestProcessors {
                     args.add(i, context.getRequest());
                 } else if (paramClass.equals(HttpServletResponse.class)) {
                     args.add(i, context.getResponse());
+                } else if( pathVariableValueMap.containsKey(typeVariable[i].getName())){
+                	args.add(i,StringConverter.converter(pathVariableValueMap.get(typeVariable[i].getName()), paramClass));
                 }
+                
             }
 
             return processorMethod.invoke(processorObject, args.toArray());
@@ -263,7 +278,8 @@ public final class RequestProcessors {
         for (final ProcessorMethod processorMethod : processorMethods) {
             // TODO: 88250, sort, binary-search
             if (method.equals(processorMethod.getMethod())) {
-                String uriPattern = processorMethod.getURIPattern();
+                //String uriPattern = processorMethod.getURIPattern();
+                String uriPattern = processorMethod.getMappingString();
 
                 if (processorMethod.isWithContextPath()) {
                     uriPattern = contextPath + uriPattern;
@@ -354,6 +370,7 @@ public final class RequestProcessors {
                 processorMethod.setProcessorClass(clz);
                 processorMethod.setProcessorMethod(method);
                 processorMethod.setURIPatternModel(uriPatternsMode);
+                processorMethod.analysis();
             }
         }
     }
@@ -371,7 +388,7 @@ public final class RequestProcessors {
      * @version 1.0.0.2, May 1, 2012
      */
     private static final class ProcessorMethod {
-
+    	
         /**
          * URI path pattern.
          */
@@ -406,7 +423,8 @@ public final class RequestProcessors {
             this.uriPatternMode = uriPatternMode;
         }
 
-        /**
+
+		/**
          * Gets the URI pattern mode.
          * 
          * @return URI pattern mode
@@ -504,5 +522,95 @@ public final class RequestProcessors {
         public void setWithContextPath(final boolean withContextPath) {
             this.withContextPath = withContextPath;
         }
+        
+        /**
+         * the mappingString for mapping.
+         */
+        private String mappingString;
+      
+        /**
+		 * @return the mappingString
+		 */
+		public String getMappingString() {
+			return mappingString;
+		}
+
+		/**
+         * analysis the Pattern,do the other things to fill the pattren mapping.
+         */
+        public void analysis() {
+        	mappingString = handleMappingString();
+        	
+		}
+        
+        /**
+         * the paramNames in pattern.
+         */
+        private List<String> paramNames = new ArrayList<String>();
+        
+        /**
+         * the posSpan in pattern. 
+         */
+        private List<Integer> posSpan  = new ArrayList<Integer>();
+     
+
+        /**
+         * using regex to get the mappingString,if no matching return the orgin uriPattern.
+         * @return the mappingString.
+         */
+		private String handleMappingString() {
+			final Pattern pattern = Pattern.compile("\\{[^}]+\\}");
+			Matcher matcher = pattern.matcher(uriPattern);
+			StringBuilder uriMapping = new StringBuilder(uriPattern);
+			int fixPos = 0;
+			char[] tem = null;
+			int lastEnd = 0;
+			while (matcher.find()) {
+				tem = new char[matcher.end() - matcher.start() - 2];
+				uriMapping.getChars(matcher.start() - fixPos + 1, matcher.end() - fixPos -1, tem,0);
+				paramNames.add(new String(tem));
+				if(lastEnd == 0){
+				    posSpan.add(matcher.start());
+				}else{
+					posSpan.add(matcher.start() - lastEnd);
+				}
+				
+				uriMapping.replace(matcher.start() - fixPos, matcher.end() - fixPos, "*");
+				fixPos = matcher.end() - matcher.start() - 1;
+				lastEnd = matcher.end();
+			}
+			
+			return uriMapping.toString();
+		}
+		
+		
+		/**
+		 * get pathVariableValueMap in requestURI.
+		 * @param requestURI requestURI
+		 * @return map
+		 */
+		public Map<String, String> pathVariableValueMap(String requestURI) {
+
+			Map<String, String> ret = new HashMap<String, String>();
+			
+			int length = requestURI.length();
+			int i = 0;
+			for (int j = 0; j < paramNames.size(); j++) {
+				int step = 0 ;
+				while( step < posSpan.get(j)){
+					i++;
+					step++;
+				}
+				StringBuilder  chars = new StringBuilder();
+				Character tem = null;
+				while( (i<length) &&  (tem = requestURI.charAt(i)) != '/'){
+					chars.append(tem);
+					i++;
+				}
+				ret.put(paramNames.get(j),chars.toString());
+			}
+			return ret;
+		}
+		
     }
 }

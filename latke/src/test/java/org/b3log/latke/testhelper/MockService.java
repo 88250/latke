@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.testhelper;
 
+
 /**
  * Mockservice,for dispatch UT.
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
@@ -36,8 +37,13 @@ public class MockService {
      * @param name name
      * @return a String
      */
-    public String getString(final Integer id, final String name){
-        return "string1";
+    public String getString1(Integer id, String name){
+        return id + name;
     }
+    
+    
+    public static void main(String[] args) throws Exception {
+		
+	}
 
 }
