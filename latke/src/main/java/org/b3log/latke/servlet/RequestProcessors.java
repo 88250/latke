@@ -543,6 +543,10 @@ public final class RequestProcessors {
          * the posSpan in pattern. 
          */
         private List<Integer> posSpan = new ArrayList<Integer>();
+        /**
+         * the character after the pattern.
+         */
+        private List<Character> afertCharacters = new ArrayList<Character>();
 
         /**
          * the Names in method.
@@ -578,8 +582,14 @@ public final class RequestProcessors {
                 }
 
                 uriMapping.replace(matcher.start() - fixPos, matcher.end() - fixPos, "*");
-                fixPos = matcher.end() - matcher.start() - 1;
+                fixPos = fixPos + matcher.end() - matcher.start() - 1;
                 lastEnd = matcher.end();
+
+                if (matcher.end() - fixPos < uriMapping.length()) {
+                    afertCharacters.add(uriMapping.charAt(matcher.end() - fixPos));
+                } else {
+                    afertCharacters.add(null);
+                }
             }
 
             return uriMapping.toString();
@@ -604,7 +614,7 @@ public final class RequestProcessors {
                     step++;
                 }
                 chars = new StringBuilder();
-                while ((i < length) && (requestURI.charAt(i)) != '/') {
+                while ((i < length) && Character.valueOf((requestURI.charAt(i))) != afertCharacters.get(j)) {
                     chars.append(requestURI.charAt(i));
                     i++;
                 }
