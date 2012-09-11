@@ -28,7 +28,7 @@ import org.b3log.latke.util.Strings;
  * Latke framework configuration utility facade.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.9, Aug 27, 2012
+ * @version 1.0.2.0, Sep 11, 2012
  * @see #initRuntimeEnv()
  * @see #getServePath()
  * @see #getStaticServePath()
@@ -501,6 +501,8 @@ public final class Latkes {
             final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
             LOGGER.log(Level.INFO, "Runtime database is [{0}]", runtimeDatabase);
         }
+        
+        locale = new Locale("en_US");
     }
 
     /**
