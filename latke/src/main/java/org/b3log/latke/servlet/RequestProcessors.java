@@ -193,11 +193,18 @@ public final class RequestProcessors {
 
         try {
             for (final File file : files) {
-                if (file.getName().contains("appengine-api") || file.getName().startsWith("freemarker") ||
-                        file.getName().startsWith("javassist") || file.getName().startsWith("commons") ||
-                        file.getName().startsWith("mail") || file.getName().startsWith("activation") ||
-                        file.getName().startsWith("slf4j") || file.getName().startsWith("bonecp") || file.getName().startsWith("jsoup") ||
-                        file.getName().startsWith("guava") || file.getName().startsWith("markdown") || file.getName().startsWith("mysql")) {
+                if (file.getName().contains("appengine-api")
+                        || file.getName().startsWith("freemarker")
+                        || file.getName().startsWith("javassist")
+                        || file.getName().startsWith("commons")
+                        || file.getName().startsWith("mail")
+                        || file.getName().startsWith("activation")
+                        || file.getName().startsWith("slf4j")
+                        || file.getName().startsWith("bonecp")
+                        || file.getName().startsWith("jsoup")
+                        || file.getName().startsWith("guava")
+                        || file.getName().startsWith("markdown")
+                        || file.getName().startsWith("mysql")) {
                     // Just skips some known dependencies hardly....
                     LOGGER.log(Level.INFO, "Skipped request processing discovery[jarName={0}]", file.getName());
 
@@ -212,8 +219,7 @@ public final class RequestProcessors {
                     final String classFileName = jarEntry.getName();
 
                     if (classFileName.contains("$") // Skips inner class
-                            ||
-                            !classFileName.endsWith(".class")) {
+                            || !classFileName.endsWith(".class")) {
                         continue;
                     }
 
@@ -293,8 +299,11 @@ public final class RequestProcessors {
                     found = RegexPathMatcher.match(uriPattern, requestURI);
                     break;
                 default:
-                    throw new IllegalStateException("Can not process URI pattern[uriPattern=" + processorMethod.getURIPattern() +
-                            ", mode=" + processorMethod.getURIPatternMode() + "]");
+                    throw new IllegalStateException("Can not process URI pattern[uriPattern="
+                            + processorMethod.getURIPattern()
+                            + ", mode="
+                            + processorMethod.getURIPatternMode()
+                            + "]");
                 }
 
                 if (found) {
@@ -614,7 +623,7 @@ public final class RequestProcessors {
                     step++;
                 }
                 chars = new StringBuilder();
-                while ((i < length) && Character.valueOf((requestURI.charAt(i))) != afertCharacters.get(j)) {
+                while (i < length && Character.valueOf(requestURI.charAt(i)) != afertCharacters.get(j)) {
                     chars.append(requestURI.charAt(i));
                     i++;
                 }
