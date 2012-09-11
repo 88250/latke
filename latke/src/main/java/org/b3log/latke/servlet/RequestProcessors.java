@@ -54,7 +54,8 @@ import org.b3log.latke.util.RegexPathMatcher;
  * Request processor utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.9, May 3, 2012
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.1.0, Sep 10, 2012
  */
 public final class RequestProcessors {
 
@@ -72,9 +73,8 @@ public final class RequestProcessors {
     private static Map<Method, Object> processors = new HashMap<Method, Object>();
 
     /**
-     * Invokes a processor method with the specified request URI, method and 
-     * context.
-     * 
+     * Invokes a processor method with the specified request URI, method and context.
+     *
      * @param requestURI the specified request URI
      * @param contextPath the specified context path
      * @param method the specified method
@@ -85,8 +85,8 @@ public final class RequestProcessors {
         final ProcessorMethod processMethod = getProcessorMethod(requestURI, contextPath, method);
 
         if (null == processMethod) {
-            LOGGER.log(Level.WARNING, "Can not find process method for request[requestURI={0}, method={1}]", new Object[] {requestURI,
-                    method });
+            LOGGER.log(Level.WARNING, "Can not find process method for request[requestURI={0}, method={1}]", new Object[]{requestURI,
+                                                                                                                          method});
             return null;
         }
 
@@ -132,9 +132,8 @@ public final class RequestProcessors {
     }
 
     /**
-     * Scans classpath to discover request processor classes via annotation
-     * {@linkplain org.b3log.latke.annotation.RequestProcessor}.
-     * 
+     * Scans classpath to discover request processor classes via annotation {@linkplain org.b3log.latke.annotation.RequestProcessor}.
+     *
      * @throws Exception exception
      */
     public static void discover() throws Exception {
@@ -149,15 +148,15 @@ public final class RequestProcessors {
         final String webRoot = AbstractServletListener.getWebRoot();
         final File classesDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "classes" + File.separator);
         @SuppressWarnings("unchecked")
-        final Collection<File> classes = FileUtils.listFiles(classesDir, new String[] {"class" }, true);
+        final Collection<File> classes = FileUtils.listFiles(classesDir, new String[]{"class"}, true);
         final ClassLoader classLoader = RequestProcessors.class.getClassLoader();
 
         try {
             for (final File classFile : classes) {
                 final String path = classFile.getPath();
                 final String className =
-                        StringUtils.substringBetween(path, "WEB-INF" + File.separator + "classes" + File.separator, ".class")
-                                .replaceAll("\\/", ".").replaceAll("\\\\", ".");
+                             StringUtils.substringBetween(path, "WEB-INF" + File.separator + "classes" + File.separator, ".class")
+                        .replaceAll("\\/", ".").replaceAll("\\\\", ".");
                 final Class<?> clz = classLoader.loadClass(className);
 
                 if (clz.isAnnotationPresent(RequestProcessor.class)) {
@@ -187,17 +186,19 @@ public final class RequestProcessors {
         final String webRoot = AbstractServletListener.getWebRoot();
         final File libDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "lib" + File.separator);
         @SuppressWarnings("unchecked")
-        final Collection<File> files = FileUtils.listFiles(libDir, new String[] {"jar" }, true);
+        final Collection<File> files = FileUtils.listFiles(libDir, new String[]{"jar"}, true);
 
         final ClassLoader classLoader = RequestProcessors.class.getClassLoader();
 
         try {
             for (final File file : files) {
-                if (file.getName().contains("appengine-api") || file.getName().startsWith("freemarker") ||
-                        file.getName().startsWith("javassist") || file.getName().startsWith("commons") ||
-                        file.getName().startsWith("mail") || file.getName().startsWith("activation") ||
-                        file.getName().startsWith("slf4j") || file.getName().startsWith("bonecp") || file.getName().startsWith("jsoup") ||
-                        file.getName().startsWith("guava") || file.getName().startsWith("markdown") || file.getName().startsWith("mysql")) {
+                if (file.getName().contains("appengine-api") || file.getName().startsWith("freemarker")
+                    || file.getName().startsWith("javassist") || file.getName().startsWith("commons")
+                    || file.getName().startsWith("mail") || file.getName().startsWith("activation")
+                    || file.getName().startsWith("slf4j") || file.getName().startsWith("bonecp")
+                    || file.getName().startsWith("jsoup") || file.getName().startsWith("guava")
+                    || file.getName().startsWith("markdown") || file.getName().startsWith("mysql")
+                    || file.getName().startsWith("c3p0")) {
                     // Just skips some known dependencies hardly....
                     LOGGER.log(Level.INFO, "Skipped request processing discovery[jarName={0}]", file.getName());
 
@@ -212,8 +213,7 @@ public final class RequestProcessors {
                     final String classFileName = jarEntry.getName();
 
                     if (classFileName.contains("$") // Skips inner class
-                            ||
-                            !classFileName.endsWith(".class")) {
+                        || !classFileName.endsWith(".class")) {
                         continue;
                     }
 
@@ -221,7 +221,7 @@ public final class RequestProcessors {
 
                     final ClassFile classFile = new ClassFile(dataInputStream);
                     final AnnotationsAttribute annotationsAttribute =
-                            (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
+                                               (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
                     if (null == annotationsAttribute) {
                         continue;
                     }
@@ -256,15 +256,15 @@ public final class RequestProcessors {
 
     /**
      * Gets process method for the specified request URI and method.
-     * 
+     *
      * @param requestURI the specified request URI
      * @param contextPath the specified context path
      * @param method the specified method
      * @return process method, returns {@code null} if not found
      */
     private static ProcessorMethod getProcessorMethod(final String requestURI, final String contextPath, final String method) {
-        LOGGER.log(Level.FINEST, "Gets processor method[requestURI={0}, contextPath={1}, method={2}]", new Object[] {requestURI,
-                contextPath, method });
+        LOGGER.log(Level.FINEST, "Gets processor method[requestURI={0}, contextPath={1}, method={2}]", new Object[]{requestURI,
+                                                                                                                    contextPath, method});
 
         final List<ProcessorMethod> matches = new ArrayList<ProcessorMethod>();
         int i = 0;
@@ -286,15 +286,15 @@ public final class RequestProcessors {
 
                 switch (processorMethod.getURIPatternMode()) {
 
-                case ANT_PATH:
-                    found = AntPathMatcher.match(uriPattern, requestURI);
-                    break;
-                case REGEX:
-                    found = RegexPathMatcher.match(uriPattern, requestURI);
-                    break;
-                default:
-                    throw new IllegalStateException("Can not process URI pattern[uriPattern=" + processorMethod.getURIPattern() +
-                            ", mode=" + processorMethod.getURIPatternMode() + "]");
+                    case ANT_PATH:
+                        found = AntPathMatcher.match(uriPattern, requestURI);
+                        break;
+                    case REGEX:
+                        found = RegexPathMatcher.match(uriPattern, requestURI);
+                        break;
+                    default:
+                        throw new IllegalStateException("Can not process URI pattern[uriPattern=" + processorMethod.getURIPattern()
+                                                        + ", mode=" + processorMethod.getURIPatternMode() + "]");
                 }
 
                 if (found) {
@@ -336,10 +336,10 @@ public final class RequestProcessors {
 
     /**
      * Adds processor method by the specified annotation, class and method.
-     * 
+     *
      * @param requestProcessing the specified annotation
      * @param clz the specified class
-     * @param method the specified method 
+     * @param method the specified method
      */
     private static void addProcessorMethod(final RequestProcessing requestProcessing, final Class<?> clz, final Method method) {
         final String[] uriPatterns = requestProcessing.value();
@@ -408,7 +408,7 @@ public final class RequestProcessors {
 
         /**
          * Sets the URI pattern mode with the specified URI pattern mode.
-         * 
+         *
          * @param uriPatternMode the specified URI pattern mode
          */
         public void setURIPatternModel(final URIPatternMode uriPatternMode) {
@@ -417,7 +417,7 @@ public final class RequestProcessors {
 
         /**
          * Gets the URI pattern mode.
-         * 
+         *
          * @return URI pattern mode
          */
         public URIPatternMode getURIPatternMode() {
@@ -426,7 +426,7 @@ public final class RequestProcessors {
 
         /**
          * Gets method.
-         * 
+         *
          * @return method
          */
         public String getMethod() {
@@ -435,7 +435,7 @@ public final class RequestProcessors {
 
         /**
          * Sets the method with the specified method.
-         * 
+         *
          * @param method the specified method
          */
         public void setMethod(final String method) {
@@ -444,7 +444,7 @@ public final class RequestProcessors {
 
         /**
          * Gets the processor class.
-         * 
+         *
          * @return processor class
          */
         public Class<?> getProcessorClass() {
@@ -453,7 +453,7 @@ public final class RequestProcessors {
 
         /**
          * Sets the processor class with the specified processor class.
-         * 
+         *
          * @param processorClass the specified processor class
          */
         public void setProcessorClass(final Class<?> processorClass) {
@@ -462,7 +462,7 @@ public final class RequestProcessors {
 
         /**
          * Gets the processor method.
-         * 
+         *
          * @return processor method
          */
         public Method getProcessorMethod() {
@@ -471,7 +471,7 @@ public final class RequestProcessors {
 
         /**
          * Sets the processor method with the specified processor method.
-         * 
+         *
          * @param processorMethod the specified processor method
          */
         public void setProcessorMethod(final Method processorMethod) {
@@ -480,7 +480,7 @@ public final class RequestProcessors {
 
         /**
          * Gets the URI pattern.
-         * 
+         *
          * @return URI pattern
          */
         public String getURIPattern() {
@@ -489,7 +489,7 @@ public final class RequestProcessors {
 
         /**
          * Sets the URI pattern with the specified URI pattern.
-         * 
+         *
          * @param uriPattern the specified URI pattern
          */
         public void setURIPattern(final String uriPattern) {
@@ -498,7 +498,7 @@ public final class RequestProcessors {
 
         /**
          * Checks dose whether the URI pattern with the context path.
-         * 
+         *
          * @return {@code true} if it is with the context path, returns {@code false} otherwise
          */
         public boolean isWithContextPath() {
@@ -507,13 +507,12 @@ public final class RequestProcessors {
 
         /**
          * Sets the with context path flag with the specified with context path flag.
-         * 
+         *
          * @param withContextPath the specified with context path flag
          */
         public void setWithContextPath(final boolean withContextPath) {
             this.withContextPath = withContextPath;
         }
-
         /**
          * the mappingString for mapping.
          */
@@ -533,21 +532,18 @@ public final class RequestProcessors {
             mappingString = handleMappingString();
             methodParamNames = ReflectHelper.getMethodVariableNames(processorClass, processorMethod.getName());
         }
-
         /**
          * the paramNames in pattern.
          */
         private List<String> paramNames = new ArrayList<String>();
-
         /**
-         * the posSpan in pattern. 
+         * the posSpan in pattern.
          */
         private List<Integer> posSpan = new ArrayList<Integer>();
         /**
          * the character after the pattern.
          */
         private List<Character> afertCharacters = new ArrayList<Character>();
-
         /**
          * the Names in method.
          */
@@ -562,6 +558,7 @@ public final class RequestProcessors {
 
         /**
          * using regex to get the mappingString,if no matching return the orgin uriPattern.
+         *
          * @return the mappingString.
          */
         private String handleMappingString() {
@@ -569,7 +566,7 @@ public final class RequestProcessors {
             final Matcher matcher = pattern.matcher(uriPattern);
             final StringBuilder uriMapping = new StringBuilder(uriPattern);
             int fixPos = 0;
-            char[] tem = null;
+            char[] tem;
             int lastEnd = 0;
             while (matcher.find()) {
                 tem = new char[matcher.end() - matcher.start() - 2];
@@ -597,6 +594,7 @@ public final class RequestProcessors {
 
         /**
          * get pathVariableValueMap in requestURI.
+         *
          * @param requestURI requestURI
          * @return map
          */
@@ -606,7 +604,7 @@ public final class RequestProcessors {
 
             final int length = requestURI.length();
             int i = 0;
-            StringBuilder chars = null;
+            StringBuilder chars;
             for (int j = 0; j < paramNames.size(); j++) {
                 int step = 0;
                 while (step < posSpan.get(j)) {
@@ -614,7 +612,7 @@ public final class RequestProcessors {
                     step++;
                 }
                 chars = new StringBuilder();
-                while ((i < length) && Character.valueOf((requestURI.charAt(i))) != afertCharacters.get(j)) {
+                while (i < length && Character.valueOf(requestURI.charAt(i)) != afertCharacters.get(j)) {
                     chars.append(requestURI.charAt(i));
                     i++;
                 }
@@ -622,6 +620,5 @@ public final class RequestProcessors {
             }
             return ret;
         }
-
     }
 }
