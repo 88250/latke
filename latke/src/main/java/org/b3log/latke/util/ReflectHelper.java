@@ -69,6 +69,7 @@ public final class ReflectHelper {
         final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
         for (int i = 0; i < variableNames.length; i++) {
             variableNames[i] = attr.variableName(i + staticIndex);
+                               
         }
         return variableNames;
     }

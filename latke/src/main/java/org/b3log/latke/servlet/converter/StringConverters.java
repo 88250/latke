@@ -23,14 +23,14 @@ import java.util.Map;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 10, 2012
  */
-public final class StringConverter {
+public final class StringConverters {
 
     /**
      * the default constructor.
      */
-    private StringConverter(){
+    private StringConverters() {
     }
-    
+
     /**
      * the map hold all the converter!.bad desgin,shuold for user custom.
      */
@@ -53,14 +53,19 @@ public final class StringConverter {
 
     /**
      * core method from String to the class Type.
+     * @param name the name of the param
      * @param value the String value
      * @param clazz the specific clazz
      * @param <T> the type to be convert 
      * @return the specific type
      */
     @SuppressWarnings("unchecked")
-    public static <T> T converter(final String value, final Class<T> clazz) {
-        return (T) converMap.get(clazz).doConvert(value);
-    }
+    public static <T> T convert(final String name, final String value, final Class<T> clazz) {
 
+        final IStringConvert<?> convert = converMap.get(clazz);
+        if (convert != null) {
+            return (T) converMap.get(clazz).doConvert(value);
+        }
+        return null;
+    }
 }

@@ -36,5 +36,5 @@ public @interface PathVariable {
     /** 
      * The URI template variable to bind to. 
      */
-    String value() default "";
+    String value();
 }

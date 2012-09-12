@@ -37,6 +37,7 @@ public class RequestProcessorsTest extends TestCase {
         hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[] {}));
         hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[] {Integer.class, String.class }));
         hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString1", new Class<?>[] {Integer.class, String.class }));
+        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[] {String.class, String.class }));
     }
 
     /**
@@ -94,6 +95,16 @@ public class RequestProcessorsTest extends TestCase {
         final String requestURI = "/string/11ptom";
         final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
         Assert.assertEquals("11tom", ret);
+        
+    }
+    /**
+     * test {@link RequestProcessors}.invoke method(using pattern).
+     */
+    public void testInvokePattern2() {
+        
+        final String requestURI = "/name--password";
+        final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
+        Assert.assertEquals("passwordname", ret);
         
     }
 
