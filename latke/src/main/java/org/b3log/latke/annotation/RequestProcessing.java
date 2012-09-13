@@ -15,12 +15,13 @@
  */
 package org.b3log.latke.annotation;
 
-import org.b3log.latke.servlet.HTTPRequestMethod;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
 
 /**
@@ -55,7 +56,7 @@ public @interface RequestProcessing {
     /**
      * The HTTP request methods the annotated method should process.
      */
-    HTTPRequestMethod[] method() default {HTTPRequestMethod.GET};
+    HTTPRequestMethod[] method() default {HTTPRequestMethod.GET };
 
     /**
      * Checks dose whether the URI patterns with context path.
@@ -73,4 +74,18 @@ public @interface RequestProcessing {
      * </p>
      */
     boolean isWithContextPath() default true;
+
+    /**
+     * user custom data convert class.
+     */
+    Class<?> convertClass() default NULLClASS.class;
+
+    /**
+     * the NULLCLASS for the null class annotation.
+     * @author <a href="wmainlove@gmail.com">Love Yao</a>
+     * @version 1.0.0.1, Sep 13, 2012
+     */
+    static final class NULLClASS {
+    }
+
 }

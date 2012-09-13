@@ -42,9 +42,10 @@ public final class ReflectHelper {
      * getMethodVariableNames in user defined.
      * @param clazz the specific clazz
      * @param targetMethodName the targetMethodName
+     * @param types the types of the method
      * @return the String[] of names
      */
-    public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, Class<?>[] types) {
+    public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, final Class<?>[] types) {
 
         final ClassPool pool = ClassPool.getDefault();
         pool.insertClassPath(new ClassClassPath(clazz));
@@ -52,13 +53,12 @@ public final class ReflectHelper {
         CtMethod cm = null;
         try {
             cc = pool.get(clazz.getName());
-            CtClass[] ptypes = new CtClass[types.length];
+            final CtClass[] ptypes = new CtClass[types.length];
             for (int i = 0; i < ptypes.length; i++) {
                 ptypes[i] = pool.get(types[i].getName());
             }
             cm = cc.getDeclaredMethod(targetMethodName, ptypes);
         } catch (final NotFoundException e) {
-
             e.printStackTrace();
         }
 
