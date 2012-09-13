@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
+import org.b3log.latke.servlet.converter.ConvertSupport;
 
 /**
  * Indicates that an annotated method for HTTP servlet request processing.
@@ -78,14 +79,6 @@ public @interface RequestProcessing {
     /**
      * user custom data convert class.
      */
-    Class<?> convertClass() default NULLClASS.class;
-
-    /**
-     * the NULLCLASS for the null class annotation.
-     * @author <a href="wmainlove@gmail.com">Love Yao</a>
-     * @version 1.0.0.1, Sep 13, 2012
-     */
-    static final class NULLClASS {
-    }
+    Class<? extends ConvertSupport> convertClass() default ConvertSupport.class;
 
 }

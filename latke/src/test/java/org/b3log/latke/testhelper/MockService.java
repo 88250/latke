@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.testhelper;
 
+import java.util.Date;
+
 import org.b3log.latke.annotation.PathVariable;
 
 /**
@@ -52,6 +54,17 @@ public class MockService {
     public String getString2(@PathVariable("password") final String name, @PathVariable("name") final String password) {
         return name
                 + password;
+    }
+
+    /**
+     * getString2.
+     * @param id id 
+     * @param date data
+     * @return string
+     */
+    public String getString2(final Integer id, final Date date) {
+        return ""
+                + id + date.getTime();
     }
 
 }

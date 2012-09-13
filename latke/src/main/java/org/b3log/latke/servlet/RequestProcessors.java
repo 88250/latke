@@ -46,7 +46,7 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.annotation.PathVariable;
 import org.b3log.latke.annotation.RequestProcessing;
 import org.b3log.latke.annotation.RequestProcessor;
-import org.b3log.latke.servlet.converter.StringConverters;
+import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ReflectHelper;
 import org.b3log.latke.util.RegexPathMatcher;
@@ -72,6 +72,11 @@ public final class RequestProcessors {
      * Processors.
      */
     private static Map<Method, Object> processors = new HashMap<Method, Object>();
+    /**
+     * the data convertMap cache.
+     */
+    private static Map<Class<? extends ConvertSupport>, ConvertSupport> convertMap =
+            new HashMap<Class<? extends ConvertSupport>, ConvertSupport>();
 
     /**
      * Invokes a processor method with the specified request URI, method and context.
@@ -119,7 +124,10 @@ public final class RequestProcessors {
                 } else if (paramClass.equals(HttpServletResponse.class)) {
                     args.add(i, context.getResponse());
                 } else if (pathVariableValueMap.containsKey(parameterName[i])) {
-                    args.add(i, StringConverters.convert(parameterName[i], pathVariableValueMap.get(parameterName[i]), paramClass));
+                    args.add(
+                            i,
+                            getConerter(processMethod.getConvertClass()).convert(parameterName[i],
+                                    pathVariableValueMap.get(parameterName[i]), paramClass));
                 } else {
                     args.add(i, null);
                 }
@@ -131,6 +139,23 @@ public final class RequestProcessors {
 
             return null;
         }
+    }
+
+    /**
+     * get the converter in this method,using cache.
+     * @param convertClass the class of {@link ConvertSupport}
+     * @throws Exception Exception 
+     * @return {@link ConvertSupport}
+     */
+    private static ConvertSupport getConerter(final Class<? extends ConvertSupport> convertClass) throws Exception {
+
+        ConvertSupport convertSupport = convertMap.get(convertClass);
+        if (convertSupport == null) {
+            convertSupport = convertClass.newInstance();
+            convertMap.put(convertClass, convertSupport);
+        }
+
+        return convertSupport;
     }
 
     /**
@@ -370,6 +395,8 @@ public final class RequestProcessors {
                 processorMethod.setProcessorClass(clz);
                 processorMethod.setProcessorMethod(method);
                 processorMethod.setURIPatternModel(uriPatternsMode);
+                processorMethod.setConvertClass(requestProcessing.convertClass());
+
                 processorMethod.analysis();
             }
         }
@@ -413,6 +440,10 @@ public final class RequestProcessors {
          * Method.
          */
         private Method processorMethod;
+        /**
+         * the userdefined data converclass.
+         */
+        private Class<? extends ConvertSupport> convertClass;
 
         /**
          * Sets the URI pattern mode with the specified URI pattern mode.
@@ -523,6 +554,20 @@ public final class RequestProcessors {
         }
 
         /**
+         * @return the convertClass
+         */
+        public Class<? extends ConvertSupport> getConvertClass() {
+            return convertClass;
+        }
+
+        /**
+         * @param convertClass the convertClass to set
+         */
+        public void setConvertClass(final Class<? extends ConvertSupport> convertClass) {
+            this.convertClass = convertClass;
+        }
+
+        /**
          * the mappingString for mapping.
          */
         private String mappingString;
@@ -551,6 +596,7 @@ public final class RequestProcessors {
                 }
                 i++;
             }
+
         }
 
         /**

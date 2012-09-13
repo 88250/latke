@@ -15,11 +15,14 @@
  */
 package org.b3log.latke.servlet;
 
+import java.util.Date;
 import java.util.HashSet;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.b3log.latke.servlet.converter.ConvertSupport;
+import org.b3log.latke.testhelper.MockConverSupport;
 import org.b3log.latke.testhelper.VirtualObject;
 
 /**
@@ -34,10 +37,15 @@ public class RequestProcessorsTest extends TestCase {
         final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
         final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
         final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
-        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[] {}));
-        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[] {Integer.class, String.class }));
-        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString1", new Class<?>[] {Integer.class, String.class }));
-        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[] {String.class, String.class }));
+        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[] {}, ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[] {Integer.class, String.class },
+                ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString1", new Class<?>[] {Integer.class, String.class },
+                ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[] {String.class, String.class },
+                ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[] {Integer.class, Date.class },
+                MockConverSupport.class));
     }
 
     /**
@@ -46,11 +54,13 @@ public class RequestProcessorsTest extends TestCase {
      * @param uriPattern the uriPattern
      * @param methodName the methodName
      * @param clazz the class[] types of the method paramss
+     * @param convertClazz the custom ConvertClazz
      * @return the processorMethod in {@link RequestProcessors}
      *      
      */
     private static Object registerServiceAndMethod(
-            final VirtualObject service, final String uriPattern, final String methodName, final Class<?>[] clazz) {
+            final VirtualObject service, final String uriPattern, final String methodName, final Class<?>[] clazz,
+            final Class<? extends ConvertSupport> convertClazz) {
         final VirtualObject processorMethod = new VirtualObject("org.b3log.latke.servlet.RequestProcessors$ProcessorMethod");
         processorMethod.setValue("uriPattern", uriPattern);
         processorMethod.setValue("withContextPath", false);
@@ -58,6 +68,7 @@ public class RequestProcessorsTest extends TestCase {
         processorMethod.setValue("method", HTTPRequestMethod.GET.name());
         processorMethod.setValue("processorClass", service.getInstanceClass());
         processorMethod.setValue("processorMethod", service.getInstanceMethod(methodName, clazz));
+        processorMethod.setValue("convertClass", convertClazz);
         try {
             processorMethod.getInstanceMethod("analysis", new Class[] {}).invoke(processorMethod.getInstance(), null);
         } catch (final Exception e) {
@@ -87,25 +98,38 @@ public class RequestProcessorsTest extends TestCase {
         Assert.assertEquals("11tom", ret);
 
     }
+
     /**
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
     public void testInvokePattern1() {
-        
+
         final String requestURI = "/string/11ptom";
         final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
         Assert.assertEquals("11tom", ret);
-        
+
     }
+
     /**
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
     public void testInvokePattern2() {
-        
+
         final String requestURI = "/name--password";
         final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
         Assert.assertEquals("passwordname", ret);
-        
+
+    }
+
+    /**
+     * test {@link RequestProcessors}.invoke method(using pattern).
+     */
+    public void testInvokePattern3() {
+
+        final String requestURI = "/date/1/20120306";
+        final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
+        Assert.assertEquals("11330963200000", ret);
+
     }
 
 }
