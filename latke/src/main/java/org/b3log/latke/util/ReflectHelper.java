@@ -44,7 +44,7 @@ public final class ReflectHelper {
      * @param targetMethodName the targetMethodName
      * @return the String[] of names
      */
-    public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName) {
+    public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, Class<?>[] types) {
 
         final ClassPool pool = ClassPool.getDefault();
         pool.insertClassPath(new ClassClassPath(clazz));
@@ -52,8 +52,13 @@ public final class ReflectHelper {
         CtMethod cm = null;
         try {
             cc = pool.get(clazz.getName());
-            cm = cc.getDeclaredMethod(targetMethodName);
+            CtClass[] ptypes = new CtClass[types.length];
+            for (int i = 0; i < ptypes.length; i++) {
+                ptypes[i] = pool.get(types[i].getName());
+            }
+            cm = cc.getDeclaredMethod(targetMethodName, ptypes);
         } catch (final NotFoundException e) {
+
             e.printStackTrace();
         }
 
@@ -68,8 +73,9 @@ public final class ReflectHelper {
         }
         final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
         for (int i = 0; i < variableNames.length; i++) {
-            variableNames[i] = attr.variableName(i + staticIndex);
-                               
+            variableNames[i] = attr.variableName(i
+                    + staticIndex);
+
         }
         return variableNames;
     }

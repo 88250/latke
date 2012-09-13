@@ -540,7 +540,8 @@ public final class RequestProcessors {
         public void analysis() {
             mappingString = handleMappingString();
 
-            methodParamNames = ReflectHelper.getMethodVariableNames(processorClass, processorMethod.getName());
+            methodParamNames = ReflectHelper.getMethodVariableNames(processorClass, processorMethod.getName(),
+                    processorMethod.getParameterTypes());
             int i = 0;
             for (java.lang.annotation.Annotation[] annotations : processorMethod.getParameterAnnotations()) {
                 for (java.lang.annotation.Annotation annotation : annotations) {
