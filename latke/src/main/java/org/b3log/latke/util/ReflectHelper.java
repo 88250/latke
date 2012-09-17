@@ -27,8 +27,9 @@ import javassist.bytecode.MethodInfo;
 
 /**
  * ReflectHelper while not using java reflect instead of the other class byte tool.
+ * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 10, 2012
+ * @version 1.0.0.2, Sep 17, 2012
  */
 public final class ReflectHelper {
 
@@ -62,6 +63,10 @@ public final class ReflectHelper {
             e.printStackTrace();
         }
 
+        if (null == cm) {
+            return new String[types.length];
+        }
+
         final MethodInfo methodInfo = cm.getMethodInfo();
         final CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
         final LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag);
@@ -79,5 +84,4 @@ public final class ReflectHelper {
         }
         return variableNames;
     }
-
 }
