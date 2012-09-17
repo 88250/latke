@@ -24,39 +24,42 @@ import junit.framework.TestCase;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.testhelper.MockConverSupport;
 import org.b3log.latke.testhelper.VirtualObject;
+import org.testng.annotations.Test;
 
 /**
  * test for {@link RequestProcessors}.
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 3, 2012
  */
-@SuppressWarnings({"unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class RequestProcessorsTest extends TestCase {
 
     static {
         final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
         final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
         final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
-        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[] {}, ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[] {Integer.class, String.class },
+        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
                 ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString1", new Class<?>[] {Integer.class, String.class },
+        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString1", new Class<?>[]{Integer.class, String.class},
                 ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[] {String.class, String.class },
+        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
                 ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[] {Integer.class, Date.class },
+        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
                 MockConverSupport.class));
     }
 
     /**
      * registerServiceAndMethod for a dispath mapping for UT.
+     *
      * @param service the ServiceHolder
      * @param uriPattern the uriPattern
      * @param methodName the methodName
      * @param clazz the class[] types of the method paramss
      * @param convertClazz the custom ConvertClazz
      * @return the processorMethod in {@link RequestProcessors}
-     *      
+     *
      */
     private static Object registerServiceAndMethod(
             final VirtualObject service, final String uriPattern, final String methodName, final Class<?>[] clazz,
@@ -70,7 +73,7 @@ public class RequestProcessorsTest extends TestCase {
         processorMethod.setValue("processorMethod", service.getInstanceMethod(methodName, clazz));
         processorMethod.setValue("convertClass", convertClazz);
         try {
-            processorMethod.getInstanceMethod("analysis", new Class[] {}).invoke(processorMethod.getInstance(), null);
+            processorMethod.getInstanceMethod("analysis", new Class[]{}).invoke(processorMethod.getInstance(), null);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -80,6 +83,7 @@ public class RequestProcessorsTest extends TestCase {
     /**
      * test {@link RequestProcessors}.invoke method(easy one).
      */
+    @Test
     public void testInvoke() {
 
         final String requestURI = "/string";
@@ -91,6 +95,7 @@ public class RequestProcessorsTest extends TestCase {
     /**
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
+    @Test
     public void testInvokePattern() {
 
         final String requestURI = "/string/11/tom";
@@ -102,6 +107,7 @@ public class RequestProcessorsTest extends TestCase {
     /**
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
+    @Test
     public void testInvokePattern1() {
 
         final String requestURI = "/string/11ptom";
@@ -113,6 +119,7 @@ public class RequestProcessorsTest extends TestCase {
     /**
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
+    @Test
     public void testInvokePattern2() {
 
         final String requestURI = "/name--password";
@@ -124,6 +131,7 @@ public class RequestProcessorsTest extends TestCase {
     /**
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
+    @Test
     public void testInvokePattern3() {
 
         final String requestURI = "/date/1/20120306";
@@ -131,5 +139,4 @@ public class RequestProcessorsTest extends TestCase {
         Assert.assertEquals("11330963200000", ret);
 
     }
-
 }
