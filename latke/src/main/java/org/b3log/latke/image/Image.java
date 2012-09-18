@@ -19,14 +19,37 @@ package org.b3log.latke.image;
  * Image.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Aug 8, 2011
+ * @version 1.0.0.1, Sep 18, 2012
  */
 public final class Image {
+    
+    /**
+     * Name.
+     */
+    private String name;
 
     /**
      * Data.
      */
     private byte[] data;
+    
+    /**
+     * Gets the name.
+     * 
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
+    
+    /**
+     * Sets the name with the specified name.
+     * 
+     * @param name the specified name
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
 
     /**
      * Gets the data.

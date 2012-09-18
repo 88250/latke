@@ -24,17 +24,17 @@ import org.b3log.latke.image.Image;
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 /**
- * PNG HTTP response renderer.
+ * JPEG HTTP response renderer.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Sep 12, 2011
+ * @version 1.0.0.0, Sep 18, 2012
  */
-public final class PNGRenderer extends AbstractHTTPResponseRenderer {
+public final class JPGRenderer extends AbstractHTTPResponseRenderer {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(PNGRenderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JPGRenderer.class.getName());
     /**
      * Image to render.
      */
@@ -53,7 +53,7 @@ public final class PNGRenderer extends AbstractHTTPResponseRenderer {
     public void render(final HTTPRequestContext context) {
         try {
             final HttpServletResponse response = context.getResponse();
-            response.setContentType("image/png");
+            response.setContentType("image/jpeg");
 
             final OutputStream outputStream = response.getOutputStream();
             outputStream.write(image.getData());
