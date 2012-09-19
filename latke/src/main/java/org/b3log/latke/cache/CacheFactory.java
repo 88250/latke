@@ -30,7 +30,7 @@ import org.b3log.latke.RuntimeEnv;
  * Cache factory.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.0, Sep 7, 2012
+ * @version 1.0.1.1, Sep 19, 2012
  */
 public final class CacheFactory {
 
@@ -63,7 +63,8 @@ public final class CacheFactory {
                 }
 
                 break;
-            case BAE:
+            case BAE: // No cache
+                break;
             case LOCAL:
                 // Clears cache one by one
                 for (final Map.Entry<String, Cache<String, ?>> entry : CACHES.entrySet()) {
@@ -105,8 +106,9 @@ public final class CacheFactory {
                         ret = gaeMemcacheConstructor.newInstance(cacheName);
                         break;
                     case BAE:
-                        final Class<Cache<String, ?>> baeMemcache = (Class<Cache<String, ?>>) Class.forName(
-                                "org.b3log.latke.cache.bae.Memcache");
+                        final Class<Cache<String, ?>> baeMemcache = (Class<Cache<String, ?>>) 
+                                Class.forName("org.b3log.latke.cache.NoCache");
+                                // Class.forName("org.b3log.latke.cache.bae.Memcache");
                         final Constructor<Cache<String, ?>> baeMemcacheConstructor = baeMemcache.getConstructor(String.class);
                         ret = baeMemcacheConstructor.newInstance(cacheName);
                         break;
