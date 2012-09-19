@@ -212,9 +212,6 @@ public final class JdbcRepository implements Repository {
             }
         }
 
-        /*
-         * TODO: Y, table name Prefix.
-         */
         sql.append("insert into ").append(getName()).append(insertString)
                 .append(" value ").append(wildcardString);
     }
@@ -284,7 +281,7 @@ public final class JdbcRepository implements Repository {
         if (needUpdateJsonObject.length() == 0) {
             LOGGER.log(Level.INFO,
                     "nothing to update [{0}] for repository[{1}]",
-                    new Object[] {id, getName() });
+                    new Object[]{id, getName()});
             return;
         }
 
@@ -429,7 +426,7 @@ public final class JdbcRepository implements Repository {
                 LOGGER.log(
                         Level.FINER,
                         "Got an object[cacheKey={0}] from repository cache[name={1}]",
-                        new Object[] {cacheKey, getName() });
+                        new Object[]{cacheKey, getName()});
                 return ret;
             }
         }
@@ -451,7 +448,7 @@ public final class JdbcRepository implements Repository {
                 LOGGER.log(
                         Level.FINER,
                         "Added an object[cacheKey={0}] in repository cache[{1}]",
-                        new Object[] {cacheKey, getName() });
+                        new Object[]{cacheKey, getName()});
             }
 
         } catch (final SQLException e) {
@@ -519,7 +516,7 @@ public final class JdbcRepository implements Repository {
                 LOGGER.log(
                         Level.FINER,
                         "Got query result[cacheKey={0}] from repository cache[name={1}]",
-                        new Object[] {cacheKey, getName() });
+                        new Object[]{cacheKey, getName()});
                 return ret;
             }
 
@@ -566,7 +563,7 @@ public final class JdbcRepository implements Repository {
                 LOGGER.log(
                         Level.FINER,
                         "Added query result[cacheKey={0}] in repository cache[{1}]",
-                        new Object[] {cacheKey, getName() });
+                        new Object[]{cacheKey, getName()});
                 try {
                     cacheQueryResults(ret.optJSONArray(Keys.RESULTS), query);
                 } catch (final JSONException e) {
@@ -610,7 +607,7 @@ public final class JdbcRepository implements Repository {
             LOGGER.log(
                     Level.FINER,
                     "Added an object[cacheKey={0}] in repository cache[{1}] for default index[oId]",
-                    new Object[] {cacheKey, getName() });
+                    new Object[]{cacheKey, getName()});
 
             // 2. Caching for get by query with filters (EQUAL operator) only
             final Set<String[]> indexes = query.getIndexes();
@@ -623,8 +620,8 @@ public final class JdbcRepository implements Repository {
 
                     futureQuery
                             .setFilter(new PropertyFilter(propertyName,
-                                    FilterOperator.EQUAL, jsonObject
-                                            .opt(propertyName)));
+                            FilterOperator.EQUAL, jsonObject
+                            .opt(propertyName)));
                     logMsgBuilder.append(propertyName).append(",");
                 }
 
@@ -649,8 +646,8 @@ public final class JdbcRepository implements Repository {
                 LOGGER.log(
                         Level.FINER,
                         "Added an object[cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
-                        new Object[] {cacheKey, getName(), logMsgBuilder,
-                                futureQuery.toString() });
+                        new Object[]{cacheKey, getName(), logMsgBuilder,
+                            futureQuery.toString()});
             }
         }
     }
@@ -706,8 +703,8 @@ public final class JdbcRepository implements Repository {
 
         if (currentPageNum > ret) {
             LOGGER.log(Level.WARNING,
-                    "Current page num[{0}] > page count[{1}]", new Object[] {
-                            currentPageNum, ret });
+                    "Current page num[{0}] > page count[{1}]", new Object[]{
+                        currentPageNum, ret});
         }
 
         getQuerySql(currentPageNum, pageSize, selectSql, filterSql, orderBySql,
@@ -889,7 +886,7 @@ public final class JdbcRepository implements Repository {
                 LOGGER.log(
                         Level.FINER,
                         "Got an object[cacheKey={0}] from repository cache[name={1}]",
-                        new Object[] {cacheKey, getName() });
+                        new Object[]{cacheKey, getName()});
                 try {
                     return (Long) o;
                 } catch (final Exception e) {
@@ -908,7 +905,7 @@ public final class JdbcRepository implements Repository {
             CACHE.putAsync(cacheKey, ret);
             LOGGER.log(Level.FINER,
                     "Added an object[cacheKey={0}] in repository cache[{1}]",
-                    new Object[] {cacheKey, getName() });
+                    new Object[]{cacheKey, getName()});
         }
 
         return ret;
@@ -952,12 +949,10 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public String getName() {
-        final String tablePrefix = StringUtils.isNotBlank(Latkes
-                .getLocalProperty("jdbc.tablePrefix")) ? "_"
-                + Latkes.getLocalProperty("jdbc.tablePrefix") : "";
+        final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
+                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_" : "";
 
-        return tablePrefix
-                + name;
+        return tableNamePrefix + name;
     }
 
     @Override
@@ -1102,30 +1097,30 @@ public final class JdbcRepository implements Repository {
         String filterOperator = null;
 
         switch (propertyFilter.getOperator()) {
-        case EQUAL:
-            filterOperator = "=";
-            break;
-        case GREATER_THAN:
-            filterOperator = ">";
-            break;
-        case GREATER_THAN_OR_EQUAL:
-            filterOperator = ">=";
-            break;
-        case LESS_THAN:
-            filterOperator = "<";
-            break;
-        case LESS_THAN_OR_EQUAL:
-            filterOperator = "<=";
-            break;
-        case NOT_EQUAL:
-            filterOperator = "!=";
-            break;
-        case IN:
-            filterOperator = "in";
-            break;
-        default:
-            throw new RepositoryException("Unsupported filter operator["
-                    + propertyFilter.getOperator() + "]");
+            case EQUAL:
+                filterOperator = "=";
+                break;
+            case GREATER_THAN:
+                filterOperator = ">";
+                break;
+            case GREATER_THAN_OR_EQUAL:
+                filterOperator = ">=";
+                break;
+            case LESS_THAN:
+                filterOperator = "<";
+                break;
+            case LESS_THAN_OR_EQUAL:
+                filterOperator = "<=";
+                break;
+            case NOT_EQUAL:
+                filterOperator = "!=";
+                break;
+            case IN:
+                filterOperator = "in";
+                break;
+            default:
+                throw new RepositoryException("Unsupported filter operator["
+                        + propertyFilter.getOperator() + "]");
         }
 
         if (FilterOperator.IN != propertyFilter.getOperator()) {
@@ -1198,16 +1193,16 @@ public final class JdbcRepository implements Repository {
 
             if (iterator.hasNext()) {
                 switch (compositeFilter.getOperator()) {
-                case AND:
-                    filterSql.append(" and ");
-                    break;
-                case OR:
-                    filterSql.append(" or ");
-                    break;
-                default:
-                    throw new RepositoryException(
-                            "Unsupported composite filter[operator="
-                                    + compositeFilter.getOperator() + "]");
+                    case AND:
+                        filterSql.append(" and ");
+                        break;
+                    case OR:
+                        filterSql.append(" or ");
+                        break;
+                    default:
+                        throw new RepositoryException(
+                                "Unsupported composite filter[operator="
+                                + compositeFilter.getOperator() + "]");
                 }
             }
         }

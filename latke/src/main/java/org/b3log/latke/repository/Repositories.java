@@ -25,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.repository.impl.UserRepositoryImpl;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Strings;
@@ -35,7 +37,7 @@ import org.json.JSONObject;
  * Repository utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.6, Apr 10, 2012
+ * @version 1.0.0.7, Sep 19, 2012
  */
 public final class Repositories {
 
@@ -185,13 +187,13 @@ public final class Repositories {
             keySet.add(key);
 
             if (needIgnoreKeys
-                && Strings.contains(key, ignoredKeys)) {
+                    && Strings.contains(key, ignoredKeys)) {
                 continue;
             }
 
             if (!nameSet.contains(key)) {
                 throw new RepositoryException("A json object to persist to repository[name="
-                                              + repositoryName + "] does not contain a key[" + key + "]");
+                        + repositoryName + "] does not contain a key[" + key + "]");
             }
 
             // TODO: 88250, type and length validation
@@ -214,14 +216,13 @@ public final class Repositories {
              */
         }
 
-        // Checks whether the specified json object has an redundant (undefined)
-        // key
+        // Checks whether the specified json object has an redundant (undefined) key
         for (int i = 0; i < names.length(); i++) {
             final String name = names.optString(i);
 
             if (!keySet.contains(name)) {
                 throw new RepositoryException("A json object to persist to repository[name="
-                                              + repositoryName + "] contains an redundant key[" + name + "]");
+                        + repositoryName + "] contains an redundant key[" + name + "]");
             }
         }
     }
@@ -250,7 +251,7 @@ public final class Repositories {
         }
 
         throw new RuntimeException("Not found the repository[name="
-                                   + repositoryName + "] description, please define it in repositories.json");
+                + repositoryName + "] description, please define it in repositories.json");
     }
 
     /**
@@ -280,7 +281,7 @@ public final class Repositories {
 
         if (null == keys) {
             throw new RuntimeException("Not found the repository[name=" + repositoryName
-                                       + "] description, please define it in repositories.json");
+                    + "] description, please define it in repositories.json");
         }
 
         final Set<String> ret = new HashSet<String>();
@@ -333,6 +334,16 @@ public final class Repositories {
             LOGGER.log(Level.CONFIG, "{0}{1}", new Object[]{Strings.LINE_SEPARATOR, description});
 
             repositoriesDescription = new JSONObject(description);
+
+            // Repository name prefix
+            final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
+                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_" : "";
+            
+            final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
+            for (int i = 0; i < repositories.length(); i++) {
+                final JSONObject repository = repositories.optJSONObject(i);
+                repository.put("name", tableNamePrefix + repository.optString("name"));
+            }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Parses repository description failed", e);
         } finally {
