@@ -19,7 +19,6 @@ import com.baidu.bae.api.factory.BaeFactory;
 import com.baidu.bae.api.taskqueue.BaeTaskQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.taskqueue.Queue;
 import org.b3log.latke.taskqueue.Task;
 import org.b3log.latke.taskqueue.TaskHandle;
