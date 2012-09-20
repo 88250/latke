@@ -22,15 +22,14 @@ import org.b3log.latke.servlet.HTTPRequestMethod;
  * Task.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.2, Feb 24, 2012
+ * @version 1.0.0.3, Sep 20, 2012
  */
 public final class Task implements Serializable {
-    
+
     /**
      * Default serial version uid.
      */
     private static final long serialVersionUID = 1L;
-
     /**
      * URL.
      */
@@ -43,10 +42,14 @@ public final class Task implements Serializable {
      * HTTP method.
      */
     private HTTPRequestMethod requestMethod = HTTPRequestMethod.GET;
+    /**
+     * Payload.
+     */
+    private byte[] payload;
 
     /**
      * Gets the request method.
-     * 
+     *
      * @return request method of this task
      */
     public HTTPRequestMethod getRequestMethod() {
@@ -55,7 +58,7 @@ public final class Task implements Serializable {
 
     /**
      * Sets the request method with the specified request method.
-     * 
+     *
      * @param requestMethod the specified request method
      */
     public void setRequestMethod(final HTTPRequestMethod requestMethod) {
@@ -63,8 +66,35 @@ public final class Task implements Serializable {
     }
 
     /**
+     * Gets the payload ({@link HTTPRequestMethod#POST POST} data body).
+     *
+     * <p>
+     * Certain HTTP methods ({@linkplain HTTPRequestMethod#GET GET}) will NOT have any payload, and this method will return
+     * {@code null}. 
+     * </p>
+     *
+     * @return payload
+     */
+    public byte[] getPayload() {
+        return payload;
+    }
+
+    /**
+     * Sets the payload with the specified payload.
+     *
+     * <p>
+     * This method should NOT be called for certain HTTP methods (e.g. {@link HTTPRequestMethod#GET GET}). 
+     * </p>
+     *
+     * @param payload the specified payload
+     */
+    public void setPayload(final byte[] payload) {
+        this.payload = payload;
+    }
+
+    /**
      * Gets the URL of this task.
-     * 
+     *
      * @return URI of this task
      */
     public String getURL() {
@@ -73,7 +103,7 @@ public final class Task implements Serializable {
 
     /**
      * Sets the URL with the specified URL.
-     * 
+     *
      * @param url the specified URL
      */
     public void setURL(final String url) {
@@ -82,7 +112,7 @@ public final class Task implements Serializable {
 
     /**
      * Gets the name of this task.
-     * 
+     *
      * @return name of this task
      */
     public String getName() {
@@ -91,7 +121,7 @@ public final class Task implements Serializable {
 
     /**
      * Sets the name with the specified name.
-     * 
+     *
      * @param name the specified name
      */
     public void setName(final String name) {
