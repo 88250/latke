@@ -29,11 +29,12 @@ import org.b3log.latke.util.Callstacks;
 
 /**
  * JDBC connection utilities.
- * 
+ *
  * <p>
- * Uses <a href="http://jolbox.com/">BoneCP</a> as the underlying connection pool.
+ * Uses <a href="http://jolbox.com/">BoneCP</a> or 
+ * <a href="http://sourceforge.net/projects/c3p0/">c3p0</a> as the underlying connection pool.
  * </p>
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.0.7, Sep 4, 2012
@@ -128,7 +129,7 @@ public final class Connections {
 
                 // Disable JMX
                 System.setProperty("com.mchange.v2.c3p0.management.ManagementCoordinator",
-                                   "com.mchange.v2.c3p0.management.NullManagementCoordinator");
+                        "com.mchange.v2.c3p0.management.NullManagementCoordinator");
 
                 c3p0 = new ComboPooledDataSource();
                 c3p0.setUser(userName);
@@ -143,7 +144,7 @@ public final class Connections {
                 LOGGER.info("Do not use database connection pool");
             }
 
-            LOGGER.info("Initialized connection pool");
+            LOGGER.info("Initialized connection pool [type=" + poolType + ']');
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Can not initialize database connection", e);
         }
@@ -151,9 +152,9 @@ public final class Connections {
 
     /**
      * Gets a connection.
-     * 
+     *
      * @return a connection
-     * @throws SQLException SQL exception 
+     * @throws SQLException SQL exception
      */
     public static Connection getConnection() throws SQLException {
         if (LOGGER.isLoggable(Level.FINEST)) {
@@ -162,12 +163,12 @@ public final class Connections {
 
         if ("BoneCP".equals(poolType)) {
             LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                       new Object[]{boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
+                    new Object[]{boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
 
             return boneCP.getConnection();
         } else if ("c3p0".equals(poolType)) {
             LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                       new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
+                    new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
             final Connection ret = c3p0.getConnection();
             ret.setTransactionIsolation(transactionIsolationInt);
 
