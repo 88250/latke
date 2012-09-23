@@ -34,7 +34,7 @@ import org.b3log.latke.urlfetch.HTTPResponse;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.4, May 4, 2012
+ * @version 1.0.0.5, Sep 23, 2012
  * 
  */
 class UrlFetchCommonHandler {
@@ -112,7 +112,8 @@ class UrlFetchCommonHandler {
         ret.setFinalURL(httpURLConnection.getURL());
 
         InputStream retStream;
-        if (HttpServletResponse.SC_OK == ret.getResponseCode()) {
+        if (HttpServletResponse.SC_OK <= ret.getResponseCode()
+                && ret.getResponseCode() < HttpServletResponse.SC_BAD_REQUEST) {
             retStream = httpURLConnection.getInputStream();
         } else {
             retStream = httpURLConnection.getErrorStream();

@@ -22,7 +22,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.concurrent.Future;
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.testng.annotations.Test;
@@ -31,17 +30,19 @@ import org.testng.annotations.Test;
  * URL fetch test case.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 0.0.0.2, Aug 21, 2011
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.3, Sep 23, 2012
  */
 public class UrlFetchTestCase {
 
-    static {
-        Latkes.initRuntimeEnv();
-    }
     /**
      * URL fetch service.
      */
     private final URLFetchService fetchService = URLFetchServiceFactory.getURLFetchService();
+
+    static {
+        Latkes.initRuntimeEnv();
+    }
 
     /**
      * 
@@ -70,7 +71,7 @@ public class UrlFetchTestCase {
         final HTTPRequest request = new HTTPRequest();
         request.setRequestMethod(HTTPRequestMethod.GET);
         request.setURL(new URL("http://www.baidu.com"));
-        
+
         final Future<?> fetchAsync = fetchService.fetchAsync(request);
         final HTTPResponse httpResponse = (HTTPResponse) fetchAsync.get();
 
@@ -88,8 +89,7 @@ public class UrlFetchTestCase {
         request.setRequestMethod(HTTPRequestMethod.POST);
         request.setURL(new URL("https://passport.baidu.com/api/?login"));
 
-        final String content = URLEncoder.encode(
-                "username=yaoliceng&password=09101112", "UTF-8");
+        final String content = URLEncoder.encode("username=b3logtest&password=b3logtest", "UTF-8");
         request.setPayload(content.getBytes());
 
         final HTTPResponse httpResponse = fetchService.fetch(request);
@@ -112,7 +112,7 @@ public class UrlFetchTestCase {
         }
 
         final BufferedReader reader =
-                             new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
+                new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
                 httpResponse.getContent())));
 
         String lines;
