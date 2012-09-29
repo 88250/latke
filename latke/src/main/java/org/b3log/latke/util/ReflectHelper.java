@@ -27,8 +27,9 @@ import javassist.bytecode.MethodInfo;
 
 /**
  * ReflectHelper while not using java reflect instead of the other class byte tool.
+ * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 10, 2012
+ * @version 1.0.0.2, Sep 17, 2012
  */
 public final class ReflectHelper {
 
@@ -42,9 +43,10 @@ public final class ReflectHelper {
      * getMethodVariableNames in user defined.
      * @param clazz the specific clazz
      * @param targetMethodName the targetMethodName
+     * @param types the types of the method
      * @return the String[] of names
      */
-    public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName) {
+    public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, final Class<?>[] types) {
 
         final ClassPool pool = ClassPool.getDefault();
         pool.insertClassPath(new ClassClassPath(clazz));
@@ -52,9 +54,17 @@ public final class ReflectHelper {
         CtMethod cm = null;
         try {
             cc = pool.get(clazz.getName());
-            cm = cc.getDeclaredMethod(targetMethodName);
+            final CtClass[] ptypes = new CtClass[types.length];
+            for (int i = 0; i < ptypes.length; i++) {
+                ptypes[i] = pool.get(types[i].getName());
+            }
+            cm = cc.getDeclaredMethod(targetMethodName, ptypes);
         } catch (final NotFoundException e) {
             e.printStackTrace();
+        }
+
+        if (null == cm) {
+            return new String[types.length];
         }
 
         final MethodInfo methodInfo = cm.getMethodInfo();
@@ -68,9 +78,10 @@ public final class ReflectHelper {
         }
         final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
         for (int i = 0; i < variableNames.length; i++) {
-            variableNames[i] = attr.variableName(i + staticIndex);
+            variableNames[i] = attr.variableName(i
+                    + staticIndex);
+
         }
         return variableNames;
     }
-
 }

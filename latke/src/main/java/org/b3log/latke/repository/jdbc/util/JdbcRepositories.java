@@ -34,7 +34,7 @@ import org.json.JSONObject;
  * JdbcRepositories utilities.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Dec 20, 2011
+ * @version 1.0.0.1, Sep 19, 2012
  */
 public final class JdbcRepositories {
 
@@ -45,19 +45,19 @@ public final class JdbcRepositories {
     /**
      * the String jsonType to JdbcType.
      */
-    //    @SuppressWarnings("serial")
-    //    private static final Map<String, Integer> JSONTYPETOJDBCTYPEMAP =
-    //            new HashMap<String, Integer>() {
-    //                {
+    // @SuppressWarnings("serial")
+    // private static final Map<String, Integer> JSONTYPETOJDBCTYPEMAP =
+    // new HashMap<String, Integer>() {
+    // {
     //
-    //                    put("int", Types.INTEGER);
-    //                    put("long", Types.BIGINT);
-    //                    put("String", Types.VARCHAR);
-    //                    put("boolean", Types.BOOLEAN);
-    //                    put("double", Types.DOUBLE);
+    // put("int", Types.INTEGER);
+    // put("long", Types.BIGINT);
+    // put("String", Types.VARCHAR);
+    // put("boolean", Types.BOOLEAN);
+    // put("double", Types.DOUBLE);
     //
-    //                }
-    //            };
+    // }
+    // };
     /**
      * /** to json "repositories".
      */
@@ -91,9 +91,10 @@ public final class JdbcRepositories {
      */
     public static final String OID = "oId";
     /**
-     * store all repository filed definition in a Map.
+     * Stores all repository filed definition in a Map.
+     * 
      * <p>
-     * key: the name of the repository value: list of all the FieldDefinition
+     * key: the name of the repository value (or table name with prefix): list of all the FieldDefinition
      * </p>
      */
     private static Map<String, List<FieldDefinition>> repositoriesMap = null;
@@ -142,19 +143,19 @@ public final class JdbcRepositories {
 
         final JSONArray repositoritArray = jsonObject.getJSONArray(REPOSITORIES);
 
-        JSONObject repositoritObject = null;
-        JSONObject fieldDefinitionObject = null;
+        JSONObject repositoryObject;
+        JSONObject fieldDefinitionObject;
 
         for (int i = 0; i < repositoritArray.length(); i++) {
-            repositoritObject = repositoritArray.getJSONObject(i);
-            final String repositoryName = repositoritObject.getString(NAME);
+            repositoryObject = repositoritArray.getJSONObject(i);
+            final String repositoryName = repositoryObject.getString(NAME);
 
             final List<FieldDefinition> fieldDefinitions = new ArrayList<FieldDefinition>();
             repositoriesMap.put(repositoryName, fieldDefinitions);
 
-            final JSONArray keysJsonArray = repositoritObject.getJSONArray(KEYS);
+            final JSONArray keysJsonArray = repositoryObject.getJSONArray(KEYS);
 
-            FieldDefinition definition = null;
+            FieldDefinition definition;
             for (int j = 0; j < keysJsonArray.length(); j++) {
                 fieldDefinitionObject = keysJsonArray.getJSONObject(j);
                 definition = fillFieldDefinitionData(fieldDefinitionObject);
@@ -166,24 +167,26 @@ public final class JdbcRepositories {
     /**
      * fillFieldDefinitionData.
      * 
-     * @param fieldDefinitionObject josn model
+     * @param fieldDefinitionObject
+     *            josn model
      * @return {@link FieldDefinition}
-     * @throws JSONException JSONException
+     * @throws JSONException
+     *             JSONException
      */
     private static FieldDefinition fillFieldDefinitionData(final JSONObject fieldDefinitionObject) throws JSONException {
         final FieldDefinition fieldDefinition = new FieldDefinition();
         fieldDefinition.setName(fieldDefinitionObject.getString(NAME));
 
-        //        final Integer type =
-        //                JSONTYPETOJDBCTYPEMAP
-        //                        .get(fieldDefinitionObject.getString(TYPE));
-        //        if (type == null) {
-        //            LOGGER.severe("the type [" + fieldDefinitionObject.getString(TYPE)
-        //                    + "] no mapping defined now!!!!");
-        //            throw new RuntimeException("the type ["
-        //                    + fieldDefinitionObject.getString(TYPE)
-        //                    + "] no mapping defined now!!!!");
-        //        }
+        // final Integer type =
+        // JSONTYPETOJDBCTYPEMAP
+        // .get(fieldDefinitionObject.getString(TYPE));
+        // if (type == null) {
+        // LOGGER.severe("the type [" + fieldDefinitionObject.getString(TYPE)
+        // + "] no mapping defined now!!!!");
+        // throw new RuntimeException("the type ["
+        // + fieldDefinitionObject.getString(TYPE)
+        // + "] no mapping defined now!!!!");
+        // }
 
         fieldDefinition.setType(fieldDefinitionObject.getString(TYPE));
         fieldDefinition.setNullable(fieldDefinitionObject.optBoolean(NULLABLE));
@@ -202,8 +205,8 @@ public final class JdbcRepositories {
     }
 
     /**
-     *createTableResult model for view to show.
-     *
+     * createTableResult model for view to show.
+     * 
      */
     public static class CreateTableResult {
 
@@ -226,7 +229,8 @@ public final class JdbcRepositories {
 
         /**
          * 
-         * @param name tableName
+         * @param name
+         *            tableName
          */
         public void setName(final String name) {
             this.name = name;
@@ -242,7 +246,8 @@ public final class JdbcRepositories {
 
         /**
          * 
-         * @param isSuccess isSuccess
+         * @param isSuccess
+         *            isSuccess
          */
         public void setSuccess(final boolean isSuccess) {
             this.isSuccess = isSuccess;
@@ -251,8 +256,10 @@ public final class JdbcRepositories {
         /**
          * constructor.
          * 
-         * @param name table
-         * @param isSuccess isSuccess
+         * @param name
+         *            table
+         * @param isSuccess
+         *            isSuccess
          */
         public CreateTableResult(final String name, final boolean isSuccess) {
             super();
@@ -263,23 +270,20 @@ public final class JdbcRepositories {
 
     /**
      * initAllTables from json.
+     * 
      * @return List<CreateTableResult>
      */
     public static List<CreateTableResult> initAllTables() {
-
         final List<CreateTableResult> results = new ArrayList<JdbcRepositories.CreateTableResult>();
         final Map<String, List<FieldDefinition>> map = getRepositoriesMap();
 
         boolean isSuccess = false;
 
         for (String tableName : map.keySet()) {
-
             try {
-                isSuccess = JdbcFactory.createJdbcFactory().createTable(
-                        tableName, map.get(tableName));
+                isSuccess = JdbcFactory.createJdbcFactory().createTable(tableName, map.get(tableName));
             } catch (final SQLException e) {
-                LOGGER.log(Level.SEVERE,
-                           "createTable[" + tableName + "] error", e);
+                LOGGER.log(Level.SEVERE, "createTable[" + tableName + "] error", e);
             }
 
             results.add(new CreateTableResult(tableName, isSuccess));
@@ -292,10 +296,10 @@ public final class JdbcRepositories {
     /**
      * set the repositoriesMap.
      * 
-     * @param repositoriesMap  repositoriesMap
+     * @param repositoriesMap
+     *            repositoriesMap
      */
-    public static void setRepositoriesMap(
-            final Map<String, List<FieldDefinition>> repositoriesMap) {
+    public static void setRepositoriesMap(final Map<String, List<FieldDefinition>> repositoriesMap) {
         JdbcRepositories.repositoriesMap = repositoriesMap;
     }
 

@@ -26,7 +26,7 @@ import org.b3log.latke.taskqueue.TaskHandle;
 import org.b3log.latke.taskqueue.TaskQueueService;
 
 /**
- * Task.
+ * Google App Engine task queue service.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.0.1, Feb 21, 2012
@@ -43,7 +43,6 @@ public final class GAETaskQueueService implements TaskQueueService {
         final com.google.appengine.api.taskqueue.Queue queue = QueueFactory.getQueue(queueName);
 
         return new Queue() {
-
             @Override
             public TaskHandle add(final Task task) {
                 final TaskOptions taskOptions = TaskOptions.Builder.withTaskName(task.getName()).url(task.getURL());
@@ -60,6 +59,7 @@ public final class GAETaskQueueService implements TaskQueueService {
                         taskOptions.method(TaskOptions.Method.HEAD);
                         break;
                     case POST:
+                        taskOptions.payload(task.getPayload());
                         taskOptions.method(TaskOptions.Method.POST);
                         break;
                     case PUT:
@@ -72,6 +72,7 @@ public final class GAETaskQueueService implements TaskQueueService {
                 }
 
                 final com.google.appengine.api.taskqueue.TaskHandle handle = queue.add(taskOptions);
+                
                 final TaskHandle ret = new GAETaskHandle(handle);
 
                 return ret;

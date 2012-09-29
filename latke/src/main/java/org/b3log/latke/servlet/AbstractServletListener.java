@@ -18,6 +18,7 @@ package org.b3log.latke.servlet;
 import java.util.logging.Level;
 import java.io.File;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Locale;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -33,7 +34,7 @@ import org.b3log.latke.repository.jdbc.JdbcRepository;
 
 /**
  * Abstract servlet listener.
- * 
+ *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.3.0, Apr 5, 2012
  */
@@ -51,13 +52,18 @@ public abstract class AbstractServletListener implements ServletContextListener,
     static {
         final URL resource = ClassLoader.class.getResource("/");
         if (null != resource) { // Running unit tests
-            webRoot = resource.getPath();
+            try {
+                webRoot = URLDecoder.decode(resource.getPath(), "UTF-8");
+                LOGGER.log(Level.INFO, "Classpath [{0}]", webRoot);
+            } catch (final Exception e) {
+                throw new RuntimeException("Decodes web root path failed", e);
+            }
         }
     }
 
     /**
      * Initializes context, {@linkplain #webRoot web root}, locale and runtime environment.
-     * 
+     *
      * @param servletContextEvent servlet context event
      */
     @Override
@@ -83,9 +89,8 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
     /**
      * Destroys the context, unregisters remote JavaScript services.
-     * 
-     * @param servletContextEvent
-     *            servlet context event
+     *
+     * @param servletContextEvent servlet context event
      */
     @Override
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
@@ -112,7 +117,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
     /**
      * Gets the absolute file path of web root directory on the server's file system.
-     * 
+     *
      * @return the directory file path(tailing with {@link File#separator}).
      */
     public static String getWebRoot() {

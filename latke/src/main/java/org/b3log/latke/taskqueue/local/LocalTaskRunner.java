@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.taskqueue.Task;
 import org.b3log.latke.urlfetch.HTTPRequest;
@@ -30,11 +29,12 @@ import org.b3log.latke.urlfetch.URLFetchServiceFactory;
 
 /**
  * run the task in queue, now using httpUrlfetch to handle the request.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Apr 6, 2012
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.2, Sep 20, 2012
  */
-public class LocalTaskRunner extends Thread {
+public final class LocalTaskRunner extends Thread {
 
     /**
      * Logger.
@@ -51,8 +51,8 @@ public class LocalTaskRunner extends Thread {
 
     /**
      * default constructor.
-     * 
-     * @param task task need to do 
+     *
+     * @param task task need to do
      * @param retryLimit retryTime
      */
     public LocalTaskRunner(final Task task, final Integer retryLimit) {
@@ -66,12 +66,13 @@ public class LocalTaskRunner extends Thread {
 
     @Override
     public void run() {
-
         urlFetchService = URLFetchServiceFactory.getURLFetchService();
 
         final HTTPRequest httpRequest = new HTTPRequest();
         try {
             httpRequest.setURL(new URL(Latkes.getServer() + Latkes.getContextPath() + task.getURL()));
+            httpRequest.setRequestMethod(task.getRequestMethod());
+            httpRequest.setPayload(task.getPayload());
         } catch (final MalformedURLException e) {
             e.printStackTrace();
         }
@@ -89,19 +90,16 @@ public class LocalTaskRunner extends Thread {
             } else {
                 break;
             }
-
         }
-
     }
 
     /**
      * do task using urlfetch(method:get),if wrong return false.
-     * 
+     *
      * @param httpRequest {@link HTTPRequest}
      * @return isSuccess
      */
     private boolean doUrlFetch(final HTTPRequest httpRequest) {
-
         HTTPResponse httpResponse = null;
         try {
             httpResponse = urlFetchService.fetch(httpRequest);
@@ -111,11 +109,8 @@ public class LocalTaskRunner extends Thread {
         }
 
         /**
-         * <p> Quote GAE:"
-         * If a push task request handler returns an HTTP status code within the range 200–299, 
-         * App Engine considers the task to have completed successfully. 
-         * If the task returns a status code outside of this range" 
-         *</p>
+         * <p> Quote GAE:" If a push task request handler returns an HTTP status code within the range 200–299, App Engine considers the
+         * task to have completed successfully. If the task returns a status code outside of this range" </p>
          */
         final Integer beginCode = 200;
         final Integer endCode = 299;
@@ -124,7 +119,7 @@ public class LocalTaskRunner extends Thread {
             return true;
         }
         LOGGER.log(Level.INFO, "The task[{0}] not success ,the return code is [{1}]",
-                   new Object[]{task.getURL(), httpResponse.getResponseCode()});
+                new Object[]{task.getURL(), httpResponse.getResponseCode()});
 
         return false;
     }
