@@ -15,14 +15,11 @@
  */
 package org.b3log.latke.servlet;
 
-import java.util.Date;
-import java.util.HashSet;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.b3log.latke.servlet.converter.ConvertSupport;
-import org.b3log.latke.testhelper.MockConverSupport;
+import org.b3log.latke.testhelper.MockService;
 import org.b3log.latke.testhelper.VirtualObject;
 import org.testng.annotations.Test;
 
@@ -36,18 +33,19 @@ import org.testng.annotations.Test;
 public class RequestProcessorsTest extends TestCase {
 
     static {
-        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
-        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
-        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
-        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
-                ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString1", new Class<?>[]{Integer.class, String.class},
-                ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
-                ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
-                MockConverSupport.class));
+//        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
+//        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
+//        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
+//        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
+//        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
+//                ConvertSupport.class));
+//        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString11", new Class<?>[]{Integer.class, String.class},
+//                ConvertSupport.class));
+//        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
+//                ConvertSupport.class));
+//        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
+//                MockConverSupport.class));
+        RequestProcessors.discoverFromClass(MockService.class);
     }
 
     /**
@@ -61,6 +59,7 @@ public class RequestProcessorsTest extends TestCase {
      * @return the processorMethod in {@link RequestProcessors}
      *
      */
+    @Deprecated
     private static Object registerServiceAndMethod(
             final VirtualObject service, final String uriPattern, final String methodName, final Class<?>[] clazz,
             final Class<? extends ConvertSupport> convertClazz) {
@@ -96,7 +95,7 @@ public class RequestProcessorsTest extends TestCase {
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
     @Test
-    public void testInvokePattern() {
+    public void testInvokePattern1() {
 
         final String requestURI = "/string/11/tom";
         final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
@@ -108,7 +107,7 @@ public class RequestProcessorsTest extends TestCase {
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
     @Test
-    public void testInvokePattern1() {
+    public void testInvokePattern11() {
 
         final String requestURI = "/string/11ptom";
         final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());

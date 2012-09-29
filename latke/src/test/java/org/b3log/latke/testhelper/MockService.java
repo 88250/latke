@@ -18,18 +18,22 @@ package org.b3log.latke.testhelper;
 import java.util.Date;
 
 import org.b3log.latke.servlet.annotation.PathVariable;
+import org.b3log.latke.servlet.annotation.RequestProcessing;
+import org.b3log.latke.servlet.annotation.RequestProcessor;
 
 /**
  * Mockservice,for dispatch UT.
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 3, 2012
  */
+@RequestProcessor
 public class MockService {
 
     /**
      * getString.
      * @return a String
      */
+    @RequestProcessing(value = "string")
     public String getString() {
         return "string";
     }
@@ -40,9 +44,20 @@ public class MockService {
      * @param name name
      * @return a String
      */
+    @RequestProcessing(value = "/string/{id}/{name}")
     public String getString1(final Integer id, final String name) {
-        return id
-                + name;
+        return id + name;
+    }
+
+    /**
+     * getString11.
+     * @param id id
+     * @param name name
+     * @return a String
+     */
+    @RequestProcessing(value = "/string/{id}p{name}")
+    public String getString11(final Integer id, final String name) {
+        return id + name;
     }
 
     /**
@@ -51,9 +66,9 @@ public class MockService {
      * @param password password
      * @return a String
      */
+    @RequestProcessing(value = "/{name}--{password}")
     public String getString2(@PathVariable("password") final String name, @PathVariable("name") final String password) {
-        return name
-                + password;
+        return name + password;
     }
 
     /**
@@ -62,9 +77,9 @@ public class MockService {
      * @param date data
      * @return string
      */
+    @RequestProcessing(value = "/date/{id}/{date}", convertClass = MockConverSupport.class)
     public String getString2(final Integer id, final Date date) {
-        return ""
-                + id + date.getTime();
+        return "" + id + date.getTime();
     }
 
 }

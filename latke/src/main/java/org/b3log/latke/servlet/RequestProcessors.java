@@ -289,6 +289,31 @@ public final class RequestProcessors {
     }
 
     /**
+     * discover {@link RequestProcessor} to the ReuqestMapping from a specific class.
+     * @param clazz the specific clazz need to be add Request Mapping
+     */
+    public static void discoverFromClass(final Class<?> clazz) {
+
+        final RequestProcessor requestProcessor = clazz.getAnnotation(RequestProcessor.class);
+
+        if (null == requestProcessor) {
+            return;
+        }
+
+        final Method[] declaredMethods = clazz.getDeclaredMethods();
+        for (int i = 0; i < declaredMethods.length; i++) {
+            final Method mthd = declaredMethods[i];
+            final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);
+
+            if (null == requestProcessingMethodAnn) {
+                continue;
+            }
+            addProcessorMethod(requestProcessingMethodAnn, clazz, mthd);
+        }
+
+    }
+
+    /**
      * Gets process method for the specified request URI and method.
      *
      * @param requestURI the specified request URI
