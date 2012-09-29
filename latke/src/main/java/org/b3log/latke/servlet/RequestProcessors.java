@@ -159,7 +159,8 @@ public final class RequestProcessors {
     }
 
     /**
-     * Scans classpath to discover request processor classes via annotation {@linkplain org.b3log.latke.servlet.annotation.RequestProcessor}.
+     * Scans classpath to discover request processor classes via annotation
+     * {@linkplain org.b3log.latke.servlet.annotation.RequestProcessor}.
      *
      * @throws Exception exception
      */
@@ -173,8 +174,7 @@ public final class RequestProcessors {
      */
     private static void discoverFromClassesDir() {
         final String webRoot = AbstractServletListener.getWebRoot();
-        final File classesDir = new File(webRoot
-                + File.separator + "WEB-INF" + File.separator + "classes" + File.separator);
+        final File classesDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "classes" + File.separator);
         @SuppressWarnings("unchecked")
         final Collection<File> classes = FileUtils.listFiles(classesDir, new String[] {"class" }, true);
         final ClassLoader classLoader = RequestProcessors.class.getClassLoader();
@@ -183,8 +183,7 @@ public final class RequestProcessors {
             for (final File classFile : classes) {
                 final String path = classFile.getPath();
                 final String className =
-                        StringUtils.substringBetween(path, "WEB-INF"
-                                + File.separator + "classes" + File.separator, ".class")
+                        StringUtils.substringBetween(path, "WEB-INF" + File.separator + "classes" + File.separator, ".class")
                                 .replaceAll("\\/", ".").replaceAll("\\\\", ".");
                 final Class<?> clz = classLoader.loadClass(className);
 
@@ -213,8 +212,7 @@ public final class RequestProcessors {
      */
     private static void discoverFromLibDir() {
         final String webRoot = AbstractServletListener.getWebRoot();
-        final File libDir = new File(webRoot
-                + File.separator + "WEB-INF" + File.separator + "lib" + File.separator);
+        final File libDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "lib" + File.separator);
         @SuppressWarnings("unchecked")
         final Collection<File> files = FileUtils.listFiles(libDir, new String[] {"jar" }, true);
 
@@ -224,11 +222,16 @@ public final class RequestProcessors {
             for (final File file : files) {
                 if (file.getName().contains("appengine-api")
                         || file.getName().startsWith("freemarker")
-                        || file.getName().startsWith("javassist") || file.getName().startsWith("commons")
-                        || file.getName().startsWith("mail") || file.getName().startsWith("activation")
-                        || file.getName().startsWith("slf4j") || file.getName().startsWith("bonecp")
-                        || file.getName().startsWith("jsoup") || file.getName().startsWith("guava")
-                        || file.getName().startsWith("markdown") || file.getName().startsWith("mysql")
+                        || file.getName().startsWith("javassist")
+                        || file.getName().startsWith("commons")
+                        || file.getName().startsWith("mail")
+                        || file.getName().startsWith("activation")
+                        || file.getName().startsWith("slf4j")
+                        || file.getName().startsWith("bonecp")
+                        || file.getName().startsWith("jsoup")
+                        || file.getName().startsWith("guava")
+                        || file.getName().startsWith("markdown")
+                        || file.getName().startsWith("mysql")
                         || file.getName().startsWith("c3p0")) {
                     // Just skips some known dependencies hardly....
                     LOGGER.log(Level.INFO, "Skipped request processing discovery[jarName={0}]", file.getName());
@@ -306,8 +309,7 @@ public final class RequestProcessors {
                 String uriPattern = processorMethod.getMappingString();
 
                 if (processorMethod.isWithContextPath()) {
-                    uriPattern = contextPath
-                            + uriPattern;
+                    uriPattern = contextPath + uriPattern;
                 }
 
                 if (requestURI.equals(uriPattern)) {
@@ -327,7 +329,9 @@ public final class RequestProcessors {
                 default:
                     throw new IllegalStateException("Can not process URI pattern[uriPattern="
                             + processorMethod.getURIPattern()
-                            + ", mode=" + processorMethod.getURIPatternMode() + "]");
+                            + ", mode="
+                            + processorMethod.getURIPatternMode()
+                            + "]");
                 }
 
                 if (found) {
@@ -585,8 +589,8 @@ public final class RequestProcessors {
         public void analysis() {
             mappingString = handleMappingString();
 
-            methodParamNames = ReflectHelper.getMethodVariableNames(processorClass, processorMethod.getName(),
-                    processorMethod.getParameterTypes());
+            methodParamNames =
+                    ReflectHelper.getMethodVariableNames(processorClass, processorMethod.getName(), processorMethod.getParameterTypes());
             int i = 0;
             for (java.lang.annotation.Annotation[] annotations : processorMethod.getParameterAnnotations()) {
                 for (java.lang.annotation.Annotation annotation : annotations) {
@@ -636,30 +640,21 @@ public final class RequestProcessors {
             char[] tem;
             int lastEnd = 0;
             while (matcher.find()) {
-                tem = new char[matcher.end()
-                        - matcher.start() - 2];
-                uriMapping.getChars(matcher.start()
-                        - fixPos + 1, matcher.end()
-                        - fixPos - 1, tem, 0);
+                tem = new char[matcher.end() - matcher.start() - 2];
+                uriMapping.getChars(matcher.start() - fixPos + 1, matcher.end() - fixPos - 1, tem, 0);
                 paramNames.add(new String(tem));
                 if (lastEnd == 0) {
                     posSpan.add(matcher.start());
                 } else {
-                    posSpan.add(matcher.start()
-                            - lastEnd);
+                    posSpan.add(matcher.start() - lastEnd);
                 }
 
-                uriMapping.replace(matcher.start()
-                        - fixPos, matcher.end()
-                        - fixPos, "*");
-                fixPos = fixPos
-                        + matcher.end() - matcher.start() - 1;
+                uriMapping.replace(matcher.start() - fixPos, matcher.end() - fixPos, "*");
+                fixPos = fixPos + matcher.end() - matcher.start() - 1;
                 lastEnd = matcher.end();
 
-                if (matcher.end()
-                        - fixPos < uriMapping.length()) {
-                    afertCharacters.add(uriMapping.charAt(matcher.end()
-                            - fixPos));
+                if (matcher.end() - fixPos < uriMapping.length()) {
+                    afertCharacters.add(uriMapping.charAt(matcher.end() - fixPos));
                 } else {
                     afertCharacters.add(null);
                 }
@@ -688,8 +683,7 @@ public final class RequestProcessors {
                     step++;
                 }
                 chars = new StringBuilder();
-                while (i < length
-                        && Character.valueOf(requestURI.charAt(i)) != afertCharacters.get(j)) {
+                while (i < length && Character.valueOf(requestURI.charAt(i)) != afertCharacters.get(j)) {
                     chars.append(requestURI.charAt(i));
                     i++;
                 }
