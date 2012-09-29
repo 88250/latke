@@ -17,7 +17,7 @@ package org.b3log.latke.testhelper;
 
 import java.util.Date;
 
-import org.b3log.latke.annotation.PathVariable;
+import org.b3log.latke.servlet.annotation.PathVariable;
 
 /**
  * Mockservice,for dispatch UT.

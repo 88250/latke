@@ -43,9 +43,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.annotation.PathVariable;
-import org.b3log.latke.annotation.RequestProcessing;
-import org.b3log.latke.annotation.RequestProcessor;
+import org.b3log.latke.servlet.annotation.PathVariable;
+import org.b3log.latke.servlet.annotation.RequestProcessing;
+import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ReflectHelper;
@@ -159,7 +159,7 @@ public final class RequestProcessors {
     }
 
     /**
-     * Scans classpath to discover request processor classes via annotation {@linkplain org.b3log.latke.annotation.RequestProcessor}.
+     * Scans classpath to discover request processor classes via annotation {@linkplain org.b3log.latke.servlet.annotation.RequestProcessor}.
      *
      * @throws Exception exception
      */
