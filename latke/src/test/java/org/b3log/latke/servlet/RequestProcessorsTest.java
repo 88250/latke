@@ -29,22 +29,22 @@ import org.testng.annotations.Test;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 3, 2012
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes" })
 public class RequestProcessorsTest extends TestCase {
 
     static {
-//        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
-//        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
-//        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
-//        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
-//        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
-//                ConvertSupport.class));
-//        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString11", new Class<?>[]{Integer.class, String.class},
-//                ConvertSupport.class));
-//        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
-//                ConvertSupport.class));
-//        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
-//                MockConverSupport.class));
+        //        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
+        //        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
+        //        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
+        //        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
+        //        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
+        //                ConvertSupport.class));
+        //        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString11", new Class<?>[]{Integer.class, String.class},
+        //                ConvertSupport.class));
+        //        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
+        //                ConvertSupport.class));
+        //        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
+        //                MockConverSupport.class));
         RequestProcessors.discoverFromClass(MockService.class);
     }
 
@@ -60,9 +60,8 @@ public class RequestProcessorsTest extends TestCase {
      *
      */
     @Deprecated
-    private static Object registerServiceAndMethod(
-            final VirtualObject service, final String uriPattern, final String methodName, final Class<?>[] clazz,
-            final Class<? extends ConvertSupport> convertClazz) {
+    private static Object registerServiceAndMethod(final VirtualObject service, final String uriPattern, final String methodName,
+            final Class<?>[] clazz, final Class<? extends ConvertSupport> convertClazz) {
         final VirtualObject processorMethod = new VirtualObject("org.b3log.latke.servlet.RequestProcessors$ProcessorMethod");
         processorMethod.setValue("uriPattern", uriPattern);
         processorMethod.setValue("withContextPath", false);
@@ -72,7 +71,7 @@ public class RequestProcessorsTest extends TestCase {
         processorMethod.setValue("processorMethod", service.getInstanceMethod(methodName, clazz));
         processorMethod.setValue("convertClass", convertClazz);
         try {
-            processorMethod.getInstanceMethod("analysis", new Class[]{}).invoke(processorMethod.getInstance(), null);
+            processorMethod.getInstanceMethod("analysis", new Class[] {}).invoke(processorMethod.getInstance(), null);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +102,7 @@ public class RequestProcessorsTest extends TestCase {
 
     }
 
-    /**
+    /**(AfterRequestProcessAdvice) adviceMap.get(clz)
      * test {@link RequestProcessors}.invoke method(using pattern).
      */
     @Test
@@ -136,6 +135,18 @@ public class RequestProcessorsTest extends TestCase {
         final String requestURI = "/date/1/20120306";
         final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
         Assert.assertEquals("11330963200000", ret);
+
+    }
+
+    /**
+     * test {@link RequestProcessors}.invoke method(using pattern).
+     */
+    @Test
+    public void testInvokeBefore() {
+
+        final String requestURI = "/before/12";
+        final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
+        Assert.assertEquals("12", ret);
 
     }
 }

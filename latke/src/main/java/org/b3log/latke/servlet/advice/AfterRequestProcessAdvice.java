@@ -20,12 +20,15 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 /**
  * BeforeRequestProcessAdvice.
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Sep 29, 2012
+ * @version 1.0.0.0, Sep 30, 2012
  */
 public class AfterRequestProcessAdvice implements RequestProcessAdvice {
 
-    @Override
-    public void doAdvice(final HTTPRequestContext context) {
+    /**
+     * doAdvice.
+     * @param context {@link HTTPRequestContext}
+     * @param ret  the invoke ret
+     */
+    public void doAdvice(HTTPRequestContext context, Object ret) {
     }
-
 }

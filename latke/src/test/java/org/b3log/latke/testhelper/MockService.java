@@ -17,6 +17,8 @@ package org.b3log.latke.testhelper;
 
 import java.util.Date;
 
+import org.b3log.latke.servlet.annotation.After;
+import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
@@ -80,6 +82,18 @@ public class MockService {
     @RequestProcessing(value = "/date/{id}/{date}", convertClass = MockConverSupport.class)
     public String getString2(final Integer id, final Date date) {
         return "" + id + date.getTime();
+    }
+
+    /**
+     * getString3
+     * @param id id 
+     * @return string
+     */
+    @Before
+    @After
+    @RequestProcessing(value = "/before/{id}")
+    public String getString3(final Integer id) {
+        return id + "";
     }
 
 }

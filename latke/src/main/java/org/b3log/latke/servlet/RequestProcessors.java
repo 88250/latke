@@ -24,6 +24,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,6 +44,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
+import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
+import org.b3log.latke.servlet.advice.RequestProcessAdvice;
+import org.b3log.latke.servlet.annotation.After;
+import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
@@ -72,6 +78,11 @@ public final class RequestProcessors {
      * Processors.
      */
     private static Map<Method, Object> processors = new HashMap<Method, Object>();
+    /**
+     * the BeforeRequestProcessAdvice instanse holder.
+     */
+    private static Map<Class<? extends RequestProcessAdvice>, ? extends RequestProcessAdvice> adviceMap =
+            new HashMap<Class<? extends RequestProcessAdvice>, RequestProcessAdvice>();
     /**
      * the data convertMap cache.
      */
@@ -103,13 +114,12 @@ public final class RequestProcessors {
             if (null == processorObject) {
                 final Class<?> processorClass = processMethod.getProcessorClass();
                 final Object instance = processorClass.newInstance();
-
                 processors.put(processorMethod, instance);
-
                 processorObject = instance;
             }
 
-            final List<Object> args = new ArrayList<Object>();
+            final Map<String, Object> args = new LinkedHashMap<String, Object>();
+
             final Class<?>[] parameterTypes = processorMethod.getParameterTypes();
             final String[] parameterName = processMethod.getMethodParamNames();
 
@@ -118,25 +128,54 @@ public final class RequestProcessors {
             for (int i = 0; i < parameterTypes.length; i++) {
                 final Class<?> paramClass = parameterTypes[i];
                 if (paramClass.equals(HTTPRequestContext.class)) {
-                    args.add(i, context);
+                    args.put(parameterName[i], context);
                 } else if (paramClass.equals(HttpServletRequest.class)) {
-                    args.add(i, context.getRequest());
+                    args.put(parameterName[i], context.getRequest());
                 } else if (paramClass.equals(HttpServletResponse.class)) {
-                    args.add(i, context.getResponse());
+                    args.put(parameterName[i], context.getResponse());
                 } else if (pathVariableValueMap.containsKey(parameterName[i])) {
-                    args.add(
-                            i,
+                    args.put(
+                            parameterName[i],
                             getConerter(processMethod.getConvertClass()).convert(parameterName[i],
                                     pathVariableValueMap.get(parameterName[i]), paramClass));
                 } else {
-                    args.add(i, null);
+                    args.put(parameterName[i], null);
                 }
             }
 
-            return processorMethod.invoke(processorObject, args.toArray());
+            // before invoke.
+            if (processorMethod.isAnnotationPresent(Before.class)) {
+                final Before befores = processorMethod.getAnnotation(Before.class);
+                final Class<? extends BeforeRequestProcessAdvice>[] adviceClass = befores.adviceClass();
+                BeforeRequestProcessAdvice instance = null;
+                for (Class<? extends BeforeRequestProcessAdvice> clz : adviceClass) {
+                    instance = (BeforeRequestProcessAdvice) adviceMap.get(clz);
+                    if (instance == null) {
+                        instance = clz.newInstance();
+                    }
+                    instance.doAdvice(context, args);
+                }
+            }
+
+            Object ret = processorMethod.invoke(processorObject, args.values().toArray());
+
+            // after invoke.
+            if (processorMethod.isAnnotationPresent(After.class)) {
+                final After afters = processorMethod.getAnnotation(After.class);
+                final Class<? extends AfterRequestProcessAdvice>[] adviceClass = afters.adviceClass();
+                AfterRequestProcessAdvice instance = null;
+                for (Class<? extends AfterRequestProcessAdvice> clz : adviceClass) {
+                    instance = (AfterRequestProcessAdvice) adviceMap.get(clz);
+                    if (instance == null) {
+                        instance = clz.newInstance();
+                    }
+                    instance.doAdvice(context, ret);
+                }
+            }
+            return ret;
+
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Invokes processor method failed", e);
-
             return null;
         }
     }

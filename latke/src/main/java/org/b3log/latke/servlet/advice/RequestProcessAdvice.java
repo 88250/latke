@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.advice;
 
-import org.b3log.latke.servlet.HTTPRequestContext;
 
 /**
  * the remarked interface for RequestProcess Advice.
@@ -24,11 +23,5 @@ import org.b3log.latke.servlet.HTTPRequestContext;
  * @version 1.0.0.0, Sep 29, 2012
  */
 public interface RequestProcessAdvice {
-
-    /**
-     * doAdvice.
-     * @param context {@link HTTPRequestContext}
-     */
-    void doAdvice(HTTPRequestContext context);
 
 }

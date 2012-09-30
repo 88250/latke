@@ -15,6 +15,11 @@
  */
 package org.b3log.latke.servlet.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 
 /**
@@ -22,15 +27,13 @@ import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Sep 29, 2012
  */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Before {
 
     /**
      * the real BeforeRequestProcessAdvice.
      */
-    Class<? extends BeforeRequestProcessAdvice> convertClass();
+    Class<? extends BeforeRequestProcessAdvice>[] adviceClass() default BeforeRequestProcessAdvice.class;
 
-    /**
-     * the priority of the BeforeRequestProcessAdvice.
-     */
-    int priority() default 0;
 }

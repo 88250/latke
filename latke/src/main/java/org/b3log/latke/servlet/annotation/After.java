@@ -15,23 +15,25 @@
  */
 package org.b3log.latke.servlet.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 
 /**
  * the after advice mark for processMethod. 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Sep 29, 2012
+ * @version 1.0.0.0, Sep 30, 2012
  */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface After {
-    
+
     /**
      * the real AfterRequestProcessAdvice.
      */
-    Class<? extends AfterRequestProcessAdvice> convertClass();
-
-    /**
-     * the priority of the AfterRequestProcessAdvice.
-     */
-    int priority() default 0;
+    Class<? extends AfterRequestProcessAdvice>[] adviceClass() default AfterRequestProcessAdvice.class;
 
 }
