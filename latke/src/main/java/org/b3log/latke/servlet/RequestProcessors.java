@@ -157,7 +157,7 @@ public final class RequestProcessors {
                 }
             }
 
-            Object ret = processorMethod.invoke(processorObject, args.values().toArray());
+            final Object ret = processorMethod.invoke(processorObject, args.values().toArray());
 
             // after invoke.
             if (processorMethod.isAnnotationPresent(After.class)) {

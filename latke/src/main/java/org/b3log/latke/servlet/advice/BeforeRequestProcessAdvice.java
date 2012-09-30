@@ -31,7 +31,7 @@ public class BeforeRequestProcessAdvice implements RequestProcessAdvice {
      * @param context {@link HTTPRequestContext}
      * @param args the invoke method params and values.
      */
-    public void doAdvice(HTTPRequestContext context, Map<String, Object> args) {
+    public void doAdvice(final HTTPRequestContext context, final Map<String, Object> args) {
     }
 
 }

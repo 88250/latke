@@ -33,18 +33,20 @@ import org.testng.annotations.Test;
 public class RequestProcessorsTest extends TestCase {
 
     static {
-        //        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
-        //        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
-        //        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
-        //        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
-        //        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
-        //                ConvertSupport.class));
-        //        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString11", new Class<?>[]{Integer.class, String.class},
-        //                ConvertSupport.class));
-        //        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
-        //                ConvertSupport.class));
-        //        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
-        //                MockConverSupport.class));
+        /**
+        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
+        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
+        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
+        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
+                ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString11", new Class<?>[]{Integer.class, String.class},
+                ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
+                ConvertSupport.class));
+        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
+                MockConverSupport.class));
+         */
         RequestProcessors.discoverFromClass(MockService.class);
     }
 

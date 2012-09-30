@@ -85,7 +85,7 @@ public class MockService {
     }
 
     /**
-     * getString3
+     * getString3.
      * @param id id 
      * @return string
      */

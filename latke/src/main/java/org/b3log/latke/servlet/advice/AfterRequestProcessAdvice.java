@@ -29,6 +29,6 @@ public class AfterRequestProcessAdvice implements RequestProcessAdvice {
      * @param context {@link HTTPRequestContext}
      * @param ret  the invoke ret
      */
-    public void doAdvice(HTTPRequestContext context, Object ret) {
+    public void doAdvice(final HTTPRequestContext context, final Object ret) {
     }
 }
