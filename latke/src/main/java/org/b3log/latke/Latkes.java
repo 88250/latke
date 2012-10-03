@@ -28,7 +28,7 @@ import org.b3log.latke.util.Strings;
  * Latke framework configuration utility facade.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.0, Sep 11, 2012
+ * @version 1.0.2.1, Oct 3, 2012
  * @see #initRuntimeEnv()
  * @see #getServePath()
  * @see #getStaticServePath()
@@ -55,6 +55,10 @@ public final class Latkes {
      * Is the page cache enabled?
      */
     private static boolean pageCacheEnabled;
+    /**
+     * Is the data cache enabled?
+     */
+    private static boolean dataCacheEnabled;
     /**
      * Local properties (local.properties).
      */
@@ -442,6 +446,36 @@ public final class Latkes {
     }
 
     /**
+     * Disables the data cache.
+     * 
+     * <p>
+     * Invokes this method will remove all cached data.
+     * </p>
+     */
+    public static void disableDataCache() {
+        dataCacheEnabled = false;
+        PageCaches.removeAll();
+        LOGGER.log(Level.FINER, "Disabled data cache");
+    }
+
+    /**
+     * Enables the page cache.
+     */
+    public static void enableDataCache() {
+        dataCacheEnabled = true;
+        LOGGER.log(Level.FINER, "Enabled data cache");
+    }
+
+    /**
+     * Is the data cache enabled?
+     * 
+     * @return {@code true} if it is enabled, returns {@code false} otherwise
+     */
+    public static boolean isDataCacheEnabled() {
+        return dataCacheEnabled;
+    }
+
+    /**
      * Initializes {@linkplain RuntimeEnv runtime environment}.
      * 
      * <ol>
@@ -501,7 +535,7 @@ public final class Latkes {
             final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
             LOGGER.log(Level.INFO, "Runtime database is [{0}]", runtimeDatabase);
         }
-        
+
         locale = new Locale("en_US");
     }
 
@@ -549,7 +583,7 @@ public final class Latkes {
     public static RuntimeDatabase getRuntimeDatabase() {
         if (RuntimeEnv.LOCAL != runtimeEnv && RuntimeEnv.BAE != runtimeEnv) {
             throw new RuntimeException("Underlying database can be specified when Latke runs on [Local] / [BAE] environment only, "
-                                       + "current runtime enviornment [" + runtimeEnv + ']');
+                    + "current runtime enviornment [" + runtimeEnv + ']');
         }
 
         final String runtimeDatabase = LOCAL_PROPS.getProperty("runtimeDatabase");
