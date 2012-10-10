@@ -57,7 +57,7 @@ public final class JdbcUtil {
     public static boolean executeSql(final String sql, final Connection connection) throws SQLException {
         LOGGER.log(Level.FINEST, "executeSql: {0}", sql);
         final Statement statement = connection.createStatement();
-        final boolean isSuccess = statement.execute(sql);
+        final boolean isSuccess = !statement.execute(sql);
         statement.close();
 
         return isSuccess;
@@ -72,8 +72,7 @@ public final class JdbcUtil {
      * @return issuccess
      * @throws SQLException SQLException
      */
-    public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection)
-            throws SQLException {
+    public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection) throws SQLException {
         LOGGER.log(Level.FINEST, "executeSql: {0}", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -100,10 +99,8 @@ public final class JdbcUtil {
      * @throws JSONException JSONException
      * @throws RepositoryException repositoryException
      */
-    public static JSONObject queryJsonObject(final String sql,
-            final List<Object> paramList, final Connection connection,
-            final String tableName) throws SQLException, JSONException,
-            RepositoryException {
+    public static JSONObject queryJsonObject(final String sql, final List<Object> paramList, final Connection connection,
+            final String tableName) throws SQLException, JSONException, RepositoryException {
 
         return queryJson(sql, paramList, connection, true, tableName);
 
@@ -122,10 +119,8 @@ public final class JdbcUtil {
      * @throws JSONException JSONException
      * @throws RepositoryException repositoryException
      */
-    public static JSONArray queryJsonArray(final String sql,
-            final List<Object> paramList, final Connection connection,
-            final String tableName) throws SQLException, JSONException,
-            RepositoryException {
+    public static JSONArray queryJsonArray(final String sql, final List<Object> paramList, final Connection connection,
+            final String tableName) throws SQLException, JSONException, RepositoryException {
         final JSONObject jsonObject = queryJson(sql, paramList, connection, false, tableName);
         return jsonObject.getJSONArray(Keys.RESULTS);
 
@@ -143,10 +138,8 @@ public final class JdbcUtil {
      * @throws JSONException JSONException
      * @throws RepositoryException respsitoryException
      */
-    private static JSONObject queryJson(final String sql,
-            final List<Object> paramList, final Connection connection,
-            final boolean ifOnlyOne, final String tableName)
-            throws SQLException, JSONException, RepositoryException {
+    private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection,
+            final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
         LOGGER.log(Level.FINEST, "querySql: {0}", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -175,8 +168,7 @@ public final class JdbcUtil {
      * @throws JSONException JSONException
      * @throws RepositoryException RepositoryException
      */
-    private static JSONObject resultSetToJsonObject(final ResultSet resultSet,
-            final boolean ifOnlyOne, final String tableName)
+    private static JSONObject resultSetToJsonObject(final ResultSet resultSet, final boolean ifOnlyOne, final String tableName)
             throws SQLException, JSONException, RepositoryException {
         final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
