@@ -60,7 +60,6 @@ public final class JdbcUtil {
         final Statement statement = connection.createStatement();
         final boolean isSuccess = !statement.execute(sql);
         statement.close();
-        
         return isSuccess;
     }
 
