@@ -56,10 +56,11 @@ public final class JdbcUtil {
      */
     public static boolean executeSql(final String sql, final Connection connection) throws SQLException {
         LOGGER.log(Level.FINEST, "executeSql: {0}", sql);
+        
         final Statement statement = connection.createStatement();
         final boolean isSuccess = !statement.execute(sql);
         statement.close();
-
+        
         return isSuccess;
     }
 
