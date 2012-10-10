@@ -34,10 +34,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * jdbcUtil.
+ * JDBC utilities.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Dec 20, 2011
+ * @version 1.0.0.1, Oct 10, 2012
  */
 public final class JdbcUtil {
 
@@ -54,10 +54,8 @@ public final class JdbcUtil {
      * @return ifsuccess
      * @throws SQLException SQLException
      */
-    public static boolean executeSql(final String sql,
-            final Connection connection) throws SQLException {
-
-        LOGGER.info("executeSql:" + sql);
+    public static boolean executeSql(final String sql, final Connection connection) throws SQLException {
+        LOGGER.log(Level.FINEST, "executeSql: {0}", sql);
         final Statement statement = connection.createStatement();
         final boolean isSuccess = statement.execute(sql);
         statement.close();
@@ -74,12 +72,10 @@ public final class JdbcUtil {
      * @return issuccess
      * @throws SQLException SQLException
      */
-    public static boolean executeSql(final String sql,
-            final List<Object> paramList, final Connection connection)
+    public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection)
             throws SQLException {
+        LOGGER.log(Level.FINEST, "executeSql: {0}", sql);
 
-        LOGGER.info("executeSql:" + sql);
-        
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
         for (int i = 1; i <= paramList.size(); i++) {
@@ -151,8 +147,7 @@ public final class JdbcUtil {
             final List<Object> paramList, final Connection connection,
             final boolean ifOnlyOne, final String tableName)
             throws SQLException, JSONException, RepositoryException {
-
-        LOGGER.info("querySql:" + sql);
+        LOGGER.log(Level.FINEST, "querySql: {0}", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
