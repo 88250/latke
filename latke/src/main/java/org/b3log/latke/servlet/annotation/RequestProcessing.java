@@ -20,7 +20,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
 import org.b3log.latke.servlet.converter.ConvertSupport;
@@ -29,6 +28,7 @@ import org.b3log.latke.servlet.converter.ConvertSupport;
  * Indicates that an annotated method for HTTP servlet request processing.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.4, May 1, 2012
  * @see RequestProcessor
  */
@@ -57,7 +57,7 @@ public @interface RequestProcessing {
     /**
      * The HTTP request methods the annotated method should process.
      */
-    HTTPRequestMethod[] method() default {HTTPRequestMethod.GET };
+    HTTPRequestMethod[] method() default {HTTPRequestMethod.GET};
 
     /**
      * Checks dose whether the URI patterns with context path.
@@ -77,8 +77,7 @@ public @interface RequestProcessing {
     boolean isWithContextPath() default true;
 
     /**
-     * user custom data convert class.
+     * User customized data convert class.
      */
     Class<? extends ConvertSupport> convertClass() default ConvertSupport.class;
-
 }
