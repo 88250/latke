@@ -18,11 +18,11 @@ package org.b3log.latke.urlfetch.local;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 
 /**
- * UrlFetchHandlerFactory to get  UrlFetchHandler.
+ * UrlFetchHandlerFactory to get an UrlFetchHandler.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 0.0.0.3, Aug 21, 2011
- * 
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.4, Oct 12, 2012
  */
 final class UrlFetchHandlerFactory {
 
@@ -42,10 +42,12 @@ final class UrlFetchHandlerFactory {
             case POST:
                 ret = new UrlFetchPostHandler();
                 break;
+            case PUT:
+                ret = new UrlFetchPutHandler();
+                break;
             default:
                 ret = new UrlFetchCommonHandler();
                 break;
-
         }
 
         return ret;
