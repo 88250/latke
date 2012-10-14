@@ -54,10 +54,12 @@ import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.converter.ConvertSupport;
+import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.servlet.renderer.TextHTMLRenderer;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ReflectHelper;
 import org.b3log.latke.util.RegexPathMatcher;
+import org.json.JSONObject;
 
 /**
  * Request processor utilities.
@@ -160,7 +162,8 @@ public final class RequestProcessors {
                         instance.doAdvice(context, args);
                     }
                 } catch (final RequestProcessAdiceException e) {
-                    final TextHTMLRenderer ret = new TextHTMLRenderer();
+                    final JSONRenderer ret = new JSONRenderer();
+                    ret.setJSONObject(e.getJsonObject());
                     context.setRenderer(ret);
                     return null;
                 }
