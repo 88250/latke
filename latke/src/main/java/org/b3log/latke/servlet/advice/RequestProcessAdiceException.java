@@ -15,20 +15,24 @@
  */
 package org.b3log.latke.servlet.advice;
 
-import org.b3log.latke.servlet.HTTPRequestContext;
-
 /**
- * BeforeRequestProcessAdvice.
+ * RequestProcessAdiceException for {@link RequestProcessAdvice}.
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Oct 14, 2012
+ * @version 1.0.0.0, Oct 14, 2012
  */
-public class AfterRequestProcessAdvice implements RequestProcessAdvice {
+public class RequestProcessAdiceException extends Exception {
 
     /**
-     * doAdvice.
-     * @param context {@link HTTPRequestContext}
-     * @param ret  the invoke ret
+     * serialVersionUID.
      */
-    public void doAdvice(final HTTPRequestContext context, final Object ret) {
+    private static final long serialVersionUID = 4070666571307478762L;
+
+    /**
+     * the default constructor.
+     * @param message exception message
+     */
+    public RequestProcessAdiceException(final String message) {
+        super(message);
     }
+
 }

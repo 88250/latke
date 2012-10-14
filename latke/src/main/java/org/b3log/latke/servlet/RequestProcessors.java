@@ -47,12 +47,14 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdvice;
+import org.b3log.latke.servlet.advice.RequestProcessAdiceException;
 import org.b3log.latke.servlet.annotation.After;
 import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.converter.ConvertSupport;
+import org.b3log.latke.servlet.renderer.TextHTMLRenderer;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ReflectHelper;
 import org.b3log.latke.util.RegexPathMatcher;
@@ -148,13 +150,21 @@ public final class RequestProcessors {
                 final Before befores = processorMethod.getAnnotation(Before.class);
                 final Class<? extends BeforeRequestProcessAdvice>[] adviceClass = befores.adviceClass();
                 BeforeRequestProcessAdvice instance = null;
-                for (Class<? extends BeforeRequestProcessAdvice> clz : adviceClass) {
-                    instance = (BeforeRequestProcessAdvice) adviceMap.get(clz);
-                    if (instance == null) {
-                        instance = clz.newInstance();
+
+                try {
+                    for (Class<? extends BeforeRequestProcessAdvice> clz : adviceClass) {
+                        instance = (BeforeRequestProcessAdvice) adviceMap.get(clz);
+                        if (instance == null) {
+                            instance = clz.newInstance();
+                        }
+                        instance.doAdvice(context, args);
                     }
-                    instance.doAdvice(context, args);
+                } catch (final RequestProcessAdiceException e) {
+                    final TextHTMLRenderer ret = new TextHTMLRenderer();
+                    context.setRenderer(ret);
+                    return null;
                 }
+
             }
 
             final Object ret = processorMethod.invoke(processorObject, args.values().toArray());

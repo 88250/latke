@@ -30,8 +30,9 @@ public class BeforeRequestProcessAdvice implements RequestProcessAdvice {
      * doAdvice.
      * @param context {@link HTTPRequestContext}
      * @param args the invoke method params and values.
+     * @throws RequestProcessAdiceException the exception
      */
-    public void doAdvice(final HTTPRequestContext context, final Map<String, Object> args) {
+    public void doAdvice(final HTTPRequestContext context, final Map<String, Object> args) throws RequestProcessAdiceException {
     }
 
 }
