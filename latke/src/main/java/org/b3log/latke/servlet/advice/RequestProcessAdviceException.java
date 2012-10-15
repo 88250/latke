@@ -18,17 +18,17 @@ package org.b3log.latke.servlet.advice;
 import org.json.JSONObject;
 
 /**
- * RequestProcessAdiceException for {@link RequestProcessAdvice}.
+ * Exception for {@link RequestProcessAdvice}.
+ * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Oct 14, 2012
  */
-public class RequestProcessAdiceException extends Exception {
+public class RequestProcessAdviceException extends Exception {
 
     /**
      * the error message jsonObject.
      */
     private JSONObject jsonObject;
-
     /**
      * serialVersionUID.
      */
@@ -38,7 +38,7 @@ public class RequestProcessAdiceException extends Exception {
      * the default constructor.
      * @param jsonObject jsonObject
      */
-    public RequestProcessAdiceException(final JSONObject jsonObject) {
+    public RequestProcessAdviceException(final JSONObject jsonObject) {
         super(jsonObject.toString());
         this.jsonObject = jsonObject;
     }
@@ -49,5 +49,4 @@ public class RequestProcessAdiceException extends Exception {
     public JSONObject getJsonObject() {
         return jsonObject;
     }
-
 }

@@ -16,7 +16,6 @@
 package org.b3log.latke.servlet.advice;
 
 import java.util.Map;
-
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 /**
@@ -30,9 +29,8 @@ public class BeforeRequestProcessAdvice implements RequestProcessAdvice {
      * doAdvice.
      * @param context {@link HTTPRequestContext}
      * @param args the invoke method params and values.
-     * @throws RequestProcessAdiceException the exception
+     * @throws RequestProcessAdviceException the exception
      */
-    public void doAdvice(final HTTPRequestContext context, final Map<String, Object> args) throws RequestProcessAdiceException {
+    public void doAdvice(final HTTPRequestContext context, final Map<String, Object> args) throws RequestProcessAdviceException {
     }
-
 }

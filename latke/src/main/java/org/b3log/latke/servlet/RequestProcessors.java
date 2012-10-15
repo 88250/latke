@@ -46,7 +46,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.RequestProcessAdiceException;
+import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 import org.b3log.latke.servlet.advice.RequestProcessAdvice;
 import org.b3log.latke.servlet.annotation.After;
 import org.b3log.latke.servlet.annotation.Before;
@@ -159,7 +159,7 @@ public final class RequestProcessors {
                         }
                         instance.doAdvice(context, args);
                     }
-                } catch (final RequestProcessAdiceException e) {
+                } catch (final RequestProcessAdviceException e) {
                     final JSONRenderer ret = new JSONRenderer();
                     ret.setJSONObject(e.getJsonObject());
                     context.setRenderer(ret);
