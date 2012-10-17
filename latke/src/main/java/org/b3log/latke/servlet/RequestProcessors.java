@@ -18,6 +18,7 @@ package org.b3log.latke.servlet;
 import java.io.DataInputStream;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -34,20 +35,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.annotation.Annotation;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 import org.b3log.latke.servlet.advice.RequestProcessAdvice;
+import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 import org.b3log.latke.servlet.annotation.After;
 import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.PathVariable;
@@ -64,7 +62,7 @@ import org.b3log.latke.util.RegexPathMatcher;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.1.0, Sep 10, 2012
+ * @version 1.0.1.1, Oct 17, 2012
  */
 public final class RequestProcessors {
 
@@ -81,7 +79,7 @@ public final class RequestProcessors {
      */
     private static Map<Method, Object> processors = new HashMap<Method, Object>();
     /**
-     * the BeforeRequestProcessAdvice instanse holder.
+     * the BeforeRequestProcessAdvice instance holder.
      */
     private static Map<Class<? extends RequestProcessAdvice>, ? extends RequestProcessAdvice> adviceMap =
             new HashMap<Class<? extends RequestProcessAdvice>, RequestProcessAdvice>();
@@ -104,8 +102,8 @@ public final class RequestProcessors {
         final ProcessorMethod processMethod = getProcessorMethod(requestURI, contextPath, method);
 
         if (null == processMethod) {
-            LOGGER.log(Level.WARNING, "Can not find process method for request[requestURI={0}, method={1}]", new Object[] {requestURI,
-                    method });
+            LOGGER.log(Level.WARNING, "Can not find process method for request[requestURI={0}, method={1}]", new Object[]{requestURI,
+                                                                                                                          method});
             return null;
         }
 
@@ -139,7 +137,7 @@ public final class RequestProcessors {
                     args.put(
                             parameterName[i],
                             getConerter(processMethod.getConvertClass()).convert(parameterName[i],
-                                    pathVariableValueMap.get(parameterName[i]), paramClass));
+                                                                                 pathVariableValueMap.get(parameterName[i]), paramClass));
                 } else {
                     args.put(parameterName[i], null);
                 }
@@ -149,7 +147,7 @@ public final class RequestProcessors {
             if (processorMethod.isAnnotationPresent(Before.class)) {
                 final Before befores = processorMethod.getAnnotation(Before.class);
                 final Class<? extends BeforeRequestProcessAdvice>[] adviceClass = befores.adviceClass();
-                BeforeRequestProcessAdvice instance = null;
+                BeforeRequestProcessAdvice instance;
 
                 try {
                     for (Class<? extends BeforeRequestProcessAdvice> clz : adviceClass) {
@@ -174,7 +172,7 @@ public final class RequestProcessors {
             if (processorMethod.isAnnotationPresent(After.class)) {
                 final After afters = processorMethod.getAnnotation(After.class);
                 final Class<? extends AfterRequestProcessAdvice>[] adviceClass = afters.adviceClass();
-                AfterRequestProcessAdvice instance = null;
+                AfterRequestProcessAdvice instance;
                 for (Class<? extends AfterRequestProcessAdvice> clz : adviceClass) {
                     instance = (AfterRequestProcessAdvice) adviceMap.get(clz);
                     if (instance == null) {
@@ -226,7 +224,7 @@ public final class RequestProcessors {
         final String webRoot = AbstractServletListener.getWebRoot();
         final File classesDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "classes" + File.separator);
         @SuppressWarnings("unchecked")
-        final Collection<File> classes = FileUtils.listFiles(classesDir, new String[] {"class" }, true);
+        final Collection<File> classes = FileUtils.listFiles(classesDir, new String[]{"class"}, true);
         final ClassLoader classLoader = RequestProcessors.class.getClassLoader();
 
         try {
@@ -234,7 +232,7 @@ public final class RequestProcessors {
                 final String path = classFile.getPath();
                 final String className =
                         StringUtils.substringBetween(path, "WEB-INF" + File.separator + "classes" + File.separator, ".class")
-                                .replaceAll("\\/", ".").replaceAll("\\\\", ".");
+                        .replaceAll("\\/", ".").replaceAll("\\\\", ".");
                 final Class<?> clz = classLoader.loadClass(className);
 
                 if (clz.isAnnotationPresent(RequestProcessor.class)) {
@@ -264,25 +262,25 @@ public final class RequestProcessors {
         final String webRoot = AbstractServletListener.getWebRoot();
         final File libDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "lib" + File.separator);
         @SuppressWarnings("unchecked")
-        final Collection<File> files = FileUtils.listFiles(libDir, new String[] {"jar" }, true);
+        final Collection<File> files = FileUtils.listFiles(libDir, new String[]{"jar"}, true);
 
         final ClassLoader classLoader = RequestProcessors.class.getClassLoader();
 
         try {
             for (final File file : files) {
                 if (file.getName().contains("appengine-api")
-                        || file.getName().startsWith("freemarker")
-                        || file.getName().startsWith("javassist")
-                        || file.getName().startsWith("commons")
-                        || file.getName().startsWith("mail")
-                        || file.getName().startsWith("activation")
-                        || file.getName().startsWith("slf4j")
-                        || file.getName().startsWith("bonecp")
-                        || file.getName().startsWith("jsoup")
-                        || file.getName().startsWith("guava")
-                        || file.getName().startsWith("markdown")
-                        || file.getName().startsWith("mysql")
-                        || file.getName().startsWith("c3p0")) {
+                    || file.getName().startsWith("freemarker")
+                    || file.getName().startsWith("javassist")
+                    || file.getName().startsWith("commons")
+                    || file.getName().startsWith("mail")
+                    || file.getName().startsWith("activation")
+                    || file.getName().startsWith("slf4j")
+                    || file.getName().startsWith("bonecp")
+                    || file.getName().startsWith("jsoup")
+                    || file.getName().startsWith("guava")
+                    || file.getName().startsWith("markdown")
+                    || file.getName().startsWith("mysql")
+                    || file.getName().startsWith("c3p0")) {
                     // Just skips some known dependencies hardly....
                     LOGGER.log(Level.INFO, "Skipped request processing discovery[jarName={0}]", file.getName());
 
@@ -297,7 +295,7 @@ public final class RequestProcessors {
                     final String classFileName = jarEntry.getName();
 
                     if (classFileName.contains("$") // Skips inner class
-                            || !classFileName.endsWith(".class")) {
+                        || !classFileName.endsWith(".class")) {
                         continue;
                     }
 
@@ -372,8 +370,8 @@ public final class RequestProcessors {
      * @return process method, returns {@code null} if not found
      */
     private static ProcessorMethod getProcessorMethod(final String requestURI, final String contextPath, final String method) {
-        LOGGER.log(Level.FINEST, "Gets processor method[requestURI={0}, contextPath={1}, method={2}]", new Object[] {requestURI,
-                contextPath, method });
+        LOGGER.log(Level.FINEST, "Gets processor method[requestURI={0}, contextPath={1}, method={2}]", new Object[]{requestURI,
+                                                                                                                    contextPath, method});
 
         final List<ProcessorMethod> matches = new ArrayList<ProcessorMethod>();
         int i = 0;
@@ -395,18 +393,18 @@ public final class RequestProcessors {
 
                 switch (processorMethod.getURIPatternMode()) {
 
-                case ANT_PATH:
-                    found = AntPathMatcher.match(uriPattern, requestURI);
-                    break;
-                case REGEX:
-                    found = RegexPathMatcher.match(uriPattern, requestURI);
-                    break;
-                default:
-                    throw new IllegalStateException("Can not process URI pattern[uriPattern="
-                            + processorMethod.getURIPattern()
-                            + ", mode="
-                            + processorMethod.getURIPatternMode()
-                            + "]");
+                    case ANT_PATH:
+                        found = AntPathMatcher.match(uriPattern, requestURI);
+                        break;
+                    case REGEX:
+                        found = RegexPathMatcher.match(uriPattern, requestURI);
+                        break;
+                    default:
+                        throw new IllegalStateException("Can not process URI pattern[uriPattern="
+                                                        + processorMethod.getURIPattern()
+                                                        + ", mode="
+                                                        + processorMethod.getURIPatternMode()
+                                                        + "]");
                 }
 
                 if (found) {
@@ -645,7 +643,6 @@ public final class RequestProcessors {
         public void setConvertClass(final Class<? extends ConvertSupport> convertClass) {
             this.convertClass = convertClass;
         }
-
         /**
          * the mappingString for mapping.
          */
@@ -677,7 +674,6 @@ public final class RequestProcessors {
             }
 
         }
-
         /**
          * the paramNames in pattern.
          */
@@ -743,8 +739,9 @@ public final class RequestProcessors {
          *
          * @param requestURI requestURI
          * @return map
+         * @throws Exception exception
          */
-        public Map<String, String> pathVariableValueMap(final String requestURI) {
+        public Map<String, String> pathVariableValueMap(final String requestURI) throws Exception {
 
             final Map<String, String> ret = new HashMap<String, String>();
 
@@ -762,8 +759,10 @@ public final class RequestProcessors {
                     chars.append(requestURI.charAt(i));
                     i++;
                 }
-                ret.put(paramNames.get(j), chars.toString());
+
+                ret.put(paramNames.get(j), URLDecoder.decode(chars.toString(), "UTF-8"));
             }
+
             return ret;
         }
     }
