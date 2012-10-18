@@ -37,7 +37,7 @@ import org.json.JSONObject;
  * Repository utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.7, Sep 19, 2012
+ * @version 1.0.0.8, Oct 18, 2012
  */
 public final class Repositories {
 
@@ -186,12 +186,11 @@ public final class Repositories {
 
             keySet.add(key);
 
-            if (needIgnoreKeys
-                    && Strings.contains(key, ignoredKeys)) {
+            if (needIgnoreKeys && Strings.contains(key, ignoredKeys)) {
                 continue;
             }
 
-            if (!nameSet.contains(key)) {
+            if (!keyDescription.optBoolean("nullable") && !nameSet.contains(key)) {
                 throw new RepositoryException("A json object to persist to repository[name="
                         + repositoryName + "] does not contain a key[" + key + "]");
             }
@@ -337,8 +336,8 @@ public final class Repositories {
 
             // Repository name prefix
             final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
-                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_" : "";
-            
+                    ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_" : "";
+
             final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
             for (int i = 0; i < repositories.length(); i++) {
                 final JSONObject repository = repositories.optJSONObject(i);
