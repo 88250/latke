@@ -17,6 +17,7 @@ package org.b3log.latke.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +28,7 @@ import org.json.JSONArray;
  * Collection utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.7, Jan 6, 2012
+ * @version 1.0.0.8, Oct 21, 2012
  */
 public final class CollectionUtils {
 
@@ -121,6 +122,27 @@ public final class CollectionUtils {
         }
 
         for (final T object : list) {
+            ret.put(object);
+        }
+
+        return ret;
+    }
+    
+    /**
+     * Converts the specified {@link Collection collection} to a {@link JSONArray JSON array}.
+     *
+     * @param <T> the type of elements maintained by the specified collection
+     * @param collection the specified collection
+     * @return a {@link JSONArray JSON array}
+     */
+    public static <T> JSONArray toJSONArray(final Collection<T> collection) {
+        final JSONArray ret = new JSONArray();
+
+        if (null == collection) {
+            return ret;
+        }
+
+        for (final T object : collection) {
             ret.put(object);
         }
 
