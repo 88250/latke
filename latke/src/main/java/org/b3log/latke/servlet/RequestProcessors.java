@@ -62,7 +62,7 @@ import org.b3log.latke.util.RegexPathMatcher;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.1.1, Oct 17, 2012
+ * @version 1.0.1.2, Oct 23, 2012
  */
 public final class RequestProcessors {
 
@@ -184,7 +184,9 @@ public final class RequestProcessors {
             return ret;
 
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Invokes processor method failed", e);
+            LOGGER.log(Level.SEVERE, "Invokes processor method failed [method=" + processorMethod.getDeclaringClass().getSimpleName() + '#'
+                                     + processorMethod.getName() + ']', e);
+
             return null;
         }
     }
