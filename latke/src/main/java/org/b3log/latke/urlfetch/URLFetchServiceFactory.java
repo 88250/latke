@@ -23,8 +23,9 @@ import org.b3log.latke.RuntimeEnv;
  * URL fetch service factory.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, Nov 8, 2012
+ * @version 1.0.0.4, Nov 16, 2012
  */
+@SuppressWarnings("unchecked")
 public final class URLFetchServiceFactory {
 
     /**
@@ -42,14 +43,13 @@ public final class URLFetchServiceFactory {
         final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
 
         try {
-            Class<URLFetchService> serviceClass = null;
+            Class<URLFetchService> serviceClass;
 
             switch (runtimeEnv) {
                 case BAE:
-                    // TODO: BAE URL Fetch Service
-                    //serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.bae.BAEURLFetchService");
-                    //URL_FETCH_SERVICE = serviceClass.newInstance();
-                    //break;
+                    serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.bae.BAEURLFetchService");
+                    URL_FETCH_SERVICE = serviceClass.newInstance();
+                    break;
                 case LOCAL:
                     serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
                     URL_FETCH_SERVICE = serviceClass.newInstance();
