@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Keys;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdvice;
@@ -56,6 +57,7 @@ import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ReflectHelper;
 import org.b3log.latke.util.RegexPathMatcher;
+import org.json.JSONObject;
 
 /**
  * Request processor utilities.
@@ -158,8 +160,12 @@ public final class RequestProcessors {
                         instance.doAdvice(context, args);
                     }
                 } catch (final RequestProcessAdviceException e) {
+                    final JSONObject exception = e.getJsonObject();
+
+                    LOGGER.log(Level.WARNING, "Occurs an exception before request processing [errMsg={0}]", exception.optString(Keys.MSG));
+
                     final JSONRenderer ret = new JSONRenderer();
-                    ret.setJSONObject(e.getJsonObject());
+                    ret.setJSONObject(exception);
                     context.setRenderer(ret);
                     return null;
                 }
