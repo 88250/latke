@@ -31,8 +31,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
+import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
+import org.b3log.latke.cache.local.memory.LruMemoryCache;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
@@ -72,8 +75,7 @@ public final class PluginManager {
      * </p>
      */
     @SuppressWarnings("unchecked")
-    private final Cache<String, HashMap<String, HashSet<AbstractPlugin>>> pluginCache =
-            (Cache<String, HashMap<String, HashSet<AbstractPlugin>>>) CacheFactory.getCache(PLUGIN_CACHE_NAME);
+    private final Cache<String, HashMap<String, HashSet<AbstractPlugin>>> pluginCache;
     /**
      * Plugin root directory.
      */
@@ -264,7 +266,7 @@ public final class PluginManager {
         set.add(plugin);
 
         LOGGER.log(Level.FINER, "Registered plugin[name={0}, version={1}] for view[name={2}], [{3}] plugins totally",
-                   new Object[]{plugin.getName(), plugin.getVersion(), viewName, holder.size()});
+                new Object[]{plugin.getName(), plugin.getVersion(), viewName, holder.size()});
     }
 
     /**
@@ -314,8 +316,8 @@ public final class PluginManager {
      * @throws Exception exception
      */
     private static void registerEventListeners(final Properties props,
-                                               final URLClassLoader classLoader,
-                                               final AbstractPlugin plugin)
+            final URLClassLoader classLoader,
+            final AbstractPlugin plugin)
             throws Exception {
         final String eventListenerClasses = props.getProperty(Plugin.PLUGIN_EVENT_LISTENER_CLASSES);
         final String[] eventListenerClassArray = eventListenerClasses.split(",");
@@ -335,7 +337,7 @@ public final class PluginManager {
             final EventManager eventManager = EventManager.getInstance();
             eventManager.registerListener(eventListener);
             LOGGER.log(Level.FINER, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",
-                       new Object[]{eventListener.getClass(), eventListener.getEventType(), plugin.getName()});
+                    new Object[]{eventListener.getClass(), eventListener.getEventType(), plugin.getName()});
         }
     }
 
@@ -380,6 +382,12 @@ public final class PluginManager {
     /**
      * Private default constructor.
      */
+    @SuppressWarnings("unchecked")
     private PluginManager() {
+        if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) {
+            pluginCache = new LruMemoryCache<String, HashMap<String, HashSet<AbstractPlugin>>>();
+        } else {
+            pluginCache = (Cache<String, HashMap<String, HashSet<AbstractPlugin>>>) CacheFactory.getCache(PLUGIN_CACHE_NAME);
+        }
     }
 }
