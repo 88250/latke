@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -29,12 +31,18 @@ import javassist.bytecode.MethodInfo;
  * ReflectHelper while not using java reflect instead of the other class byte tool.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.2, Sep 17, 2012
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.3, Oct 12, 2012
  */
 public final class ReflectHelper {
 
     /**
-     * the defalut constructor.
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(ReflectHelper.class.getName());
+
+    /**
+     * The default constructor.
      */
     private ReflectHelper() {
     }
@@ -43,24 +51,23 @@ public final class ReflectHelper {
      * getMethodVariableNames in user defined.
      * @param clazz the specific clazz
      * @param targetMethodName the targetMethodName
-     * @param types the types of the method
+     * @param types the types of the method parameters
      * @return the String[] of names
      */
     public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, final Class<?>[] types) {
-
         final ClassPool pool = ClassPool.getDefault();
         pool.insertClassPath(new ClassClassPath(clazz));
         CtClass cc;
         CtMethod cm = null;
         try {
-            cc = pool.get(clazz.getName());
+                cc = pool.get(clazz.getName());
             final CtClass[] ptypes = new CtClass[types.length];
             for (int i = 0; i < ptypes.length; i++) {
                 ptypes[i] = pool.get(types[i].getName());
             }
             cm = cc.getDeclaredMethod(targetMethodName, ptypes);
-        } catch (final NotFoundException e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            LOGGER.log(Level.SEVERE, "Get method variable names failed", e);
         }
 
         if (null == cm) {
@@ -74,12 +81,11 @@ public final class ReflectHelper {
         try {
             variableNames = new String[cm.getParameterTypes().length];
         } catch (final NotFoundException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Get method variable names failed", e);
         }
         final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
         for (int i = 0; i < variableNames.length; i++) {
-            variableNames[i] = attr.variableName(i
-                    + staticIndex);
+            variableNames[i] = attr.variableName(i + staticIndex);
 
         }
         return variableNames;

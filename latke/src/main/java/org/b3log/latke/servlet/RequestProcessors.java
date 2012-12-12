@@ -105,7 +105,7 @@ public final class RequestProcessors {
 
         if (null == processMethod) {
             LOGGER.log(Level.WARNING, "Can not find process method for request[requestURI={0}, method={1}]", new Object[]{requestURI,
-                                                                                                                          method});
+                        method});
             return null;
         }
 
@@ -139,7 +139,7 @@ public final class RequestProcessors {
                     args.put(
                             parameterName[i],
                             getConerter(processMethod.getConvertClass()).convert(parameterName[i],
-                                                                                 pathVariableValueMap.get(parameterName[i]), paramClass));
+                            pathVariableValueMap.get(parameterName[i]), paramClass));
                 } else {
                     args.put(parameterName[i], null);
                 }
@@ -191,7 +191,7 @@ public final class RequestProcessors {
 
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Invokes processor method failed [method=" + processorMethod.getDeclaringClass().getSimpleName() + '#'
-                                     + processorMethod.getName() + ']', e);
+                    + processorMethod.getName() + ']', e);
 
             return null;
         }
@@ -277,18 +277,18 @@ public final class RequestProcessors {
         try {
             for (final File file : files) {
                 if (file.getName().contains("appengine-api")
-                    || file.getName().startsWith("freemarker")
-                    || file.getName().startsWith("javassist")
-                    || file.getName().startsWith("commons")
-                    || file.getName().startsWith("mail")
-                    || file.getName().startsWith("activation")
-                    || file.getName().startsWith("slf4j")
-                    || file.getName().startsWith("bonecp")
-                    || file.getName().startsWith("jsoup")
-                    || file.getName().startsWith("guava")
-                    || file.getName().startsWith("markdown")
-                    || file.getName().startsWith("mysql")
-                    || file.getName().startsWith("c3p0")) {
+                        || file.getName().startsWith("freemarker")
+                        || file.getName().startsWith("javassist")
+                        || file.getName().startsWith("commons")
+                        || file.getName().startsWith("mail")
+                        || file.getName().startsWith("activation")
+                        || file.getName().startsWith("slf4j")
+                        || file.getName().startsWith("bonecp")
+                        || file.getName().startsWith("jsoup")
+                        || file.getName().startsWith("guava")
+                        || file.getName().startsWith("markdown")
+                        || file.getName().startsWith("mysql")
+                        || file.getName().startsWith("c3p0")) {
                     // Just skips some known dependencies hardly....
                     LOGGER.log(Level.INFO, "Skipped request processing discovery[jarName={0}]", file.getName());
 
@@ -303,13 +303,13 @@ public final class RequestProcessors {
                     final String classFileName = jarEntry.getName();
 
                     if (classFileName.contains("$") // Skips inner class
-                        || !classFileName.endsWith(".class")) {
+                            || !classFileName.endsWith(".class")) {
                         continue;
                     }
 
-                    final DataInputStream dataInputStream = new DataInputStream(jarFile.getInputStream(jarEntry));
+                    final DataInputStream classInputStream = new DataInputStream(jarFile.getInputStream(jarEntry));
 
-                    final ClassFile classFile = new ClassFile(dataInputStream);
+                    final ClassFile classFile = new ClassFile(classInputStream);
                     final AnnotationsAttribute annotationsAttribute =
                             (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
                     if (null == annotationsAttribute) {
@@ -339,13 +339,18 @@ public final class RequestProcessors {
                 }
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Scans classpath (classes directory) failed", e);
+            LOGGER.log(Level.SEVERE, "Scans classpath (lib directory) failed", e);
 
         }
     }
 
     /**
-     * discover {@link RequestProcessor} to the ReuqestMapping from a specific class.
+     * Discover {@link RequestProcessor} to the ReuqestMapping from a specific class.
+     * 
+     * <p>
+     *   <b>NOTE</b>: This method ONLY for test.
+     * </p>
+     * 
      * @param clazz the specific clazz need to be add Request Mapping
      */
     public static void discoverFromClass(final Class<?> clazz) {
@@ -364,9 +369,9 @@ public final class RequestProcessors {
             if (null == requestProcessingMethodAnn) {
                 continue;
             }
+
             addProcessorMethod(requestProcessingMethodAnn, clazz, mthd);
         }
-
     }
 
     /**
@@ -379,7 +384,7 @@ public final class RequestProcessors {
      */
     private static ProcessorMethod getProcessorMethod(final String requestURI, final String contextPath, final String method) {
         LOGGER.log(Level.FINEST, "Gets processor method[requestURI={0}, contextPath={1}, method={2}]", new Object[]{requestURI,
-                                                                                                                    contextPath, method});
+                    contextPath, method});
 
         final List<ProcessorMethod> matches = new ArrayList<ProcessorMethod>();
         int i = 0;
@@ -409,10 +414,7 @@ public final class RequestProcessors {
                         break;
                     default:
                         throw new IllegalStateException("Can not process URI pattern[uriPattern="
-                                                        + processorMethod.getURIPattern()
-                                                        + ", mode="
-                                                        + processorMethod.getURIPatternMode()
-                                                        + "]");
+                                + processorMethod.getURIPattern() + ", mode=" + processorMethod.getURIPatternMode() + "]");
                 }
 
                 if (found) {
