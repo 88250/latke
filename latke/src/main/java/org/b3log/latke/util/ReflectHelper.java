@@ -55,12 +55,15 @@ public final class ReflectHelper {
      * @return the String[] of names
      */
     public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, final Class<?>[] types) {
-        final ClassPool pool = ClassPool.getDefault();
-        pool.insertClassPath(new ClassClassPath(clazz));
         CtClass cc;
         CtMethod cm = null;
+
         try {
-                cc = pool.get(clazz.getName());
+            final ClassPool pool = ClassPool.getDefault();
+            pool.insertClassPath(new ClassClassPath(clazz));
+            pool.insertClassPath(new ClassClassPath(Thread.currentThread().getClass()));
+
+            cc = pool.get(clazz.getName());
             final CtClass[] ptypes = new CtClass[types.length];
             for (int i = 0; i < ptypes.length; i++) {
                 ptypes[i] = pool.get(types[i].getName());
