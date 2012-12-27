@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.repository.h2.mapping.BooleanMapping;
+import org.b3log.latke.repository.h2.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.DateMapping;
 import org.b3log.latke.repository.jdbc.mapping.IntMapping;
 import org.b3log.latke.repository.jdbc.mapping.LongMapping;
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.mapping.NumberMapping;
-import org.b3log.latke.repository.jdbc.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**

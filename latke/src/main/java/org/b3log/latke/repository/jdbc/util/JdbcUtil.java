@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.repository.jdbc.util;
 
+import java.io.IOException;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
@@ -71,7 +74,7 @@ public final class JdbcUtil {
      * @param sql sql
      * @param paramList paramList
      * @param connection connection
-     * @return issuccess
+     * @return is success
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection) throws SQLException {
@@ -208,7 +211,39 @@ public final class JdbcUtil {
                     if ("boolean".equals(definition.getType())) {
                         jsonObject.put(definition.getName(), resultSet.getBoolean(columnName));
                     } else {
-                        jsonObject.put(definition.getName(), resultSet.getObject(columnName));
+                        final Object v = resultSet.getObject(columnName);
+
+                        while (true) {
+                            if (RuntimeDatabase.H2 != Latkes.getRuntimeDatabase()) {
+                                jsonObject.put(definition.getName(), v);
+
+                                break;
+                            }
+
+                            // H2
+                            if ("String".equals(definition.getType()) && v instanceof Clob) { // H2 CLOB
+                                final Clob clob = (Clob) v;
+
+                                String str = null;
+                                try {
+                                    str = IOUtils.toString(clob.getCharacterStream());
+                                } catch (final IOException e) {
+                                    LOGGER.log(Level.SEVERE, "Cant not read column[name=" + columnName + "] in table[name=" + tableName
+                                            + "] on H2", e);
+                                } finally {
+                                    clob.free();
+                                }
+
+                                jsonObject.put(definition.getName(), str);
+
+                                break;
+                            }
+
+                            // H2 other types
+                            jsonObject.put(definition.getName(), v);
+
+                            break;
+                        }
                     }
                 }
             }

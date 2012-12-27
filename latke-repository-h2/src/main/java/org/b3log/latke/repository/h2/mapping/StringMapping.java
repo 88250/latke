@@ -19,20 +19,31 @@ import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**
- * H2 boolean type mapping.
+ * H2 string type mapping.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.0.0, Dec 27, 2012
  */
-public final class BooleanMapping implements Mapping {
-
+public final class StringMapping implements Mapping {
+    
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
         final StringBuilder sql = new StringBuilder();
         sql.append(definition.getName());
-        sql.append(" boolean");
-        if (!definition.getNullable()) {
-            sql.append(" not null");
+
+        if (definition.getLength() == null) {
+            definition.setLength(new Integer("0"));
+        }
+
+        if (definition.getLength() > new Integer("1024")) {
+            sql.append(" text");
+        } else {
+            sql.append(" varchar(").append(definition.getLength() < 1 ? new Integer("100") : definition.getLength());
+            sql.append(")");
+
+            if (!definition.getNullable()) {
+                sql.append(" not null");
+            }
         }
 
         return sql.toString();
