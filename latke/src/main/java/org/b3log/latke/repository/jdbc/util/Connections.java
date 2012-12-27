@@ -26,18 +26,20 @@ import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.util.Callstacks;
+import org.h2.jdbcx.JdbcConnectionPool;
 
 /**
  * JDBC connection utilities.
  *
  * <p>
- * Uses <a href="http://jolbox.com/">BoneCP</a> or 
- * <a href="http://sourceforge.net/projects/c3p0/">c3p0</a> as the underlying connection pool.
+ * Uses <a href="http://jolbox.com/">BoneCP</a>, 
+ * <a href="http://sourceforge.net/projects/c3p0/">c3p0</a> or 
+ * <a href="http://www.h2database.com">H2</a> as the underlying connection pool.
  * </p>
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.7, Sep 4, 2012
+ * @version 1.0.0.8, Dec 27, 2012
  */
 public final class Connections {
 
@@ -57,6 +59,10 @@ public final class Connections {
      * Connection pool - c3p0.
      */
     private static ComboPooledDataSource c3p0;
+    /**
+     * Connection pool - H2.
+     */
+    private static JdbcConnectionPool h2;
     /**
      * Transaction isolation.
      */
@@ -83,7 +89,7 @@ public final class Connections {
             final String driver = Latkes.getLocalProperty("jdbc.driver");
             Class.forName(driver);
 
-            if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) {
+            if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) { // BAE can not use connection pool
                 poolType = "none";
             } else {
                 poolType = Latkes.getLocalProperty("jdbc.pool");
@@ -140,6 +146,11 @@ public final class Connections {
                 c3p0.setMinPoolSize(minConnCnt);
                 c3p0.setMaxPoolSize(maxConnCnt);
                 c3p0.setMaxStatementsPerConnection(maxConnCnt);
+            } else if ("h2".equals(poolType)) {
+                LOGGER.log(Level.FINE, "Initialing database connection pool [h2]");
+
+                h2 = JdbcConnectionPool.create(url, userName, password);
+                h2.setMaxConnections(maxConnCnt);
             } else if ("none".equals(poolType)) {
                 LOGGER.info("Do not use database connection pool");
             }
@@ -172,6 +183,12 @@ public final class Connections {
             final Connection ret = c3p0.getConnection();
             ret.setTransactionIsolation(transactionIsolationInt);
 
+            return ret;
+        } else if ("h2".equals(poolType)) {
+            LOGGER.log(Level.FINEST, "Connection pool[leasedConns={0}]", new Object[]{h2.getActiveConnections()});
+            final Connection ret = h2.getConnection();
+            ret.setTransactionIsolation(transactionIsolationInt);
+            
             return ret;
         } else if ("none".equals(poolType)) {
             return DriverManager.getConnection(url, userName, password);
