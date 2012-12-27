@@ -85,9 +85,7 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:svn:http://latke.googlecode.com/svn/trunk/latke-repository-mysql</connection>
-        <developerConnection>scm:svn:https://latke.googlecode.com/svn/trunk/latke-repository-mysql</developerConnection>
-        <url>http://code.google.com/p/latke/source/browse/#svn/trunk/latke-repository-mysql</url>
+        <url>https://github.com/b3log/b3log-latke</url>
     </scm>
 
     <reporting>
@@ -302,8 +300,16 @@
                     <updateReleaseInfo>true</updateReleaseInfo>
                 </configuration>
             </plugin>
-
+            
         </plugins>
+        
+        <extensions>
+            <extension>
+                <groupId>org.jvnet.wagon-svn</groupId>
+                <artifactId>wagon-svn</artifactId>
+                <version>1.12</version>
+            </extension>
+        </extensions>
     </build>
 
 
