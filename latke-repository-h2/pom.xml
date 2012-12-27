@@ -108,7 +108,7 @@
         <snapshotRepository>
             <id>m2-snapshot</id>
             <name>Maven Repository at Google</name>
-            <url>https://m2-repos.googlecode.com/svn/snapshot</url>
+            <url>svn:https://m2-repos.googlecode.com/svn/snapshot</url>
             <uniqueVersion>true</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
