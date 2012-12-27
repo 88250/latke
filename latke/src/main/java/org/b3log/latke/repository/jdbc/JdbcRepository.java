@@ -641,7 +641,7 @@ public final class JdbcRepository implements Repository {
         getOrderBySql(orderBySql, query.getSorts());
 
         if (-1 == pageCount) {
-            final StringBuilder countSql = new StringBuilder("select count (" + JdbcRepositories.OID + ") from ").append(getName());
+            final StringBuilder countSql = new StringBuilder("select count(" + JdbcRepositories.OID + ") from ").append(getName());
 
             if (StringUtils.isNotBlank(filterSql.toString())) {
                 countSql.append(" where ").append(filterSql);
@@ -838,7 +838,7 @@ public final class JdbcRepository implements Repository {
             }
         }
 
-        final StringBuilder sql = new StringBuilder("select count (" + JdbcRepositories.OID + ") from ").append(getName());
+        final StringBuilder sql = new StringBuilder("select count(" + JdbcRepositories.OID + ") from ").append(getName());
         final long ret = count(sql, new ArrayList<Object>());
 
         if (cacheEnabled) {
