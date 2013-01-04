@@ -37,7 +37,7 @@
     Most Checks are configurable, be sure to consult the documentation.
     To completely disable a check, just comment it out or delete it from the file.
     Finally, it is worth reading the documentation.
-    Version: 1.0.1.5, Jul 20, 2010
+    Version: 1.0.1.6, Jan 4, 2013
     Author: Liang Ding
 -->
 <!DOCTYPE module PUBLIC
@@ -67,7 +67,7 @@
         <module name="JavadocMethod"/>
         <module name="JavadocType">
             <property name="authorFormat" value="\S"/>
-            <property name="versionFormat" value="\d\.\d\.\d\.\d, [A-Z]+[a-z]{2,2} \d{1,2}, \d\d\d\d"/>
+            <property name="versionFormat" value="\d+\.\d+\.\d+\.\d+, [A-Z]+[a-z]{2,2} \d{1,2}, \d\d\d\d"/>
         </module>
         <module name="JavadocVariable"/>
         <module name="JavadocStyle">
@@ -191,10 +191,10 @@
             <property name="format" value="\s+$"/>
             <property name="message" value="Line has trailing spaces."/>
 
-            <property name="format" value="System\.out\.println"/>
-            <property name="message" value="System.out.println invoked!"/>
-      </module>
-      -->
+              <property name="format" value="System\.out\.println"/>
+              <property name="message" value="System.out.println invoked!"/>
+        </module>
+        -->
         <!-- <module name="TodoComment"/> -->
         <module name="UpperEll"/>
 
