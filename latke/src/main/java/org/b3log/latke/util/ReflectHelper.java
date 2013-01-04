@@ -32,7 +32,7 @@ import javassist.bytecode.MethodInfo;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, Oct 12, 2012
+ * @version 1.0.0.4, Dec 21, 2012
  */
 public final class ReflectHelper {
 
@@ -60,6 +60,7 @@ public final class ReflectHelper {
 
         try {
             final ClassPool pool = ClassPool.getDefault();
+            pool.insertClassPath(new ClassClassPath(ReflectHelper.class));
             pool.insertClassPath(new ClassClassPath(clazz));
             pool.insertClassPath(new ClassClassPath(Thread.currentThread().getClass()));
 

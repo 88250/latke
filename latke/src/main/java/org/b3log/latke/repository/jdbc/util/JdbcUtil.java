@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.repository.jdbc.util;
 
+import java.io.IOException;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,8 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import org.apache.commons.io.IOUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.Latkes;
+import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.repository.RepositoryException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +41,8 @@ import org.json.JSONObject;
  * JDBC utilities.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Oct 10, 2012
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.2, Dec 27, 2012
  */
 public final class JdbcUtil {
 
@@ -56,7 +61,7 @@ public final class JdbcUtil {
      */
     public static boolean executeSql(final String sql, final Connection connection) throws SQLException {
         LOGGER.log(Level.FINEST, "executeSql: {0}", sql);
-        
+
         final Statement statement = connection.createStatement();
         final boolean isSuccess = !statement.execute(sql);
         statement.close();
@@ -69,7 +74,7 @@ public final class JdbcUtil {
      * @param sql sql
      * @param paramList paramList
      * @param connection connection
-     * @return issuccess
+     * @return is success
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection) throws SQLException {
@@ -181,14 +186,18 @@ public final class JdbcUtil {
 
         final Map<String, FieldDefinition> dMap = new HashMap<String, FieldDefinition>();
         for (FieldDefinition fieldDefinition : definitioList) {
-            dMap.put(fieldDefinition.getName(), fieldDefinition);
+            if (RuntimeDatabase.H2 == Latkes.getRuntimeDatabase()) {
+                dMap.put(fieldDefinition.getName().toUpperCase(), fieldDefinition);
+            } else {
+                dMap.put(fieldDefinition.getName(), fieldDefinition);
+            }
         }
 
         final int numColumns = resultSetMetaData.getColumnCount();
 
         final JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = null;
-        String columnName = null;
+        JSONObject jsonObject;
+        String columnName;
         while (resultSet.next()) {
             jsonObject = new JSONObject();
 
@@ -196,17 +205,45 @@ public final class JdbcUtil {
                 columnName = resultSetMetaData.getColumnName(i);
 
                 final FieldDefinition definition = dMap.get(columnName);
-                if (definition == null) {
-                    //                    throw new RepositoryException(
-                    //                            "resultSetToJsonObject: null columnName["
-                    //                                    + columnName + "] finded in table  "
-                    //                                    + tableName);
+                if (definition == null) { // COUNT(OID)
                     jsonObject.put(columnName, resultSet.getObject(columnName));
                 } else {
                     if ("boolean".equals(definition.getType())) {
-                        jsonObject.put(columnName, resultSet.getBoolean(columnName));
+                        jsonObject.put(definition.getName(), resultSet.getBoolean(columnName));
                     } else {
-                        jsonObject.put(columnName, resultSet.getObject(columnName));
+                        final Object v = resultSet.getObject(columnName);
+
+                        while (true) {
+                            if (RuntimeDatabase.H2 != Latkes.getRuntimeDatabase()) {
+                                jsonObject.put(definition.getName(), v);
+
+                                break;
+                            }
+
+                            // H2
+                            if ("String".equals(definition.getType()) && v instanceof Clob) { // H2 CLOB
+                                final Clob clob = (Clob) v;
+
+                                String str = null;
+                                try {
+                                    str = IOUtils.toString(clob.getCharacterStream());
+                                } catch (final IOException e) {
+                                    LOGGER.log(Level.SEVERE, "Cant not read column[name=" + columnName + "] in table[name=" + tableName
+                                            + "] on H2", e);
+                                } finally {
+                                    clob.free();
+                                }
+
+                                jsonObject.put(definition.getName(), str);
+
+                                break;
+                            }
+
+                            // H2 other types
+                            jsonObject.put(definition.getName(), v);
+
+                            break;
+                        }
                     }
                 }
             }

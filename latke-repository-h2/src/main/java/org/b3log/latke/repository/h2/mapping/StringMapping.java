@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.repository.jdbc.mapping;
+package org.b3log.latke.repository.h2.mapping;
 
+import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**
- * Boolean data type mapping.
+ * H2 string type mapping.
  * 
- * <p>
- * The data type is CHAR(1), we could INSERT INTO `test`(`test`) VALUES (false/true) in MySQL database, the actual value is '0' for false,
- * '1' for true.
- * </p>
- * 
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Dec 27, 2012
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.0, Dec 27, 2012
  */
-public class BooleanMapping implements Mapping {
-
+public final class StringMapping implements Mapping {
+    
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
         final StringBuilder sql = new StringBuilder();
         sql.append(definition.getName());
-        sql.append(" char(1)");
-        if (!definition.getNullable()) {
-            sql.append(" not null");
 
+        if (definition.getLength() == null) {
+            definition.setLength(new Integer("0"));
+        }
+
+        if (definition.getLength() > new Integer("1024")) {
+            sql.append(" text");
+        } else {
+            sql.append(" varchar(").append(definition.getLength() < 1 ? new Integer("100") : definition.getLength());
+            sql.append(")");
+
+            if (!definition.getNullable()) {
+                sql.append(" not null");
+            }
         }
 
         return sql.toString();

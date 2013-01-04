@@ -582,7 +582,7 @@ public final class Latkes {
      */
     public static RuntimeDatabase getRuntimeDatabase() {
         if (RuntimeEnv.LOCAL != runtimeEnv && RuntimeEnv.BAE != runtimeEnv) {
-            throw new RuntimeException("Underlying database can be specified when Latke runs on [Local] / [BAE] environment only, "
+            throw new RuntimeException("Underlying database can be specified when Latke runs on [LOCAL] / [BAE] environment only, "
                     + "current runtime enviornment [" + runtimeEnv + ']');
         }
 

@@ -41,7 +41,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.3, Oct 3, 2012
+ * @version 1.0.1.4, Dec 27, 2012
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -72,6 +72,9 @@ public abstract class AbstractRepository implements Repository {
                     final RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
                     switch (runtimeDatabase) {
                         case MYSQL:
+                            repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
+                            break;
+                        case H2:
                             repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
                             break;
                         default:

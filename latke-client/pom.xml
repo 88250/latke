@@ -27,9 +27,9 @@
         <maven-checkstyle-plugin.version>2.6</maven-checkstyle-plugin.version>
         <maven-javadoc-plugin.version>2.7</maven-javadoc-plugin.version>
         <maven-cobertura-plugin.version>2.5.1</maven-cobertura-plugin.version>
-	<!-- Unit Test -->
+        <!-- Unit Test -->
         <testng.version>6.1.1</testng.version>
-	<!-- -->
+        <!-- -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -74,9 +74,7 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:svn:http://latke.googlecode.com/svn/trunk/latke-client</connection>
-        <developerConnection>scm:svn:https://latke.googlecode.com/svn/trunk/latke-client</developerConnection>
-        <url>http://code.google.com/p/latke/source/browse/#svn/trunk/latke-client</url>
+        <url>https://github.com/b3log/b3log-latke</url>
     </scm>
 
     <reporting>

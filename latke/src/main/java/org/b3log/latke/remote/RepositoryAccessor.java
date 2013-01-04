@@ -15,18 +15,22 @@
  */
 package org.b3log.latke.remote;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.AbstractRepository;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.Repositories;
 import org.b3log.latke.repository.Repository;
 import org.b3log.latke.repository.Transaction;
+import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
@@ -41,7 +45,7 @@ import org.json.JSONObject;
  * Accesses repository via HTTP protocol.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, Apr 22, 2012
+ * @version 1.0.1.3, Dec 16, 2012
  */
 @RequestProcessor
 public final class RepositoryAccessor {
@@ -77,7 +81,7 @@ public final class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.GET)
     public void getRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
-                                        final HttpServletResponse response) {
+            final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
         context.setRenderer(renderer);
 
@@ -120,7 +124,7 @@ public final class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.PUT)
     public void setRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
-                                        final HttpServletResponse response) {
+            final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
         context.setRenderer(renderer);
 
@@ -162,7 +166,7 @@ public final class RepositoryAccessor {
      *     "msg":"Got data",
      *     "repositoryNames" : [
      *         "repository1", "repository2", ....
-     *       ] 
+     *     ] 
      * }
      * </pre>
      * </p>
@@ -173,7 +177,7 @@ public final class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repository/names", method = HTTPRequestMethod.GET)
     public void getRepositoryNames(final HTTPRequestContext context, final HttpServletRequest request,
-                                   final HttpServletResponse response) {
+            final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
         context.setRenderer(renderer);
 
@@ -322,6 +326,20 @@ public final class RepositoryAccessor {
             final JSONArray data = new JSONArray(dataContent);
             for (int i = 0; i < data.length(); i++) {
                 final JSONObject record = data.getJSONObject(i);
+
+                // Date type fixing
+                final SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy", Locale.US);
+                
+                final JSONArray keysDescription = Repositories.getRepositoryKeysDescription(repositoryName);
+                for (int j = 0; j < keysDescription.length(); j++) {
+                    final JSONObject keyDescription = keysDescription.optJSONObject(j);
+                    final String key = keyDescription.optString("name");
+                    final String type = keyDescription.optString("type");
+                    if ("Date".equals(type)) {
+                        record.put(key, sdf.parse(record.optString(key)));
+                    }
+                }
+
                 repository.add(record);
             }
 
@@ -338,6 +356,53 @@ public final class RepositoryAccessor {
         } finally {
             repository.setCacheEnabled(true);
         }
+    }
+
+    /**
+     * Creates tables.
+     * 
+     * <p>
+     * Query parameters:
+     * /latke/remote/repository/tables?<em>userName=xxx&password=xxx&repositoryName=xxx</em><br/>
+     * All parameters are required.
+     * </p>
+     * 
+     * <p>
+     * Renders response like the following: 
+     * <pre>
+     * {
+     *     "sc":200,
+     *     "msg":"Created tables",
+     * }
+     * </pre>
+     * </p>
+     * 
+     * @param context the specified HTTP request context
+     * @param request the specified HTTP servlet request
+     * @param response the specified HTTP servlet response 
+     */
+    @RequestProcessing(value = "/latke/remote/repository/tables", method = HTTPRequestMethod.PUT)
+    public void createTables(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
+        final JSONRenderer renderer = new JSONRenderer();
+        context.setRenderer(renderer);
+
+        final JSONObject jsonObject = new JSONObject();
+        renderer.setJSONObject(jsonObject);
+
+        jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_OK);
+        jsonObject.put(Keys.MSG, "Created tables");
+
+        if (!authSucc(request, jsonObject)) {
+            return;
+        }
+
+        if (RuntimeEnv.GAE == Latkes.getRuntimeEnv()) {
+            jsonObject.put(Keys.MSG, "GAE runtime enviorment dose not need to create tables");
+
+            return;
+        }
+
+        JdbcRepositories.initAllTables();
     }
 
     /**

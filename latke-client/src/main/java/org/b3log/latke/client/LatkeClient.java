@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -48,6 +49,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -70,6 +72,10 @@ public final class LatkeClient {
      * Sets repositories writable.
      */
     private static final String SET_REPOSITORIES_WRITABLE = "/latke/remote/repositories/writable";
+    /**
+     * Create tables.
+     */
+    private static final String CREATE_TABLES = "/latke/remote/repository/tables";
     /**
      * Gets data.
      */
@@ -112,11 +118,11 @@ public final class LatkeClient {
     public static void main(String[] args) throws Exception {
 // Backup Test:      
 //        args = new String[]{
-//            "-h", "-backup", "-repository_names", "-verbose", "-s", "demo.b3log.org", "-u", "Admin", "-p", "b3logsolo", "-backup_dir",
+//            "-h", "-backup", "-repository_names", "-verbose", "-s", "localhost:8080", "-u", "test", "-p", "1", "-backup_dir",
 //            "C:/b3log_backup", "-w", "true"};
 // Restore Test:
         args = new String[]{
-            "-h", "-backup", "-verbose", "-s", "demo.b3log.org:80", "-u", "b3log.solo@gmail.com", "-p", "b3logsolo", "-backup_dir",
+            "-h", "-restore", "-create_tables", "-verbose", "-s", "localhost:8080", "-u", "test", "-p", "1", "-backup_dir",
             "C:/b3log_backup"};
 
         final Options options = getOptions();
@@ -147,19 +153,42 @@ public final class LatkeClient {
 
             final HttpClient httpClient = new DefaultHttpClient();
 
-            final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-            qparams.add(new BasicNameValuePair("userName", userName));
-            qparams.add(new BasicNameValuePair("password", password));
-
             if (cmd.hasOption("repository_names")) {
                 getRepositoryNames();
             }
 
+            if (cmd.hasOption("create_tables")) {
+                final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+                qparams.add(new BasicNameValuePair("userName", userName));
+                qparams.add(new BasicNameValuePair("password", password));
+
+                final URI uri = URIUtils.createURI("http", serverAddress, -1, CREATE_TABLES, URLEncodedUtils.format(qparams, "UTF-8"),
+                        null);
+                final HttpPut request = new HttpPut();
+                request.setURI(uri);
+
+                if (verbose) {
+                    System.out.println("Starting create tables");
+                }
+
+                final HttpResponse httpResponse = httpClient.execute(request);
+                final InputStream contentStream = httpResponse.getEntity().getContent();
+                final String content = IOUtils.toString(contentStream).trim();
+
+                if (verbose) {
+                    printResponse(content);
+                }
+            }
+
             if (cmd.hasOption("w")) {
                 final String writable = cmd.getOptionValue("w");
+                final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+                qparams.add(new BasicNameValuePair("userName", userName));
+                qparams.add(new BasicNameValuePair("password", password));
+
                 qparams.add(new BasicNameValuePair("writable", writable));
                 final URI uri = URIUtils.createURI("http", serverAddress, -1, SET_REPOSITORIES_WRITABLE,
-                                                   URLEncodedUtils.format(qparams, "UTF-8"), null);
+                        URLEncodedUtils.format(qparams, "UTF-8"), null);
                 final HttpPut request = new HttpPut();
                 request.setURI(uri);
 
@@ -206,7 +235,7 @@ public final class LatkeClient {
 
                         if (verbose) {
                             System.out.println("Getting data from repository [" + repositoryName + "] with pagination[pageNum=" + pageNum
-                                               + ", pageSize=" + PAGE_SIZE + "]");
+                                    + ", pageSize=" + PAGE_SIZE + "]");
                         }
 
                         final HttpResponse httpResponse = httpClient.execute(request);
@@ -224,7 +253,7 @@ public final class LatkeClient {
                         final JSONArray results = resp.getJSONArray("rslts");
 
                         final String backupPath = backupDir.getPath() + File.separatorChar + repositoryName + File.separatorChar
-                                                  + pageNum + '_' + results.length() + '_' + System.currentTimeMillis() + ".json";
+                                + pageNum + '_' + results.length() + '_' + System.currentTimeMillis() + ".json";
                         final File backup = new File(backupPath);
                         final FileWriter fileWriter = new FileWriter(backup);
                         IOUtils.write(results.toString(), fileWriter);
@@ -256,7 +285,7 @@ public final class LatkeClient {
                     final Set<File> backupFiles = getBackupFiles(repositoryName);
 
                     if (verbose) {
-                        System.out.println("Restoring repository[" + repositoryName);
+                        System.out.println("Restoring repository[" + repositoryName + ']');
                     }
 
                     for (final File backupFile : backupFiles) {
@@ -295,8 +324,8 @@ public final class LatkeClient {
                         final String backupTime = getBackupFileNameField(backupFile.getName(), "${backupTime}");
 
                         final String restoredPath = backupDir.getPath() + File.separatorChar + repositoryName + File.separatorChar
-                                                    + pageNum + '_' + pageSize + '_' + backupTime + '_' + System.currentTimeMillis()
-                                                    + ".json";
+                                + pageNum + '_' + pageSize + '_' + backupTime + '_' + System.currentTimeMillis()
+                                + ".json";
                         final File restoredFile = new File(restoredPath);
                         backupFile.renameTo(restoredFile);
 
@@ -375,7 +404,6 @@ public final class LatkeClient {
     private static Set<File> getBackupFiles(final String repositoryName) {
         final String backupRepositoryPath = backupDir.getPath() + File.separatorChar + repositoryName + File.separatorChar;
         final File[] repositoryDataFiles = new File(backupRepositoryPath).listFiles(new FilenameFilter() {
-
             @Override
             public boolean accept(final File dir, final String name) {
                 return name.endsWith(".json");
@@ -383,9 +411,7 @@ public final class LatkeClient {
         });
 
         final Set<File> ret = new HashSet<File>();
-        for (int i = 0; i < repositoryDataFiles.length; i++) {
-            ret.add(repositoryDataFiles[i]);
-        }
+        ret.addAll(Arrays.asList(repositoryDataFiles));
 
         return ret;
     }
@@ -401,7 +427,6 @@ public final class LatkeClient {
      */
     private static Set<String> getRepositoryNamesFromBackupDir() {
         final File[] repositoryBackupDirs = backupDir.listFiles(new FileFilter() {
-
             @Override
             public boolean accept(final File file) {
                 return file.isDirectory();
@@ -431,7 +456,7 @@ public final class LatkeClient {
         qparams.add(new BasicNameValuePair("password", password));
 
         final URI uri = URIUtils.createURI("http", serverAddress, -1, GET_REPOSITORY_NAMES,
-                                           URLEncodedUtils.format(qparams, "UTF-8"), null);
+                URLEncodedUtils.format(qparams, "UTF-8"), null);
         final HttpGet request = new HttpGet();
         request.setURI(uri);
 
@@ -459,7 +484,7 @@ public final class LatkeClient {
             if (!dir.exists() && verbose) {
                 dir.mkdir();
                 System.out.println("Created a directory[name=" + dir.getName() + "] under backup directory[path="
-                                   + backupDir.getPath() + "]");
+                        + backupDir.getPath() + "]");
             }
         }
 
@@ -474,7 +499,12 @@ public final class LatkeClient {
      */
     private static void printResponse(final String content) throws Exception {
         System.out.println("Response:");
-        System.out.println(new JSONObject(content).toString(4));
+
+        try {
+            System.out.println(new JSONObject(content).toString(4));
+        } catch (final JSONException e) {
+            System.out.println("The response is not a JSON");
+        }
     }
 
     /**
@@ -497,16 +527,17 @@ public final class LatkeClient {
 
         ret.addOption(OptionBuilder.withArgName("server").hasArg().withDescription(
                 "For server address. For example, localhost:8080").isRequired().create('s'));
+        ret.addOption(OptionBuilder.withDescription("Create tables.").create("create_tables"));
         ret.addOption(OptionBuilder.withArgName("username").hasArg().withDescription("Username").isRequired().create('u'));
         ret.addOption(OptionBuilder.withArgName("password").hasArg().withDescription("Password").isRequired().create('p'));
-        ret.addOption(OptionBuilder.withArgName("backup_dir").hasArg().withDescription("Backup directory").isRequired().
-                create("backup_dir"));
+        ret.addOption(OptionBuilder.withArgName("backup_dir").hasArg().withDescription("Backup directory").isRequired().create(
+                "backup_dir"));
         ret.addOption(OptionBuilder.withDescription("Backup data").create("backup"));
         ret.addOption(OptionBuilder.withDescription("Restore data").create("restore"));
         ret.addOption(OptionBuilder.withArgName("writable").hasArg().
                 withDescription("Disable/Enable repository writes. For example, -w true").create('w'));
         ret.addOption(OptionBuilder.withDescription("Prints repository names and creates directories with the repository names under"
-                                                    + " back_dir").create("repository_names"));
+                + " back_dir").create("repository_names"));
         ret.addOption(OptionBuilder.withDescription("Extras verbose").create("verbose"));
         ret.addOption(OptionBuilder.withDescription("Prints help").create('h'));
         ret.addOption(OptionBuilder.withDescription("Prints this client version").create('v'));

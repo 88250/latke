@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <version>0.5.0-SNAPSHOT</version>
     <name>Latke Repository (MySQL)</name>
-    <url>http://latke.googlecode.com</url>
+    <url>https://github.com/b3log/b3log-latke</url>
     <description>Latke Repository on MySQL.</description>
     <inceptionYear>2011</inceptionYear>
 
@@ -85,9 +85,7 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:svn:http://latke.googlecode.com/svn/trunk/latke-repository-mysql</connection>
-        <developerConnection>scm:svn:https://latke.googlecode.com/svn/trunk/latke-repository-mysql</developerConnection>
-        <url>http://code.google.com/p/latke/source/browse/#svn/trunk/latke-repository-mysql</url>
+        <url>https://github.com/b3log/b3log-latke</url>
     </scm>
 
     <reporting>

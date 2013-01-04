@@ -19,13 +19,12 @@ package org.b3log.latke;
  *  Latke runtime JDBC database.
  * 
  * <p>
- * If Latke runs on local environment, Latke will read database configurations
- * from file "local.properties".
+ * If Latke runs on local environment, Latke will read database configurations from file "local.properties".
  * </p>
  *  
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.2, May 29, 2012
+ * @version 1.0.0.3, Dec 27, 2012
  * @see Latkes#getRuntimeDatabase() 
  */
 public enum RuntimeDatabase {
@@ -38,6 +37,10 @@ public enum RuntimeDatabase {
      * MySQL.
      */
     MYSQL,
+    /**
+     * H2.
+     */
+    H2,
     /**
      * SYBASE.
      */

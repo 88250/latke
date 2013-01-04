@@ -50,7 +50,7 @@ public final class MailServiceTestCase {
                 MailServiceFactory.getMailService();
 
         final Message message = new Message();
-        message.setFrom("b3log.solo@163.com");
+        message.setFrom("b3log.solo@gmail.com");
         message.setSubject("Latke Mail Service[local] Test");
         message.setHtmlBody("<htmL><body>测试</body><html>");
         message.addRecipient("jiangzezhou1989@yahoo.com.cn");

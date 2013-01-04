@@ -57,7 +57,7 @@ public final class JdbcFactory implements JdbcDatabase {
             new HashMap<RuntimeDatabase, String>() {
                 {
                     put(RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
-
+                    put(RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
                 }
             };
 
