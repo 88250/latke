@@ -35,7 +35,7 @@ import org.b3log.latke.util.Strings;
  * 
  * @author <a href="mailto:jiangzezhou1989@gmail.com">zezhou jiang</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 0.0.0.2, Aug 20, 2011
+ * @version 1.0.0.3, Jan 4, 2013
  */
 final class MailSender {
 
@@ -55,8 +55,7 @@ final class MailSender {
      *   <li>mail.debug</li>
      * </ul>
      */
-    private final ResourceBundle mailProperties = ResourceBundle.getBundle(
-            "mail");
+    private final ResourceBundle mailProperties = ResourceBundle.getBundle("mail");
 
     /**
      * Create session based on the mail properties.
@@ -65,62 +64,16 @@ final class MailSender {
      */
     private Session getSession() {
         final Properties props = new Properties();
-        props.setProperty("mail.smtp.host", getHost());
+        props.setProperty("mail.smtp.host", mailProperties.getString("mail.smtp.host"));
         props.setProperty("mail.smtp.auth", "true");
-        props.setProperty("mail.smtp.port", getPort());
+        props.setProperty("mail.smtp.port", mailProperties.getString("mail.smtp.port"));
         props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", mailProperties.getString("mail.debug"));
+        props.put("mail.smtp.socketFactory.class", mailProperties.getString("mail.smtp.socketFactory.class"));
+        props.put("mail.smtp.socketFactory.fallback", mailProperties.getString("mail.smtp.socketFactory.fallback"));
+        props.put("mail.smtp.socketFactory.port", mailProperties.getString("mail.smtp.socketFactory.port"));
 
-        final Session ret = Session.getDefaultInstance(props, new SMTPAuthenticator());
-        ret.setDebug(getDebug());
-
-        return ret;
-    }
-
-    /**
-     * Get session debug from mail properties.
-     * 
-     * @return session debug
-     */
-    private boolean getDebug() {
-        final String debugStr = mailProperties.getString("mail.debug");
-
-        return Boolean.valueOf(debugStr);
-    }
-
-    /**
-     * Get mail SMTP host form mail properties.
-     * 
-     * @return mail SMTP host
-     */
-    private String getHost() {
-        return mailProperties.getString("mail.smtp.host");
-    }
-
-    /**
-     * Get mail user form mail properties.
-     * 
-     * @return mail user
-     */
-    private String getUser() {
-        return mailProperties.getString("mail.user");
-    }
-
-    /**
-     * Gets mail password from mail properties.
-     * 
-     * @return mail password
-     */
-    private String getPassword() {
-        return mailProperties.getString("mail.password");
-    }
-
-    /**
-     * Gets mail SMTP port from mail properties.
-     * 
-     * @return mail SMTP port
-     */
-    private String getPort() {
-        return mailProperties.getString("mail.smtp.port");
+        return Session.getDefaultInstance(props, new SMTPAuthenticator());
     }
 
     /**
@@ -196,7 +149,8 @@ final class MailSender {
 
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(getUser(), getPassword());
+            return new PasswordAuthentication(mailProperties.getString("mail.user"),
+                    mailProperties.getString("mail.password"));
         }
     }
 }
