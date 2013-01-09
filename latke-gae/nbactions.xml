@@ -54,4 +54,11 @@
             <goal>checkstyle:checkstyle</goal>
         </goals>
     </action>
+    <action>
+        <actionName>CUSTOM-jacobe-jacobe</actionName>
+        <displayName>jacobe-jacobe</displayName>
+        <goals>
+            <goal>jacobe:jacobe</goal>
+        </goals>
+    </action>
 </actions>

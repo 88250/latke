@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.image.gae;
 
+
 import com.google.appengine.api.images.Composite;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.b3log.latke.image.Image;
 import org.b3log.latke.image.ImageService;
+
 
 /**
  * Google App Engine image service.
@@ -39,6 +41,7 @@ public final class GAEImageService implements ImageService {
     @Override
     public Image makeImage(final byte[] data) {
         final Image ret = new Image();
+
         ret.setData(data);
 
         return ret;
@@ -51,13 +54,15 @@ public final class GAEImageService implements ImageService {
         int width = 0;
         int height = 0;
         final int length = images.size();
+
         for (int i = 0; i < length; i++) {
             final Image image = images.get(i);
             final byte[] imageData = image.getData();
             final com.google.appengine.api.images.Image gaeImage = ImagesServiceFactory.makeImage(imageData);
 
-            final Composite composite = ImagesServiceFactory.makeComposite(
-                    gaeImage, i * gaeImage.getWidth(), 0, 1.0F, Composite.Anchor.TOP_LEFT);
+            final Composite composite = ImagesServiceFactory.makeComposite(gaeImage, i * gaeImage.getWidth(), 0, 1.0F,
+                Composite.Anchor.TOP_LEFT);
+
             composites.add(composite);
 
             if (i == length - 1) { // Using the last clip as the dimension of eatch one

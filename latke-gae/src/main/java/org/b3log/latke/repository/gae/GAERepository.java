@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.gae;
 
+
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.DataTypeUtils;
 import com.google.appengine.api.datastore.Key;
@@ -69,6 +70,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 /**
  * Google App Engine repository implementation, wraps
  * <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/package-summary.html">
@@ -103,19 +105,23 @@ public final class GAERepository implements Repository {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(GAERepository.class.getName());
+
     /**
      * GAE datastore service.
      */
     private final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+
     /**
      * GAE datastore supported types.
      */
     private static final Set<Class<?>> GAE_SUPPORTED_TYPES = DataTypeUtils.getSupportedTypes();
+
     /**
      * Default parent key. Kind is {@code "parentKind"}, name is
      * {@code "parentKeyName"}.
      */
     private static final Key DEFAULT_PARENT_KEY = KeyFactory.createKey("parentKind", "parentKeyName");
+
     /**
      * Repository cache.
      * <p>
@@ -123,38 +129,47 @@ public final class GAERepository implements Repository {
      * </p>
      */
     public static final Cache<String, Serializable> CACHE;
+
     /**
      * Repository cache name.
      */
     public static final String REPOSITORY_CACHE_NAME = "repositoryCache";
+
     /**
      * Repository cache count.
      */
     private static final String REPOSITORY_CACHE_COUNT = "#count";
+
     /**
      * Repository cache query cursor.
      */
     private static final String REPOSITORY_CACHE_QUERY_CURSOR = "#query#cursor";
+
     /**
      * Is cache enabled?
      */
     private boolean cacheEnabled = true;
+
     /**
      * Writable?
      */
     private boolean writable = true;
+
     /**
      * Cache key prefix.
      */
     public static final String CACHE_KEY_PREFIX = "repository";
+
     /**
      * Query chunk size.
      */
     private static final int QUERY_CHUNK_SIZE = 50;
+
     /**
      * The current transaction.
      */
     public static final ThreadLocal<GAETransaction> TX = new InheritableThreadLocal<GAETransaction>();
+
     /**
      * Repository name.
      */
@@ -165,11 +180,11 @@ public final class GAERepository implements Repository {
      */
     static {
         final RuntimeEnv runtime = Latkes.getRuntimeEnv();
+
         if (!runtime.equals(RuntimeEnv.GAE)) {
-            throw new RuntimeException("GAE repository can only runs on Google App Engine, please "
-                                       + "check your configuration and make sure "
-                                       + "Latkes.setRuntimeEnv(RuntimeEnv.GAE) was invoked before "
-                                       + "using GAE repository.");
+            throw new RuntimeException(
+                "GAE repository can only runs on Google App Engine, please " + "check your configuration and make sure "
+                + "Latkes.setRuntimeEnv(RuntimeEnv.GAE) was invoked before " + "using GAE repository.");
         }
 
         CACHE = (Cache<String, Serializable>) CacheFactory.getCache(REPOSITORY_CACHE_NAME);
@@ -177,6 +192,7 @@ public final class GAERepository implements Repository {
         // TODO: Intializes the runtime mode at application startup
         LOGGER.info("Initializing runtime mode....");
         final Value gaeEnvValue = SystemProperty.environment.value();
+
         if (SystemProperty.Environment.Value.Production == gaeEnvValue) {
             LOGGER.info("B3log Solo runs in [production] mode");
             Latkes.setRuntimeMode(RuntimeMode.PRODUCTION);
@@ -228,8 +244,9 @@ public final class GAERepository implements Repository {
      * @throws RepositoryException repository exception
      */
     private String add(final JSONObject jsonObject, final String parentKeyKind, final String parentKeyName)
-            throws RepositoryException {
+        throws RepositoryException {
         String ret = null;
+
         try {
             if (!jsonObject.has(Keys.OBJECT_ID)) {
                 ret = genTimeMillisId();
@@ -241,6 +258,7 @@ public final class GAERepository implements Repository {
 
             final Key parentKey = KeyFactory.createKey(parentKeyKind, parentKeyName);
             final Entity entity = new Entity(getName(), ret, parentKey);
+
             setProperties(entity, jsonObject);
 
             datastoreService.put(entity);
@@ -249,7 +267,7 @@ public final class GAERepository implements Repository {
             throw new RepositoryException(e);
         }
 
-        LOGGER.log(Level.FINER, "Added an object[oId={0}] in repository[{1}]", new Object[]{ret, getName()});
+        LOGGER.log(Level.FINER, "Added an object[oId={0}] in repository[{1}]", new Object[] {ret, getName()});
 
         return ret;
     }
@@ -311,6 +329,7 @@ public final class GAERepository implements Repository {
      */
     private void cacheQueryResults(final JSONArray results, final org.b3log.latke.repository.Query query) throws JSONException {
         String cacheKey;
+
         for (int i = 0; i < results.length(); i++) {
             final JSONObject jsonObject = results.optJSONObject(i);
 
@@ -318,13 +337,15 @@ public final class GAERepository implements Repository {
             cacheKey = CACHE_KEY_PREFIX + jsonObject.optString(Keys.OBJECT_ID);
             CACHE.putAsync(cacheKey, jsonObject);
             LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}] for default index[oId]",
-                       new Object[]{cacheKey, getName()});
+                new Object[] {cacheKey, getName()});
 
             // 2. Caching for get by query with filters (EQUAL operator) only
             final Set<String[]> indexes = query.getIndexes();
             final StringBuilder logMsgBuilder = new StringBuilder();
+
             for (final String[] index : indexes) {
                 final org.b3log.latke.repository.Query futureQuery = new org.b3log.latke.repository.Query().setPageCount(1);
+
                 for (int j = 0; j < index.length; j++) {
                     final String propertyName = index[j];
 
@@ -337,16 +358,18 @@ public final class GAERepository implements Repository {
 
                 final JSONObject futureQueryRet = new JSONObject();
                 final JSONObject pagination = new JSONObject();
+
                 futureQueryRet.put(Pagination.PAGINATION, pagination);
                 pagination.put(Pagination.PAGINATION_PAGE_COUNT, 1);
 
                 final JSONArray futureQueryResults = new JSONArray();
+
                 futureQueryRet.put(Keys.RESULTS, futureQueryResults);
                 futureQueryResults.put(jsonObject);
 
                 CACHE.putAsync(cacheKey, futureQueryRet);
                 LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
-                           new Object[]{cacheKey, getName(), logMsgBuilder, futureQuery.toString()});
+                    new Object[] {cacheKey, getName(), logMsgBuilder, futureQuery.toString()});
             }
         }
     }
@@ -361,12 +384,13 @@ public final class GAERepository implements Repository {
      * @throws RepositoryException repository exception
      */
     private void update(final String id, final JSONObject jsonObject, final String parentKeyKind, final String parentKeyName)
-            throws RepositoryException {
+        throws RepositoryException {
         try {
             jsonObject.put(Keys.OBJECT_ID, id);
 
             final Key parentKey = KeyFactory.createKey(parentKeyKind, parentKeyName);
             final Entity entity = new Entity(getName(), id, parentKey);
+
             setProperties(entity, jsonObject);
 
             datastoreService.put(entity);
@@ -375,7 +399,7 @@ public final class GAERepository implements Repository {
             throw new RepositoryException(e);
         }
 
-        LOGGER.log(Level.FINER, "Updated an object[oId={0}] in repository[name={1}]", new Object[]{id, getName()});
+        LOGGER.log(Level.FINER, "Updated an object[oId={0}] in repository[name={1}]", new Object[] {id, getName()});
     }
 
     /**
@@ -413,8 +437,9 @@ public final class GAERepository implements Repository {
 
         final Key parentKey = KeyFactory.createKey(parentKeyKind, parentKeyName);
         final Key key = KeyFactory.createKey(parentKey, getName(), id);
+
         datastoreService.delete(key);
-        LOGGER.log(Level.FINER, "Removed an object[oId={0}] from repository[name={1}]", new Object[]{id, getName()});
+        LOGGER.log(Level.FINER, "Removed an object[oId={0}] from repository[name={1}]", new Object[] {id, getName()});
     }
 
     /**
@@ -433,6 +458,7 @@ public final class GAERepository implements Repository {
         }
 
         final GAETransaction currentTransaction = TX.get();
+
         if (null == currentTransaction) {
             // Gets outside a transaction
             return get(DEFAULT_PARENT_KEY, id);
@@ -463,14 +489,16 @@ public final class GAERepository implements Repository {
 
             if (cacheEnabled) {
                 final String cacheKey = CACHE_KEY_PREFIX + ids.hashCode();
+
                 ret = (Map<String, JSONObject>) CACHE.get(cacheKey);
                 if (null != ret) {
-                    LOGGER.log(Level.FINER, "Got objects[cacheKey={0}] from repository cache[name={1}]", new Object[]{cacheKey, getName()});
+                    LOGGER.log(Level.FINER, "Got objects[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                     return ret;
                 }
             }
 
             final Set<Key> keys = new HashSet<Key>();
+
             for (final String id : ids) {
                 final Key key = KeyFactory.createKey(DEFAULT_PARENT_KEY, getName(), id);
 
@@ -485,12 +513,13 @@ public final class GAERepository implements Repository {
                 ret.put(entry.getKey().getName(), entity2JSONObject(entry.getValue()));
             }
 
-            LOGGER.log(Level.FINER, "Got objects[oIds={0}] from repository[name={1}]", new Object[]{ids, getName()});
+            LOGGER.log(Level.FINER, "Got objects[oIds={0}] from repository[name={1}]", new Object[] {ids, getName()});
 
             if (cacheEnabled) {
                 final String cacheKey = CACHE_KEY_PREFIX + ids.hashCode();
+
                 CACHE.putAsync(cacheKey, (Serializable) ret);
-                LOGGER.log(Level.FINER, "Added objects[cacheKey={0}] in repository cache[{1}]", new Object[]{cacheKey, getName()});
+                LOGGER.log(Level.FINER, "Added objects[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
             }
 
             return ret;
@@ -514,27 +543,31 @@ public final class GAERepository implements Repository {
 
         if (cacheEnabled) {
             final String cacheKey = CACHE_KEY_PREFIX + id;
+
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[]{cacheKey, getName()});
+                LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 return ret;
             }
         }
 
         final Key key = KeyFactory.createKey(parentKey, getName(), id);
+
         try {
             final Entity entity = datastoreService.get(key);
+
             ret = entity2JSONObject(entity);
 
-            LOGGER.log(Level.FINER, "Got an object[oId={0}] from repository[name={1}]", new Object[]{id, getName()});
+            LOGGER.log(Level.FINER, "Got an object[oId={0}] from repository[name={1}]", new Object[] {id, getName()});
 
             if (cacheEnabled) {
                 final String cacheKey = CACHE_KEY_PREFIX + id;
+
                 CACHE.putAsync(cacheKey, ret);
-                LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[]{cacheKey, getName()});
+                LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
             }
         } catch (final EntityNotFoundException e) {
-            LOGGER.log(Level.WARNING, "Not found an object[oId={0}] in repository[name={1}]", new Object[]{id, getName()});
+            LOGGER.log(Level.WARNING, "Not found an object[oId={0}] in repository[name={1}]", new Object[] {id, getName()});
             return null;
         }
 
@@ -551,13 +584,13 @@ public final class GAERepository implements Repository {
         JSONObject ret;
 
         final String cacheKey = CACHE_KEY_PREFIX + query.getCacheKey() + "_" + getName();
-        LOGGER.log(Level.FINEST, "Executing a query[cacheKey={0}, query=[{1}]]", new Object[]{cacheKey, query.toString()});
+
+        LOGGER.log(Level.FINEST, "Executing a query[cacheKey={0}, query=[{1}]]", new Object[] {cacheKey, query.toString()});
 
         if (cacheEnabled) {
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.FINER, "Got query result[cacheKey={0}] from repository cache[name={1}]",
-                           new Object[]{cacheKey, getName()});
+                LOGGER.log(Level.FINER, "Got query result[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 return ret;
             }
         }
@@ -569,6 +602,7 @@ public final class GAERepository implements Repository {
         final Map<String, SortDirection> sorts = query.getSorts();
         // Asssumes the application call need to count page
         int pageCount = -1;
+
         // If the application caller need not to count page, gets the page count the caller specified 
         if (null != query.getPageCount()) {
             pageCount = query.getPageCount();
@@ -578,7 +612,7 @@ public final class GAERepository implements Repository {
 
         if (cacheEnabled) {
             CACHE.putAsync(cacheKey, ret);
-            LOGGER.log(Level.FINER, "Added query result[cacheKey={0}] in repository cache[{1}]", new Object[]{cacheKey, getName()});
+            LOGGER.log(Level.FINER, "Added query result[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
 
             try {
                 cacheQueryResults(ret.optJSONArray(Keys.RESULTS), query);
@@ -606,18 +640,20 @@ public final class GAERepository implements Repository {
      * @throws RepositoryException repository exception
      */
     private JSONObject get(final int currentPageNum, final int pageSize, final int pageCount, final Set<Projection> projections,
-                           final Map<String, SortDirection> sorts, final Filter filter, final String cacheKey)
-            throws RepositoryException {
+        final Map<String, SortDirection> sorts, final Filter filter, final String cacheKey)
+        throws RepositoryException {
         final Query query = new Query(getName());
 
         // 1. Filters
         if (null != filter) {
             if (filter instanceof PropertyFilter) {
                 final FilterPredicate filterPredicate = processPropertyFiler((PropertyFilter) filter);
+
                 query.setFilter(filterPredicate);
             } else { // CompositeFiler
                 final CompositeFilter compositeFilter = (CompositeFilter) filter;
                 final Query.CompositeFilter queryCompositeFilter = processCompositeFilter(compositeFilter);
+
                 query.setFilter(queryCompositeFilter);
             }
         }
@@ -625,6 +661,7 @@ public final class GAERepository implements Repository {
         // 2. Sorts
         for (final Map.Entry<String, SortDirection> sort : sorts.entrySet()) {
             Query.SortDirection querySortDirection;
+
             if (sort.getValue().equals(SortDirection.ASCENDING)) {
                 querySortDirection = Query.SortDirection.ASCENDING;
             } else {
@@ -654,25 +691,30 @@ public final class GAERepository implements Repository {
 
         final Collection<Query.Filter> filters = new ArrayList<Query.Filter>();
         final List<Filter> subFilters = compositeFilter.getSubFilters();
+
         for (final Filter subFilter : subFilters) {
             if (subFilter instanceof PropertyFilter) {
                 final FilterPredicate filterPredicate = processPropertyFiler((PropertyFilter) subFilter);
+
                 filters.add(filterPredicate);
             } else { // CompositeFilter
                 final Query.CompositeFilter queryCompositeFilter = processCompositeFilter((CompositeFilter) subFilter);
+
                 filters.add(queryCompositeFilter);
             }
         }
 
         switch (compositeFilter.getOperator()) {
-            case AND:
-                ret = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filters);
-                break;
-            case OR:
-                ret = new Query.CompositeFilter(Query.CompositeFilterOperator.OR, filters);
-                break;
-            default:
-                throw new RepositoryException("Unsupported composite filter[operator=" + compositeFilter.getOperator() + "]");
+        case AND:
+            ret = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filters);
+            break;
+
+        case OR:
+            ret = new Query.CompositeFilter(Query.CompositeFilterOperator.OR, filters);
+            break;
+
+        default:
+            throw new RepositoryException("Unsupported composite filter[operator=" + compositeFilter.getOperator() + "]");
         }
 
         return ret;
@@ -689,30 +731,38 @@ public final class GAERepository implements Repository {
         Query.FilterPredicate ret;
 
         Query.FilterOperator filterOperator = null;
+
         switch (propertyFilter.getOperator()) {
-            case EQUAL:
-                filterOperator = Query.FilterOperator.EQUAL;
-                break;
-            case GREATER_THAN:
-                filterOperator = Query.FilterOperator.GREATER_THAN;
-                break;
-            case GREATER_THAN_OR_EQUAL:
-                filterOperator = Query.FilterOperator.GREATER_THAN_OR_EQUAL;
-                break;
-            case LESS_THAN:
-                filterOperator = Query.FilterOperator.LESS_THAN;
-                break;
-            case LESS_THAN_OR_EQUAL:
-                filterOperator = Query.FilterOperator.LESS_THAN_OR_EQUAL;
-                break;
-            case NOT_EQUAL:
-                filterOperator = Query.FilterOperator.NOT_EQUAL;
-                break;
-            case IN:
-                filterOperator = Query.FilterOperator.IN;
-                break;
-            default:
-                throw new RepositoryException("Unsupported filter operator[" + propertyFilter.getOperator() + "]");
+        case EQUAL:
+            filterOperator = Query.FilterOperator.EQUAL;
+            break;
+
+        case GREATER_THAN:
+            filterOperator = Query.FilterOperator.GREATER_THAN;
+            break;
+
+        case GREATER_THAN_OR_EQUAL:
+            filterOperator = Query.FilterOperator.GREATER_THAN_OR_EQUAL;
+            break;
+
+        case LESS_THAN:
+            filterOperator = Query.FilterOperator.LESS_THAN;
+            break;
+
+        case LESS_THAN_OR_EQUAL:
+            filterOperator = Query.FilterOperator.LESS_THAN_OR_EQUAL;
+            break;
+
+        case NOT_EQUAL:
+            filterOperator = Query.FilterOperator.NOT_EQUAL;
+            break;
+
+        case IN:
+            filterOperator = Query.FilterOperator.IN;
+            break;
+
+        default:
+            throw new RepositoryException("Unsupported filter operator[" + propertyFilter.getOperator() + "]");
         }
 
         if (FilterOperator.IN != propertyFilter.getOperator()) {
@@ -721,6 +771,7 @@ public final class GAERepository implements Repository {
             final Set<Object> values = new HashSet<Object>();
 
             final StringBuilder logMsgBuilder = new StringBuilder();
+
             logMsgBuilder.append("In operation[");
             @SuppressWarnings("unchecked")
             final Collection<?> inValues = (Collection<?>) propertyFilter.getValue();
@@ -756,6 +807,7 @@ public final class GAERepository implements Repository {
         if (fetchSize >= count) {
             for (final Entity entity : entities) {
                 final JSONObject jsonObject = entity2JSONObject(entity);
+
                 ret.add(jsonObject);
             }
 
@@ -765,11 +817,13 @@ public final class GAERepository implements Repository {
         final List<Integer> fetchIndexes = CollectionUtils.getRandomIntegers(0, count - 1, fetchSize);
 
         int index = 0;
+
         for (final Entity entity : entities) {
             index++;
 
             if (fetchIndexes.contains(index)) {
                 final JSONObject jsonObject = entity2JSONObject(entity);
+
                 ret.add(jsonObject);
             }
         }
@@ -780,11 +834,12 @@ public final class GAERepository implements Repository {
     @Override
     public long count() {
         final String cacheKey = CACHE_KEY_PREFIX + getName() + REPOSITORY_CACHE_COUNT;
+
         if (cacheEnabled) {
             final Object o = CACHE.get(cacheKey);
+
             if (null != o) {
-                LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]",
-                           new Object[]{cacheKey, getName()});
+                LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 try {
                     return (Long) o;
                 } catch (final Exception e) {
@@ -802,8 +857,7 @@ public final class GAERepository implements Repository {
 
         if (cacheEnabled) {
             CACHE.putAsync(cacheKey, ret);
-            LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]",
-                       new Object[]{cacheKey, getName()});
+            LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
         }
 
         return ret;
@@ -823,11 +877,14 @@ public final class GAERepository implements Repository {
         for (Map.Entry<String, Object> property : properties.entrySet()) {
             final String k = property.getKey();
             final Object v = property.getValue();
+
             if (v instanceof Text) {
                 final Text valueText = (Text) v;
+
                 jsonMap.put(k, valueText.getValue());
             } else if (v instanceof com.google.appengine.api.datastore.Blob) {
                 final com.google.appengine.api.datastore.Blob blob = (com.google.appengine.api.datastore.Blob) v;
+
                 jsonMap.put(k, new Blob(blob.getBytes()));
             } else {
                 jsonMap.put(k, v);
@@ -846,6 +903,7 @@ public final class GAERepository implements Repository {
      */
     public static void setProperties(final Entity entity, final JSONObject jsonObject) throws JSONException {
         final Iterator<String> keys = jsonObject.keys();
+
         while (keys.hasNext()) {
             final String key = keys.next();
             final Object value = jsonObject.get(key);
@@ -856,19 +914,20 @@ public final class GAERepository implements Repository {
 
             if (value instanceof String) {
                 final String valueString = (String) value;
+
                 if (valueString.length() > DataTypeUtils.MAX_STRING_PROPERTY_LENGTH) {
                     final Text text = new Text(valueString);
+
                     entity.setProperty(key, text);
                 } else {
                     entity.setProperty(key, value);
                 }
-            } else if (value instanceof Number
-                       || value instanceof Date
-                       || value instanceof Boolean
-                       || GAE_SUPPORTED_TYPES.contains(value.getClass())) {
+            } else if (value instanceof Number || value instanceof Date || value instanceof Boolean
+                || GAE_SUPPORTED_TYPES.contains(value.getClass())) {
                 entity.setProperty(key, value);
             } else if (value instanceof Blob) {
                 final Blob blob = (Blob) value;
+
                 entity.setProperty(key, new com.google.appengine.api.datastore.Blob(blob.getBytes()));
             }
         }
@@ -901,32 +960,34 @@ public final class GAERepository implements Repository {
      * @throws RepositoryException repository exception
      */
     private JSONObject get(final Query query, final int currentPageNum, final int pageSize, final int pageCount, final String cacheKey)
-            throws RepositoryException {
+        throws RepositoryException {
         final PreparedQuery preparedQuery = datastoreService.prepare(query);
 
         int pageCnt = pageCount;
+
         if (-1 == pageCnt) { // Application caller dose not specify the page count
             // Calculates the page count
             long count = -1;
             final String countCacheKey = cacheKey + REPOSITORY_CACHE_COUNT;
+
             if (cacheEnabled) {
                 final Object o = CACHE.get(countCacheKey);
+
                 if (null != o) {
                     LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]",
-                               new Object[]{countCacheKey, getName()});
+                        new Object[] {countCacheKey, getName()});
                     count = (Long) o;
                 }
             }
 
             if (-1 == count) {
                 count = preparedQuery.countEntities(FetchOptions.Builder.withDefaults());
-                LOGGER.log(Level.WARNING, "Invoked countEntities() for repository[name={0}, count={1}]",
-                           new Object[]{getName(), count});
+                LOGGER.log(Level.WARNING, "Invoked countEntities() for repository[name={0}, count={1}]", new Object[] {getName(), count});
 
                 if (cacheEnabled) {
                     CACHE.putAsync(countCacheKey, count);
                     LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]",
-                               new Object[]{countCacheKey, getName()});
+                        new Object[] {countCacheKey, getName()});
                 }
             }
 
@@ -934,23 +995,26 @@ public final class GAERepository implements Repository {
         }
 
         final JSONObject ret = new JSONObject();
+
         try {
             final JSONObject pagination = new JSONObject();
+
             ret.put(Pagination.PAGINATION, pagination);
             pagination.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
 
             QueryResultList<Entity> queryResultList;
+
             if (1 != currentPageNum) {
                 final Cursor startCursor = getStartCursor(currentPageNum, pageSize, preparedQuery);
 
-                queryResultList = preparedQuery.asQueryResultList(withStartCursor(
-                        startCursor).limit(pageSize).chunkSize(QUERY_CHUNK_SIZE));
+                queryResultList = preparedQuery.asQueryResultList(withStartCursor(startCursor).limit(pageSize).chunkSize(QUERY_CHUNK_SIZE));
             } else { // The first page
                 queryResultList = preparedQuery.asQueryResultList(withLimit(pageSize).chunkSize(QUERY_CHUNK_SIZE));
             }
 
             // Converts entities to json objects
             final JSONArray results = new JSONArray();
+
             ret.put(Keys.RESULTS, results);
             for (final Entity entity : queryResultList) {
                 final JSONObject jsonObject = entity2JSONObject(entity);
@@ -959,7 +1023,7 @@ public final class GAERepository implements Repository {
             }
 
             LOGGER.log(Level.FINER, "Found objects[size={0}] at page[currentPageNum={1}, pageSize={2}] in repository[{3}]",
-                       new Object[]{results.length(), currentPageNum, pageSize, getName()});
+                new Object[] {results.length(), currentPageNum, pageSize, getName()});
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new RepositoryException(e);
@@ -977,8 +1041,7 @@ public final class GAERepository implements Repository {
         final String timeMillisId = Ids.genTimeMillisId();
         final long inc = CACHE.inc("id-step-generator", 1);
 
-        LOGGER.log(Level.FINEST, "[timeMillisId={0}, inc={1}]",
-                   new Object[]{timeMillisId, inc});
+        LOGGER.log(Level.FINEST, "[timeMillisId={0}, inc={1}]", new Object[] {timeMillisId, inc});
 
         return String.valueOf(Long.parseLong(timeMillisId) + inc);
     }
@@ -986,6 +1049,7 @@ public final class GAERepository implements Repository {
     @Override
     public GAETransaction beginTransaction() {
         GAETransaction ret = TX.get();
+
         if (null != ret) {
             LOGGER.log(Level.FINER, "There is a transaction[isActive={0}] in current thread", ret.isActive());
             if (ret.isActive()) {
@@ -1044,12 +1108,13 @@ public final class GAERepository implements Repository {
     private Cursor getStartCursor(final int currentPageNum, final int pageSize, final PreparedQuery preparedQuery) {
         int i = currentPageNum - 1;
         Cursor ret = null;
+
         for (; i > 0; i--) {
             final String cacheKey = CACHE_KEY_PREFIX + getName() + REPOSITORY_CACHE_QUERY_CURSOR + '(' + i + ')';
+
             ret = (Cursor) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.FINEST, "Found a query cursor[{0}] in repository cache[name={1}]",
-                           new Object[]{i, getName()});
+                LOGGER.log(Level.FINEST, "Found a query cursor[{0}] in repository cache[name={1}]", new Object[] {i, getName()});
                 // Found the nearest cursor
                 break;
             }
@@ -1058,11 +1123,11 @@ public final class GAERepository implements Repository {
         int emptyCursorIndex = i;
         QueryResultList<Entity> results;
         String cacheKey;
+
         if (null == ret) { // No cache at all
             LOGGER.log(Level.INFO, "No query cursor at all");
             // For the first page
-            results = preparedQuery.asQueryResultList(withLimit(pageSize).
-                    chunkSize(QUERY_CHUNK_SIZE));
+            results = preparedQuery.asQueryResultList(withLimit(pageSize).chunkSize(QUERY_CHUNK_SIZE));
             ret = results.getCursor(); // The end cursor of page 1, also the start cursor of page 2
             cacheKey = CACHE_KEY_PREFIX + getName() + REPOSITORY_CACHE_QUERY_CURSOR + "(2)";
             CACHE.putAsync(cacheKey, ret);

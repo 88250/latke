@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.urlfetch.gae;
 
+
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 
+
 /**
  * Google App Engine URL fetch service.
  *
@@ -38,8 +40,8 @@ public final class GAEURLFetchService implements URLFetchService {
     /**
      * URL fetch service.
      */
-    private static final com.google.appengine.api.urlfetch.URLFetchService URL_FETCH_SERVICE =
-            URLFetchServiceFactory.getURLFetchService();
+    private static final com.google.appengine.api.urlfetch.URLFetchService URL_FETCH_SERVICE = URLFetchServiceFactory.getURLFetchService();
+
     /**
      * Default fetch timeout, measures in seconds.
      */
@@ -73,7 +75,7 @@ public final class GAEURLFetchService implements URLFetchService {
      * @return HTTP response
      */
     private static HTTPResponse toHTTPResponse(
-            final com.google.appengine.api.urlfetch.HTTPResponse response) {
+        final com.google.appengine.api.urlfetch.HTTPResponse response) {
         final HTTPResponse ret = new HTTPResponse();
 
         ret.setContent(response.getContent());
@@ -81,8 +83,10 @@ public final class GAEURLFetchService implements URLFetchService {
         ret.setResponseCode(response.getResponseCode());
 
         final List<com.google.appengine.api.urlfetch.HTTPHeader> gaeHTTPHeaders = response.getHeaders();
+
         for (final com.google.appengine.api.urlfetch.HTTPHeader gaeHTTPHeader : gaeHTTPHeaders) {
             final HTTPHeader header = new HTTPHeader(gaeHTTPHeader.getName(), gaeHTTPHeader.getValue());
+
             ret.addHeader(header);
         }
 
@@ -102,26 +106,32 @@ public final class GAEURLFetchService implements URLFetchService {
         com.google.appengine.api.urlfetch.HTTPRequest ret = null;
 
         switch (requestMethod) {
-            case GET:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url);
-                break;
-            case DELETE:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.DELETE);
-                break;
-            case HEAD:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.HEAD);
-                break;
-            case POST:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.POST);
-                break;
-            case PUT:
-                ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.PUT);
-                break;
-            default:
-                throw new RuntimeException("Unsupported HTTP request method[" + requestMethod.name() + "]");
+        case GET:
+            ret = new com.google.appengine.api.urlfetch.HTTPRequest(url);
+            break;
+
+        case DELETE:
+            ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.DELETE);
+            break;
+
+        case HEAD:
+            ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.HEAD);
+            break;
+
+        case POST:
+            ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.POST);
+            break;
+
+        case PUT:
+            ret = new com.google.appengine.api.urlfetch.HTTPRequest(url, HTTPMethod.PUT);
+            break;
+
+        default:
+            throw new RuntimeException("Unsupported HTTP request method[" + requestMethod.name() + "]");
         }
 
         final List<HTTPHeader> headers = request.getHeaders();
+
         for (final HTTPHeader header : headers) {
             ret.addHeader(new com.google.appengine.api.urlfetch.HTTPHeader(header.getName(), header.getValue()));
         }

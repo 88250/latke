@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.gae;
 
+
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.repository.Transaction;
 import org.json.JSONObject;
+
 
 /**
  * Google App Engine datastore transaction. Just wraps {@link com.google.appengine.api.datastore.Transaction} simply.
@@ -44,14 +46,17 @@ public final class GAETransaction implements Transaction {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(GAETransaction.class.getName());
+
     /**
      * Underlying Google App Engine transaction.
      */
     private com.google.appengine.api.datastore.Transaction appEngineDatastoreTx;
+
     /**
      * Times of commit retries.
      */
     public static final int COMMIT_RETRIES = 3;
+
     /**
      * Transaction cache.
      * 
@@ -67,6 +72,7 @@ public final class GAETransaction implements Transaction {
      * </p>
      */
     private Map<String, JSONObject> cache = new HashMap<String, JSONObject>();
+
     /**
      * Flag of clear query cache.
      */
@@ -108,6 +114,7 @@ public final class GAETransaction implements Transaction {
 
         for (final String id : ids) {
             final JSONObject o = cache.get(id);
+
             if (null != o) {
                 ret.put(id, o);
             }
@@ -205,7 +212,7 @@ public final class GAETransaction implements Transaction {
 
                 --retries;
                 LOGGER.log(Level.WARNING, "Retrying to commit this transaction[id={0}, app={1}]",
-                           new Object[]{appEngineDatastoreTx.getId(), appEngineDatastoreTx.getApp()});
+                    new Object[] {appEngineDatastoreTx.getId(), appEngineDatastoreTx.getApp()});
             }
         }
     }
