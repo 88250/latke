@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.jpa;
 
+
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import javax.persistence.OneToOne;
 import org.b3log.latke.Keys;
 import org.b3log.latke.repository.jpa.util.EntityClassCheckers;
 
+
 /**
  * Meta entity.
  *
@@ -40,14 +42,17 @@ public final class MetaEntity {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(MetaEntity.class.getName());
+
     /**
      * The type of entity.
      */
     private Class<?> entityClass;
+
     /**
      * Repository.
      */
     private String repositoryName;
+
     /**
      * Fields.
      */
@@ -70,10 +75,11 @@ public final class MetaEntity {
         this.entityClass = entityClass;
 
         final String entityClassName = entityClass.getSimpleName();
+
         repositoryName = entityClassName.substring(0, 1).toLowerCase() + entityClassName.substring(1);
 
         LOGGER.log(Level.FINER, "Entity[classSimpleName={0}] to repository[name={1}]",
-                   new Object[]{entityClass.getSimpleName(), repositoryName});
+            new Object[] {entityClass.getSimpleName(), repositoryName});
 
         final Field[] allFields = entityClass.getDeclaredFields();
 
@@ -91,15 +97,14 @@ public final class MetaEntity {
                 continue;
             }
 
-
-            if (field.isAnnotationPresent(OneToOne.class)
-                || field.isAnnotationPresent(ManyToOne.class)) {
+            if (field.isAnnotationPresent(OneToOne.class) || field.isAnnotationPresent(ManyToOne.class)) {
                 fields.put(field.getName() + "Id", field);
                 continue;
             }
 
             if (field.isAnnotationPresent(ManyToMany.class)) {
                 final String many2ManyReposName = fieldClass.getSimpleName() + '_' + entityClass.getSimpleName();
+
                 Relationships.addManyToManyRepositoryName(many2ManyReposName);
             }
 

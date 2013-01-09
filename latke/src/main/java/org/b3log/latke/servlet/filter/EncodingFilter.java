@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.filter;
 
+
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -22,6 +23,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
 
 /**
  * General encoding filter.
@@ -39,6 +41,7 @@ public final class EncodingFilter implements Filter {
      * Request encoding.
      */
     private String requestEncoding = "UTF-8";
+
     /**
      * Response encoding.
      */
@@ -61,7 +64,7 @@ public final class EncodingFilter implements Filter {
      */
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         request.setCharacterEncoding(requestEncoding);
         response.setCharacterEncoding(responseEncoding);
         
@@ -69,6 +72,5 @@ public final class EncodingFilter implements Filter {
     }
 
     @Override
-    public void destroy() {
-    }
+    public void destroy() {}
 }

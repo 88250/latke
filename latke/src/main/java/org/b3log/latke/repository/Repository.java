@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.repository;
 
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.b3log.latke.cache.Cache;
 import org.json.JSONObject;
+
 
 /**
  * Repository.
@@ -47,7 +49,7 @@ public interface Repository {
      * @throws RepositoryException repository exception
      */
     void update(final String id, final JSONObject jsonObject)
-            throws RepositoryException;
+        throws RepositoryException;
 
     /**
      * Removes a json object by the specified id.

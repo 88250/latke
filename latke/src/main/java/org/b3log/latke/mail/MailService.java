@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.mail;
 
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
 
 /**
  * Mail service.
@@ -48,14 +50,17 @@ public interface MailService {
          * From.
          */
         private String from;
+
         /**
          * Recipients.
          */
         private Set<String> recipients = new HashSet<String>();
+
         /**
          * HTML body. 
          */
         private String htmlBody;
+
         /**
          * Subject.
          */

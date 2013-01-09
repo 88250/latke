@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.jpa.util;
 
+
 /**
  * Entity class check utilities.
  *
@@ -49,6 +50,5 @@ public final class EntityClassCheckers {
     /**
      * Private constructor.
      */
-    private EntityClassCheckers() {
-    }
+    private EntityClassCheckers() {}
 }

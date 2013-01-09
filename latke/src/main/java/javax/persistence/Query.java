@@ -35,9 +35,11 @@
  */
 package javax.persistence;
 
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Interface used to control query execution.

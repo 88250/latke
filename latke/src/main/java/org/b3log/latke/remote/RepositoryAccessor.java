@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.remote;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -40,6 +41,7 @@ import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 /**
  * Accesses repository via HTTP protocol.
@@ -81,11 +83,13 @@ public final class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.GET)
     public void getRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
-            final HttpServletResponse response) {
+        final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
+
         context.setRenderer(renderer);
 
         final JSONObject jsonObject = new JSONObject();
+
         renderer.setJSONObject(jsonObject);
 
         if (!authSucc(request, jsonObject)) {
@@ -124,14 +128,17 @@ public final class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.PUT)
     public void setRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
-            final HttpServletResponse response) {
+        final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
+
         context.setRenderer(renderer);
 
         final JSONObject jsonObject = new JSONObject();
+
         renderer.setJSONObject(jsonObject);
 
         final String writable = request.getParameter("writable");
+
         if (!"true".equals(writable) && !"false".equals(writable)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[writable], optional value is [true] or [false]");
@@ -177,11 +184,13 @@ public final class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repository/names", method = HTTPRequestMethod.GET)
     public void getRepositoryNames(final HTTPRequestContext context, final HttpServletRequest request,
-            final HttpServletResponse response) {
+        final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
+
         context.setRenderer(renderer);
 
         final JSONObject jsonObject = new JSONObject();
+
         renderer.setJSONObject(jsonObject);
 
         jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_OK);
@@ -224,9 +233,11 @@ public final class RepositoryAccessor {
     @RequestProcessing(value = "/latke/remote/repository/data", method = HTTPRequestMethod.GET)
     public void getData(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
+
         context.setRenderer(renderer);
 
         final JSONObject jsonObject = new JSONObject();
+
         renderer.setJSONObject(jsonObject);
 
         jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_OK);
@@ -238,6 +249,7 @@ public final class RepositoryAccessor {
 
         final String repositoryName = request.getParameter("repositoryName");
         final Repository repository = Repositories.getRepository(repositoryName);
+
         if (null == repository) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Not found repository[name=" + repositoryName + "]");
@@ -249,8 +261,8 @@ public final class RepositoryAccessor {
 
         repository.setCacheEnabled(false);
 
-        final Query query = new Query().setCurrentPageNum(Integer.valueOf(request.getParameter("pageNum"))).
-                setPageSize(Integer.valueOf(request.getParameter("pageSize")));
+        final Query query = new Query().setCurrentPageNum(Integer.valueOf(request.getParameter("pageNum"))).setPageSize(
+            Integer.valueOf(request.getParameter("pageSize")));
 
         try {
             final JSONObject result = repository.get(query);
@@ -299,9 +311,11 @@ public final class RepositoryAccessor {
     @RequestProcessing(value = "/latke/remote/repository/data", method = HTTPRequestMethod.POST)
     public void putData(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
+
         context.setRenderer(renderer);
 
         final JSONObject jsonObject = new JSONObject();
+
         renderer.setJSONObject(jsonObject);
 
         jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_OK);
@@ -313,17 +327,19 @@ public final class RepositoryAccessor {
 
         final String repositoryName = request.getParameter("repositoryName");
         Repository repository = Repositories.getRepository(repositoryName);
+
         if (null == repository) {
-            repository = new AbstractRepository(repositoryName) {
-            };
+            repository = new AbstractRepository(repositoryName) {};
         }
 
         repository.setCacheEnabled(false);
 
         final Transaction transaction = repository.beginTransaction();
+
         try {
             final String dataContent = request.getParameter("data").trim();
             final JSONArray data = new JSONArray(dataContent);
+
             for (int i = 0; i < data.length(); i++) {
                 final JSONObject record = data.getJSONObject(i);
 
@@ -331,10 +347,12 @@ public final class RepositoryAccessor {
                 final SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy", Locale.US);
                 
                 final JSONArray keysDescription = Repositories.getRepositoryKeysDescription(repositoryName);
+
                 for (int j = 0; j < keysDescription.length(); j++) {
                     final JSONObject keyDescription = keysDescription.optJSONObject(j);
                     final String key = keyDescription.optString("name");
                     final String type = keyDescription.optString("type");
+
                     if ("Date".equals(type)) {
                         record.put(key, sdf.parse(record.optString(key)));
                     }
@@ -384,9 +402,11 @@ public final class RepositoryAccessor {
     @RequestProcessing(value = "/latke/remote/repository/tables", method = HTTPRequestMethod.PUT)
     public void createTables(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
+
         context.setRenderer(renderer);
 
         final JSONObject jsonObject = new JSONObject();
+
         renderer.setJSONObject(jsonObject);
 
         jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_OK);
@@ -520,6 +540,7 @@ public final class RepositoryAccessor {
      */
     private boolean badPutDataRequest(final HttpServletRequest request, final JSONObject jsonObject) {
         final String repositoryName = request.getParameter("repositoryName");
+
         if (Strings.isEmptyOrNull(repositoryName)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[repositoryName]");
@@ -527,6 +548,7 @@ public final class RepositoryAccessor {
         }
 
         final String dataContent = request.getParameter("data");
+
         if (Strings.isEmptyOrNull(dataContent)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[data]");

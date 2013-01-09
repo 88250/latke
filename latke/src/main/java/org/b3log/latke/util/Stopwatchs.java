@@ -15,12 +15,14 @@
  */
 package org.b3log.latke.util;
 
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 /**
  * Stop watch utilities for timing of a thread of tasks.
@@ -103,6 +105,7 @@ public final class Stopwatchs {
      */
     public static void start(final String taskTitle) {
         Stopwatch root = STOPWATCH.get();
+
         if (null == root) {
             root = new Stopwatch(taskTitle); // Creates the root stopwatch
             STOPWATCH.set(root);
@@ -111,6 +114,7 @@ public final class Stopwatchs {
         }
 
         final Stopwatch recent = getRecentRunning(STOPWATCH.get());
+
         if (null == recent) {
             return;
         }
@@ -124,11 +128,13 @@ public final class Stopwatchs {
      */
     public static void end() {
         final Stopwatch root = STOPWATCH.get();
+
         if (null == root) {
             return; // Donoting....
         }
 
         final Stopwatch recent = getRecentRunning(root);
+
         if (null == recent) {
             return;
         }
@@ -160,6 +166,7 @@ public final class Stopwatchs {
      */
     public static String getTimingStat() {
         final Stopwatch root = STOPWATCH.get();
+
         if (null == root) {
             return "No stopwatch";
         }
@@ -195,11 +202,13 @@ public final class Stopwatchs {
         }
 
         final Stopwatch root = STOPWATCH.get();
+
         if (null == root) {
             return -1;
         }
 
         final Stopwatch stopwatch = get(root, taskTitle);
+
         if (null == stopwatch) {
             return -1;
         }
@@ -226,6 +235,7 @@ public final class Stopwatchs {
 
         for (final Stopwatch leaf : parent.getLeaves()) {
             final Stopwatch ret = get(leaf, taskTitle);
+
             if (null != ret) {
                 return ret;
             }
@@ -246,6 +256,7 @@ public final class Stopwatchs {
         }
 
         final List<Stopwatch> leaves = parent.getLeaves();
+
         if (leaves.isEmpty()) {
             if (parent.isRunning()) {
                 return parent;
@@ -270,8 +281,7 @@ public final class Stopwatchs {
     /**
      * Private constructor.
      */
-    private Stopwatchs() {
-    }
+    private Stopwatchs() {}
 
     /**
      * Stopwatch for timing a task.
@@ -302,22 +312,27 @@ public final class Stopwatchs {
          * Task title.
          */
         private String taskTitle;
+
         /**
          * Leaf noes.
          */
         private List<Stopwatch> leaves = new ArrayList<Stopwatch>();
+
         /**
          * Start time.
          */
         private long startTime;
+
         /**
          * End time.
          */
         private long endTime;
+
         /**
          * Hundred.
          */
         private static final int HUNDRED = 100;
+
         /**
          * Math context for formatting percent.
          */
@@ -425,11 +440,13 @@ public final class Stopwatchs {
          */
         public float getPercentOfRoot() {
             final Stopwatch root = STOPWATCH.get();
+
             if (null == root) {
                 return 0;
             }
 
             final float rootElapsedTime = (float) root.getElapsedTime();
+
             if (0 == rootElapsedTime) { // Denominator is equals to zero
                 return 0;
             }
@@ -448,6 +465,7 @@ public final class Stopwatchs {
 
             for (int i = 0; i < leaves.size(); i++) {
                 final Stopwatch leaf = leaves.get(i);
+
                 stringBuilder.append(getIndentBlanks(level * 2));
                 leaf.appendTimingStat(level + 1, stringBuilder);
             }
@@ -472,15 +490,15 @@ public final class Stopwatchs {
         @Override
         public String toString() {
             float percentOfRoot = getPercentOfRoot();
+
             if (0 > percentOfRoot) {
                 percentOfRoot = 0F;
             }
 
             final BigDecimal percenOfRoot = new BigDecimal(percentOfRoot, MATH_CONTEXT);
 
-            final StringBuilder stringBuilder = new StringBuilder("[").append(percenOfRoot).
-                    append("]%, [").append(getElapsedTime()).append("]ms [").
-                    append(getTaskTitle()).append("]").append(Strings.LINE_SEPARATOR);
+            final StringBuilder stringBuilder = new StringBuilder("[").append(percenOfRoot).append("]%, [").append(getElapsedTime()).append("]ms [").append(getTaskTitle()).append("]").append(
+                Strings.LINE_SEPARATOR);
 
             return stringBuilder.toString();
         }

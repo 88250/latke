@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
 
 /**
  * A standard object serializer to serialize and deserialize for an object that
@@ -81,6 +83,5 @@ public final class Serializer {
     /**
      * Private default constructor.
      */
-    private Serializer() {
-    }
+    private Serializer() {}
 }

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.model;
 
+
 /**
  * This class defines all label model relevant keys.
  *
@@ -27,14 +28,17 @@ public final class Label {
      * Label id.
      */
     public static final String LABEL_ID = "labelId";
+
     /**
      * Label text.
      */
     public static final String LABEL_TEXT = "labelText";
+
     /**
      * Labels.
      */
     public static final String LABELS = "labels";
+
     /**
      * Html title.
      */
@@ -43,6 +47,5 @@ public final class Label {
     /**
      * Private default constructor.
      */
-    private Label() {
-    }
+    private Label() {}
 }

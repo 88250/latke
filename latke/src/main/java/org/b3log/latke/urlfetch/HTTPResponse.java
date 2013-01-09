@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.urlfetch;
 
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 /**
  * Encapsulation of the result of a {@link HTTPRequest HTTP request} made via 
@@ -33,14 +35,17 @@ public final class HTTPResponse {
      * Content.
      */
     private byte[] content;
+
     /**
      * Final URL.
      */
     private URL finalURL;
+
     /**
      * Response code.
      */
     private int responseCode;
+
     /**
      * HTTP headers.
      */

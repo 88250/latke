@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.urlfetch;
 
+
 /**
  * This class depicts either an HTTP request header or an HTTP response header.
  *
@@ -27,6 +28,7 @@ public final class HTTPHeader {
      * Name.
      */
     private String name;
+
     /**
      * Value.
      */

@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.repository;
 
+
 import java.util.Collections;
 import java.util.List;
+
 
 /**
  * Composite filter that combines serval sub filters using a {@link CompositeFilterOperator}.
@@ -31,14 +33,17 @@ public final class CompositeFilter implements Filter {
      * Operator.
      */
     private CompositeFilterOperator operator;
+
     /**
      * Sub filters.
      */
     private List<Filter> subFilters;
+
     /**
      * Initialization value for hashing.
      */
     private static final int INIT_HASH = 3;
+
     /**
      * Base for hashing.
      */
@@ -82,6 +87,7 @@ public final class CompositeFilter implements Filter {
             return false;
         }
         final CompositeFilter other = (CompositeFilter) obj;
+
         if (this.operator != other.operator) {
             return false;
         }

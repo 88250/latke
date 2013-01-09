@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javassist.ClassClassPath;
@@ -26,6 +27,7 @@ import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+
 
 /**
  * ReflectHelper while not using java reflect instead of the other class byte tool.
@@ -44,8 +46,7 @@ public final class ReflectHelper {
     /**
      * The default constructor.
      */
-    private ReflectHelper() {
-    }
+    private ReflectHelper() {}
 
     /**
      * getMethodVariableNames in user defined.
@@ -60,12 +61,14 @@ public final class ReflectHelper {
 
         try {
             final ClassPool pool = ClassPool.getDefault();
+
             pool.insertClassPath(new ClassClassPath(ReflectHelper.class));
             pool.insertClassPath(new ClassClassPath(clazz));
             pool.insertClassPath(new ClassClassPath(Thread.currentThread().getClass()));
 
             cc = pool.get(clazz.getName());
             final CtClass[] ptypes = new CtClass[types.length];
+
             for (int i = 0; i < ptypes.length; i++) {
                 ptypes[i] = pool.get(types[i].getName());
             }
@@ -82,12 +85,14 @@ public final class ReflectHelper {
         final CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
         final LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag);
         String[] variableNames = new String[0];
+
         try {
             variableNames = new String[cm.getParameterTypes().length];
         } catch (final NotFoundException e) {
             LOGGER.log(Level.SEVERE, "Get method variable names failed", e);
         }
         final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
+
         for (int i = 0; i < variableNames.length; i++) {
             variableNames[i] = attr.variableName(i + staticIndex);
 

@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * Do nothing HTTP response renderer.
@@ -33,6 +35,7 @@ public final class DoNothingRenderer extends AbstractHTTPResponseRenderer {
     @Override
     public void render(final HTTPRequestContext context) {
         final HttpServletResponse response = context.getResponse();
+
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }

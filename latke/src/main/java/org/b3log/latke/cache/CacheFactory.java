@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.cache;
 
+
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+
 
 /**
  * Cache factory.
@@ -38,6 +40,7 @@ public final class CacheFactory {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(CacheFactory.class.getName());
+
     /**
      * Caches.
      */
@@ -54,28 +57,33 @@ public final class CacheFactory {
         }
 
         switch (runtime) {
-            case GAE:
-                final Iterator<Cache<String, ?>> iterator = CACHES.values().iterator();
-                if (iterator.hasNext()) {
-                    iterator.next().removeAll();
-                    // Clears one will clears all on GAE
-                    break;
-                }
+        case GAE:
+            final Iterator<Cache<String, ?>> iterator = CACHES.values().iterator();
 
+            if (iterator.hasNext()) {
+                iterator.next().removeAll();
+                // Clears one will clears all on GAE
                 break;
-            case BAE: // No cache
-                break;
-            case LOCAL:
-                // Clears cache one by one
-                for (final Map.Entry<String, Cache<String, ?>> entry : CACHES.entrySet()) {
-                    final Cache<String, ?> cache = entry.getValue();
-                    cache.removeAll();
-                    LOGGER.log(Level.FINEST, "Clears cache[name={0}]", entry.getKey());
-                }
+            }
 
-                break;
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+            break;
+
+        case BAE: // No cache
+            break;
+
+        case LOCAL:
+            // Clears cache one by one
+            for (final Map.Entry<String, Cache<String, ?>> entry : CACHES.entrySet()) {
+                final Cache<String, ?> cache = entry.getValue();
+
+                cache.removeAll();
+                LOGGER.log(Level.FINEST, "Clears cache[name={0}]", entry.getKey());
+            }
+
+            break;
+
+        default:
+            throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
         }
     }
 
@@ -94,26 +102,31 @@ public final class CacheFactory {
         try {
             if (null == ret) {
                 switch (Latkes.getRuntime("cache")) {
-                    case LOCAL:
-                        final Class<Cache<String, ?>> localLruCache = (Class<Cache<String, ?>>) Class.forName(
-                                "org.b3log.latke.cache.local.memory.LruMemoryCache");
-                        ret = localLruCache.newInstance();
-                        break;
-                    case GAE:
-                        final Class<Cache<String, ?>> gaeMemcache = (Class<Cache<String, ?>>) Class.forName(
-                                "org.b3log.latke.cache.gae.Memcache");
-                        final Constructor<Cache<String, ?>> gaeMemcacheConstructor = gaeMemcache.getConstructor(String.class);
-                        ret = gaeMemcacheConstructor.newInstance(cacheName);
-                        break;
-                    case BAE:
-                        final Class<Cache<String, ?>> baeMemcache = (Class<Cache<String, ?>>) 
-                                Class.forName("org.b3log.latke.cache.NoCache");
-                                // Class.forName("org.b3log.latke.cache.bae.Memcache");
-                        final Constructor<Cache<String, ?>> baeMemcacheConstructor = baeMemcache.getConstructor(String.class);
-                        ret = baeMemcacheConstructor.newInstance(cacheName);
-                        break;
-                    default:
-                        throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                case LOCAL:
+                    final Class<Cache<String, ?>> localLruCache = (Class<Cache<String, ?>>) Class.forName(
+                        "org.b3log.latke.cache.local.memory.LruMemoryCache");
+
+                    ret = localLruCache.newInstance();
+                    break;
+
+                case GAE:
+                    final Class<Cache<String, ?>> gaeMemcache = (Class<Cache<String, ?>>) Class.forName("org.b3log.latke.cache.gae.Memcache");
+                    final Constructor<Cache<String, ?>> gaeMemcacheConstructor = gaeMemcache.getConstructor(String.class);
+
+                    ret = gaeMemcacheConstructor.newInstance(cacheName);
+                    break;
+
+                case BAE:
+                    final Class<Cache<String, ?>> baeMemcache = (Class<Cache<String, ?>>) 
+                        Class.forName("org.b3log.latke.cache.NoCache");
+                    // Class.forName("org.b3log.latke.cache.bae.Memcache");
+                    final Constructor<Cache<String, ?>> baeMemcacheConstructor = baeMemcache.getConstructor(String.class);
+
+                    ret = baeMemcacheConstructor.newInstance(cacheName);
+                    break;
+
+                default:
+                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
                 }
 
                 CACHES.put(cacheName, ret);
@@ -130,6 +143,5 @@ public final class CacheFactory {
     /**
      * Private default constructor.
      */
-    private CacheFactory() {
-    }
+    private CacheFactory() {}
 }

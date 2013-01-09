@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.converter;
 
+
 /**
  * the interface that mean thar conver String to T.
  * @param <T> the type shold be convert

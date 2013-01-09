@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.json.JSONArray;
+
 
 /**
  * Collection utilities.
@@ -35,8 +37,7 @@ public final class CollectionUtils {
     /**
      * Private default constructor.
      */
-    private CollectionUtils() {
-    }
+    private CollectionUtils() {}
 
     /**
      * Gets a list of integers(size specified by the given size) between the
@@ -57,10 +58,12 @@ public final class CollectionUtils {
 
         int remainsSize;
         int index;
+
         while (ret.size() < size) {
             remainsSize = integers.size();
             index = (int) (Math.random() * (remainsSize - 1));
             final Integer i = integers.get(index);
+
             ret.add(i);
             integers.remove(i);
         }
@@ -78,6 +81,7 @@ public final class CollectionUtils {
      */
     public static List<Integer> genIntegers(final int start, final int end) {
         final List<Integer> ret = new ArrayList<Integer>();
+
         for (int i = 0; i <= end; i++) {
             ret.add(i + start);
         }
@@ -98,8 +102,10 @@ public final class CollectionUtils {
         }
 
         final Set<T> ret = new HashSet<T>();
+
         for (int i = 0; i < array.length; i++) {
             final T object = array[i];
+
             ret.add(object);
         }
 
@@ -206,11 +212,12 @@ public final class CollectionUtils {
     @SuppressWarnings("unchecked")
     public static <T> T[] jsonArrayToArray(final JSONArray jsonArray, final Class<? extends T[]> newType) {
         if (null == jsonArray) {
-            return (T[]) new Object[]{};
+            return (T[]) new Object[] {};
         }
 
         final int newLength = jsonArray.length();
         final Object[] original = new Object[newLength];
+
         for (int i = 0; i < newLength; i++) {
             original[i] = jsonArray.opt(i);
         }

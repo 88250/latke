@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.filter;
 
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+
 /**
  * Abstract HTTP response GZIP filter.
  *
@@ -46,8 +48,7 @@ public abstract class AbstractGZIPFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(AbstractGZIPFilter.class.getName());
 
     @Override
-    public void init(final FilterConfig cfg) throws ServletException {
-    }
+    public void init(final FilterConfig cfg) throws ServletException {}
 
     /**
      * Wraps the http servlet response with GZIP if could.
@@ -60,9 +61,10 @@ public abstract class AbstractGZIPFilter implements Filter {
      */
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final String requestURI = httpServletRequest.getRequestURI();
+
         if (shouldSkip(requestURI)) {
             LOGGER.log(Level.FINEST, "Skip GZIP filter request[URI={0}]", requestURI);
             chain.doFilter(request, response);
@@ -72,8 +74,8 @@ public abstract class AbstractGZIPFilter implements Filter {
 
         final String acceptEncoding = httpServletRequest.getHeader("Accept-Encoding");
         boolean supportGZIP = false;
-        if (null != acceptEncoding
-            && 0 <= acceptEncoding.indexOf("gzip")) {
+
+        if (null != acceptEncoding && 0 <= acceptEncoding.indexOf("gzip")) {
             supportGZIP = true;
         }
 
@@ -85,6 +87,7 @@ public abstract class AbstractGZIPFilter implements Filter {
         }
 
         final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
         httpServletResponse.addHeader("Content-Encoding", "gzip");
         httpServletResponse.addHeader("Vary", "Accept-Encoding");
         chain.doFilter(request, new GZIPServletResponseWrapper(httpServletResponse));
@@ -104,8 +107,7 @@ public abstract class AbstractGZIPFilter implements Filter {
     public abstract boolean shouldSkip(final String requestURI);
 
     @Override
-    public void destroy() {
-    }
+    public void destroy() {}
 
     /**
      * HTTP response wrapper for GZIP.
@@ -119,10 +121,12 @@ public abstract class AbstractGZIPFilter implements Filter {
          * GZIP output stream.
          */
         private GZIPOutputStream gzipStream;
+
         /**
          * Servlet output stream.
          */
         private ServletOutputStream servletOutputStream;
+
         /**
          * Print writer.
          */
@@ -136,7 +140,7 @@ public abstract class AbstractGZIPFilter implements Filter {
          * @throws IOException io exception
          */
         GZIPServletResponseWrapper(final HttpServletResponse httpServletResponse)
-                throws IOException {
+            throws IOException {
             super(httpServletResponse);
         }
 
@@ -166,6 +170,7 @@ public abstract class AbstractGZIPFilter implements Filter {
          */
         private ServletOutputStream createOutputStream() throws IOException {
             final ServletResponse servletResponse = this.getResponse();
+
             gzipStream = new GZIPOutputStream(servletResponse.getOutputStream());
 
             return new ServletOutputStream() {

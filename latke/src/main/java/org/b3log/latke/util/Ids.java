@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 
 /**
  * Id utilities.
@@ -30,6 +32,7 @@ public final class Ids {
      * Lock for unique id generation.
      */
     private static final Lock ID_GEN_LOCK = new ReentrantLock();
+
     /**
      * Sleep millisecond.
      */
@@ -38,8 +41,7 @@ public final class Ids {
     /**
      * Private default constructor.
      */
-    private Ids() {
-    }
+    private Ids() {}
 
     /**
      * Gets current date time string.

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * String utilities.
@@ -35,29 +37,32 @@ public final class Strings {
      * Line separator.
      */
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
     /**
      * Maximum length of local part of a valid email address.
      */
     private static final int MAX_EMAIL_LENGTH_LOCAL = 64;
+
     /**
      * Maximum length of domain part of a valid email address.
      */
     private static final int MAX_EMAIL_LENGTH_DOMAIN = 255;
+
     /**
      * Maximum length of a valid email address.
      */
     private static final int MAX_EMAIL_LENGTH = 256;
+
     /**
      * Email pattern.
      */
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+        "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
     /**
      * Private default constructor.
      */
-    private Strings() {
-    }
+    private Strings() {}
 
     /**
      * Converts the specified string into a string list line by line.
@@ -77,6 +82,7 @@ public final class Strings {
 
         try {
             String line = bufferedReader.readLine();
+
             while (null != line) {
                 ret.add(line);
 
@@ -128,16 +134,19 @@ public final class Strings {
         }
 
         final String[] parts = string.split("@");
+
         if (2 != parts.length) {
             return false;
         }
 
         final String local = parts[0];
+
         if (MAX_EMAIL_LENGTH_LOCAL < local.length()) {
             return false;
         }
 
         final String domain = parts[1];
+
         if (MAX_EMAIL_LENGTH_DOMAIN < domain.length()) {
             return false;
         }

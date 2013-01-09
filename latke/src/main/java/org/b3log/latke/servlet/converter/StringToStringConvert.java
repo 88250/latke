@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.converter;
 
+
 /**
  * inner impl: String to String.
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>

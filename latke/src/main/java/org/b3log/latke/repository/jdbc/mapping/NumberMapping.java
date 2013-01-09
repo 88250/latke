@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.repository.jdbc.mapping;
 
+
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+
 
 /**
  * NumberMapping.
@@ -29,6 +31,7 @@ public class NumberMapping implements Mapping {
     public String toDataBaseSting(final FieldDefinition definition) {
 
         final StringBuilder sql = new StringBuilder();
+
         sql.append(definition.getName());
         sql.append("  double ");
         if (!definition.getNullable()) {

@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.util;
 
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  * MD5 hash.
@@ -32,14 +34,17 @@ public final class MD5 {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(MD5.class.getName());
+
     /**
      * Message digest.
      */
     private static MessageDigest messageDigest;
+
     /**
      * Low 8 bits all sets to 1.
      */
     private static final int LOW_8_BITS_1 = 0xff;
+
     /**
      * Append size.
      */
@@ -48,8 +53,7 @@ public final class MD5 {
     /**
      * Private default constructor.
      */
-    private MD5() {
-    }
+    private MD5() {}
 
     static {
         try {
@@ -79,6 +83,7 @@ public final class MD5 {
 
         for (int i = 0; i < bytes.length; i++) {
             final int val = ((int) bytes[i]) & LOW_8_BITS_1;
+
             if (val < APPEND_SIZE) {
                 hexValue.append("0");
             }

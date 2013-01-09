@@ -15,12 +15,14 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
+
 
 /**
  *
@@ -36,10 +38,12 @@ public final class JdbcTransaction implements Transaction {
      * Connection.
      */
     private Connection connection;
+
     /**
      * Is active.
      */
     private boolean isActive;
+
     /**
      * Flag of clear query cache.
      */

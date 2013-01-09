@@ -22,6 +22,4 @@ package org.b3log.latke.servlet.advice;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Sep 29, 2012
  */
-public interface RequestProcessAdvice {
-
-}
+public interface RequestProcessAdvice {}

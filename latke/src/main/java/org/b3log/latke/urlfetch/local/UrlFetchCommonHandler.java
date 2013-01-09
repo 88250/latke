@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.urlfetch.local;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.urlfetch.HTTPHeader;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
+
 
 /**
  * Common handler for URL fetch.
@@ -53,9 +55,11 @@ class UrlFetchCommonHandler {
     protected HTTPResponse doFetch(final HTTPRequest request) throws IOException {
 
         final HttpURLConnection httpURLConnection = prepareConnection(request);
+
         configConnection(httpURLConnection, request);
         httpURLConnection.connect();
         final HTTPResponse ret = resultConnection(httpURLConnection);
+
         httpURLConnection.disconnect();
 
         return ret;
@@ -73,6 +77,7 @@ class UrlFetchCommonHandler {
         }
 
         final HttpURLConnection ret = (HttpURLConnection) request.getURL().openConnection();
+
         ret.setRequestMethod(request.getRequestMethod().toString());
 
         for (HTTPHeader httpHeader : request.getHeaders()) {
@@ -96,8 +101,7 @@ class UrlFetchCommonHandler {
      * @throws IOException IOException from java.net
      */
     protected void configConnection(final HttpURLConnection httpURLConnection, final HTTPRequest request)
-            throws IOException {
-    }
+        throws IOException {}
 
     /**
      * 
@@ -112,8 +116,8 @@ class UrlFetchCommonHandler {
         ret.setFinalURL(httpURLConnection.getURL());
 
         InputStream retStream;
-        if (HttpServletResponse.SC_OK <= ret.getResponseCode()
-                && ret.getResponseCode() < HttpServletResponse.SC_BAD_REQUEST) {
+
+        if (HttpServletResponse.SC_OK <= ret.getResponseCode() && ret.getResponseCode() < HttpServletResponse.SC_BAD_REQUEST) {
             retStream = httpURLConnection.getInputStream();
         } else {
             retStream = httpURLConnection.getErrorStream();
@@ -146,11 +150,13 @@ class UrlFetchCommonHandler {
     private byte[] inputStreamToByte(final InputStream is) throws IOException {
         final ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
         int ch;
+
         while ((ch = is.read()) != -1) {
             bytestream.write(ch);
         }
 
         final byte[] ret = bytestream.toByteArray();
+
         bytestream.close();
 
         return ret;

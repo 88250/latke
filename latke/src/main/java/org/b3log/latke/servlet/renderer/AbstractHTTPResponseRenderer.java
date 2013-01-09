@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * Abstract HTTP response renderer.

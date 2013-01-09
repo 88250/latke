@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.repository;
 
+
 import java.io.Serializable;
+
 
 /**
  * Blob.
@@ -29,6 +31,7 @@ public final class Blob implements Serializable {
      * Default serial version uid.
      */
     private static final long serialVersionUID = 1L;
+
     /**
      * Bytes.
      */

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.plugin;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
@@ -45,6 +46,7 @@ import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.latke.util.Strings;
 
+
 /**
  * Plugin loader.
  * 
@@ -57,14 +59,17 @@ public final class PluginManager {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(PluginManager.class.getName());
+
     /**
      * Type of loaded event.
      */
     public static final String PLUGIN_LOADED_EVENT = "pluginLoadedEvt";
+
     /**
      * Plugin Cache.
      */
     private static final String PLUGIN_CACHE_NAME = "pluginCache";
+
     /**
      * Plugins cache.
      * 
@@ -76,10 +81,12 @@ public final class PluginManager {
      */
     @SuppressWarnings("unchecked")
     private final Cache<String, HashMap<String, HashSet<AbstractPlugin>>> pluginCache;
+
     /**
      * Plugin root directory.
      */
     public static final String PLUGIN_ROOT = AbstractServletListener.getWebRoot() + Plugin.PLUGINS;
+
     /**
      * Plugin class loaders.
      */
@@ -94,6 +101,7 @@ public final class PluginManager {
         final String viewName = plugin.getViewName();
 
         HashMap<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
+
         if (null == holder) {
             LOGGER.info("Plugin cache miss, reload");
             load();
@@ -120,6 +128,7 @@ public final class PluginManager {
      */
     public List<AbstractPlugin> getPlugins() {
         Map<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
+
         if (null == holder) {
             LOGGER.info("Plugin cache miss, reload");
             load();
@@ -147,6 +156,7 @@ public final class PluginManager {
      */
     public Set<AbstractPlugin> getPlugins(final String viewName) {
         Map<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
+
         if (null == holder) {
             LOGGER.info("Plugin cache miss, reload");
             load();
@@ -158,6 +168,7 @@ public final class PluginManager {
         }
 
         final Set<AbstractPlugin> ret = holder.get(viewName);
+
         if (null == ret) {
             return Collections.emptySet();
         }
@@ -176,6 +187,7 @@ public final class PluginManager {
         final File[] pluginsDirs = new File(PLUGIN_ROOT).listFiles();
         final List<AbstractPlugin> plugins = new ArrayList<AbstractPlugin>();
         HashMap<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
+
         if (null == holder) {
             LOGGER.info("Creates an empty plugin holder");
             holder = new HashMap<String, HashSet<AbstractPlugin>>();
@@ -183,11 +195,13 @@ public final class PluginManager {
 
         for (int i = 0; i < pluginsDirs.length; i++) {
             final File pluginDir = pluginsDirs[i];
+
             if (pluginDir.isDirectory() && !pluginDir.isHidden() && !pluginDir.getName().startsWith(".")) {
                 try {
                     LOGGER.log(Level.INFO, "Loading plugin under directory[{0}]", pluginDir.getName());
 
                     final AbstractPlugin plugin = load(pluginDir, holder);
+
                     plugins.add(plugin);
                 } catch (final Exception e) {
                     LOGGER.log(Level.WARNING, "Load plugin under directory[" + pluginDir.getName() + "] failed", e);
@@ -219,6 +233,7 @@ public final class PluginManager {
      */
     private AbstractPlugin load(final File pluginDir, final HashMap<String, HashSet<AbstractPlugin>> holder) throws Exception {
         final Properties props = new Properties();
+
         props.load(new FileInputStream(pluginDir.getPath() + File.separator + "plugin.properties"));
 
         final File defaultClassesFileDir = new File(pluginDir.getPath() + File.separator + "classes");
@@ -229,12 +244,13 @@ public final class PluginManager {
         final File classesFileDir = new File(classesFileDirPath);
         final URL classesFileDirURL = classesFileDir.toURI().toURL();
 
-        final URLClassLoader classLoader = new URLClassLoader(new URL[]{
-                    defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
+        final URLClassLoader classLoader = new URLClassLoader(new URL[] {
+            defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
 
         classLoaders.add(classLoader);
 
         final String pluginClassName = props.getProperty(Plugin.PLUGIN_CLASS);
+
         LOGGER.log(Level.FINEST, "Loading plugin class[name={0}]", pluginClassName);
         final Class<?> pluginClass = classLoader.loadClass(pluginClassName);
         final AbstractPlugin ret = (AbstractPlugin) pluginClass.newInstance();
@@ -258,6 +274,7 @@ public final class PluginManager {
         final String viewName = plugin.getViewName();
 
         HashSet<AbstractPlugin> set = holder.get(viewName);
+
         if (null == set) {
             set = new HashSet<AbstractPlugin>();
             holder.put(viewName, set);
@@ -266,7 +283,7 @@ public final class PluginManager {
         set.add(plugin);
 
         LOGGER.log(Level.FINER, "Registered plugin[name={0}, version={1}] for view[name={2}], [{3}] plugins totally",
-                new Object[]{plugin.getName(), plugin.getVersion(), viewName, holder.size()});
+            new Object[] {plugin.getName(), plugin.getVersion(), viewName, holder.size()});
     }
 
     /**
@@ -283,7 +300,8 @@ public final class PluginManager {
         final String name = props.getProperty(Plugin.PLUGIN_NAME);
         final String version = props.getProperty(Plugin.PLUGIN_VERSION);
         final String types = props.getProperty(Plugin.PLUGIN_TYPES);
-        LOGGER.log(Level.FINEST, "Plugin[name={0}, author={1}, version={2}, types={3}]", new Object[]{name, author, version, types});
+
+        LOGGER.log(Level.FINEST, "Plugin[name={0}, author={1}, version={2}, types={3}]", new Object[] {name, author, version, types});
 
         plugin.setAuthor(author);
         plugin.setName(name);
@@ -292,8 +310,10 @@ public final class PluginManager {
         plugin.setDir(pluginDir);
         plugin.readLangs();
         final String[] typeArray = types.split(",");
+
         for (int i = 0; i < typeArray.length; i++) {
             final PluginType type = PluginType.valueOf(typeArray[i]);
+
             plugin.addType(type);
         }
     }
@@ -316,13 +336,15 @@ public final class PluginManager {
      * @throws Exception exception
      */
     private static void registerEventListeners(final Properties props,
-            final URLClassLoader classLoader,
-            final AbstractPlugin plugin)
-            throws Exception {
+        final URLClassLoader classLoader,
+        final AbstractPlugin plugin)
+        throws Exception {
         final String eventListenerClasses = props.getProperty(Plugin.PLUGIN_EVENT_LISTENER_CLASSES);
         final String[] eventListenerClassArray = eventListenerClasses.split(",");
+
         for (int i = 0; i < eventListenerClassArray.length; i++) {
             final String eventListenerClassName = eventListenerClassArray[i];
+
             if (Strings.isEmptyOrNull(eventListenerClassName)) {
                 LOGGER.log(Level.INFO, "No event listener to load for plugin[name={0}]", plugin.getName());
                 return;
@@ -335,9 +357,10 @@ public final class PluginManager {
             final AbstractEventListener<?> eventListener = (AbstractEventListener) getInstance.invoke(eventListenerClass);
 
             final EventManager eventManager = EventManager.getInstance();
+
             eventManager.registerListener(eventListener);
             LOGGER.log(Level.FINER, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",
-                    new Object[]{eventListener.getClass(), eventListener.getEventType(), plugin.getName()});
+                new Object[] {eventListener.getClass(), eventListener.getEventType(), plugin.getName()});
         }
     }
 
@@ -375,8 +398,7 @@ public final class PluginManager {
         /**
          * Private default constructor.
          */
-        private PluginManagerSingletonHolder() {
-        }
+        private PluginManagerSingletonHolder() {}
     }
 
     /**

@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.repository.jdbc.mapping;
 
+
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+
 
 /**
  * Date type mapping.

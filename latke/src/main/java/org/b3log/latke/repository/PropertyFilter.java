@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository;
 
+
 /**
  * A {@link Filter filter } on a single property.
  *
@@ -27,18 +28,22 @@ public final class PropertyFilter implements Filter {
      * Key.
      */
     private String key;
+
     /**
      * Operator.
      */
     private FilterOperator operator;
+
     /**
      * Value.
      */
     private Object value;
+
     /**
      * Initialization value for hashing.
      */
     private static final int INIT_HASH = 7;
+
     /**
      * Base for hashing.
      */
@@ -95,8 +100,8 @@ public final class PropertyFilter implements Filter {
         }
 
         final PropertyFilter other = (PropertyFilter) obj;
-        if ((this.key == null) ? (other.key != null)
-            : !this.key.equals(other.key)) {
+
+        if ((this.key == null) ? (other.key != null) : !this.key.equals(other.key)) {
             return false;
         }
 
@@ -125,8 +130,8 @@ public final class PropertyFilter implements Filter {
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("key=");
-        stringBuilder.append(key).append(", operator=").append(operator.name()).
-                append(", value=").append(value.toString());
+
+        stringBuilder.append(key).append(", operator=").append(operator.name()).append(", value=").append(value.toString());
 
         return stringBuilder.toString();
     }

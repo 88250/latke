@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.taskqueue;
 
+
 import java.io.Serializable;
 import org.b3log.latke.servlet.HTTPRequestMethod;
+
 
 /**
  * Task.
@@ -30,18 +32,22 @@ public final class Task implements Serializable {
      * Default serial version uid.
      */
     private static final long serialVersionUID = 1L;
+
     /**
      * URL.
      */
     private String url;
+
     /**
      * Name.
      */
     private String name;
+
     /**
      * HTTP method.
      */
     private HTTPRequestMethod requestMethod = HTTPRequestMethod.GET;
+
     /**
      * Payload.
      */
@@ -130,9 +136,8 @@ public final class Task implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder().
-                append("url=").append(url).append(", name=").append(name).append(
-                ", requestMethod=").append(requestMethod);
+        final StringBuilder stringBuilder = new StringBuilder().append("url=").append(url).append(", name=").append(name).append(", requestMethod=").append(
+            requestMethod);
 
         return stringBuilder.toString();
     }

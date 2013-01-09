@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.servlet.advice;
 
+
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * BeforeRequestProcessAdvice.
@@ -29,6 +31,5 @@ public class AfterRequestProcessAdvice implements RequestProcessAdvice {
      * @param context {@link HTTPRequestContext}
      * @param ret  the invoke ret
      */
-    public void doAdvice(final HTTPRequestContext context, final Object ret) {
-    }
+    public void doAdvice(final HTTPRequestContext context, final Object ret) {}
 }

@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.cache;
 
+
 import java.io.Serializable;
 import java.util.Collection;
+
 
 /**
  * Do not cache.
@@ -61,12 +63,10 @@ public final class NoCache<K extends Serializable, V extends Serializable> imple
     }
 
     @Override
-    public void put(final K key, final V value) {
-    }
+    public void put(final K key, final V value) {}
 
     @Override
-    public void putAsync(final K key, final V value) {
-    }
+    public void putAsync(final K key, final V value) {}
 
     @Override
     public V get(final K key) {
@@ -79,20 +79,16 @@ public final class NoCache<K extends Serializable, V extends Serializable> imple
     }
 
     @Override
-    public void remove(final K key) {
-    }
+    public void remove(final K key) {}
 
     @Override
-    public void remove(final Collection<K> keys) {
-    }
+    public void remove(final Collection<K> keys) {}
 
     @Override
-    public void removeAll() {
-    }
+    public void removeAll() {}
 
     @Override
-    public void setMaxCount(final long maxCount) {
-    }
+    public void setMaxCount(final long maxCount) {}
 
     @Override
     public long getMaxCount() {
@@ -130,6 +126,5 @@ public final class NoCache<K extends Serializable, V extends Serializable> imple
     }
 
     @Override
-    public void collect() {
-    }
+    public void collect() {}
 }

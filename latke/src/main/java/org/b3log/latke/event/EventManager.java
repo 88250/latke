@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.event;
 
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+
 
 /**
  * Event manager.
@@ -91,8 +93,7 @@ public final class EventManager {
     /**
      * Private default constructor.
      */
-    private EventManager() {
-    }
+    private EventManager() {}
 
     /**
      * Event manager singleton holder.
@@ -110,7 +111,6 @@ public final class EventManager {
         /**
          * Private default constructor.
          */
-        private EventManagerSingletonHolder() {
-        }
+        private EventManagerSingletonHolder() {}
     }
 }

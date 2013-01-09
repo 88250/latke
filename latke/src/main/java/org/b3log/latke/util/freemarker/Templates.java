@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util.freemarker;
 
+
 import freemarker.core.TemplateElement;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
 
 /**
  * Utilities of <a href="http://www.freemarker.org">FreeMarker</a> 
@@ -39,14 +41,17 @@ public final class Templates {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Templates.class.getName());
+
     /**
      * Main template {@link Configuration configuration}.
      */
     public static final Configuration MAIN_CFG = new Configuration();
+
     /**
      * Mobile template {@link Configuration configuration}.
      */
     public static final Configuration MOBILE_CFG = new Configuration();
+
     /**
      * Template cache.
      * 
@@ -55,6 +60,7 @@ public final class Templates {
      * </p>
      */
     public static final Map<String, Template> CACHE = new HashMap<String, Template>();
+
     /**
      * Enables the {@linkplain #CACHE cache}? Default to {@code true}.
      */
@@ -68,8 +74,7 @@ public final class Templates {
     /**
      * Private default constructor.
      */
-    private Templates() {
-    }
+    private Templates() {}
 
     /**
      * Determines whether exists a variable specified by the given expression
@@ -96,18 +101,20 @@ public final class Templates {
      * @return {@code true} if it exists, returns {@code false} otherwise
      */
     private static boolean hasExpression(final Template template,
-                                         final String expression,
-                                         final TemplateElement templateElement) {
+        final String expression,
+        final TemplateElement templateElement) {
         final String canonicalForm = templateElement.getCanonicalForm();
+
         if (canonicalForm.startsWith(expression)) {
             LOGGER.log(Level.FINEST, "Template has expression[nodeName={0}, expression={1}]",
-                       new Object[]{templateElement.getNodeName(), expression});
+                new Object[] {templateElement.getNodeName(), expression});
 
             return true;
         }
 
         @SuppressWarnings("unchecked")
         final Enumeration<TemplateElement> children = templateElement.children();
+
         while (children.hasMoreElements()) {
             final TemplateElement nextElement = children.nextElement();
 
@@ -146,7 +153,7 @@ public final class Templates {
                 }
             } catch (final Exception e) {
                 LOGGER.log(Level.SEVERE, "Can not load mobile template[templateDirName={0}, templateName={1}]",
-                           new Object[]{templateDirName, templateName});
+                    new Object[] {templateDirName, templateName});
                 return null;
             }
 
@@ -168,7 +175,7 @@ public final class Templates {
 
             return ret;
         } catch (final IOException e) {
-            LOGGER.log(Level.WARNING, "Gets template[name={0}] failed: [{1}]", new Object[]{templateName, e.getMessage()});
+            LOGGER.log(Level.WARNING, "Gets template[name={0}] failed: [{1}]", new Object[] {templateName, e.getMessage()});
             return null;
         }
     }

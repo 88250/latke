@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.repository.jpa;
 
+
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 import org.b3log.latke.repository.Transaction;
+
 
 /**
  * Entity transaction implementation.

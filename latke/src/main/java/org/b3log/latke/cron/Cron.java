@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.cron;
 
+
 import java.net.URL;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -24,6 +25,7 @@ import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.URLFetchService;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
+
 
 /**
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
@@ -37,22 +39,27 @@ public final class Cron extends TimerTask {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Cron.class.getName());
+
     /**
      * Time unit constant - 60.
      */
     public static final int SIXTY = 60;
+
     /**
      * Time unit constant - 1000.
      */
     public static final int THOUSAND = 1000;
+
     /**
      * The URL this cron job to invoke.
      */
     private String url;
+
     /**
      * Description of this cron job.
      */
     private String description;
+
     /**
      * Schedule of this cron job.
      * 
@@ -65,6 +72,7 @@ public final class Cron extends TimerTask {
      * </p>
      */
     private String schedule;
+
     /**
      * Time in milliseconds between successive task executions.
      */
@@ -114,7 +122,7 @@ public final class Cron extends TimerTask {
         final int num = Integer.valueOf(StringUtils.substringBetween(schedule, " ", " "));
         final String timeUnit = StringUtils.substringAfterLast(schedule, " ");
 
-        LOGGER.log(Level.FINEST, "Parsed cron job[schedule={0}]: [num={1}, timeUnit={2}]", new Object[]{schedule, num, timeUnit});
+        LOGGER.log(Level.FINEST, "Parsed cron job[schedule={0}]: [num={1}, timeUnit={2}]", new Object[] {schedule, num, timeUnit});
 
         if ("hours".equals(timeUnit)) {
             period = num * SIXTY * SIXTY * THOUSAND;

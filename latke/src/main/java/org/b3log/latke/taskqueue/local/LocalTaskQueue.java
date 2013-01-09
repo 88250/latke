@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.taskqueue.local;
 
+
 import org.b3log.latke.taskqueue.Queue;
 import org.b3log.latke.taskqueue.Task;
 import org.b3log.latke.taskqueue.TaskHandle;
+
 
 /**
  * LocalTaskQueue.
@@ -45,8 +47,9 @@ public class LocalTaskQueue implements Queue {
     @Override
     public TaskHandle add(final Task task) {
 
-        //trigger the task right now
+        // trigger the task right now
         final LocalTaskRunner localTaskRunner = new LocalTaskRunner(task, retryLimit);
+
         localTaskRunner.start();
 
         return new LocalTaskhandle();

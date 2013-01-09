@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.event;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Abstract event queue(Observable).
@@ -33,6 +35,7 @@ public abstract class AbstractEventQueue {
      * Flag of change.
      */
     private boolean changed = false;
+
     /**
      * Listeners.
      */
@@ -45,12 +48,13 @@ public abstract class AbstractEventQueue {
      * @param listener the specified listener
      */
     synchronized void addListener(
-            final AbstractEventListener<?> listener) {
+        final AbstractEventListener<?> listener) {
         if (null == listener) {
             throw new NullPointerException();
         }
 
         final String eventType = listener.getEventType();
+
         if (null == eventType) {
             throw new NullPointerException();
         }
@@ -72,8 +76,9 @@ public abstract class AbstractEventQueue {
      * @param listener the specified listener
      */
     synchronized void deleteListener(
-            final AbstractEventListener<?> listener) {
+        final AbstractEventListener<?> listener) {
         final String eventType = listener.getEventType();
+
         if (null == eventType) {
             throw new NullPointerException();
         }
@@ -111,6 +116,7 @@ public abstract class AbstractEventQueue {
      * @see AbstractEventListener#performAction(org.b3log.latke.event.AbstractEventQueue, org.b3log.latke.event.Event) 
      */
     public void notifyListeners(final Event<?> event) throws EventException {
+
         /*
          * a temporary array buffer, used as a snapshot of the state of
          * current listeners.
@@ -118,6 +124,7 @@ public abstract class AbstractEventQueue {
         AbstractEventListener<?>[] arrLocal = null;
 
         synchronized (this) {
+
             /* We don't want the listener doing callbacks into arbitrary code
              * while holding its own Monitor. The code where we extract each
              * Observable from the Vector and store the state of the listener
@@ -135,6 +142,7 @@ public abstract class AbstractEventQueue {
             final List<AbstractEventListener<?>> listenerList = listeners.get(eventType);
 
             final AbstractEventListener<?>[] types = new AbstractEventListener<?>[1];
+
             if (null != listenerList) {
                 arrLocal = listenerList.<AbstractEventListener<?>>toArray(types);
                 clearChanged();

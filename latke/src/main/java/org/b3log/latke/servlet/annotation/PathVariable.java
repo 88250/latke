@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.servlet.annotation;
 
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 
 /**
  * Indicates that a method parameter should be bound to a URI template variable. 
@@ -33,7 +35,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface PathVariable {
 
-    /** 
+    /**
      * The URI template variable to bind to. 
      */
     String value();

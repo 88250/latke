@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.taskqueue.local;
 
+
 import org.b3log.latke.taskqueue.TaskHandle;
+
 
 /**
  * Local task queue service.

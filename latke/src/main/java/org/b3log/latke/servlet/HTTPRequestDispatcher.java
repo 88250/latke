@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet;
 
+
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.Keys;
 import org.b3log.latke.cache.PageCaches;
@@ -36,6 +37,7 @@ import org.b3log.latke.servlet.renderer.HTTP404Renderer;
 import org.b3log.latke.util.StaticResources;
 import org.b3log.latke.util.Stopwatchs;
 
+
 /**
  * Front controller for HTTP request dispatching.
  *
@@ -48,30 +50,37 @@ public final class HTTPRequestDispatcher extends HttpServlet {
      * Default serial version uid.
      */
     private static final long serialVersionUID = 1L;
+
     /**
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(HTTPRequestDispatcher.class.getName());
-    /** 
+
+    /**
      * Default Servlet name used by Tomcat, Jetty, JBoss, and GlassFish.
      */
     private static final String COMMON_DEFAULT_SERVLET_NAME = "default";
-    /** 
+
+    /**
      * Default Servlet name used by Google App Engine.
      */
     private static final String GAE_DEFAULT_SERVLET_NAME = "_ah_default";
-    /** 
+
+    /**
      * Default Servlet name used by Resin.
      */
     private static final String RESIN_DEFAULT_SERVLET_NAME = "resin-file";
-    /** 
+
+    /**
      * Default Servlet name used by WebLogic.
      */
     private static final String WEBLOGIC_DEFAULT_SERVLET_NAME = "FileServlet";
+
     /**
      * Default Servlet name used by WebSphere.
      */
     private static final String WEBSPHERE_DEFAULT_SERVLET_NAME = "SimpleFileServlet";
+
     /**
      * Current default servlet name.
      */
@@ -101,6 +110,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         }
 
         final ServletContext servletContext = getServletContext();
+
         if (servletContext.getNamedDispatcher(COMMON_DEFAULT_SERVLET_NAME) != null) {
             defaultServletName = COMMON_DEFAULT_SERVLET_NAME;
         } else if (servletContext.getNamedDispatcher(GAE_DEFAULT_SERVLET_NAME) != null) {
@@ -112,8 +122,9 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         } else if (servletContext.getNamedDispatcher(WEBSPHERE_DEFAULT_SERVLET_NAME) != null) {
             defaultServletName = WEBSPHERE_DEFAULT_SERVLET_NAME;
         } else {
-            throw new IllegalStateException("Unable to locate the default servlet for serving static content. "
-                                            + "Please set the 'defaultServletName' property explicitly.");
+            throw new IllegalStateException(
+                "Unable to locate the default servlet for serving static content. "
+                    + "Please set the 'defaultServletName' property explicitly.");
             // TODO: Loads from local.properties 
         }
 
@@ -134,13 +145,14 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         final String requestURI = request.getRequestURI();
 
         LOGGER.log(Level.FINEST, "Request[contextPath={0}, pathTranslated={1}, requestURI={2}]",
-                   new Object[]{request.getContextPath(), resourcePath, requestURI});
+            new Object[] {request.getContextPath(), resourcePath, requestURI});
 
         if (StaticResources.isStatic(request)) {
             final RequestDispatcher requestDispatcher = getServletContext().getNamedDispatcher(defaultServletName);
+
             if (null == requestDispatcher) {
-                throw new IllegalStateException("A RequestDispatcher could not be located for the default servlet ["
-                                                + this.defaultServletName + "]");
+                throw new IllegalStateException(
+                    "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
             }
 
             requestDispatcher.forward(request, response);
@@ -148,11 +160,13 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         }
 
         final long startTimeMillis = System.currentTimeMillis();
+
         request.setAttribute(Keys.HttpRequest.START_TIME_MILLIS, startTimeMillis);
 
         if (Latkes.isPageCacheEnabled()) {
             final String queryString = request.getQueryString();
             String pageCacheKey = (String) request.getAttribute(Keys.PAGE_CACHE_KEY);
+
             if (Strings.isEmptyOrNull(pageCacheKey)) {
                 pageCacheKey = PageCaches.getPageCacheKey(requestURI, queryString);
                 request.setAttribute(Keys.PAGE_CACHE_KEY, pageCacheKey);
@@ -162,6 +176,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         // Encoding configuration to filter/EncodingFilter 
 
         final HTTPRequestContext context = new HTTPRequestContext();
+
         context.setRequest(request);
         context.setResponse(response);
 
@@ -179,24 +194,27 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         final HttpServletRequest request = context.getRequest();
 
         String requestURI = (String) request.getAttribute(Keys.HttpRequest.REQUEST_URI);
+
         if (Strings.isEmptyOrNull(requestURI)) {
             requestURI = request.getRequestURI();
         }
 
         String method = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
+
         if (Strings.isEmptyOrNull(method)) {
             method = request.getMethod();
         }
 
-        LOGGER.log(Level.FINER, "Request[requestURI={0}, method={1}]", new Object[]{requestURI, method});
+        LOGGER.log(Level.FINER, "Request[requestURI={0}, method={1}]", new Object[] {requestURI, method});
 
         try {
             final Object processorMethodRet = RequestProcessors.invoke(requestURI, Latkes.getContextPath(), method, context);
         } catch (final Exception e) {
             final String exceptionTypeName = e.getClass().getName();
+
             LOGGER.log(Level.FINER,
-                       "Occured error while processing request[requestURI={0}, method={1}, exceptionTypeName={2}, errorMsg={3}]",
-                       new Object[]{requestURI, method, exceptionTypeName, e.getMessage()});
+                "Occured error while processing request[requestURI={0}, method={1}, exceptionTypeName={2}, errorMsg={3}]",
+                new Object[] {requestURI, method, exceptionTypeName, e.getMessage()});
             if ("com.google.apphosting.api.ApiProxy$OverQuotaException".equals(exceptionTypeName)) {
                 PageCaches.removeAll();
 
@@ -207,8 +225,9 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             throw new ServletException(e);
         } catch (final Error e) {
             final Runtime runtime = Runtime.getRuntime();
+
             LOGGER.log(Level.FINER, "Memory status[total={0}, max={1}, free={2}]",
-                       new Object[]{runtime.totalMemory(), runtime.maxMemory(), runtime.freeMemory()});
+                new Object[] {runtime.totalMemory(), runtime.maxMemory(), runtime.freeMemory()});
 
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
 
@@ -218,8 +237,10 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         // XXX: processor method ret?
 
         final HttpServletResponse response = context.getResponse();
+
         if (response.isCommitted()) { // Sends rdirect or send error
             final PrintWriter writer = response.getWriter();
+
             writer.flush();
             writer.close();
 
@@ -247,23 +268,28 @@ public final class HTTPRequestDispatcher extends HttpServlet {
     private JSONObject getQueryStringJSONObject(final HttpServletRequest request) throws JSONException {
         JSONObject ret = null;
         final String tmp = request.getQueryString();
+
         if (null == tmp) {
             return new JSONObject();
         }
 
         LOGGER.log(Level.FINEST, "Client is using QueryString[{0}]", tmp);
         final StringBuilder sb = new StringBuilder();
+
         sb.append("{");
         final String[] split = tmp.split("&");
+
         for (int i = 0; i < split.length; i++) {
             final String query = split[i];
             final String[] kv = query.split("=");
+
             if (kv.length != 2) {
                 return new JSONObject();
             }
 
             final String key = kv[0];
             final String value = kv[1];
+
             sb.append("\"");
             sb.append(key);
             sb.append("\":");

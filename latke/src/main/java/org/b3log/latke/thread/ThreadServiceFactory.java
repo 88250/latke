@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.thread;
 
+
 import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+
 
 /**
  * Thread service factory.
@@ -31,6 +33,7 @@ public final class ThreadServiceFactory {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(ThreadServiceFactory.class.getName());
+
     /**
      * Thread service.
      */
@@ -45,20 +48,23 @@ public final class ThreadServiceFactory {
             Class<ThreadService> serviceClass = null;
 
             switch (runtimeEnv) {
-                case BAE:
-                    serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.bae.BAEThreadService");
-                    THREAD_SERVICE = serviceClass.newInstance();
-                    break;
-                case LOCAL:
-                    serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.local.LocalThreadService");
-                    THREAD_SERVICE = serviceClass.newInstance();
-                    break;
-                case GAE:
-                    serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.gae.GAEThreadService");
-                    THREAD_SERVICE = serviceClass.newInstance();
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+            case BAE:
+                serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.bae.BAEThreadService");
+                THREAD_SERVICE = serviceClass.newInstance();
+                break;
+
+            case LOCAL:
+                serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.local.LocalThreadService");
+                THREAD_SERVICE = serviceClass.newInstance();
+                break;
+
+            case GAE:
+                serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.gae.GAEThreadService");
+                THREAD_SERVICE = serviceClass.newInstance();
+                break;
+
+            default:
+                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Thread Service!", e);
@@ -79,6 +85,5 @@ public final class ThreadServiceFactory {
     /**
      * Private default constructor.
      */
-    private ThreadServiceFactory() {
-    }
+    private ThreadServiceFactory() {}
 }

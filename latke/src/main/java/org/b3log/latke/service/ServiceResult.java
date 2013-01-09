@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.service;
 
+
 /**
  * Service result.
  * 
@@ -38,10 +39,12 @@ public final class ServiceResult<T> {
      * Indicates whether business processing is successful or not.
      */
     private boolean successful;
+
     /**
      * Business processing result.
      */
     private T result;
+
     /**
      * Message.
      */
@@ -121,7 +124,6 @@ public final class ServiceResult<T> {
         /**
          * Private constructor.
          */
-        private Null() {
-        }
+        private Null() {}
     }
 }

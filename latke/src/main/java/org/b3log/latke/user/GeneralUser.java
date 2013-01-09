@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.user;
 
+
 /**
  * User.
  *
@@ -27,10 +28,12 @@ public final class GeneralUser {
      * Id.
      */
     private String id;
+
     /**
      * Email.
      */
     private String email;
+
     /**
      * Nickname.
      */

@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.plugin;
 
+
 import java.util.Map;
+
 
 /**
  * View load event data.
@@ -29,6 +31,7 @@ public final class ViewLoadEventData {
      * Name of the template file.
      */
     private String viewName;
+
     /**
      * Data model.
      */

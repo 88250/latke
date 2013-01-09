@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.urlfetch.local;
 
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import org.b3log.latke.urlfetch.HTTPRequest;
+
 
 /**
  * Specific Handler for urlfetch.
@@ -34,13 +36,14 @@ class UrlFetchPostHandler extends UrlFetchCommonHandler {
 
     @Override
     protected void configConnection(final HttpURLConnection httpURLConnection, final HTTPRequest request)
-            throws IOException {
+        throws IOException {
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setUseCaches(false);
 
         if (request.getPayload() != null) {
 
             final OutputStream outputStream = httpURLConnection.getOutputStream();
+
             outputStream.write(request.getPayload());
 
             outputStream.flush();

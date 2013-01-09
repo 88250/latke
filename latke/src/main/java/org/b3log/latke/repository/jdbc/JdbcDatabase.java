@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+
 import java.sql.SQLException;
 import java.util.List;
 
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+
 
 /**
  * interface JdbcDatabase.
@@ -37,7 +39,7 @@ public interface JdbcDatabase {
      * @throws SQLException SQLException 
      */
     boolean createTable(String tableName, List<FieldDefinition> fieldDefinitions)
-            throws SQLException;
+        throws SQLException;
 
     /**
      * 
@@ -64,7 +66,7 @@ public interface JdbcDatabase {
      * @return sql 
      */
     String queryPage(int start, int end, String selectSql, String filterSql,
-            String orderBySql, String tableName);
+        String orderBySql, String tableName);
 
     /**
      * getRandomlySql.

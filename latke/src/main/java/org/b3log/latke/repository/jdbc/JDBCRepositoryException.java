@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+
 import org.b3log.latke.repository.RepositoryException;
+
 
 /**
  * JDBC repository exception.

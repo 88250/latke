@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+
 /**
  * Static resource utilities.
  *
@@ -43,6 +45,7 @@ public final class StaticResources {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(StaticResources.class.getName());
+
     /**
      * Static resource path patterns.
      * 
@@ -57,10 +60,12 @@ public final class StaticResources {
         final File appengineWeb = new File(webRoot + File.separator + "WEB-INF" + File.separator + "appengine-web.xml");
 
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
         try {
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             final Document document = documentBuilder.parse(appengineWeb);
             final Element root = document.getDocumentElement();
+
             root.normalize();
 
             final Element staticFiles = (Element) root.getElementsByTagName("static-files").item(0);
@@ -70,6 +75,7 @@ public final class StaticResources {
             for (int i = 0; i < includes.getLength(); i++) {
                 final Element include = (Element) includes.item(i);
                 final String path = include.getAttribute("path");
+
                 LOGGER.log(Level.CONFIG, "path pattern=[{0}]", path);
                 STATIC_RESOURCE_PATHS.add(path);
             }
@@ -80,8 +86,10 @@ public final class StaticResources {
 
         final StringBuilder logBuilder = new StringBuilder("Static files: [").append(Strings.LINE_SEPARATOR);
         final Iterator<String> iterator = STATIC_RESOURCE_PATHS.iterator();
+
         while (iterator.hasNext()) {
             final String pattern = iterator.next();
+
             logBuilder.append("    ").append(pattern);
             if (iterator.hasNext()) {
                 logBuilder.append(',');
@@ -100,9 +108,10 @@ public final class StaticResources {
      * @return {@code true} if the client requests a static resource, returns {@code false} otherwise
      */
     public static boolean isStatic(final HttpServletRequest request) {
-        final boolean requestStaticResourceChecked =
-                      null == request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED)
-                      ? false : (Boolean) request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED);
+        final boolean requestStaticResourceChecked = null == request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED)
+            ? false
+            : (Boolean) request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED);
+
         if (requestStaticResourceChecked) {
             return (Boolean) request.getAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE);
         }
@@ -125,6 +134,5 @@ public final class StaticResources {
     /**
      * Private constructor.
      */
-    private StaticResources() {
-    }
+    private StaticResources() {}
 }

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.jpa.util;
 
+
 /**
  * Type utilities.
  *
@@ -23,10 +24,8 @@ package org.b3log.latke.repository.jpa.util;
  */
 public final class Types {
     
-
     /**
      * Entity scanner.
      */
-    private Types() {
-    }
+    private Types() {}
 }

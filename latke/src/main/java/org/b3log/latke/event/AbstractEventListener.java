@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.event;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  * Abstract event listener(Observer).
@@ -51,6 +53,7 @@ public abstract class AbstractEventListener<T> {
     final void performAction(final AbstractEventQueue eventQueue, final Event<?> event) throws EventException {
         @SuppressWarnings("unchecked")
         final Event<T> eventObject = (Event<T>) event;
+
         try {
             action(eventObject);
         } catch (final Exception e) {
@@ -58,6 +61,7 @@ public abstract class AbstractEventListener<T> {
         } finally { // remove event from event queue
             if (eventQueue instanceof SynchronizedEventQueue) {
                 final SynchronizedEventQueue synchronizedEventQueue = (SynchronizedEventQueue) eventQueue;
+
                 synchronizedEventQueue.removeEvent(eventObject);
             }
         }

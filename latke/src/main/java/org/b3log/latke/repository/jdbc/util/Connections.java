@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.jdbc.util;
 
+
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -27,6 +28,7 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.util.Callstacks;
 import org.h2.jdbcx.JdbcConnectionPool;
+
 
 /**
  * JDBC connection utilities.
@@ -47,38 +49,47 @@ public final class Connections {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Connections.class.getName());
+
     /**
      * Pool type.
      */
     private static String poolType;
+
     /**
      * Connection pool - BoneCP.
      */
     private static BoneCP boneCP;
+
     /**
      * Connection pool - c3p0.
      */
     private static ComboPooledDataSource c3p0;
+
     /**
      * Connection pool - H2.
      */
     private static JdbcConnectionPool h2;
+
     /**
      * Transaction isolation.
      */
     private static String transactionIsolation;
+
     /**
      * Transaction isolation integer value.
      */
     private static int transactionIsolationInt;
+
     /**
      * JDBC URL.
      */
     private static String url;
+
     /**
      * JDBC user name.
      */
     private static String userName;
+
     /**
      * JDBC password.
      */
@@ -87,6 +98,7 @@ public final class Connections {
     static {
         try {
             final String driver = Latkes.getLocalProperty("jdbc.driver");
+
             Class.forName(driver);
 
             if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) { // BAE can not use connection pool
@@ -100,6 +112,7 @@ public final class Connections {
             password = Latkes.getLocalProperty("jdbc.password");
             final int minConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.minConnCnt"));
             final int maxConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.maxConnCnt"));
+
             transactionIsolation = Latkes.getLocalProperty("jdbc.transactionIsolation");
             if ("NONE".equals(transactionIsolation)) {
                 transactionIsolationInt = Connection.TRANSACTION_NONE;
@@ -119,6 +132,7 @@ public final class Connections {
                 LOGGER.log(Level.FINE, "Initializing database connection pool [BoneCP]");
 
                 final BoneCPConfig config = new BoneCPConfig();
+
                 config.setDefaultAutoCommit(false);
                 config.setDefaultTransactionIsolation(transactionIsolation);
                 config.setJdbcUrl(url);
@@ -135,7 +149,7 @@ public final class Connections {
 
                 // Disable JMX
                 System.setProperty("com.mchange.v2.c3p0.management.ManagementCoordinator",
-                        "com.mchange.v2.c3p0.management.NullManagementCoordinator");
+                    "com.mchange.v2.c3p0.management.NullManagementCoordinator");
 
                 c3p0 = new ComboPooledDataSource();
                 c3p0.setUser(userName);
@@ -169,24 +183,26 @@ public final class Connections {
      */
     public static Connection getConnection() throws SQLException {
         if (LOGGER.isLoggable(Level.FINEST)) {
-            Callstacks.printCallstack(Level.FINEST, new String[]{"org.b3log"}, null);
+            Callstacks.printCallstack(Level.FINEST, new String[] {"org.b3log"}, null);
         }
 
         if ("BoneCP".equals(poolType)) {
             LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                    new Object[]{boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
+                new Object[] {boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
 
             return boneCP.getConnection();
         } else if ("c3p0".equals(poolType)) {
             LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                    new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
+                new Object[] {c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
             final Connection ret = c3p0.getConnection();
+
             ret.setTransactionIsolation(transactionIsolationInt);
 
             return ret;
         } else if ("h2".equals(poolType)) {
-            LOGGER.log(Level.FINEST, "Connection pool[leasedConns={0}]", new Object[]{h2.getActiveConnections()});
+            LOGGER.log(Level.FINEST, "Connection pool[leasedConns={0}]", new Object[] {h2.getActiveConnections()});
             final Connection ret = h2.getConnection();
+
             ret.setTransactionIsolation(transactionIsolationInt);
             
             return ret;
@@ -211,6 +227,5 @@ public final class Connections {
     /**
      * Private constructor.
      */
-    private Connections() {
-    }
+    private Connections() {}
 }

@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.servlet;
 
+
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * HTTP request context.
@@ -31,10 +33,12 @@ public final class HTTPRequestContext {
      * Request.
      */
     private HttpServletRequest request;
+
     /**
      * Response.
      */
     private HttpServletResponse response;
+
     /**
      * Renderer.
      */

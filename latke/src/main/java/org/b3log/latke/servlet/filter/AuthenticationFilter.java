@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.filter;
 
+
 import java.util.logging.Level;
 import org.b3log.latke.util.Sessions;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * Authentication filter.
@@ -42,8 +44,7 @@ public final class AuthenticationFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
 
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
-    }
+    public void init(final FilterConfig filterConfig) throws ServletException {}
 
     /**
      * Filters the has not logged in user for the specified request. Send error
@@ -57,7 +58,7 @@ public final class AuthenticationFilter implements Filter {
      */
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
@@ -71,8 +72,7 @@ public final class AuthenticationFilter implements Filter {
     }
 
     @Override
-    public void destroy() {
-    }
+    public void destroy() {}
 
     /**
      * Determines whether the user for the specified request has logged in.
@@ -83,9 +83,11 @@ public final class AuthenticationFilter implements Filter {
     private boolean hasLoggedIn(final HttpServletRequest request) {
         final String requestURI = request.getRequestURI();
         final String requestURL = request.getRequestURL().toString();
-        LOGGER.log(Level.FINEST, "Request[URI={0}, URL={1}]", new Object[]{requestURI, requestURL});
+
+        LOGGER.log(Level.FINEST, "Request[URI={0}, URL={1}]", new Object[] {requestURI, requestURL});
 
         final String userName = Sessions.currentUserName(request);
+
         LOGGER.log(Level.FINEST, "Session[userName={0}]", userName);
 
         return null != userName ? true : false;

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.event;
 
+
 /**
  * Event.
  *
@@ -28,6 +29,7 @@ public final class Event<T> {
      * Type of this event.
      */
     private String type;
+
     /**
      * Data of this event.
      */

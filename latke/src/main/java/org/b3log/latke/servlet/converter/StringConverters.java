@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.servlet.converter;
 
+
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * the util for StringConverter ,//TODO should be design for user custom!!!
@@ -28,8 +30,7 @@ public final class StringConverters {
     /**
      * the default constructor.
      */
-    private StringConverters() {
-    }
+    private StringConverters() {}
 
     /**
      * the map hold all the converter!.bad desgin,shuold for user custom.
@@ -47,7 +48,7 @@ public final class StringConverters {
      * @param convert the {@link IStringConvert}
      */
     public static void registerConverter(final Class<?> clazz,
-            final IStringConvert<?> convert) {
+        final IStringConvert<?> convert) {
         converMap.put(clazz, convert);
     }
 
@@ -63,6 +64,7 @@ public final class StringConverters {
     public static <T> T convert(final String name, final String value, final Class<T> clazz) {
 
         final IStringConvert<?> convert = converMap.get(clazz);
+
         if (convert != null) {
             return (T) converMap.get(clazz).doConvert(value);
         }

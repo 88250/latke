@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.regex.Pattern;
+
 
 /**
  * Regular expression path matcher.
@@ -43,6 +45,5 @@ public final class RegexPathMatcher {
     /**
      * Private constructor.
      */
-    private RegexPathMatcher() {
-    }
+    private RegexPathMatcher() {}
 }

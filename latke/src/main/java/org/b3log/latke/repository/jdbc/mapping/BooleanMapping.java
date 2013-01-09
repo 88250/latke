@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.repository.jdbc.mapping;
 
+
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+
 
 /**
  * Boolean data type mapping.
@@ -33,6 +35,7 @@ public class BooleanMapping implements Mapping {
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
         final StringBuilder sql = new StringBuilder();
+
         sql.append(definition.getName());
         sql.append(" char(1)");
         if (!definition.getNullable()) {

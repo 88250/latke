@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.impl;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.Keys;
@@ -28,6 +29,7 @@ import org.b3log.latke.repository.RepositoryException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 /**
  * User repository implementation.
@@ -50,6 +52,7 @@ public final class UserRepositoryImpl extends AbstractRepository {
      */
     public JSONObject getByEmail(final String email) {
         final Query query = new Query();
+
         query.setFilter(new PropertyFilter(User.USER_EMAIL, FilterOperator.EQUAL, email.toLowerCase().trim()));
 
         try {
@@ -75,6 +78,7 @@ public final class UserRepositoryImpl extends AbstractRepository {
      */
     public JSONObject getAdmin() {
         final Query query = new Query();
+
         query.setFilter(new PropertyFilter(User.USER_ROLE, FilterOperator.EQUAL, Role.ADMIN_ROLE));
 
         try {
@@ -145,13 +149,11 @@ public final class UserRepositoryImpl extends AbstractRepository {
         /**
          * Singleton.
          */
-        private static final UserRepositoryImpl SINGLETON =
-                new UserRepositoryImpl(User.USER);
+        private static final UserRepositoryImpl SINGLETON = new UserRepositoryImpl(User.USER);
 
         /**
          * Private default constructor.
          */
-        private SingletonHolder() {
-        }
+        private SingletonHolder() {}
     }
 }

@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
+
 
 /**
  * Call stack utilities.
@@ -95,9 +97,8 @@ public final class Callstacks {
                 continue;
             }
 
-            stackBuilder.append("    [className=").append(stackElements[i].getClassName()).append(", fileName=").
-                    append(stackElements[i].getFileName()).append(", lineNumber=").append(stackElements[i].getLineNumber()).
-                    append(", methodName=").append(stackElements[i].getMethodName()).append(']').append(Strings.LINE_SEPARATOR);
+            stackBuilder.append("    [className=").append(stackElements[i].getClassName()).append(", fileName=").append(stackElements[i].getFileName()).append(", lineNumber=").append(stackElements[i].getLineNumber()).append(", methodName=").append(stackElements[i].getMethodName()).append(']').append(
+                Strings.LINE_SEPARATOR);
         }
         stackBuilder.append("], fullDepth=[").append(stackElements.length).append("]");
 
@@ -107,6 +108,5 @@ public final class Callstacks {
     /**
      * Private constructor.
      */
-    private Callstacks() {
-    }
+    private Callstacks() {}
 }

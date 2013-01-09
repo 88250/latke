@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.cache.local.memory;
 
+
 import java.io.Serializable;
 import org.b3log.latke.cache.Cache;
+
 
 /**
  * The abstract memory cache. 
@@ -27,24 +29,28 @@ import org.b3log.latke.cache.Cache;
  * @version 1.0.2.6, Dec 3, 2011
  */
 public abstract class AbstractMemoryCache<K extends Serializable, V extends Serializable>
-        implements Cache<K, V> {
+    implements Cache<K, V> {
 
     /**
      * Maximum objects count of this cache.
      */
     private long maxCount = Long.MAX_VALUE;
+
     /**
      * Hit count of this cache.
      */
     private long hitCount;
+
     /**
      * Miss count of this cache.
      */
     private long missCount;
+
     /**
      * Put count of this cache.
      */
     private long putCount;
+
     /**
      * Cached object count of this cache.
      */

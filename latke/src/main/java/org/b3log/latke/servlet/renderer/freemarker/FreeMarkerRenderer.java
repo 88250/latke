@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.servlet.renderer.freemarker;
 
+
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * <a href="http://freemarker.org">FreeMarker</a> HTTP response 
@@ -29,10 +31,8 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 public final class FreeMarkerRenderer extends AbstractFreeMarkerRenderer {
 
     @Override
-    protected void beforeRender(final HTTPRequestContext context) throws Exception {
-    }
+    protected void beforeRender(final HTTPRequestContext context) throws Exception {}
 
     @Override
-    protected void afterRender(final HTTPRequestContext context) throws Exception {
-    }
+    protected void afterRender(final HTTPRequestContext context) throws Exception {}
 }

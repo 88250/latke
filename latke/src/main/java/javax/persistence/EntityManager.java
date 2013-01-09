@@ -35,6 +35,7 @@
  */
 package javax.persistence;
 
+
 /**
  * Interface used to interact with the persistence context.
  *
@@ -151,37 +152,37 @@ public interface EntityManager {
     public void flush();
   
     /**
-    * Set the flush mode that applies to all objects contained
-    * in the persistence context.
-    * @param flushMode
+     * Set the flush mode that applies to all objects contained
+     * in the persistence context.
+     * @param flushMode
      * @throws IllegalStateException if this EntityManager has been closed.
-    */
+     */
     public void setFlushMode(FlushModeType flushMode);    
 
     /**
-    * Get the flush mode that applies to all objects contained
-    * in the persistence context.
-    * @return flush mode
+     * Get the flush mode that applies to all objects contained
+     * in the persistence context.
+     * @return flush mode
      * @throws IllegalStateException if this EntityManager has been closed.
-    */
+     */
     public FlushModeType getFlushMode();
 
     /**
-    * Set the lock mode for an entity object contained
-    * in the persistence context.
-    * @param entity
-    * @param lockMode
+     * Set the lock mode for an entity object contained
+     * in the persistence context.
+     * @param entity
+     * @param lockMode
      * @throws IllegalStateException if this EntityManager has been closed.
-    * @throws PersistenceException if an unsupported lock call
-    * is made
-    * @throws IllegalArgumentException if the instance is not
-    * an entity or is a detached entity
-    * @throws TransactionRequiredException if there is no
-    * transaction
-    */
+     * @throws PersistenceException if an unsupported lock call
+     * is made
+     * @throws IllegalArgumentException if the instance is not
+     * an entity or is a detached entity
+     * @throws TransactionRequiredException if there is no
+     * transaction
+     */
     public void lock(Object entity, LockModeType lockMode);
 
-    /** 
+    /**
      * Refresh the state of the instance from the database,
      * overwriting changes made to the entity, if any.
      * @param entity
@@ -198,12 +199,12 @@ public interface EntityManager {
     public void refresh(Object entity);
     
     /**
-    * Clear the persistence context, causing all managed
-    * entities to become detached. Changes made to entities that
-    * have not been flushed to the database will not be
-    * persisted.
+     * Clear the persistence context, causing all managed
+     * entities to become detached. Changes made to entities that
+     * have not been flushed to the database will not be
+     * persisted.
      * @throws IllegalStateException if this EntityManager has been closed.
-    */
+     */
     public void clear();
 
     /**
@@ -280,11 +281,11 @@ public interface EntityManager {
     public void joinTransaction();
 
     /**
-    * Return the underlying provider object for the EntityManager,
-    * if available. The result of this method is implementation
-    * specific.
+     * Return the underlying provider object for the EntityManager,
+     * if available. The result of this method is implementation
+     * specific.
      * @throws IllegalStateException if this EntityManager has been closed.
-    */
+     */
     public Object getDelegate();
 
     /**

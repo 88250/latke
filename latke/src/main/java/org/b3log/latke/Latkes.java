@@ -15,6 +15,7 @@
  */
 package org.b3log.latke;
 
+
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.util.Strings;
+
 
 /**
  * Latke framework configuration utility facade.
@@ -39,86 +41,107 @@ public final class Latkes {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Latkes.class.getName());
+
     /**
      * Locale. Initializes this by {@link #setLocale(java.util.Locale)}.
      */
     private static Locale locale;
+
     /**
      * Where Latke runs on?.
      */
     private static RuntimeEnv runtimeEnv;
+
     /**
      * Which mode Latke runs in?
      */
     private static RuntimeMode runtimeMode;
+
     /**
      * Is the page cache enabled?
      */
     private static boolean pageCacheEnabled;
+
     /**
      * Is the data cache enabled?
      */
     private static boolean dataCacheEnabled;
+
     /**
      * Local properties (local.properties).
      */
     private static final Properties LOCAL_PROPS = new Properties();
+
     /**
      * Static resource version.
      */
     private static String staticResourceVersion;
+
     /**
      * Server scheme.
      */
     private static String serverScheme = "http";
+
     /**
      * Static server scheme.
      */
     private static String staticServerScheme = "http";
+
     /**
      * Server host.
      */
     private static String serverHost;
+
     /**
      * Static server host.
      */
     private static String staticServerHost;
+
     /**
      * Server port.
      */
     private static String serverPort;
+
     /**
      * Static server port.
      */
     private static String staticServerPort;
+
     /**
      * Server. (${serverScheme}://${serverHost}:${serverPort})
      */
     private static String server;
+
     /**
      * Serve path. (${server}${contextPath})
      */
     private static String servePath;
+
     /**
      * Static server. (${staticServerScheme}://${staticServerHost}:${staticServerPort})
      */
     private static String staticServer;
+
     /**
      * Static serve path. (${staticServer}${staticPath})
      */
     private static String staticServePath;
+
     /**
      * Context path.
      */
     private static String contextPath;
+
     /**
      * Static path.
      */
     private static String staticPath;
+
     /**
      * Latke configurations (latke.properties).
      */
     private static final Properties LATKE_PROPS = new Properties();
+
     /**
      * Latke remote interfaces configurations (remote.properties).
      */
@@ -128,6 +151,7 @@ public final class Latkes {
         LOGGER.config("Loading latke.properties");
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/latke.properties");
+
             if (null != resourceAsStream) {
                 LATKE_PROPS.load(resourceAsStream);
                 LOGGER.config("Loaded latke.properties");
@@ -140,6 +164,7 @@ public final class Latkes {
         LOGGER.config("Loading local.properties");
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/local.properties");
+
             if (null != resourceAsStream) {
                 LOCAL_PROPS.load(resourceAsStream);
                 LOGGER.config("Loaded local.properties");
@@ -152,6 +177,7 @@ public final class Latkes {
         LOGGER.config("Loading remote.properties");
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/remote.properties");
+
             if (null != resourceAsStream) {
                 REMOTE_PROPS.load(resourceAsStream);
                 LOGGER.config("Loaded remote.properties");
@@ -321,10 +347,10 @@ public final class Latkes {
      */
     public static String getStaticServer() {
         if (null == staticServer) {
-            final StringBuilder staticServerBuilder = new StringBuilder(getStaticServerScheme()).append("://").
-                    append(getStaticServerHost());
+            final StringBuilder staticServerBuilder = new StringBuilder(getStaticServerScheme()).append("://").append(getStaticServerHost());
 
             final String port = getStaticServerPort();
+
             if (!Strings.isEmptyOrNull(port)) {
                 staticServerBuilder.append(':').append(port);
             }
@@ -505,6 +531,7 @@ public final class Latkes {
     public static void initRuntimeEnv() {
         LOGGER.log(Level.FINEST, "Initializes runtime environment from configuration file");
         final String runtimeEnvValue = LATKE_PROPS.getProperty("runtimeEnv");
+
         if (null != runtimeEnvValue) {
             runtimeEnv = RuntimeEnv.valueOf(runtimeEnvValue);
         }
@@ -521,6 +548,7 @@ public final class Latkes {
         }
 
         final String runtimeModeValue = LATKE_PROPS.getProperty("runtimeMode");
+
         if (null != runtimeModeValue) {
             runtimeMode = RuntimeMode.valueOf(runtimeModeValue);
         } else {
@@ -528,11 +556,12 @@ public final class Latkes {
             runtimeMode = RuntimeMode.DEVELOPMENT;
         }
 
-        LOGGER.log(Level.INFO, "Latke is running on [{0}] with mode [{1}]", new Object[]{Latkes.getRuntimeEnv(), Latkes.getRuntimeMode()});
+        LOGGER.log(Level.INFO, "Latke is running on [{0}] with mode [{1}]", new Object[] {Latkes.getRuntimeEnv(), Latkes.getRuntimeMode()});
 
         if (RuntimeEnv.LOCAL == runtimeEnv) {
             // Read local database configurations
             final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
+
             LOGGER.log(Level.INFO, "Runtime database is [{0}]", runtimeDatabase);
         }
 
@@ -582,16 +611,19 @@ public final class Latkes {
      */
     public static RuntimeDatabase getRuntimeDatabase() {
         if (RuntimeEnv.LOCAL != runtimeEnv && RuntimeEnv.BAE != runtimeEnv) {
-            throw new RuntimeException("Underlying database can be specified when Latke runs on [LOCAL] / [BAE] environment only, "
+            throw new RuntimeException(
+                "Underlying database can be specified when Latke runs on [LOCAL] / [BAE] environment only, "
                     + "current runtime enviornment [" + runtimeEnv + ']');
         }
 
         final String runtimeDatabase = LOCAL_PROPS.getProperty("runtimeDatabase");
+
         if (null == runtimeDatabase) {
             throw new RuntimeException("Please configures runtime database in local.properties!");
         }
 
         final RuntimeDatabase ret = RuntimeDatabase.valueOf(runtimeDatabase);
+
         if (null == ret) {
             throw new RuntimeException("Please configures a valid runtime database in local.properties!");
         }
@@ -670,9 +702,10 @@ public final class Latkes {
             }
 
             final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
+
             switch (runtimeDatabase) {
-                default:
-                    Connections.shutdownConnectionPool();
+            default:
+                Connections.shutdownConnectionPool();
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Shutdowns Latke failed", e);
@@ -682,6 +715,5 @@ public final class Latkes {
     /**
      * Private constructor.
      */
-    private Latkes() {
-    }
+    private Latkes() {}
 }

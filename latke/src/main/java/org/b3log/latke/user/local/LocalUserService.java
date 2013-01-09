@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.user.local;
 
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.logging.Level;
@@ -28,6 +29,7 @@ import org.b3log.latke.user.GeneralUser;
 import org.b3log.latke.user.UserService;
 import org.b3log.latke.util.Sessions;
 import org.json.JSONObject;
+
 
 /**
  * Local user service.
@@ -46,11 +48,13 @@ public final class LocalUserService implements UserService {
     @Override
     public GeneralUser getCurrentUser(final HttpServletRequest request) {
         final JSONObject currentUser = Sessions.currentUser(request);
+
         if (null == currentUser) {
             return null;
         }
 
         final GeneralUser ret = new GeneralUser();
+
         ret.setEmail(currentUser.optString(User.USER_EMAIL));
         ret.setId(currentUser.optString(Keys.OBJECT_ID));
         ret.setNickname(currentUser.optString(User.USER_NAME));

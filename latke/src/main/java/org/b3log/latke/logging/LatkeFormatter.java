@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.logging;
 
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
+
 
 /**
  * A {@link Formatter} that may be customised in a {@code logging.properties}
@@ -67,50 +69,62 @@ public final class LatkeFormatter extends Formatter {
      * Default format.
      */
     private static final String DEFAULT_FORMAT = "%L: %m [%c.%M %t]";
+
     /**
      * Message format.
      */
     private final MessageFormat messageFormat;
+
     /**
      * Simple date format, (yyyy-MM-dd HH:mm:ss).
      */
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     /**
      * Index of %m.
      */
     private static final int INDEX_MESSAGE = 1;
+
     /**
      * Index of %L.
      */
     private static final int INDEX_LEVEL = 0;
+
     /**
      * Index of %n.
      */
     private static final int INDEX_LOGGER_NAME = 6;
+
     /**
      * Index of %t.
      */
     private static final int INDEX_TIME = 3;
+
     /**
      * Index of %M.
      */
     private static final int INDEX_METHOD_NAME = 2;
+
     /**
      * Index of %c.
      */
     private static final int INDEX_CLASS_NAME = 4;
+
     /**
      * Index of %C.
      */
     private static final int INDEX_SIMPLE_CLASS_NAME = 7;
+
     /**
      * Index of %T.
      */
     private static final int INDEX_THREAD_ID = 5;
+
     /**
      * Index of %ln.
      */
     private static final int INDEX_LINE_NUM = 8;
+
     /**
      * Length of arguments.
      */
@@ -123,6 +137,7 @@ public final class LatkeFormatter extends Formatter {
         // load the format from logging.properties
         final String propName = getClass().getName() + ".format";
         String format = LogManager.getLogManager().getProperty(propName);
+
         if (format == null || format.trim().length() == 0) {
             format = DEFAULT_FORMAT;
         }
@@ -131,10 +146,9 @@ public final class LatkeFormatter extends Formatter {
         }
 
         // convert it into the MessageFormat form
-        format = format.replace("%L", "{0}").replace("%m", "{1}").replace("%M", "{2}").
-                replace("%t", "{3}").replace("%c", "{4}").replace("%T", "{5}").
-                replace("%n", "{6}").replace("%C", "{7}").replace("%ln", "{8}")
-                 + System.getProperty("line.separator");
+        format = format.replace("%L", "{0}").replace("%m", "{1}").replace("%M", "{2}").replace("%t", "{3}").replace("%c", "{4}").replace("%T", "{5}").replace("%n", "{6}").replace("%C", "{7}").replace(
+            "%ln", "{8}")
+                + System.getProperty("line.separator");
 
         messageFormat = new MessageFormat(format);
     }
@@ -147,9 +161,9 @@ public final class LatkeFormatter extends Formatter {
         arguments[INDEX_LEVEL] = record.getLevel().toString();
         arguments[INDEX_MESSAGE] = record.getMessage();
         // sometimes the message is empty, but there is a throwable
-        if (null == arguments[INDEX_MESSAGE]
-            || 0 == arguments[INDEX_MESSAGE].length()) {
+        if (null == arguments[INDEX_MESSAGE] || 0 == arguments[INDEX_MESSAGE].length()) {
             final Throwable thrown = record.getThrown();
+
             if (null != thrown) {
                 arguments[INDEX_MESSAGE] = thrown.getMessage();
             }
@@ -167,6 +181,7 @@ public final class LatkeFormatter extends Formatter {
 
         // %t
         final Date date = new Date(record.getMillis());
+
         synchronized (dateFormat) {
             arguments[INDEX_TIME] = dateFormat.format(date);
         }
@@ -180,11 +195,8 @@ public final class LatkeFormatter extends Formatter {
             StackTraceElement stackTraceElement = stackTrace[i];
             String fileName = stackTraceElement.getFileName();
 
-            if ("Jdk14Log.java".equals(fileName)
-                || "JDK14LoggerAdapter.java".equals(fileName)
-                || "Logger.java".equals(fileName)
-                || "DirectJDKLog.java".equals(fileName)
-                || "JDK14LoggerFactory.java".equals(fileName)) {
+            if ("Jdk14Log.java".equals(fileName) || "JDK14LoggerAdapter.java".equals(fileName) || "Logger.java".equals(fileName)
+                || "DirectJDKLog.java".equals(fileName) || "JDK14LoggerFactory.java".equals(fileName)) {
                 currentCallerDepth = i;
 
                 if (i < stackTrace.length - 1) { // look ahead one
@@ -192,11 +204,8 @@ public final class LatkeFormatter extends Formatter {
                     fileName = stackTraceElement.getFileName();
                     stackTraceElement.getClassName();
 
-                    if (!"Jdk14Log.java".equals(fileName)
-                        && !"JDK14LoggerAdapter.java".equals(fileName)
-                        && !"Logger.java".equals(fileName)
-                        && !"DirectJDKLog.java".equals(fileName)
-                        && !"JDK14LoggerFactory.java".equals(fileName)) {
+                    if (!"Jdk14Log.java".equals(fileName) && !"JDK14LoggerAdapter.java".equals(fileName) && !"Logger.java".equals(fileName)
+                        && !"DirectJDKLog.java".equals(fileName) && !"JDK14LoggerFactory.java".equals(fileName)) {
                         currentCallerDepth++;
                         className = stackTraceElement.getClassName();
                         break;
@@ -223,23 +232,26 @@ public final class LatkeFormatter extends Formatter {
 
         // %C
         final int start = arguments[INDEX_CLASS_NAME].lastIndexOf(".") + 1;
+
         if (start > 0 && start < arguments[INDEX_CLASS_NAME].length()) {
             arguments[INDEX_SIMPLE_CLASS_NAME] = arguments[INDEX_CLASS_NAME].substring(start);
         } else {
             arguments[INDEX_SIMPLE_CLASS_NAME] = arguments[INDEX_CLASS_NAME];
         }
 
-        final int lineNumber =
-                stackTrace[currentCallerDepth].getLineNumber();
+        final int lineNumber = stackTrace[currentCallerDepth].getLineNumber();
+
         // %ln
         arguments[INDEX_LINE_NUM] = Integer.toString(lineNumber);
 
         synchronized (messageFormat) {
             final StringBuilder stringBuilder = new StringBuilder(messageFormat.format(arguments));
+
             if (record.getThrown() != null) {
                 try {
                     final StringWriter stringWriter = new StringWriter();
                     final PrintWriter printWriter = new PrintWriter(stringWriter);
+
                     record.getThrown().printStackTrace(printWriter);
                     printWriter.close();
                     stringBuilder.append(stringWriter.toString());

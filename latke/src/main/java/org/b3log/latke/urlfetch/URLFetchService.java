@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.urlfetch;
 
+
 import java.io.IOException;
 import java.util.concurrent.Future;
+
 
 /**
  * URL fetch service.

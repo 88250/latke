@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.plugin;
 
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.io.File;
@@ -38,6 +39,7 @@ import org.b3log.latke.model.Plugin;
 import org.b3log.latke.util.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 /**
  * Abstract plugin.
@@ -65,38 +67,47 @@ public abstract class AbstractPlugin implements Serializable {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(AbstractPlugin.class.getName());
+
     /**
      * Id of this plugin.
      */
     private String id;
+
     /**
      * Name of this plugin.
      */
     private String name;
+
     /**
      * Author of this author.
      */
     private String author;
+
     /**
      * Version of this plugin.
      */
     private String version;
+
     /**
      * Directory of this plugin.
      */
     private File dir;
+
     /**
      * Status of this plugin.
      */
     private PluginStatus status = PluginStatus.ENABLED;
+
     /**
      * Types of this plugin.
      */
     private Set<PluginType> types = new HashSet<PluginType>();
+
     /**
      * Languages.
      */
     private Map<String, Properties> langs = new HashMap<String, Properties>();
+
     /**
      * FreeMarker configuration.
      */
@@ -173,12 +184,12 @@ public abstract class AbstractPlugin implements Serializable {
             final String langFileName = lang.getName();
             final String key = langFileName.substring(Keys.LANGUAGE.length() + 1, langFileName.lastIndexOf("."));
             final Properties props = new Properties();
+
             try {
                 props.load(new FileInputStream(lang));
                 langs.put(key, props);
             } catch (final Exception e) {
-                Logger.getLogger(getClass().getName()).
-                        log(Level.SEVERE, "Get plugin[name=" + name + "]'s language configuration failed", e);
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Get plugin[name=" + name + "]'s language configuration failed", e);
             }
         }
     }
@@ -201,6 +212,7 @@ public abstract class AbstractPlugin implements Serializable {
      */
     public void plug(final Map<String, Object> dataModel) {
         String content = (String) dataModel.get(Plugin.PLUGINS);
+
         if (null == content) {
             dataModel.put(Plugin.PLUGINS, "");
         }
@@ -208,13 +220,13 @@ public abstract class AbstractPlugin implements Serializable {
         handleLangs(dataModel);
         fillDefault(dataModel);
 
-
         content = (String) dataModel.get(Plugin.PLUGINS);
         final StringBuilder contentBuilder = new StringBuilder(content);
 
         contentBuilder.append(getViewContent(dataModel));
 
         final String pluginsContent = contentBuilder.toString();
+
         dataModel.put(Plugin.PLUGINS, pluginsContent);
 
         LOGGER.log(Level.FINER, "Plugin[name={0}] has been plugged", getName());
@@ -232,6 +244,7 @@ public abstract class AbstractPlugin implements Serializable {
         final String variant = locale.getVariant();
 
         final StringBuilder keyBuilder = new StringBuilder(language);
+
         if (!Strings.isEmptyOrNull(country)) {
             keyBuilder.append("_").append(country);
         }
@@ -242,6 +255,7 @@ public abstract class AbstractPlugin implements Serializable {
         final String localKey = keyBuilder.toString();
         final Properties props = langs.get(localKey);
         final Set<Object> keySet = props.keySet();
+
         for (final Object key : keySet) {
             dataModel.put((String) key, props.getProperty((String) key));
         }
@@ -281,12 +295,12 @@ public abstract class AbstractPlugin implements Serializable {
         try {
             final Template template = configuration.getTemplate(Plugin.PLUGIN + ".ftl");
             final StringWriter sw = new StringWriter();
+
             template.process(dataModel, sw);
 
             return sw.toString();
         } catch (final Exception e) {
-            Logger.getLogger(getClass().getName()).
-                    log(Level.SEVERE, "Get plugin[name=" + name + "]'s view failed, will return warning", e);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Get plugin[name=" + name + "]'s view failed, will return warning", e);
             return "<div style='color: red;'>Plugin[name=" + name + "] runs failed</div>";
         }
     }
@@ -308,6 +322,7 @@ public abstract class AbstractPlugin implements Serializable {
      */
     public JSONObject toJSONObject() throws JSONException {
         final JSONObject ret = new JSONObject();
+
         ret.put(Keys.OBJECT_ID, getId());
         ret.put(Plugin.PLUGIN_NAME, getName());
         ret.put(Plugin.PLUGIN_VERSION, getVersion());
@@ -434,6 +449,7 @@ public abstract class AbstractPlugin implements Serializable {
             return false;
         }
         final AbstractPlugin other = (AbstractPlugin) obj;
+
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }
@@ -443,6 +459,7 @@ public abstract class AbstractPlugin implements Serializable {
     @Override
     public int hashCode() {
         int hash = 2;
+
         hash = 2 + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }

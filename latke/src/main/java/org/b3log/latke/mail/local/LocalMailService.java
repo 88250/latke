@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.mail.local;
 
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import org.b3log.latke.mail.MailService;
+
 
 /**
  * Implementation of the {@link MailService} interface.

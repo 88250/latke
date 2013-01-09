@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.user;
 
+
 import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * User service.

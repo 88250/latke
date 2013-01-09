@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * HTTP {@link HttpServletResponse#SC_NOT_FOUND 404 status} renderer.

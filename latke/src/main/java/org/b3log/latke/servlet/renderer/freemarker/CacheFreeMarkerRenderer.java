@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.renderer.freemarker;
 
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.util.Strings;
 import org.json.JSONObject;
+
 
 /**
  * <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
@@ -43,8 +45,7 @@ public class CacheFreeMarkerRenderer extends AbstractFreeMarkerRenderer {
     private static final Logger LOGGER = Logger.getLogger(CacheFreeMarkerRenderer.class.getName());
 
     @Override
-    protected void beforeRender(final HTTPRequestContext context) throws Exception {
-    }
+    protected void beforeRender(final HTTPRequestContext context) throws Exception {}
 
     /**
      * {@inheritDoc}
@@ -64,6 +65,7 @@ public class CacheFreeMarkerRenderer extends AbstractFreeMarkerRenderer {
 
         if (Latkes.isPageCacheEnabled()) {
             final String cachedPageKey = (String) request.getAttribute(Keys.PAGE_CACHE_KEY);
+
             if (Strings.isEmptyOrNull(cachedPageKey)) {
                 return;
             }
@@ -73,6 +75,7 @@ public class CacheFreeMarkerRenderer extends AbstractFreeMarkerRenderer {
             check(request, pageContent);
 
             final JSONObject cachedValue = new JSONObject();
+
             cachedValue.put(PageCaches.CACHED_CONTENT, pageContent);
             cachedValue.put(PageCaches.CACHED_TYPE, request.getAttribute(PageCaches.CACHED_TYPE));
             cachedValue.put(PageCaches.CACHED_OID, request.getAttribute(PageCaches.CACHED_OID));
@@ -95,8 +98,7 @@ public class CacheFreeMarkerRenderer extends AbstractFreeMarkerRenderer {
      * @param content the specified content
      */
     public static void check(final HttpServletRequest request, final String content) {
-        if (Strings.isEmptyOrNull(content)
-            || Strings.isEmptyOrNull((String) request.getAttribute(PageCaches.CACHED_TYPE))
+        if (Strings.isEmptyOrNull(content) || Strings.isEmptyOrNull((String) request.getAttribute(PageCaches.CACHED_TYPE))
             || Strings.isEmptyOrNull((String) request.getAttribute(PageCaches.CACHED_OID))
             || Strings.isEmptyOrNull((String) request.getAttribute(PageCaches.CACHED_TITLE))
             || Strings.isEmptyOrNull((String) request.getAttribute(PageCaches.CACHED_LINK))) {

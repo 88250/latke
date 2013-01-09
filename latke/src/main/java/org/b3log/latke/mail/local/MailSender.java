@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.mail.local;
 
+
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -30,6 +31,7 @@ import javax.mail.internet.MimeMessage.RecipientType;
 import org.b3log.latke.mail.MailService.Message;
 import org.b3log.latke.util.Strings;
 
+
 /**
  * Email sender.
  * 
@@ -43,6 +45,7 @@ final class MailSender {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(MailSender.class.getName());
+
     /**
      * Mail configurations.
      * 
@@ -64,6 +67,7 @@ final class MailSender {
      */
     private Session getSession() {
         final Properties props = new Properties();
+
         props.setProperty("mail.smtp.host", mailProperties.getString("mail.smtp.host"));
         props.setProperty("mail.smtp.auth", "true");
         props.setProperty("mail.smtp.port", mailProperties.getString("mail.smtp.port"));
@@ -85,7 +89,7 @@ final class MailSender {
      * @throws MessagingException if converts error 
      */
     public javax.mail.Message convert2JavaMailMsg(final Message message)
-            throws MessagingException {
+        throws MessagingException {
         if (message == null) {
             return null;
         }
@@ -99,10 +103,13 @@ final class MailSender {
         }
 
         final MimeMessage ret = new MimeMessage(getSession());
+
         ret.setFrom(new InternetAddress(message.getFrom()));
         final String subject = message.getSubject();
+
         ret.setSubject(subject != null ? subject : "");
         final String htmlBody = message.getHtmlBody();
+
         ret.setContent(htmlBody != null ? htmlBody : "", "text/html;charset=UTF-8");
         ret.addRecipients(RecipientType.TO, transformRecipients(message.getRecipients()));
 
@@ -123,6 +130,7 @@ final class MailSender {
 
         final InternetAddress[] ret = new InternetAddress[recipients.size()];
         int i = 0;
+
         for (String recipient : recipients) {
             ret[i] = new InternetAddress(recipient);
             i++;
@@ -139,6 +147,7 @@ final class MailSender {
      */
     void sendMail(final Message message) throws MessagingException {
         final javax.mail.Message msg = convert2JavaMailMsg(message);
+
         Transport.send(msg);
     }
 
@@ -149,8 +158,7 @@ final class MailSender {
 
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(mailProperties.getString("mail.user"),
-                    mailProperties.getString("mail.password"));
+            return new PasswordAuthentication(mailProperties.getString("mail.user"), mailProperties.getString("mail.password"));
         }
     }
 }

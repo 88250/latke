@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.repository.jpa;
 
+
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+
 
 /**
  * Entity manager factory implementation.

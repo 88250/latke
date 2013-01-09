@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.servlet;
 
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpSessionEvent;
+
 
 /**
  * Default servlet listener.
@@ -38,14 +40,11 @@ public final class DefaultServletListener extends AbstractServletListener {
     }
 
     @Override
-    public void requestInitialized(final ServletRequestEvent servletRequestEvent) {
-    }
+    public void requestInitialized(final ServletRequestEvent servletRequestEvent) {}
 
     @Override
-    public void sessionCreated(final HttpSessionEvent httpSessionEvent) {
-    }
+    public void sessionCreated(final HttpSessionEvent httpSessionEvent) {}
 
     @Override
-    public void sessionDestroyed(final HttpSessionEvent httpSessionEvent) {
-    }
+    public void sessionDestroyed(final HttpSessionEvent httpSessionEvent) {}
 }

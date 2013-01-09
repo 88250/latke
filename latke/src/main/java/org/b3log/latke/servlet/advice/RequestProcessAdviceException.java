@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.servlet.advice;
 
+
 import org.json.JSONObject;
+
 
 /**
  * Exception for {@link RequestProcessAdvice}.
@@ -29,6 +31,7 @@ public class RequestProcessAdviceException extends Exception {
      * the error message jsonObject.
      */
     private JSONObject jsonObject;
+
     /**
      * serialVersionUID.
      */

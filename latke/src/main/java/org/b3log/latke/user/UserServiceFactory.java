@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.user;
 
+
 import freemarker.log.Logger;
 import org.b3log.latke.Latkes;
+
 
 /**
  * User service factory.
@@ -30,8 +32,8 @@ public final class UserServiceFactory {
     /**
      * Logger.
      */
-    private static final Logger LOGGER =
-            Logger.getLogger(UserServiceFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserServiceFactory.class.getName());
+
     /**
      * User service.
      */
@@ -44,16 +46,18 @@ public final class UserServiceFactory {
             Class<UserService> serviceClass = null;
 
             switch (Latkes.getRuntime("userService")) {
-                case GAE:
-                    serviceClass = (Class<UserService>) Class.forName("org.b3log.latke.user.gae.GAEUserService");
-                    USER_SERVICE = serviceClass.newInstance();
-                    break;
-                case LOCAL:
-                    serviceClass = (Class<UserService>) Class.forName("org.b3log.latke.user.local.LocalUserService");
-                    USER_SERVICE = serviceClass.newInstance();
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+            case GAE:
+                serviceClass = (Class<UserService>) Class.forName("org.b3log.latke.user.gae.GAEUserService");
+                USER_SERVICE = serviceClass.newInstance();
+                break;
+
+            case LOCAL:
+                serviceClass = (Class<UserService>) Class.forName("org.b3log.latke.user.local.LocalUserService");
+                USER_SERVICE = serviceClass.newInstance();
+                break;
+
+            default:
+                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize User Service!", e);
@@ -75,6 +79,5 @@ public final class UserServiceFactory {
     /**
      * Private default constructor.
      */
-    private UserServiceFactory() {
-    }
+    private UserServiceFactory() {}
 }

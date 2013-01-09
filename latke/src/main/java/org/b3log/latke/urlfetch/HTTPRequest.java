@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.urlfetch;
 
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.b3log.latke.servlet.HTTPRequestMethod;
+
 
 /**
  * Encapsulation of a single HTTP request that is made via the 
@@ -36,19 +38,23 @@ public final class HTTPRequest {
      * URL.
      */
     private URL url;
+
     /**
      * Payload. 
      */
     private byte[] payload;
+
     /**
      * Payload map.
      */
     // XXX: payload abstraction
     private Map<String, String> payloadMap = new HashMap<String, String>();
+
     /**
      * Request method.
      */
     private HTTPRequestMethod requestMethod = HTTPRequestMethod.GET;
+
     /**
      * HTTP headers.
      */

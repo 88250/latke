@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.taskqueue.local;
 
+
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.b3log.latke.taskqueue.TaskQueueService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 
 /**
  * Local task queue service.
@@ -54,18 +56,19 @@ public final class LocalTaskQueueService implements TaskQueueService {
      */
     static {
         final String webRoot = AbstractServletListener.getWebRoot();
-        final File queueXml = new File(webRoot
-                + File.separator + "WEB-INF" + File.separator + "queue.xml");
+        final File queueXml = new File(webRoot + File.separator + "WEB-INF" + File.separator + "queue.xml");
 
         if (!queueXml.exists()) {
             LOGGER.log(Level.INFO, "Not found queue, no cron jobs need to schedule");
         }
 
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
         try {
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             final Document document = documentBuilder.parse(queueXml);
             final Element root = document.getDocumentElement();
+
             root.normalize();
 
             final NodeList queueRoot = root.getElementsByTagName("queue-entries");
@@ -74,8 +77,7 @@ public final class LocalTaskQueueService implements TaskQueueService {
             for (int i = 0; i < queueRoot.getLength(); i++) {
                 final Element queueNode = (Element) queueRoot.item(i);
                 final String queueName = queueNode.getElementsByTagName("name").item(0).getTextContent();
-                final Element rparamNode =
-                        (Element) queueNode.getElementsByTagName("retry-parameters").item(0);
+                final Element rparamNode = (Element) queueNode.getElementsByTagName("retry-parameters").item(0);
                 final String retryLimit = rparamNode.getElementsByTagName("task-retry-limit").item(0).getTextContent();
 
                 queueMap.put(queueName, new LocalTaskQueue(Integer.valueOf(retryLimit)));

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.image;
 
+
 /**
  * Image.
  *

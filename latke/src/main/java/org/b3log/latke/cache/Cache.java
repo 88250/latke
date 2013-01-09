@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.cache;
 
+
 import java.io.Serializable;
 import java.util.Collection;
+
 
 /**
  * This is the top interface of cache like structures.

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.model.Pagination;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 
 /**
  * Request utilities.
@@ -43,6 +45,7 @@ public final class Requests {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Requests.class.getName());
+
     /**
      * The pagination path pattern.
      * 
@@ -58,32 +61,34 @@ public final class Requests {
      * </p>
      */
     public static final String PAGINATION_PATH_PATTERN = "*/*/*";
+
     /**
      * Default page size.
      */
     private static final int DEFAULT_PAGE_SIZE = 15;
+
     /**
      * Default window size.
      */
     private static final int DEFAULT_WINDOW_SIZE = 20;
+
     /**
      * HTTP header "User-Agent" pattern for mobile device requests.
      */
-    private static final Pattern MOBILE_USER_AGENT_PATTERN =
-            Pattern.compile("android.+mobile|avantgo|bada|blackberry|blazer|compal|elaine|fennec"
+    private static final Pattern MOBILE_USER_AGENT_PATTERN = Pattern.compile(
+        "android.+mobile|avantgo|bada|blackberry|blazer|compal|elaine|fennec"
             + "|hiptop|iemobile|ip(hone|od)|iris|kindle|lge|maemo|midp|mmp|opera m(ob|in)i"
             + "|palm( os)?|phone|p(ixi|re)|plucker|pocket|psp|symbian|treo|up.(browser"
             + "|link)|ucweb|vodafone|wap|webos|windows (ce|phone)|xda|xiino|htc|MQQBrowser",
             Pattern.CASE_INSENSITIVE);
+
     /**
      * HTTP header "User-Agent" pattern for search engine bot requests.
      */
-    private static final Pattern SEARCH_ENGINE_BOT_USER_AGENT_PATTERN =
-            Pattern.compile(
-            "spider|bot|fetcher|crawler"
-            + "|google|yahoo|sogou|youdao|Xianguo.com|RssBandit|JianKongBao Monitor|BAE Online Platform"
-            + "|B3log",
-            Pattern.CASE_INSENSITIVE);
+    private static final Pattern SEARCH_ENGINE_BOT_USER_AGENT_PATTERN = Pattern.compile(
+        "spider|bot|fetcher|crawler" + "|google|yahoo|sogou|youdao|Xianguo.com|RssBandit|JianKongBao Monitor|BAE Online Platform" + "|B3log",
+        Pattern.CASE_INSENSITIVE);
+
     /**
      * Cookie expiry of "visited".
      */
@@ -127,6 +132,7 @@ public final class Requests {
         try {
             for (int i = 0; i < cookies.length; i++) {
                 final Cookie cookie = cookies[i];
+
                 if ("btouch_switch_toggle".equals(cookie.getName())) {
                     ret = cookie.getValue();
                 }
@@ -177,6 +183,7 @@ public final class Requests {
      */
     public static boolean hasBeenServed(final HttpServletRequest request, final HttpServletResponse response) {
         final Cookie[] cookies = request.getCookies();
+
         if (null == cookies || 0 == cookies.length) {
             return false;
         }
@@ -215,6 +222,7 @@ public final class Requests {
                 final StringBuilder builder = new StringBuilder("[").append("\"").append(request.getRequestURI()).append("\"]");
 
                 final Cookie c = new Cookie("visited", builder.toString());
+
                 c.setMaxAge(COOKIE_EXPIRY);
                 c.setPath("/");
                 response.addCookie(c);
@@ -222,6 +230,7 @@ public final class Requests {
                 cookieJSONArray.put(request.getRequestURI());
 
                 final Cookie c = new Cookie("visited", cookieJSONArray.toString());
+
                 c.setMaxAge(COOKIE_EXPIRY);
                 c.setPath("/");
                 response.addCookie(c);
@@ -230,6 +239,7 @@ public final class Requests {
             LOGGER.log(Level.WARNING, "Parses cookie failed, clears the cookie[name=visited]", e);
 
             final Cookie c = new Cookie("visited", null);
+
             c.setMaxAge(0);
             c.setPath("/");
 
@@ -277,6 +287,7 @@ public final class Requests {
         final Integer windowSize = getWindowSize(path);
 
         final JSONObject ret = new JSONObject();
+
         ret.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, currentPageNum);
         ret.put(Pagination.PAGINATION_PAGE_SIZE, pageSize);
         ret.put(Pagination.PAGINATION_WINDOW_SIZE, windowSize);
@@ -322,6 +333,7 @@ public final class Requests {
         }
 
         final String[] parts = path.split("/");
+
         if (1 >= parts.length) {
             return DEFAULT_PAGE_SIZE;
         }
@@ -350,6 +362,7 @@ public final class Requests {
         }
 
         final String[] parts = path.split("/");
+
         if (2 >= parts.length) {
             return DEFAULT_WINDOW_SIZE;
         }
@@ -373,14 +386,15 @@ public final class Requests {
      * @throws IOException io exception
      */
     public static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         response.setContentType("application/json");
 
         final StringBuilder sb = new StringBuilder();
         BufferedReader reader = null;
 
         final String errMsg = "Can not parse request[requestURI=" + request.getRequestURI() + ", method=" + request.getMethod()
-                + "], returns an empty json object";
+            + "], returns an empty json object";
+
         try {
             try {
                 reader = request.getReader();
@@ -389,6 +403,7 @@ public final class Requests {
             }
 
             String line = reader.readLine();
+
             while (null != line) {
                 sb.append(line);
                 line = reader.readLine();
@@ -396,6 +411,7 @@ public final class Requests {
             reader.close();
 
             String tmp = sb.toString();
+
             if (Strings.isEmptyOrNull(tmp)) {
                 tmp = "{}";
             }
@@ -411,6 +427,5 @@ public final class Requests {
     /**
      * Private default constructor.
      */
-    private Requests() {
-    }
+    private Requests() {}
 }

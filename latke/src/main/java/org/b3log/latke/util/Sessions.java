@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
@@ -23,6 +24,7 @@ import org.b3log.latke.model.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
+
 
 /**
  * Session utilities.
@@ -36,6 +38,7 @@ public final class Sessions {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Sessions.class.getName());
+
     /**
      * Cookie expiry: one year.
      */
@@ -44,8 +47,7 @@ public final class Sessions {
     /**
      * Private default constructor.
      */
-    private Sessions() {
-    }
+    private Sessions() {}
 
     /**
      * Logins the specified user from the specified request.
@@ -76,10 +78,12 @@ public final class Sessions {
 
         try {
             final JSONObject cookieJSONObject = new JSONObject();
+
             cookieJSONObject.put(User.USER_EMAIL, user.optString(User.USER_EMAIL));
             cookieJSONObject.put(User.USER_PASSWORD, MD5.hash(user.optString(User.USER_PASSWORD)));
 
             final Cookie cookie = new Cookie("b3log-latke", cookieJSONObject.toString());
+
             cookie.setPath("/");
             cookie.setMaxAge(COOKIE_EXPIRY);
             response.addCookie(cookie);
@@ -100,6 +104,7 @@ public final class Sessions {
 
         if (null != session) {
             final Cookie cookie = new Cookie("b3log-latke", null);
+
             cookie.setMaxAge(0);
             cookie.setPath("/");
 
