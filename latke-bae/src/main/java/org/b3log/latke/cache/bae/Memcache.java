@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.cache.bae;
 
+
 import com.baidu.bae.api.memcache.BaeMemcachedClient;
 import java.io.Serializable;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.util.Serializer;
+
 
 /**
  * Simple warper of <a href="http://developer.baidu.com/wiki/index.php?title=帮助文档/云环境/JAVA服务列表/Cache">
@@ -48,14 +50,17 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Memcache.class.getName());
+
     /**
      * Name of this cache.
      */
     private String name;
+
     /**
      * BAE memcached client.
      */
     private BaeMemcachedClient baeMemcachedClient;
+
     /**
      * Keys.
      */
@@ -100,8 +105,8 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
             keys.add(key.toString());
         } catch (final Exception e) {
             try {
-                LOGGER.log(Level.WARNING, "Can not put memcache[key=" + key
-                                          + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
+                LOGGER.log(Level.WARNING,
+                    "Can not put memcache[key=" + key + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
             } catch (final Exception ex) {
                 LOGGER.log(Level.SEVERE, " Serializes failed", ex);
             }
@@ -167,8 +172,7 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
     }
 
     @Override
-    public void setMaxCount(final long maxCount) {
-    }
+    public void setMaxCount(final long maxCount) {}
 
     @Override
     public long getMaxCount() {

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.urlfetch.bae;
 
+
 import com.baidu.bae.api.fetchurl.BaeFetchurl;
 import com.baidu.bae.api.fetchurl.BaeFetchurlFactory;
 import com.baidu.bae.api.fetchurl.BasicNameValuePair;
@@ -32,6 +33,7 @@ import org.b3log.latke.urlfetch.HTTPHeader;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
+
 
 /**
  * Baidu App Engine URL fetch service.
@@ -107,6 +109,7 @@ public final class BAEURLFetchService implements URLFetchService {
         ret.setResponseCode(baeFetchurl.getHttpCode());
 
         final Map<String, String> responseHeader = baeFetchurl.getResponseHeader();
+
         for (final Map.Entry<String, String> header : responseHeader.entrySet()) {
             ret.addHeader(new HTTPHeader(header.getKey(), header.getValue()));
         }
@@ -122,6 +125,7 @@ public final class BAEURLFetchService implements URLFetchService {
      */
     private static void addHeaders(final BaeFetchurl baeFetchurl, final HTTPRequest request) {
         final List<HTTPHeader> headers = request.getHeaders();
+
         for (final HTTPHeader header : headers) {
             baeFetchurl.setHeader(header.getName(), header.getValue());
         }

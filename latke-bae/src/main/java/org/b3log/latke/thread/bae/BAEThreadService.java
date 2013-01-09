@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.thread.bae;
 
+
 import org.b3log.latke.thread.ThreadService;
+
 
 /**
  * Baidu App Engine thread service.
@@ -23,7 +25,7 @@ import org.b3log.latke.thread.ThreadService;
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.0.0, Sep 20, 2012
  */
-public class BAEThreadService implements ThreadService{
+public class BAEThreadService implements ThreadService {
 
     @Override
     public Thread createThreadForCurrentRequest(final Runnable runnable) {

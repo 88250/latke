@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.taskqueue.bae;
 
+
 import com.baidu.bae.api.factory.BaeFactory;
 import com.baidu.bae.api.taskqueue.BaeTaskQueue;
 import java.util.logging.Level;
@@ -23,6 +24,7 @@ import org.b3log.latke.taskqueue.Queue;
 import org.b3log.latke.taskqueue.Task;
 import org.b3log.latke.taskqueue.TaskHandle;
 import org.b3log.latke.taskqueue.TaskQueueService;
+
 
 /**
  * Baidu App Engine task queue service.
@@ -45,7 +47,7 @@ public final class BAETaskQueueService implements TaskQueueService {
             @Override
             public TaskHandle add(final Task task) {
                 final com.baidu.bae.api.taskqueue.Task baeTask = new com.baidu.bae.api.taskqueue.FetchUrlTask(task.getURL(),
-                        new String(task.getPayload()));
+                    new String(task.getPayload()));
 
                 baeTaskQueue.push(baeTask);
 
