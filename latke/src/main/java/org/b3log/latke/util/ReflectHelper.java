@@ -18,11 +18,11 @@ package org.b3log.latke.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
@@ -91,11 +91,17 @@ public final class ReflectHelper {
         } catch (final NotFoundException e) {
             LOGGER.log(Level.SEVERE, "Get method variable names failed", e);
         }
-        final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
+
+        // final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
+        int j = -1;
+        String variableName = null;
 
         for (int i = 0; i < variableNames.length; i++) {
-            variableNames[i] = attr.variableName(i + staticIndex);
-
+            while (!"this".equals(variableName)) {
+                j++;
+                variableName = attr.variableName(j);
+            }
+            variableNames[i] = attr.variableName(++j);
         }
         return variableNames;
     }
