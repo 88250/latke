@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,7 @@ import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+
 
 /**
  * ReflectHelper while not using java reflect instead of the other class byte tool.
@@ -49,8 +51,7 @@ public final class ReflectHelper {
     /**
      * The default constructor.
      */
-    private ReflectHelper() {
-    }
+    private ReflectHelper() {}
 
     /**
      * getMethodVariableNames in user defined.
