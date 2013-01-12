@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.util;
 
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +26,6 @@ import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
-
 
 /**
  * ReflectHelper while not using java reflect instead of the other class byte tool.
@@ -44,9 +42,15 @@ public final class ReflectHelper {
     private static final Logger LOGGER = Logger.getLogger(ReflectHelper.class.getName());
 
     /**
+     * the maxFindLength to get the 'this' keyword when resolving the vaibleNames.
+     */
+    private static final Integer MAX_FIND_LENGTH = 30;
+
+    /**
      * The default constructor.
      */
-    private ReflectHelper() {}
+    private ReflectHelper() {
+    }
 
     /**
      * getMethodVariableNames in user defined.
@@ -95,13 +99,24 @@ public final class ReflectHelper {
         // final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
         int j = -1;
         String variableName = null;
+        Boolean ifkill = false;
 
-        for (int i = 0; i < variableNames.length; i++) {
-            while (!"this".equals(variableName)) {
-                j++;
-                variableName = attr.variableName(j);
+        while (!"this".equals(variableName)) {
+            j++;
+            variableName = attr.variableName(j);
+            // to prevent heap error when there being some unknown reasons to
+            // resolve the VariableNames
+            if (j > MAX_FIND_LENGTH) {
+                LOGGER.log(Level.WARNING, "maybe resolve to VariableNames error ");
+                ifkill = true;
+                break;
             }
-            variableNames[i] = attr.variableName(++j);
+        }
+
+        if (!ifkill) {
+            for (int i = 0; i < variableNames.length; i++) {
+                variableNames[i] = attr.variableName(++j);
+            }
         }
         return variableNames;
     }
