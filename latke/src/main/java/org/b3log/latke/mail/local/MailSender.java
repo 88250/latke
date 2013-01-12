@@ -77,7 +77,7 @@ final class MailSender {
         props.put("mail.smtp.socketFactory.fallback", mailProperties.getString("mail.smtp.socketFactory.fallback"));
         props.put("mail.smtp.socketFactory.port", mailProperties.getString("mail.smtp.socketFactory.port"));
 
-        return Session.getDefaultInstance(props, new SMTPAuthenticator());
+        return Session.getInstance(props, new SMTPAuthenticator());
     }
 
     /**
