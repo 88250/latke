@@ -18,15 +18,19 @@ package org.b3log.latke.servlet;
 
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,11 +40,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.annotation.Annotation;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
@@ -228,12 +235,23 @@ public final class RequestProcessors {
     /**
      * Scans classpath to discover request processor classes via annotation
      * {@linkplain org.b3log.latke.servlet.annotation.RequestProcessor}.
-     *
+     * @param scanPath the root ScanPath,using ','as the split.
+     * <P>
+     *  the being two type of the scanPath.
+     *  package: org.b3log.process
+     *  ant-style classpath: org/b3log/** /*process.class
+     * </p>
      * @throws Exception exception
      */
-    public static void discover() throws Exception {
-        discoverFromClassesDir();
-        discoverFromLibDir();
+    public static void discover(final String scanPath) throws Exception {
+
+        /** Retain the original implementation**/
+        if (StringUtils.isBlank(scanPath)) {
+            discoverFromClassesDir();
+            discoverFromLibDir();
+        } else {
+            discoverFromClassPath(scanPath);
+        }
     }
 
     /**
@@ -348,6 +366,70 @@ public final class RequestProcessors {
             LOGGER.log(Level.SEVERE, "Scans classpath (lib directory) failed", e);
 
         }
+    }
+
+    /**
+     * Scans classpath (from classloader) to discover request processor classes.
+     * @param scanPath scanPah using ',' as split.
+     * @throws IOException  IOException
+     */
+    private static void discoverFromClassPath(final String scanPath) throws IOException {
+
+        final String[] paths = scanPath.split(",");
+        final Set<URL> urls = new LinkedHashSet<URL>();
+
+        /** using static ??  */
+        final ClassPathResolver classPathResolver = new ClassPathResolver();
+
+        for (String path : paths) {
+
+            if (!AntPathMatcher.isPattern(path)) {
+                path = path.replaceAll("\\.", "/") + "/**/*.class";
+            }
+            urls.addAll(classPathResolver.getResources(path));
+        }
+
+        for (URL url : urls) {
+            final DataInputStream classInputStream = new DataInputStream(url.openStream());
+
+            final ClassFile classFile = new ClassFile(classInputStream);
+            final AnnotationsAttribute annotationsAttribute = (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
+
+            if (null == annotationsAttribute) {
+                continue;
+            }
+
+            for (Annotation annotation : annotationsAttribute.getAnnotations()) {
+                if ((annotation.getTypeName()).equals(RequestProcessor.class.getName())) {
+                    // Found a request processor class, loads it
+                    final String className = classFile.getName();
+
+                    Class<?> clz;
+
+                    try {
+                        clz = Thread.currentThread().getContextClassLoader().loadClass(className);
+                    } catch (final ClassNotFoundException e) {
+                        LOGGER.log(Level.SEVERE, "some error to load the class[" + className + "]", e);
+                        break;
+                    }
+
+                    LOGGER.log(Level.FINER, "Found a request processor[className={0}]", className);
+                    final Method[] declaredMethods = clz.getDeclaredMethods();
+
+                    for (int i = 0; i < declaredMethods.length; i++) {
+                        final Method mthd = declaredMethods[i];
+                        final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);
+
+                        if (null == requestProcessingMethodAnn) {
+                            continue;
+                        }
+                        LOGGER.info("get the matched processing Class[" + clz.getCanonicalName() + "]" + " method[" + mthd.getName() + "]");
+                        addProcessorMethod(requestProcessingMethodAnn, clz, mthd);
+                    }
+                }
+            }
+        }
+
     }
 
     /**
@@ -487,8 +569,6 @@ public final class RequestProcessors {
 
                 final ProcessorMethod processorMethod = new ProcessorMethod();
 
-                processorMethods.add(processorMethod);
-
                 processorMethod.setMethod(requestMethod.name());
                 processorMethod.setURIPattern(uriPattern);
                 processorMethod.setWithContextPath(isWithContextPath);
@@ -498,6 +578,7 @@ public final class RequestProcessors {
                 processorMethod.setConvertClass(requestProcessing.convertClass());
 
                 processorMethod.analysis();
+                processorMethods.add(processorMethod);
             }
         }
     }
@@ -802,5 +883,55 @@ public final class RequestProcessors {
 
             return ret;
         }
+
+        @Override
+        public String toString() {
+            return "ProcessorMethod [processorClass=" + processorClass.getName() + ", processorMethod=" + processorMethod.getName() + "]";
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+
+            result = prime * result + Arrays.hashCode(methodParamNames);
+            result = prime * result + ((processorMethod == null) ? 0 : processorMethod.hashCode());
+            result = prime * result + ((uriPattern == null) ? 0 : uriPattern.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final ProcessorMethod other = (ProcessorMethod) obj;
+
+            if (!Arrays.equals(methodParamNames, other.methodParamNames)) {
+                return false;
+            }
+            if (processorMethod == null) {
+                if (other.processorMethod != null) {
+                    return false;
+                }
+            } else if (!processorMethod.equals(other.processorMethod)) {
+                return false;
+            }
+            if (uriPattern == null) {
+                if (other.uriPattern != null) {
+                    return false;
+                }
+            } else if (!uriPattern.equals(other.uriPattern)) {
+                return false;
+            }
+            return true;
+        }
+
     }
 }
