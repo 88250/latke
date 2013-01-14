@@ -246,6 +246,11 @@
             <artifactId>h2</artifactId>
         </dependency>
 
+        <dependency>
+        	<groupId>org.jboss</groupId>
+        	<artifactId>jboss-vfs</artifactId>
+        	<version>2.0.0.GA</version>
+        </dependency>
     </dependencies>
 
     <build>
