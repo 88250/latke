@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.servlet;
 
+import java.util.HashSet;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -29,7 +31,7 @@ import org.testng.annotations.Test;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 3, 2012
  */
-@SuppressWarnings({"unchecked", "rawtypes" })
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class RequestProcessorsTest extends TestCase {
 
     static {
@@ -149,6 +151,21 @@ public class RequestProcessorsTest extends TestCase {
         final String requestURI = "/before/12";
         final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
         Assert.assertEquals("12", ret);
+
+    }
+
+    /**
+     * test scanClass.
+     * @throws Exception Exception  
+     */
+    @Test
+    public void testScanClass() throws Exception {
+
+        RequestProcessors.discover("org.b3log,org.b3log.latke");
+        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
+        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
+        final int totalMatched = 12;
+        Assert.assertEquals(totalMatched, hashSet.size());
 
     }
 }
