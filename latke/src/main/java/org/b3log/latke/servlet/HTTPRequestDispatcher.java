@@ -16,26 +16,28 @@
 package org.b3log.latke.servlet;
 
 
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.Keys;
-import org.b3log.latke.cache.PageCaches;
-import org.b3log.latke.util.Strings;
-import java.util.logging.Level;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
 import org.b3log.latke.util.StaticResources;
 import org.b3log.latke.util.Stopwatchs;
+import org.b3log.latke.util.Strings;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -101,7 +103,9 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         Stopwatchs.start("Discovering Request Processors");
         try {
             LOGGER.info("Discovering request processors....");
-            RequestProcessors.discover();
+            final String scanPath = getServletConfig().getInitParameter("scanPath");
+
+            RequestProcessors.discover(scanPath);
             LOGGER.info("Discovered request processors");
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Initializes request processors failed", e);
@@ -125,7 +129,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             throw new IllegalStateException(
                 "Unable to locate the default servlet for serving static content. "
                     + "Please set the 'defaultServletName' property explicitly.");
-            // TODO: Loads from local.properties 
+            // TODO: Loads from local.properties
         }
 
         LOGGER.log(Level.CONFIG, "The default servlet for serving static resource is [{0}]", defaultServletName);
@@ -173,7 +177,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             }
         }
 
-        // Encoding configuration to filter/EncodingFilter 
+        // Encoding configuration to filter/EncodingFilter
 
         final HTTPRequestContext context = new HTTPRequestContext();
 
