@@ -383,6 +383,11 @@ public final class RequestProcessors {
 
         for (String path : paths) {
 
+            /**
+             * the being two type of the scanPath.
+             *  1 package: org.b3log.process
+             *  2 ant-style classpath: org/b3log/** /*process.class
+             */
             if (!AntPathMatcher.isPattern(path)) {
                 path = path.replaceAll("\\.", "/") + "/**/*.class";
             }
