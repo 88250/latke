@@ -92,6 +92,8 @@ public class ClassPathResolver {
             
             if (isJarURL(rootDirResource)) {
                 result.addAll(doFindPathMatchingJarResources(rootDirResource, subPattern));
+            } else if (rootDirResource.getProtocol().startsWith(URL_PROTOCOL_VFS)) {
+                result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirResource, subPattern));
             } else {
                 result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
             }
@@ -197,8 +199,6 @@ public class ClassPathResolver {
                 final JarEntry jarEntry = jarCon.getJarEntry();
 
                 rootEntryPath = jarEntry != null ? jarEntry.getName() : "";
-            } else if (rootDirResource.getProtocol().startsWith(URL_PROTOCOL_VFS)) {
-                result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirResource, subPattern));
             } else {
                 // No JarURLConnection -> need to resort to URL file parsing.
                 // We'll assume URLs of the format "jar:path!/entry", with the
@@ -370,15 +370,20 @@ public class ClassPathResolver {
          * @param rootUrl rootUrl
          * @param locationPattern subPattern
          * @return the matched URLd
-         * @throws IOException  IOException
          */
-        public static Set<URL> findMatchingResources(final URL rootUrl, final String locationPattern)
-            throws IOException {
-            final VirtualFile root = VFS.getRoot(rootUrl);
-            final PatternVirtualFileVisitor visitor = new PatternVirtualFileVisitor(root.getPathName(), locationPattern);
+        public static Set<URL> findMatchingResources(final URL rootUrl, final String locationPattern) {
+            VirtualFile root;
 
-            root.visit(visitor);
-            return visitor.getResources();
+            try {
+                root = VFS.getRoot(rootUrl);
+                final PatternVirtualFileVisitor visitor = new PatternVirtualFileVisitor(root.getPathName(), locationPattern);
+
+                root.visit(visitor);
+                return visitor.getResources();
+            } catch (final IOException e) {
+                LOGGER.log(Level.SEVERE, "findMatchingResources in Jboss VPF wrong", e);
+                return new HashSet<URL>();
+            }
         }
     }
 
