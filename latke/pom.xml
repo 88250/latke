@@ -26,7 +26,7 @@
         <javassist.version>3.12.1.GA</javassist.version>
         
         <!-- JBoss VFS -->
-        <jboss-vfs.version>2.0.0.GA</jboss-vfs.version>
+        <jboss-vfs.version>3.1.0.Final</jboss-vfs.version>
         <!-- Maven Plugin -->
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
         <maven-checkstyle-plugin.version>2.6</maven-checkstyle-plugin.version>

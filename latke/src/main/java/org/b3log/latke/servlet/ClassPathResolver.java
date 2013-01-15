@@ -38,10 +38,10 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.util.AntPathMatcher;
-import org.jboss.virtual.VFS;
-import org.jboss.virtual.VirtualFile;
-import org.jboss.virtual.VirtualFileVisitor;
-import org.jboss.virtual.VisitorAttributes;
+import org.jboss.vfs.VFS;
+import org.jboss.vfs.VirtualFile;
+import org.jboss.vfs.VirtualFileVisitor;
+import org.jboss.vfs.VisitorAttributes;
 
 
 /**
@@ -375,12 +375,12 @@ public class ClassPathResolver {
             VirtualFile root;
 
             try {
-                root = VFS.getRoot(rootUrl);
+                root = VFS.getChild(rootUrl.toURI());
                 final PatternVirtualFileVisitor visitor = new PatternVirtualFileVisitor(root.getPathName(), locationPattern);
 
                 root.visit(visitor);
                 return visitor.getResources();
-            } catch (final IOException e) {
+            } catch (final Exception e) {
                 LOGGER.log(Level.SEVERE, "findMatchingResources in Jboss VPF wrong", e);
                 return new HashSet<URL>();
             }
@@ -452,5 +452,4 @@ public class ClassPathResolver {
             return sb.toString();
         }
     }
-
 }
