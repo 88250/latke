@@ -40,14 +40,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.annotation.Annotation;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
@@ -65,6 +62,7 @@ import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ReflectHelper;
 import org.b3log.latke.util.RegexPathMatcher;
+import org.b3log.latke.util.Strings;
 import org.json.JSONObject;
 
 
@@ -73,7 +71,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.1.2, Oct 23, 2012
+ * @version 1.0.2.2, Jan 15, 2013
  */
 public final class RequestProcessors {
 
@@ -151,7 +149,7 @@ public final class RequestProcessors {
                     args.put(parameterName[i], context.getResponse());
                 } else if (pathVariableValueMap.containsKey(parameterName[i])) {
                     args.put(parameterName[i],
-                        getConerter(processMethod.getConvertClass()).convert(parameterName[i], pathVariableValueMap.get(parameterName[i]),
+                        getConverter(processMethod.getConvertClass()).convert(parameterName[i], pathVariableValueMap.get(parameterName[i]),
                         paramClass));
                 } else {
                     args.put(parameterName[i], null);
@@ -220,7 +218,7 @@ public final class RequestProcessors {
      * @throws Exception Exception 
      * @return {@link ConvertSupport}
      */
-    private static ConvertSupport getConerter(final Class<? extends ConvertSupport> convertClass) throws Exception {
+    private static ConvertSupport getConverter(final Class<? extends ConvertSupport> convertClass) throws Exception {
 
         ConvertSupport convertSupport = convertMap.get(convertClass);
 
@@ -233,24 +231,23 @@ public final class RequestProcessors {
     }
 
     /**
-     * Scans classpath to discover request processor classes via annotation
+     * Scans classpath to discover request processor classes via annotation 
      * {@linkplain org.b3log.latke.servlet.annotation.RequestProcessor}.
-     * @param scanPath the root ScanPath,using ','as the split.
-     * <P>
-     *  the being two type of the scanPath.
-     *  package: org.b3log.process
-     *  ant-style classpath: org/b3log/** /*process.class
-     * </p>
+     * 
+     * @param scanPath the root ScanPath, using ',' as the split. There are two types of the scanPath: 
+     * <ul>
+     *   <li>package: org.b3log.process</li>
+     *   <li>ant-style classpath: org/b3log/** /*process.class</li>
+     * </ul>
      * @throws Exception exception
      */
     public static void discover(final String scanPath) throws Exception {
-
-        /** Retain the original implementation**/
-        if (StringUtils.isBlank(scanPath)) {
+        // Retain the original implementation if the scanPath is unspecified
+        if (Strings.isEmptyOrNull(scanPath)) {
             discoverFromClassesDir();
             discoverFromLibDir();
         } else {
-            discoverFromClassPath(scanPath);
+            discoverFromClassPath(scanPath); // See issue #17 for more details (https://github.com/b3log/b3log-latke/issues/17)
         }
     }
 
@@ -317,7 +314,6 @@ public final class RequestProcessors {
                 }
 
                 final JarFile jarFile = new JarFile(file.getPath());
-
                 final Enumeration<JarEntry> entries = jarFile.entries();
 
                 while (entries.hasMoreElements()) {
@@ -364,7 +360,6 @@ public final class RequestProcessors {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Scans classpath (lib directory) failed", e);
-
         }
     }
 
@@ -384,13 +379,14 @@ public final class RequestProcessors {
         for (String path : paths) {
 
             /**
-             * the being two type of the scanPath.
+             * the being two types of the scanPath.
              *  1 package: org.b3log.process
              *  2 ant-style classpath: org/b3log/** /*process.class
              */
             if (!AntPathMatcher.isPattern(path)) {
                 path = path.replaceAll("\\.", "/") + "/**/*.class";
             }
+            
             urls.addAll(classPathResolver.getResources(path));
         }
 
@@ -428,7 +424,8 @@ public final class RequestProcessors {
                         if (null == requestProcessingMethodAnn) {
                             continue;
                         }
-                        LOGGER.info("get the matched processing Class[" + clz.getCanonicalName() + "]" + " method[" + mthd.getName() + "]");
+                        LOGGER.log(Level.INFO, "get the matched processing Class[{0}], method[{1}]", 
+                            new Object[] {clz.getCanonicalName(), mthd.getName()});
                         addProcessorMethod(requestProcessingMethodAnn, clz, mthd);
                     }
                 }
@@ -937,6 +934,5 @@ public final class RequestProcessors {
             }
             return true;
         }
-
     }
 }
