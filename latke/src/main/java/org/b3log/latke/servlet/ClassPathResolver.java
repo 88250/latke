@@ -86,7 +86,10 @@ public class ClassPathResolver {
         final String subPattern = locationPattern.substring(scanRootPath.length());
         final Set<URL> rootDirResources = getResourcesFromRoot(scanRootPath);
 
-        for (URL rootDirResource : rootDirResources) {
+        for (final URL rootDirResource : rootDirResources) {
+            LOGGER.log(Level.INFO, "RootDirResource [protocol={0}, path={1}]",
+                new Object[] {rootDirResource.getProtocol(), rootDirResource.getPath()});
+            
             if (isJarURL(rootDirResource)) {
                 result.addAll(doFindPathMatchingJarResources(rootDirResource, subPattern));
             } else {
