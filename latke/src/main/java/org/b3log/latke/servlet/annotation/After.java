@@ -25,11 +25,11 @@ import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 
 
 /**
- * the after advice mark for processMethod. 
+ * the after advice mark for processMethod(for both processClass and processMethod) . 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Sep 30, 2012
+ * @version 1.1.0.0, Jan 17, 2013
  */
-@Target(ElementType.METHOD)
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface After {
 

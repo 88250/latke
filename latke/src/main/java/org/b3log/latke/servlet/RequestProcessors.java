@@ -52,6 +52,7 @@ import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
+import org.b3log.latke.servlet.advice.RequestReturnAdviceException;
 import org.b3log.latke.servlet.annotation.After;
 import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.PathVariable;
@@ -71,7 +72,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.2.2, Jan 15, 2013
+ * @version 1.1.0.0, Jan 17, 2013
  */
 public final class RequestProcessors {
 
@@ -119,11 +120,11 @@ public final class RequestProcessors {
         }
 
         final Method processorMethod = processMethod.getProcessorMethod();
+        final Class<?> processorClass = processMethod.getProcessorClass();
         Object processorObject = processors.get(processorMethod);
 
         try {
             if (null == processorObject) {
-                final Class<?> processorClass = processMethod.getProcessorClass();
                 final Object instance = processorClass.newInstance();
 
                 processors.put(processorMethod, instance);
@@ -156,50 +157,71 @@ public final class RequestProcessors {
                 }
             }
 
-            // before invoke.
+            // before invoke(first class before advice and then method before advice).
+            final List<Class<? extends BeforeRequestProcessAdvice>> beforeAdviceClassList = new ArrayList<Class<? extends BeforeRequestProcessAdvice>>();
+
+            if (processorClass.isAnnotationPresent(Before.class)) {
+                final Class<? extends BeforeRequestProcessAdvice>[] ac = processorClass.getAnnotation(Before.class).adviceClass();
+
+                beforeAdviceClassList.addAll(Arrays.asList(ac));
+            }
             if (processorMethod.isAnnotationPresent(Before.class)) {
-                final Before befores = processorMethod.getAnnotation(Before.class);
-                final Class<? extends BeforeRequestProcessAdvice>[] adviceClass = befores.adviceClass();
-                BeforeRequestProcessAdvice instance;
+                final Class<? extends BeforeRequestProcessAdvice>[] ac = processorMethod.getAnnotation(Before.class).adviceClass();
 
-                try {
-                    for (Class<? extends BeforeRequestProcessAdvice> clz : adviceClass) {
-                        instance = (BeforeRequestProcessAdvice) adviceMap.get(clz);
-                        if (instance == null) {
-                            instance = clz.newInstance();
-                        }
-                        instance.doAdvice(context, args);
+                beforeAdviceClassList.addAll(Arrays.asList(ac));
+            }
+
+            BeforeRequestProcessAdvice binstance;
+
+            try {
+                for (Class<? extends BeforeRequestProcessAdvice> clz : beforeAdviceClassList) {
+                    binstance = (BeforeRequestProcessAdvice) adviceMap.get(clz);
+                    if (binstance == null) {
+                        binstance = clz.newInstance();
                     }
-                } catch (final RequestProcessAdviceException e) {
-                    final JSONObject exception = e.getJsonObject();
-
-                    LOGGER.log(Level.WARNING, "Occurs an exception before request processing [errMsg={0}]", exception.optString(Keys.MSG));
-
-                    final JSONRenderer ret = new JSONRenderer();
-
-                    ret.setJSONObject(exception);
-                    context.setRenderer(ret);
-                    return null;
+                    binstance.doAdvice(context, args);
                 }
+            } catch (final RequestReturnAdviceException re) {
+                return null;
+            } catch (final RequestProcessAdviceException e) {
+                final JSONObject exception = e.getJsonObject();
 
+                LOGGER.log(Level.WARNING, "Occurs an exception before request processing [errMsg={0}]", exception.optString(Keys.MSG));
+
+                final JSONRenderer ret = new JSONRenderer();
+
+                ret.setJSONObject(exception);
+                context.setRenderer(ret);
+                return null;
             }
 
             final Object ret = processorMethod.invoke(processorObject, args.values().toArray());
 
-            // after invoke.
-            if (processorMethod.isAnnotationPresent(After.class)) {
-                final After afters = processorMethod.getAnnotation(After.class);
-                final Class<? extends AfterRequestProcessAdvice>[] adviceClass = afters.adviceClass();
-                AfterRequestProcessAdvice instance;
+            // after invoke(first method before advice and then class before advice).
+            final List<Class<? extends AfterRequestProcessAdvice>> afterAdviceClassList = new ArrayList<Class<? extends AfterRequestProcessAdvice>>();
 
-                for (Class<? extends AfterRequestProcessAdvice> clz : adviceClass) {
-                    instance = (AfterRequestProcessAdvice) adviceMap.get(clz);
-                    if (instance == null) {
-                        instance = clz.newInstance();
-                    }
-                    instance.doAdvice(context, ret);
-                }
+            if (processorMethod.isAnnotationPresent(After.class)) {
+                final Class<? extends AfterRequestProcessAdvice>[] ac = processorMethod.getAnnotation(After.class).adviceClass();
+
+                afterAdviceClassList.addAll(Arrays.asList(ac));
             }
+
+            if (processorClass.isAnnotationPresent(After.class)) {
+                final Class<? extends AfterRequestProcessAdvice>[] ac = processorClass.getAnnotation(After.class).adviceClass();
+
+                afterAdviceClassList.addAll(Arrays.asList(ac));
+            }
+
+            AfterRequestProcessAdvice instance;
+
+            for (Class<? extends AfterRequestProcessAdvice> clz : afterAdviceClassList) {
+                instance = (AfterRequestProcessAdvice) adviceMap.get(clz);
+                if (instance == null) {
+                    instance = clz.newInstance();
+                }
+                instance.doAdvice(context, ret);
+            }
+
             return ret;
 
         } catch (final Exception e) {
@@ -247,7 +269,8 @@ public final class RequestProcessors {
             discoverFromClassesDir();
             discoverFromLibDir();
         } else {
-            discoverFromClassPath(scanPath); // See issue #17 for more details (https://github.com/b3log/b3log-latke/issues/17)
+            discoverFromClassPath(scanPath); // See issue #17 for more details
+            // (https://github.com/b3log/b3log-latke/issues/17)
         }
     }
 
@@ -386,7 +409,7 @@ public final class RequestProcessors {
             if (!AntPathMatcher.isPattern(path)) {
                 path = path.replaceAll("\\.", "/") + "/**/*.class";
             }
-            
+
             urls.addAll(classPathResolver.getResources(path));
         }
 
@@ -424,7 +447,7 @@ public final class RequestProcessors {
                         if (null == requestProcessingMethodAnn) {
                             continue;
                         }
-                        LOGGER.log(Level.INFO, "get the matched processing Class[{0}], method[{1}]", 
+                        LOGGER.log(Level.INFO, "get the matched processing Class[{0}], method[{1}]",
                             new Object[] {clz.getCanonicalName(), mthd.getName()});
                         addProcessorMethod(requestProcessingMethodAnn, clz, mthd);
                     }

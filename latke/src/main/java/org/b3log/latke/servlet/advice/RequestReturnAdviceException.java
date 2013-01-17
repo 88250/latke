@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.servlet.annotation;
+package org.b3log.latke.servlet.advice;
 
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
+import org.json.JSONObject;
 
 
 /**
- * the before advice mark for processMethod.(for both processClass and processMethod). 
+ *  a mark Exception for {@link RequestProcessAdvice}.
+ * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.1.0.0, Jan 17, 2013
+ * @version 1.0.0.0, Jan 17, 2013
  */
-@Target({ ElementType.TYPE, ElementType.METHOD })
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Before {
+public class RequestReturnAdviceException extends RequestProcessAdviceException {
 
     /**
-     * the real BeforeRequestProcessAdvice.
+     * the default constructor.
+     * @param jsonObject jsonObject
      */
-    Class<? extends BeforeRequestProcessAdvice>[] adviceClass() default BeforeRequestProcessAdvice.class;
+    public RequestReturnAdviceException(final JSONObject jsonObject) {
+        super(jsonObject);
+    }
 
 }
