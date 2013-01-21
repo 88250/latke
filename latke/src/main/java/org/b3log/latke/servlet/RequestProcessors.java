@@ -40,11 +40,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.annotation.Annotation;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
@@ -59,6 +62,7 @@ import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.converter.ConvertSupport;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ReflectHelper;
@@ -72,7 +76,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.1.0.0, Jan 17, 2013
+ * @version 1.2.0.0, Jan 21, 2013
  */
 public final class RequestProcessors {
 
@@ -95,6 +99,11 @@ public final class RequestProcessors {
      * the BeforeRequestProcessAdvice instance holder.
      */
     private static Map<Class<? extends RequestProcessAdvice>, ? extends RequestProcessAdvice> adviceMap = new HashMap<Class<? extends RequestProcessAdvice>, RequestProcessAdvice>();
+
+    /**
+     * the renderer class Holder(do not  instantiate it witch has the different values of the variables>.
+     */
+    private static Map<String, Class<? extends AbstractHTTPResponseRenderer>> rendererMap = new HashMap<String, Class<? extends AbstractHTTPResponseRenderer>>();
 
     /**
      * the data convertMap cache.
@@ -148,6 +157,9 @@ public final class RequestProcessors {
                     args.put(parameterName[i], context.getRequest());
                 } else if (paramClass.equals(HttpServletResponse.class)) {
                     args.put(parameterName[i], context.getResponse());
+                } else if (AbstractHTTPResponseRenderer.class.isAssignableFrom(paramClass)
+                    && !paramClass.equals(AbstractHTTPResponseRenderer.class)) {
+                    args.put(parameterName[i], paramClass.newInstance());
                 } else if (pathVariableValueMap.containsKey(parameterName[i])) {
                     args.put(parameterName[i],
                         getConverter(processMethod.getConvertClass()).convert(parameterName[i], pathVariableValueMap.get(parameterName[i]),
@@ -602,6 +614,8 @@ public final class RequestProcessors {
                 processorMethod.setURIPatternModel(uriPatternsMode);
                 processorMethod.setConvertClass(requestProcessing.convertClass());
 
+                // processorMethod.setRenderer(initRenderer(method, clz));
+
                 processorMethod.analysis();
                 processorMethods.add(processorMethod);
             }
@@ -655,6 +669,11 @@ public final class RequestProcessors {
          * the userdefined data converclass.
          */
         private Class<? extends ConvertSupport> convertClass;
+
+        /**
+         * the Renderer-class mapping holder.
+         */
+        private Map<String, Class<? extends AbstractHTTPResponseRenderer>> initRendererMap;
 
         /**
          * Sets the URI pattern mode with the specified URI pattern mode.
@@ -808,7 +827,6 @@ public final class RequestProcessors {
                 }
                 i++;
             }
-
         }
 
         /**

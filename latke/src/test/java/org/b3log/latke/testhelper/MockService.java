@@ -15,13 +15,18 @@
  */
 package org.b3log.latke.testhelper;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.b3log.latke.servlet.annotation.After;
 import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.servlet.renderer.DoNothingRenderer;
+import org.b3log.latke.servlet.renderer.JSONRenderer;
 
 /**
  * Mockservice,for dispatch UT.
@@ -48,7 +53,8 @@ public class MockService {
      */
     @RequestProcessing(value = "/string/{id}/{name}")
     public String getString1(final Integer id, final String name) {
-        return id + name;
+        return id
+                + name;
     }
 
     /**
@@ -59,7 +65,8 @@ public class MockService {
      */
     @RequestProcessing(value = "/string/{id}p{name}")
     public String getString11(final Integer id, final String name) {
-        return id + name;
+        return id
+                + name;
     }
 
     /**
@@ -70,7 +77,8 @@ public class MockService {
      */
     @RequestProcessing(value = "/{name}--{password}")
     public String getString2(@PathVariable("password") final String name, @PathVariable("name") final String password) {
-        return name + password;
+        return name
+                + password;
     }
 
     /**
@@ -81,7 +89,8 @@ public class MockService {
      */
     @RequestProcessing(value = "/date/{id}/{date}", convertClass = MockConverSupport.class)
     public String getString2(final Integer id, final Date date) {
-        return "" + id + date.getTime();
+        return ""
+                + id + date.getTime();
     }
 
     /**
@@ -93,7 +102,36 @@ public class MockService {
     @After
     @RequestProcessing(value = "/before/{id}")
     public String getString3(final Integer id) {
-        return id + "";
+        return id
+                + "";
+    }
+
+    /**
+     * testRender.
+     * @param renderer renderer
+     * @return renderer
+     */
+    @RequestProcessing(value = "/do/render")
+    public Object testRender(final DoNothingRenderer renderer) {
+        return renderer;
+    }
+
+    /**
+     * testRender1.
+     * @param renderer1 renderer1
+     * @param doNothingRenderer doNothingRenderer
+     * @param renderer2 renderer2
+     * @return all of the renderer.
+     */
+
+    @RequestProcessing(value = "/do/render1")
+    public List<AbstractHTTPResponseRenderer> testRender1(final JSONRenderer renderer1, final DoNothingRenderer doNothingRenderer,
+            final JSONRenderer renderer2) {
+        final List<AbstractHTTPResponseRenderer> ret = new ArrayList<AbstractHTTPResponseRenderer>();
+        ret.add(renderer1);
+        ret.add(doNothingRenderer);
+        ret.add(renderer2);
+        return ret;
     }
 
 }

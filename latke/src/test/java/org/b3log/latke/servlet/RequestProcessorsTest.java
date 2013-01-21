@@ -16,11 +16,15 @@
 package org.b3log.latke.servlet;
 
 import java.util.HashSet;
+import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.b3log.latke.servlet.converter.ConvertSupport;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.servlet.renderer.DoNothingRenderer;
+import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.testhelper.MockService;
 import org.b3log.latke.testhelper.VirtualObject;
 import org.testng.annotations.Test;
@@ -164,8 +168,33 @@ public class RequestProcessorsTest extends TestCase {
         RequestProcessors.discover("org.b3log,org.b3log.latke");
         final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
         final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
-        final int totalMatched = 12;
+        final int totalMatched = 14;
         Assert.assertEquals(totalMatched, hashSet.size());
 
     }
+
+    /**
+     * testInitRender.
+     */
+    @Test
+    public void testInitRender() {
+
+        String requestURI = "/do/render";
+        final AbstractHTTPResponseRenderer ret = (AbstractHTTPResponseRenderer) RequestProcessors.invoke(requestURI, "/", "GET",
+                new HTTPRequestContext());
+        Assert.assertNotNull(ret);
+
+        requestURI = "/do/render1";
+        final List<AbstractHTTPResponseRenderer> list = (List<AbstractHTTPResponseRenderer>) RequestProcessors.invoke(requestURI, "/",
+                "GET",
+                new HTTPRequestContext());
+        final int totalMatched = 3;
+        Assert.assertEquals(list.size(), totalMatched);
+        Assert.assertTrue(list.get(0) instanceof JSONRenderer);
+        Assert.assertTrue(list.get(1) instanceof DoNothingRenderer);
+        Assert.assertTrue(list.get(2) instanceof JSONRenderer);
+        Assert.assertFalse(list.get(0) == list.get(2));
+
+    }
+
 }
