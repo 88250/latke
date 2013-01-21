@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
@@ -47,7 +48,7 @@ import org.json.JSONObject;
  * Accesses repository via HTTP protocol.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.3, Dec 16, 2012
+ * @version 1.0.1.4, Jan 19, 2013
  */
 @RequestProcessor
 public final class RepositoryAccessor {
@@ -344,8 +345,9 @@ public final class RepositoryAccessor {
                 final JSONObject record = data.getJSONObject(i);
 
                 // Date type fixing
+
                 final SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy", Locale.US);
-                
+
                 final JSONArray keysDescription = Repositories.getRepositoryKeysDescription(repositoryName);
 
                 for (int j = 0; j < keysDescription.length(); j++) {
@@ -354,7 +356,8 @@ public final class RepositoryAccessor {
                     final String type = keyDescription.optString("type");
 
                     if ("Date".equals(type)) {
-                        record.put(key, sdf.parse(record.optString(key)));
+                        record.put(key,
+                            DateUtils.parseDate(record.optString(key), new String[] {"EEE MMM d hh:mm:ss z yyyy", "yyyy-MM-dd hh:mm:ss.SSS"}));
                     }
                 }
 
@@ -367,10 +370,10 @@ public final class RepositoryAccessor {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.SEVERE, "Gets data failed", e);
+            LOGGER.log(Level.SEVERE, "Puts data failed", e);
 
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            jsonObject.put(Keys.MSG, "Gets data failed[errorMsg=" + e.getMessage() + "]");
+            jsonObject.put(Keys.MSG, "Puts data failed[errorMsg=" + e.getMessage() + "]");
         } finally {
             repository.setCacheEnabled(true);
         }
