@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.model.Plugin;
+import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.util.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +57,8 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.3, Sep 6, 2012
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.1.0.0, Jan 22, 2013
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -72,6 +74,11 @@ public abstract class AbstractPlugin implements Serializable {
      * Id of this plugin.
      */
     private String id;
+    
+    /**
+     * the rendererId of the plugin.
+     */
+    private String rendererId;
 
     /**
      * Name of this plugin.
@@ -112,13 +119,6 @@ public abstract class AbstractPlugin implements Serializable {
      * FreeMarker configuration.
      */
     private transient Configuration configuration;
-
-    /**
-     * Gets an existing view name.
-     * 
-     * @return view name, the plugin to plug
-     */
-    public abstract String getViewName();
 
     /**
      * Unplugs.
@@ -206,30 +206,58 @@ public abstract class AbstractPlugin implements Serializable {
     }
 
     /**
+     * prePlug after the real method be invoked.
+     * @param context context
+     * @param args args
+     */
+    public abstract void prePlug(final HTTPRequestContext context, final Map<String, Object> args);
+        
+    /**
+     * 
+     * @param dataModel dataModel
+     * @param context context
+     * @param ret ret
+     */
+    public abstract void postPlug(Map<String, Object> dataModel, HTTPRequestContext context, Object ret);
+    
+    /**
      * Plugs with the specified data model.
      * 
      * @param dataModel the specified data model
      */
     public void plug(final Map<String, Object> dataModel) {
+        plug(dataModel, null, null);
+    }
+    
+    /**
+     * Plugs with the specified data model and the args from request.
+     * @param dataModel dataModel 
+     * @param context context
+     * @param ret ret
+     */
+    public void plug(final Map<String, Object> dataModel, final HTTPRequestContext context, final Object ret) {
         String content = (String) dataModel.get(Plugin.PLUGINS);
-
+        
         if (null == content) {
             dataModel.put(Plugin.PLUGINS, "");
         }
-
+        
         handleLangs(dataModel);
         fillDefault(dataModel);
-
+        
+        postPlug(dataModel, context, ret);
+        
         content = (String) dataModel.get(Plugin.PLUGINS);
         final StringBuilder contentBuilder = new StringBuilder(content);
-
+        
         contentBuilder.append(getViewContent(dataModel));
-
+        
         final String pluginsContent = contentBuilder.toString();
-
+        
         dataModel.put(Plugin.PLUGINS, pluginsContent);
-
+        
         LOGGER.log(Level.FINER, "Plugin[name={0}] has been plugged", getName());
+        
     }
 
     /**
@@ -260,7 +288,7 @@ public abstract class AbstractPlugin implements Serializable {
             dataModel.put((String) key, props.getProperty((String) key));
         }
     }
-
+    
     /**
      * Fills default values into the specified data model.
      * 
@@ -430,6 +458,22 @@ public abstract class AbstractPlugin implements Serializable {
     public Set<PluginType> getTypes() {
         return Collections.unmodifiableSet(types);
     }
+    
+    /**
+     * getRendererId.
+     * @return the rendererId
+     */
+    public String getRendererId() {
+        return rendererId;
+    }
+
+    /**
+     * setRendererId.
+     * @param rendererId the rendererId to set
+     */
+    public void setRendererId(final String rendererId) {
+        this.rendererId = rendererId;
+    }
 
     /**
      * Adds the specified type.
@@ -463,4 +507,5 @@ public abstract class AbstractPlugin implements Serializable {
         hash = 2 + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
+
 }

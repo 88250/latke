@@ -98,7 +98,7 @@ public final class PluginManager {
      * @param plugin the specified plugin
      */
     public void update(final AbstractPlugin plugin) {
-        final String viewName = plugin.getViewName();
+        final String rendererId = plugin.getRendererId();
 
         HashMap<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
 
@@ -112,7 +112,7 @@ public final class PluginManager {
             }
         }
 
-        final HashSet<AbstractPlugin> set = holder.get(viewName);
+        final HashSet<AbstractPlugin> set = holder.get(rendererId);
 
         // Refresh
         set.remove(plugin);
@@ -193,21 +193,25 @@ public final class PluginManager {
             holder = new HashMap<String, HashSet<AbstractPlugin>>();
         }
 
-        for (int i = 0; i < pluginsDirs.length; i++) {
-            final File pluginDir = pluginsDirs[i];
+        if (pluginsDirs != null) {
+            for (int i = 0; i < pluginsDirs.length; i++) {
+                final File pluginDir = pluginsDirs[i];
 
-            if (pluginDir.isDirectory() && !pluginDir.isHidden() && !pluginDir.getName().startsWith(".")) {
-                try {
-                    LOGGER.log(Level.INFO, "Loading plugin under directory[{0}]", pluginDir.getName());
+                if (pluginDir.isDirectory() && !pluginDir.isHidden() && !pluginDir.getName().startsWith(".")) {
+                    try {
+                        LOGGER.log(Level.INFO, "Loading plugin under directory[{0}]", pluginDir.getName());
 
-                    final AbstractPlugin plugin = load(pluginDir, holder);
+                        final AbstractPlugin plugin = load(pluginDir, holder);
 
-                    plugins.add(plugin);
-                } catch (final Exception e) {
-                    LOGGER.log(Level.WARNING, "Load plugin under directory[" + pluginDir.getName() + "] failed", e);
+                        if (plugin != null) {
+                            plugins.add(plugin);
+                        }
+                    } catch (final Exception e) {
+                        LOGGER.log(Level.WARNING, "Load plugin under directory[" + pluginDir.getName() + "] failed", e);
+                    }
+                } else {
+                    LOGGER.log(Level.WARNING, "It[{0}] is not a directory under " + "directory plugins, ignored", pluginDir.getName());
                 }
-            } else {
-                LOGGER.log(Level.WARNING, "It[{0}] is not a directory under " + "directory plugins, ignored", pluginDir.getName());
             }
         }
 
@@ -249,11 +253,25 @@ public final class PluginManager {
 
         classLoaders.add(classLoader);
 
-        final String pluginClassName = props.getProperty(Plugin.PLUGIN_CLASS);
+        String pluginClassName = props.getProperty(Plugin.PLUGIN_CLASS);
+
+        if (StringUtils.isBlank(pluginClassName)) {
+            pluginClassName = NotInteractivePlugin.class.getName();
+        }
+
+        final String rendererId = props.getProperty(Plugin.PLUGIN_RENDERER_ID);
+
+        if (StringUtils.isBlank(rendererId)) {
+            LOGGER.log(Level.WARNING, "no renderer defined by this plugin[" + pluginDir.getName() + "]");
+            return null;
+        }
+
+        final Class<?> pluginClass = classLoader.loadClass(pluginClassName);
 
         LOGGER.log(Level.FINEST, "Loading plugin class[name={0}]", pluginClassName);
-        final Class<?> pluginClass = classLoader.loadClass(pluginClassName);
         final AbstractPlugin ret = (AbstractPlugin) pluginClass.newInstance();
+
+        ret.setRendererId(rendererId);
 
         setPluginProps(pluginDir, ret, props);
 
@@ -271,19 +289,19 @@ public final class PluginManager {
      * @param holder the specified holder 
      */
     private void register(final AbstractPlugin plugin, final HashMap<String, HashSet<AbstractPlugin>> holder) {
-        final String viewName = plugin.getViewName();
+        final String rendererId = plugin.getRendererId();
 
-        HashSet<AbstractPlugin> set = holder.get(viewName);
+        HashSet<AbstractPlugin> set = holder.get(rendererId);
 
         if (null == set) {
             set = new HashSet<AbstractPlugin>();
-            holder.put(viewName, set);
+            holder.put(rendererId, set);
         }
 
         set.add(plugin);
 
-        LOGGER.log(Level.FINER, "Registered plugin[name={0}, version={1}] for view[name={2}], [{3}] plugins totally",
-            new Object[] {plugin.getName(), plugin.getVersion(), viewName, holder.size()});
+        LOGGER.log(Level.FINER, "Registered plugin[name={0}, version={1}] for rendererId[name={2}], [{3}] plugins totally",
+            new Object[] {plugin.getName(), plugin.getVersion(), rendererId, holder.size()});
     }
 
     /**

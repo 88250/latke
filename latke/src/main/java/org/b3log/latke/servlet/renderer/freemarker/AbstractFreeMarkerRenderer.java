@@ -241,4 +241,9 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     public void setTemplateName(final String templateName) {
         this.templateName = templateName;
     }
+    
+    @Override
+    public Map<String, Object> getRenderDataModel() {
+        return dataModel;
+    }
 }

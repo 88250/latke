@@ -35,6 +35,11 @@ public final class Plugin {
     public static final String PLUGINS = "plugins";
 
     /**
+     * rendererId of the plugin.
+     */
+    public static final String PLUGIN_RENDERER_ID = "rendererId";
+
+    /**
      * Key of plugin author.
      */
     public static final String PLUGIN_AUTHOR = "author";
