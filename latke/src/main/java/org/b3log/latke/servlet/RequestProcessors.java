@@ -59,6 +59,7 @@ import org.b3log.latke.servlet.advice.RequestReturnAdviceException;
 import org.b3log.latke.servlet.annotation.After;
 import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.PathVariable;
+import org.b3log.latke.servlet.annotation.Render;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.converter.ConvertSupport;
@@ -76,7 +77,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.2.0.0, Jan 21, 2013
+ * @version 1.2.0.0, Jan 22, 2013
  */
 public final class RequestProcessors {
 
@@ -148,6 +149,8 @@ public final class RequestProcessors {
             // TODO need Optimization
             final Map<String, String> pathVariableValueMap = processMethod.pathVariableValueMap(requestURI);
 
+            final List<AbstractHTTPResponseRenderer> rendererList = new ArrayList<AbstractHTTPResponseRenderer>();
+
             for (int i = 0; i < parameterTypes.length; i++) {
                 final Class<?> paramClass = parameterTypes[i];
 
@@ -159,7 +162,13 @@ public final class RequestProcessors {
                     args.put(parameterName[i], context.getResponse());
                 } else if (AbstractHTTPResponseRenderer.class.isAssignableFrom(paramClass)
                     && !paramClass.equals(AbstractHTTPResponseRenderer.class)) {
-                    args.put(parameterName[i], paramClass.newInstance());
+                    final AbstractHTTPResponseRenderer ins = (AbstractHTTPResponseRenderer) paramClass.newInstance();
+                    final String rid = getRendererId(processorClass, processorMethod, i);
+
+                    ins.setRendererId(rid);
+                    rendererList.add(ins);
+                    args.put(parameterName[i], ins);
+
                 } else if (pathVariableValueMap.containsKey(parameterName[i])) {
                     args.put(parameterName[i],
                         getConverter(processMethod.getConvertClass()).convert(parameterName[i], pathVariableValueMap.get(parameterName[i]),
@@ -207,7 +216,15 @@ public final class RequestProcessors {
                 return null;
             }
 
+            for (int j = 0; j < rendererList.size(); j++) {
+                rendererList.get(j).preRender(context, args);
+            }
+
             final Object ret = processorMethod.invoke(processorObject, args.values().toArray());
+
+            for (int j = rendererList.size() - 1; j >= 0; j--) {
+                rendererList.get(j).postRender(context, ret);
+            }
 
             // after invoke(first method before advice and then class before advice).
             final List<Class<? extends AfterRequestProcessAdvice>> afterAdviceClassList = new ArrayList<Class<? extends AfterRequestProcessAdvice>>();
@@ -244,6 +261,51 @@ public final class RequestProcessors {
 
             return null;
         }
+    }
+
+    /**
+     * getRendererId from mark {@link Render},using"-" as split:class_method_PARAMETER.
+     * @param processorClass class
+     * @param processorMethod method
+     * @param i the index of the 
+     * @return string
+     */
+    private static String getRendererId(final Class<?> processorClass, final Method processorMethod, final int i) {
+
+        final StringBuilder sb = new StringBuilder();
+
+        if (processorClass.isAnnotationPresent(Render.class)) {
+            final String v = processorClass.getAnnotation(Render.class).value();
+
+            if (StringUtils.isNotBlank(v)) {
+                sb.append(v).append(v);
+            }
+        }
+
+        if (processorMethod.isAnnotationPresent(Render.class)) {
+
+            final String v = processorClass.getAnnotation(Render.class).value();
+
+            if (StringUtils.isNotBlank(v)) {
+                if (sb.length() > 0) {
+                    sb.append("-");
+                }
+                sb.append(v).append(v);
+            }
+        }
+
+        for (java.lang.annotation.Annotation annotation : processorMethod.getParameterAnnotations()[i]) {
+            if (annotation instanceof Render) {
+                final String v = ((PathVariable) annotation).value();
+
+                if (sb.length() > 0) {
+                    sb.append("-");
+                }
+                sb.append(v).append(v);
+            }
+        }
+
+        return sb.toString();
     }
 
     /**
