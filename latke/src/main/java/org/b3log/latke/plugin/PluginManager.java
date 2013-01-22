@@ -262,7 +262,7 @@ public final class PluginManager {
         final String rendererId = props.getProperty(Plugin.PLUGIN_RENDERER_ID);
 
         if (StringUtils.isBlank(rendererId)) {
-            LOGGER.log(Level.WARNING, "no renderer defined by this plugin[" + pluginDir.getName() + "]");
+            LOGGER.log(Level.WARNING, "no renderer defined by this plugin[" + pluginDir.getName() + "]，this plugin will be ignore!");
             return null;
         }
 
