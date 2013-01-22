@@ -21,6 +21,7 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.b3log.latke.Latkes;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.DoNothingRenderer;
@@ -178,6 +179,8 @@ public class RequestProcessorsTest extends TestCase {
      */
     @Test
     public void testInitRender() {
+        
+        Latkes.initRuntimeEnv();
 
         String requestURI = "/do/render";
         final AbstractHTTPResponseRenderer ret = (AbstractHTTPResponseRenderer) RequestProcessors.invoke(requestURI, "/", "GET",
