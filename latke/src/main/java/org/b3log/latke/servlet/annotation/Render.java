@@ -24,7 +24,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * the render mark for the parameter of the methond ,just to set the id of the Renderer.
+ * The render mark for the parameter of the method, just to set the id of the renderer.
+ * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Jan 21, 2013
  */
@@ -34,7 +35,7 @@ import java.lang.annotation.Target;
 public @interface Render {
 
     /**
-     * the id of the Render,for plugin to identify.
+     * The id of the render, for plugin to identify.
      */
     String value();
 }

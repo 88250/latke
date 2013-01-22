@@ -22,7 +22,7 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 
 
 /**
- * the interface of all the renderer.
+ * The interface of all the renderer.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Jan 22, 2013
@@ -30,22 +30,25 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 public interface HTTPResponseRenderer {
 
     /**
-     * pre-render before the real method be invoked.
-     * @param context context
-     * @param args args
+     * Pre-render before the real method be invoked.
+     * 
+     * @param context the specified HTTP request context
+     * @param args the arguments of the real method
      */
     void preRender(final HTTPRequestContext context, final Map<String, Object> args);
 
     /**
      * Renders with the specified HTTP request context.
+     * 
      * @param context the specified HTTP request context
      */
     void render(final HTTPRequestContext context);
 
     /**
-     * post-render after the real method be invoked.
-     * @param context context
-     * @param ret ret
+     * Post-render after the real method be invoked.
+     * 
+     * @param context the specified HTTP request context
+     * @param ret the return value of the real method
      */
     void postRender(final HTTPRequestContext context, final Object ret);
 }
