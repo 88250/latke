@@ -43,10 +43,10 @@ public final class StringMapping implements Mapping {
         } else {
             sql.append(" varchar(").append(definition.getLength() < 1 ? new Integer("100") : definition.getLength());
             sql.append(")");
+        }
 
-            if (!definition.getNullable()) {
-                sql.append(" not null");
-            }
+        if (!definition.getNullable()) {
+            sql.append(" not null");
         }
 
         return sql.toString();
