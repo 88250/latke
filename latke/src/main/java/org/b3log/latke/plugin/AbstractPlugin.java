@@ -58,7 +58,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.1.0.0, Jan 22, 2013
+ * @version 1.2.0.0, Jan 23, 2013
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -74,7 +74,7 @@ public abstract class AbstractPlugin implements Serializable {
      * Id of this plugin.
      */
     private String id;
-    
+
     /**
      * the rendererId of the plugin.
      */
@@ -207,19 +207,31 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * prePlug after the real method be invoked.
+     * 
      * @param context context
      * @param args args
      */
     public abstract void prePlug(final HTTPRequestContext context, final Map<String, Object> args);
-        
+
     /**
+     * postPlug after the dataModel of the main-view be generated.
      * 
      * @param dataModel dataModel
      * @param context context
      * @param ret ret
      */
     public abstract void postPlug(Map<String, Object> dataModel, HTTPRequestContext context, Object ret);
-    
+
+    /**
+     * the lifecycle pointcut for the plugin to start(enable status).
+     */
+    protected abstract void start();
+
+    /**
+     * the lifecycle pointcut for the plugin to close(disable status).
+     */
+    protected abstract void stop();
+
     /**
      * Plugs with the specified data model.
      * 
@@ -228,7 +240,7 @@ public abstract class AbstractPlugin implements Serializable {
     public void plug(final Map<String, Object> dataModel) {
         plug(dataModel, null, null);
     }
-    
+
     /**
      * Plugs with the specified data model and the args from request.
      * @param dataModel dataModel 
@@ -237,27 +249,27 @@ public abstract class AbstractPlugin implements Serializable {
      */
     public void plug(final Map<String, Object> dataModel, final HTTPRequestContext context, final Object ret) {
         String content = (String) dataModel.get(Plugin.PLUGINS);
-        
+
         if (null == content) {
             dataModel.put(Plugin.PLUGINS, "");
         }
-        
+
         handleLangs(dataModel);
         fillDefault(dataModel);
-        
+
         postPlug(dataModel, context, ret);
-        
+
         content = (String) dataModel.get(Plugin.PLUGINS);
         final StringBuilder contentBuilder = new StringBuilder(content);
-        
+
         contentBuilder.append(getViewContent(dataModel));
-        
+
         final String pluginsContent = contentBuilder.toString();
-        
+
         dataModel.put(Plugin.PLUGINS, pluginsContent);
-        
+
         LOGGER.log(Level.FINER, "Plugin[name={0}] has been plugged", getName());
-        
+
     }
 
     /**
@@ -288,7 +300,7 @@ public abstract class AbstractPlugin implements Serializable {
             dataModel.put((String) key, props.getProperty((String) key));
         }
     }
-    
+
     /**
      * Fills default values into the specified data model.
      * 
@@ -458,7 +470,7 @@ public abstract class AbstractPlugin implements Serializable {
     public Set<PluginType> getTypes() {
         return Collections.unmodifiableSet(types);
     }
-    
+
     /**
      * getRendererId.
      * @return the rendererId
@@ -506,6 +518,28 @@ public abstract class AbstractPlugin implements Serializable {
 
         hash = 2 + (this.id != null ? this.id.hashCode() : 0);
         return hash;
+    }
+
+    /**
+     * when the plugin change the status,it should note the pointcut lifecycle to know.
+     * <p>
+     *      to enable :start()
+     *      to disable :stop()
+     * </p>
+     * 
+     */
+    public void changeStatus() {
+
+        switch (status) {
+        case ENABLED:
+            start();
+            break;
+
+        case DISABLED:
+            stop();
+
+        default:
+        }
     }
 
 }
