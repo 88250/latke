@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
 import org.b3log.latke.model.Pagination;
@@ -59,7 +60,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.1, Dec 27, 2012
+ * @version 1.0.1.2, Jan 23, 2013
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -114,6 +115,25 @@ public final class JdbcRepository implements Repository {
 
     static {
         CACHE = (Cache<String, Serializable>) CacheFactory.getCache(REPOSITORY_CACHE_NAME);
+
+        final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
+
+        if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
+            int maxCnt = Integer.MAX_VALUE;
+
+            final String maxPageCntStr = Latkes.getLocalProperty("cache.maxPageCnt");
+
+            if (!Strings.isEmptyOrNull(maxPageCntStr)) {
+                maxCnt = Integer.parseInt(maxPageCntStr);
+            }
+
+            if (0 >= maxCnt) {
+                Latkes.disableDataCache();
+            } else {
+                CACHE.setMaxCount(maxCnt);
+                LOGGER.log(Level.INFO, "Initialized data object cache[maxCount={0}]", maxCnt);
+            }
+        }
     }
 
     @Override
@@ -393,12 +413,10 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * remove record.
+     * Removes an record.
      * 
-     * @param id
-     *            id
-     * @param sql
-     *            sql
+     * @param id id
+     * @param sql sql
      */
     private void remove(final String id, final StringBuilder sql) {
         sql.append("delete from ").append(getName()).append(" where ").append(JdbcRepositories.OID).append("='").append(id).append("'");

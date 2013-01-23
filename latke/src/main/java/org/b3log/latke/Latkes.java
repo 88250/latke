@@ -58,14 +58,22 @@ public final class Latkes {
     private static RuntimeMode runtimeMode;
 
     /**
-     * Is the page cache enabled?
+     * Indicates the page cache is enabled or not.
+     * 
+     * <p>
+     * Default to {@code true}.
+     * </p>
      */
-    private static boolean pageCacheEnabled;
+    private static boolean pageCacheEnabled = true;
 
     /**
-     * Is the data cache enabled?
+     * Indicates the data cache is enabled or not.
+     * 
+     * <p>
+     * Default ot {@code true}
+     * </p>
      */
-    private static boolean dataCacheEnabled;
+    private static boolean dataCacheEnabled = true;
 
     /**
      * Local properties (local.properties).
