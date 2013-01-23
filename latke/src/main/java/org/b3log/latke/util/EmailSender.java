@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.Properties;
 import java.util.logging.Logger;
 import javax.mail.Authenticator;
@@ -25,6 +26,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
 
 /**
  * Email sender.
@@ -39,26 +41,32 @@ public final class EmailSender implements Runnable {
      * Mail sender account host.
      */
     public static final String MAIL_HOST = "smtp.gmail.com";
+
     /**
      * Email from.
      */
     private String from;
+
     /**
      * Email to.
      */
     private String to;
+
     /**
      * Email message.
      */
     private String message;
+
     /**
      * Email subject.
      */
     private String subject;
+
     /**
      * Email user name.
      */
     private String userName;
+
     /**
      * Email password.
      */
@@ -75,7 +83,7 @@ public final class EmailSender implements Runnable {
      * @param subject email subject
      */
     public EmailSender(final String userName, final String password, final String from, final String to,
-                       final String message, final String subject) {
+        final String message, final String subject) {
         this.userName = userName;
         this.password = password;
         this.from = from;
@@ -90,17 +98,20 @@ public final class EmailSender implements Runnable {
      * @throws MessagingException message exception
      */
     private void sendMail() throws MessagingException {
+
         /*
          * Properties used to construct a email sending connection
          * protocal.
          */
         final Properties props = new Properties();
+
         props.put("mail.smtp.host", MAIL_HOST);
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
         final Authenticator auth = new SMTPAuthenticator();
         final MimeMessage msg = new MimeMessage(Session.getDefaultInstance(props, auth));
+
         msg.setFrom(new InternetAddress(from));
         msg.setRecipient(RecipientType.TO, new InternetAddress(to));
         msg.setSubject(subject);

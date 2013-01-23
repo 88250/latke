@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.b3log.latke.cache.local.util;
+
 
 import java.io.Serializable;
 
@@ -34,15 +35,18 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
      * Default serial version uid.
      */
     private static final long serialVersionUID = 1L;
-    /** 
+
+    /**
      * record size to avoid having to iterate.
      */
     private int size = 0;
+
     /**
      * LRU double linked map head node.
      */
     private DoubleLinkedMapNode<K, V> first;
-    /**.
+
+    /** .
      * LRU double linked map tail node.
      */
     private DoubleLinkedMapNode<K, V> last;
@@ -55,6 +59,7 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
      */
     public synchronized boolean remove(final K key) {
         final DoubleLinkedMapNode<K, V> node = getNode(key);
+
         if (node != null) {
             removeNode(node);
 
@@ -76,6 +81,7 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
             return null;
         } else {
             DoubleLinkedMapNode<K, V> current = first;
+
             while (current != null) {
                 if (current.getKey().equals(key)) {
                     return current.getValue();
@@ -95,8 +101,8 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
      * @param value the new value
      */
     public synchronized void addLast(final K key, final V value) {
-        final DoubleLinkedMapNode<K, V> node =
-                new DoubleLinkedMapNode<K, V>(key, value);
+        final DoubleLinkedMapNode<K, V> node = new DoubleLinkedMapNode<K, V>(key, value);
+
         addLastNode(node);
     }
 
@@ -115,8 +121,8 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
             throw new IllegalArgumentException("Key is null!");
         }
 
-        final DoubleLinkedMapNode<K, V> node =
-                new DoubleLinkedMapNode<K, V>(key, value);
+        final DoubleLinkedMapNode<K, V> node = new DoubleLinkedMapNode<K, V>(key, value);
+
         addFirstNode(node);
     }
 
@@ -127,6 +133,7 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
      */
     public synchronized void makeFirst(final K key) {
         final DoubleLinkedMapNode<K, V> node = getNode(key);
+
         if (node.getPrev() == null) {
             // already the first node or not a node.
             return;
@@ -160,6 +167,7 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
             }
 
             final DoubleLinkedMapNode<K, V> next = me.getNext();
+
             me = next;
         }
 
@@ -219,6 +227,7 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
             return null;
         } else {
             DoubleLinkedMapNode<K, V> current = first;
+
             while (current != null) {
                 if (current.getKey().equals(key)) {
                     return current;
@@ -307,6 +316,8 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
         size++;
     }
 }
+
+
 /**
  * A node of {@link DoubleLinkedMap double linked map}.
  *
@@ -321,18 +332,22 @@ final class DoubleLinkedMapNode<K, V> implements Serializable {
      * Generated serial version id.
      */
     private static final long serialVersionUID = -5617593667027497669L;
+
     /**
      * Payload of this node.
      */
     private V value;
+
     /**
      * Key of this node.
      */
     private K key;
+
     /**
      * Double linked map previous reference.
      */
     private DoubleLinkedMapNode<K, V> prev;
+
     /**
      * Double linked map next reference.
      */

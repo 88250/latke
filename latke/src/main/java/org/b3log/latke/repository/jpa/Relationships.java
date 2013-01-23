@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.repository.jpa;
 
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.util.Strings;
+
 
 /**
  * Relationship utilities.
@@ -38,6 +40,7 @@ final class Relationships {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Relationships.class.getName());
+
     /**
      * Many to many relationship repository names.
      */
@@ -49,13 +52,13 @@ final class Relationships {
      * @param repositoryName the specified part of many to many repository name
      * @return many to many repository name, returns {@code null} if not found
      */
-//    public String getManyToManyRepositoryName(final String repositoryName) {
-//        for (final String manyToManyRepositoryName : manyToManyRepositoryNames) {
-//            final String[] parts = manyToManyRepositoryName.split("_");
-//            
-//            
-//        }
-//    }
+    // public String getManyToManyRepositoryName(final String repositoryName) {
+    // for (final String manyToManyRepositoryName : manyToManyRepositoryNames) {
+    // final String[] parts = manyToManyRepositoryName.split("_");
+    //
+    //
+    // }
+    // }
     /**
      * Adds the specified many to many repository name.
      * 
@@ -73,7 +76,7 @@ final class Relationships {
      * name
      */
     public static void addManyToManyRepositoryName(
-            final String manyToManyRepositoryName) {
+        final String manyToManyRepositoryName) {
         if (Strings.isEmptyOrNull(manyToManyRepositoryName)) {
             throw new IllegalArgumentException("The many to many repository name is empty or null");
         }
@@ -103,6 +106,5 @@ final class Relationships {
     /**
      * Private constructor.
      */
-    private Relationships() {
-    }
+    private Relationships() {}
 }

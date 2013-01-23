@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.urlfetch;
 
+
 import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+
 
 /**
  * URL fetch service factory.
@@ -32,6 +34,7 @@ public final class URLFetchServiceFactory {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(URLFetchServiceFactory.class.getName());
+
     /**
      * URL fetch service.
      */
@@ -46,21 +49,24 @@ public final class URLFetchServiceFactory {
             Class<URLFetchService> serviceClass;
 
             switch (runtimeEnv) {
-                case BAE:
-                    serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.bae.BAEURLFetchService");
-                    // serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
-                    URL_FETCH_SERVICE = serviceClass.newInstance();
-                    break;
-                case LOCAL:
-                    serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
-                    URL_FETCH_SERVICE = serviceClass.newInstance();
-                    break;
-                case GAE:
-                    serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.gae.GAEURLFetchService");
-                    URL_FETCH_SERVICE = serviceClass.newInstance();
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+            case BAE:
+                serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.bae.BAEURLFetchService");
+                // serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
+                URL_FETCH_SERVICE = serviceClass.newInstance();
+                break;
+
+            case LOCAL:
+                serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
+                URL_FETCH_SERVICE = serviceClass.newInstance();
+                break;
+
+            case GAE:
+                serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.gae.GAEURLFetchService");
+                URL_FETCH_SERVICE = serviceClass.newInstance();
+                break;
+
+            default:
+                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize URL Fetch Service!", e);
@@ -81,6 +87,5 @@ public final class URLFetchServiceFactory {
     /**
      * Private default constructor.
      */
-    private URLFetchServiceFactory() {
-    }
+    private URLFetchServiceFactory() {}
 }

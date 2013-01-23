@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.model;
 
+
 /**
  * This class defines all plugin model relevant keys.
  *
@@ -27,34 +28,47 @@ public final class Plugin {
      * Key of plugin.
      */
     public static final String PLUGIN = "plugin";
+
     /**
      * Key of plugins.
      */
     public static final String PLUGINS = "plugins";
+
+    /**
+     * rendererId of the plugin.
+     */
+    public static final String PLUGIN_RENDERER_ID = "rendererId";
+
     /**
      * Key of plugin author.
      */
     public static final String PLUGIN_AUTHOR = "author";
+
     /**
      * Key of plugin name.
      */
     public static final String PLUGIN_NAME = "name";
+
     /**
      * Key of plugin version.
      */
     public static final String PLUGIN_VERSION = "version";
+
     /**
      * Key of plugin types.
      */
     public static final String PLUGIN_TYPES = "types";
+
     /**
      * Key of plugin class.
      */
     public static final String PLUGIN_CLASS = "pluginClass";
+
     /**
      * Key of plugin event listener classes.
      */
     public static final String PLUGIN_EVENT_LISTENER_CLASSES = "eventListenerClasses";
+
     /**
      * Key of plugin status.
      */
@@ -63,6 +77,5 @@ public final class Plugin {
     /**
      * Private default constructor.
      */
-    private Plugin() {
-    }
+    private Plugin() {}
 }

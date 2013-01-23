@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcUtil;
+
 
 /**
  * 
@@ -84,7 +86,7 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
      * @param tableName talbename
      */
     protected abstract void createDropTableSql(StringBuilder dropTableSql,
-            String tableName);
+        String tableName);
 
     /**
      * 
@@ -94,7 +96,7 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
      * @param tableName tableName
      */
     protected abstract void createTableHead(StringBuilder createTableSql,
-            String tableName);
+        String tableName);
 
     /**
      * abstract createTableBody for each DB to impl.
@@ -103,7 +105,7 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
      * @param fieldDefinitions {@link FieldDefinition}
      */
     protected abstract void createTableBody(StringBuilder createTableSql,
-            List<FieldDefinition> fieldDefinitions);
+        List<FieldDefinition> fieldDefinitions);
 
     /**
      * abstract createTableEnd for each DB to impl.
@@ -115,8 +117,10 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
     public boolean clearTable(final String tableName, final boolean ifdrop) throws SQLException {
 
         final Connection connection = Connections.getConnection();
+
         try {
             final StringBuilder clearTableSql = new StringBuilder();
+
             clearTableSql(clearTableSql, tableName, ifdrop);
             return JdbcUtil.executeSql(clearTableSql.toString(), connection);
 

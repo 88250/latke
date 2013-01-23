@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository;
 
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.b3log.latke.util.Strings;
+
 
 /**
  * Query.
@@ -39,14 +41,17 @@ public final class Query {
      * Current page number.
      */
     private int currentPageNum = 1;
+
     /**
      * Page count.
      */
     private Integer pageCount;
+
     /**
      * Page size.
      */
     private int pageSize = Integer.MAX_VALUE;
+
     /**
      * Cache key.
      * 
@@ -56,26 +61,32 @@ public final class Query {
      * </p>
      */
     private String cacheKey;
+
     /**
      * Sorts.
      */
     private Map<String, SortDirection> sorts = new LinkedHashMap<String, SortDirection>();
+
     /**
      * Filter.
      */
     private Filter filter;
+
     /**
      * Projections.
      */
     private Set<Projection> projections = new HashSet<Projection>();
+
     /**
      * Indices.
      */
     private Set<String[]> indexes = new HashSet<String[]>();
+
     /**
      * Initialization value for hashing.
      */
     private static final int INIT_HASH = 5;
+
     /**
      * Base for hashing.
      */
@@ -283,6 +294,7 @@ public final class Query {
         }
 
         final Query other = (Query) obj;
+
         if (this.currentPageNum != other.currentPageNum) {
             return false;
         }
@@ -291,8 +303,7 @@ public final class Query {
             return false;
         }
 
-        if (this.sorts != other.sorts
-            && (this.sorts == null || !this.sorts.equals(other.sorts))) {
+        if (this.sorts != other.sorts && (this.sorts == null || !this.sorts.equals(other.sorts))) {
             return false;
         }
 
@@ -310,6 +321,7 @@ public final class Query {
     @Override
     public int hashCode() {
         int hash = INIT_HASH;
+
         hash = BASE * hash + this.currentPageNum;
         hash = BASE * hash + this.pageSize;
         hash = BASE * hash + (this.sorts != null ? this.sorts.hashCode() : 0);
@@ -321,13 +333,15 @@ public final class Query {
 
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder("currentPageNum=").append(currentPageNum).
-                append(", pageSize=").append(pageSize).append(", pageCount=").append(pageCount).append(", sorts=[");
+        final StringBuilder stringBuilder = new StringBuilder("currentPageNum=").append(currentPageNum).append(", pageSize=").append(pageSize).append(", pageCount=").append(pageCount).append(
+            ", sorts=[");
 
         final Set<Entry<String, SortDirection>> entrySet = sorts.entrySet();
         final Iterator<Entry<String, SortDirection>> sortsIterator = entrySet.iterator();
+
         while (sortsIterator.hasNext()) {
             final Entry<String, SortDirection> sort = sortsIterator.next();
+
             stringBuilder.append("[key=").append(sort.getKey()).append(", direction=").append(sort.getValue().name()).append("]");
 
             if (sortsIterator.hasNext()) {
@@ -342,8 +356,10 @@ public final class Query {
         stringBuilder.append(", projections=[");
 
         final Iterator<Projection> projectionsIterator = projections.iterator();
+
         while (projectionsIterator.hasNext()) {
             final Projection projection = projectionsIterator.next();
+
             stringBuilder.append('[').append(projection.toString()).append(']');
 
             if (projectionsIterator.hasNext()) {

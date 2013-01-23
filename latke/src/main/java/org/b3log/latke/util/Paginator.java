@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Paginator utilities.
@@ -29,8 +31,7 @@ public final class Paginator {
     /**
      * Private default constructor.
      */
-    private Paginator() {
-    }
+    private Paginator() {}
 
     /**
      * Paginates with the specified current page number, page size, page count,
@@ -43,9 +44,9 @@ public final class Paginator {
      * @return a list integer pagination page numbers
      */
     public static List<Integer> paginate(final int currentPageNum,
-                                         final int pageSize,
-                                         final int pageCount,
-                                         final int windowSize) {
+        final int pageSize,
+        final int pageCount,
+        final int windowSize) {
         List<Integer> ret = null;
 
         if (pageCount < windowSize) {
@@ -56,9 +57,9 @@ public final class Paginator {
         } else {
             ret = new ArrayList<Integer>(windowSize);
             int first = currentPageNum + 1 - windowSize / 2;
+
             first = first < 1 ? 1 : first;
-            first = first + windowSize > pageCount ? pageCount - windowSize + 1
-                    : first;
+            first = first + windowSize > pageCount ? pageCount - windowSize + 1 : first;
             for (int i = 0; i < windowSize; i++) {
                 ret.add(i, first + i);
             }

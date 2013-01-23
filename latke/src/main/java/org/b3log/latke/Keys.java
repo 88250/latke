@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package org.b3log.latke;
 
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+
 
 /**
  * This class defines framework (non-functional) keys.
@@ -31,66 +33,82 @@ public final class Keys {
      * Key of message.
      */
     public static final String MSG = "msg";
+
     /**
      * Key of event.
      */
     public static final String EVENTS = "events";
+
     /**
      * Key of code.
      */
     public static final String CODE = "code";
+
     /**
      * Key of action status code.
      */
     public static final String STATUS_CODE = "sc";
+
     /**
      * Key of session id.
      */
     public static final String SESSION_ID = "sId";
+
     /**
      * Key of results.
      */
     public static final String RESULTS = "rslts";
+
     /**
      * Key of id of an entity json object.
      */
     public static final String OBJECT_ID = "oId";
+
     /**
      * Key of ids.
      */
     public static final String OBJECT_IDS = "oIds";
+
     /**
      * Key of locale.
      */
     public static final String LOCALE = "locale";
+
     /**
      * Key of language.
      */
     public static final String LANGUAGE = "lang";
+
     /**
      * Simple date format. (yyyy-MM-dd HH:mm:ss)
      */
     public static final DateFormat SIMPLE_DATE_FORMAT1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     /**
      * Key of page cache key.
      */
     public static final String PAGE_CACHE_KEY = "pageCacheKey";
+
     /**
      * Key of page type.
      */
     public static final String PAGE_TYPE = "pageType";
+
     /**
      * Key of template directory name.
      */
     public static final String TEMAPLTE_DIR_NAME = "templateDirName";
+
     /**
      * Key of exclusion.
      */
     public static final String EXCLUDES = "excludes";
+
     /**
      * Key of request.
      */
     public static final String REQUEST = "request";
+
     /**
      * Key of FreeMarker render.
      */
@@ -163,22 +181,27 @@ public final class Keys {
          * Key of is search engine bot.
          */
         public static final String IS_SEARCH_ENGINE_BOT = "isSearchEngineBot";
+
         /**
          * Key of static resource checked.
          */
         public static final String REQUEST_STATIC_RESOURCE_CHECKED = "requestStaticResourceChecked";
+
         /**
          * Key of static resource requesting.
          */
         public static final String IS_REQUEST_STATIC_RESOURCE = "isRequestStaticResource";
+
         /**
          * Key of start time millis.
          */
         public static final String START_TIME_MILLIS = "startTimeMillis";
+
         /**
          * Key of request URI.
          */
         public static final String REQUEST_URI = "requestURI";
+
         /**
          * Key of request method.
          */
@@ -187,9 +210,9 @@ public final class Keys {
         /**
          * Privates constructor.
          */
-        private HttpRequest() {
-        }
+        private HttpRequest() {}
     }
+
 
     /**
      * This class defines server keys.
@@ -203,46 +226,57 @@ public final class Keys {
          * Key of server scheme.
          */
         public static final String SERVER_SCHEME = "serverScheme";
+
         /**
          * Key of server host.
          */
         public static final String SERVER_HOST = "serverHost";
+
         /**
          * Key of server port.
          */
         public static final String SERVER_PORT = "serverPort";
+
         /**
          * Key of server.
          */
         public static final String SERVER = "server";
+
         /**
          * Key of static server scheme.
          */
         public static final String STATIC_SERVER_SCHEME = "staticServerScheme";
+
         /**
          * Key of static server host.
          */
         public static final String STATIC_SERVER_HOST = "staticServerHost";
+
         /**
          * Key of static server port.
          */
         public static final String STATIC_SERVER_PORT = "staticServerPort";
+
         /**
          * Key of static server.
          */
         public static final String STATIC_SERVER = "staticServer";
+
         /**
          * Key of context path.
          */
         public static final String CONTEXT_PATH = "contextPath";
+
         /**
          * Key of static path.
          */
         public static final String STATIC_PATH = "staticPath";
+
         /**
          * Key of serve path.
          */
         public static final String SERVE_PATH = "servePath";
+
         /**
          * Key of static serve path.
          */
@@ -251,9 +285,9 @@ public final class Keys {
         /**
          * Private constructor.
          */
-        private Server() {
-        }
+        private Server() {}
     }
+
 
     /**
      * This class defines runtime keys.
@@ -267,6 +301,7 @@ public final class Keys {
          * Key of runtime environment.
          */
         public static final String RUNTIME_ENV = "runtimeEnv";
+
         /**
          * Key of runtime mode.
          */
@@ -275,13 +310,11 @@ public final class Keys {
         /**
          * Private constructor.
          */
-        private Runtime() {
-        }
+        private Runtime() {}
     }
 
     /**
      * Private constructor.
      */
-    private Keys() {
-    }
+    private Keys() {}
 }

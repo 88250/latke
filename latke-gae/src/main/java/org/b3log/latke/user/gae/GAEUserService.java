@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.user.gae;
 
+
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 import javax.servlet.http.HttpServletRequest;
 import org.b3log.latke.user.GeneralUser;
 import org.b3log.latke.user.UserService;
+
 
 /**
  * Google App Engine user service.

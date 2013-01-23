@@ -35,6 +35,7 @@
  */
 package javax.persistence;
 
+
 /**
  * The <code>EntityTransaction</code> interface is used to control 
  * resource transactions on resource-local entity managers. The 
@@ -44,6 +45,7 @@ package javax.persistence;
  * @since Java Persistence 1.0
  */
 public interface EntityTransaction {
+
     /**
      * Start the resource transaction.
      * @throws IllegalStateException if {@link #isActive()} is true.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.logging;
 
+
 import java.util.logging.Formatter;
 import java.util.logging.LogManager;
 import java.util.logging.SimpleFormatter;
+
 
 /**
  * JDK log console handler.
@@ -35,6 +37,7 @@ public final class ConsoleHandler extends java.util.logging.ConsoleHandler {
         final String propName = getClass().getName() + ".formatter";
 
         final Formatter formatter = getFormatter(propName);
+
         setFormatter(formatter);
     }
 
@@ -47,13 +50,15 @@ public final class ConsoleHandler extends java.util.logging.ConsoleHandler {
      */
     private Formatter getFormatter(final String name) {
         final String val = LogManager.getLogManager().getProperty(name);
+
         try {
             if (val != null) {
                 final Class<?> clz = Class.forName(val);
+
                 return (Formatter) clz.newInstance();
             }
         } catch (final Exception ex) {
-           throw new RuntimeException(ex);
+            throw new RuntimeException(ex);
         }
 
         return new SimpleFormatter();

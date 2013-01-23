@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.cache.local.memory;
 
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
@@ -22,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.cache.local.util.DoubleLinkedMap;
 import org.b3log.latke.util.Serializer;
+
 
 /**
  * This is a Least Recently Used (LRU) pure memory cache. This cache use a 
@@ -34,17 +36,18 @@ import org.b3log.latke.util.Serializer;
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.2.9, Dec 3, 2011
  */
-public final class LruMemoryCache<K extends Serializable, V extends Serializable>
-        extends AbstractMemoryCache<K, V> implements Serializable {
+public final class LruMemoryCache<K extends Serializable, V extends Serializable> extends AbstractMemoryCache<K, V> implements Serializable {
 
     /**
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(LruMemoryCache.class.getName());
+
     /**
      * Default serial version uid.
      */
     private static final long serialVersionUID = 1L;
+
     /**
      * a thread-safe double linked list is used to hold all objects.
      */
@@ -117,6 +120,7 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
     @Override
     public synchronized void remove(final K key) {
         final boolean removed = map.remove(key);
+
         if (removed) {
             cachedCountDec();
         }
@@ -161,12 +165,14 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
 
         if (null == ret || !(ret instanceof Long)) {
             final Long v = delta;
+
             ret = (V) v;
             put(key, ret);
         }
 
         if (ret instanceof Long) {
             final Long v = (Long) ret + delta;
+
             ret = (V) v;
             put(key, ret);
         }

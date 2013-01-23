@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.b3log.latke.plugin;
+
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -35,9 +36,11 @@ import java.util.logging.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.model.Plugin;
+import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.util.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 /**
  * Abstract plugin.
@@ -54,7 +57,8 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.3, Sep 6, 2012
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.2.0.0, Jan 23, 2013
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -65,49 +69,56 @@ public abstract class AbstractPlugin implements Serializable {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(AbstractPlugin.class.getName());
+
     /**
      * Id of this plugin.
      */
     private String id;
+
+    /**
+     * the rendererId of the plugin.
+     */
+    private String rendererId;
+
     /**
      * Name of this plugin.
      */
     private String name;
+
     /**
      * Author of this author.
      */
     private String author;
+
     /**
      * Version of this plugin.
      */
     private String version;
+
     /**
      * Directory of this plugin.
      */
     private File dir;
+
     /**
      * Status of this plugin.
      */
     private PluginStatus status = PluginStatus.ENABLED;
+
     /**
      * Types of this plugin.
      */
     private Set<PluginType> types = new HashSet<PluginType>();
+
     /**
      * Languages.
      */
     private Map<String, Properties> langs = new HashMap<String, Properties>();
+
     /**
      * FreeMarker configuration.
      */
     private transient Configuration configuration;
-
-    /**
-     * Gets an existing view name.
-     * 
-     * @return view name, the plugin to plug
-     */
-    public abstract String getViewName();
 
     /**
      * Unplugs.
@@ -173,12 +184,12 @@ public abstract class AbstractPlugin implements Serializable {
             final String langFileName = lang.getName();
             final String key = langFileName.substring(Keys.LANGUAGE.length() + 1, langFileName.lastIndexOf("."));
             final Properties props = new Properties();
+
             try {
                 props.load(new FileInputStream(lang));
                 langs.put(key, props);
             } catch (final Exception e) {
-                Logger.getLogger(getClass().getName()).
-                        log(Level.SEVERE, "Get plugin[name=" + name + "]'s language configuration failed", e);
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Get plugin[name=" + name + "]'s language configuration failed", e);
             }
         }
     }
@@ -195,12 +206,50 @@ public abstract class AbstractPlugin implements Serializable {
     }
 
     /**
+     * prePlug after the real method be invoked.
+     * 
+     * @param context context
+     * @param args args
+     */
+    public abstract void prePlug(final HTTPRequestContext context, final Map<String, Object> args);
+
+    /**
+     * postPlug after the dataModel of the main-view be generated.
+     * 
+     * @param dataModel dataModel
+     * @param context context
+     * @param ret ret
+     */
+    public abstract void postPlug(Map<String, Object> dataModel, HTTPRequestContext context, Object ret);
+
+    /**
+     * the lifecycle pointcut for the plugin to start(enable status).
+     */
+    protected abstract void start();
+
+    /**
+     * the lifecycle pointcut for the plugin to close(disable status).
+     */
+    protected abstract void stop();
+
+    /**
      * Plugs with the specified data model.
      * 
      * @param dataModel the specified data model
      */
     public void plug(final Map<String, Object> dataModel) {
+        plug(dataModel, null, null);
+    }
+
+    /**
+     * Plugs with the specified data model and the args from request.
+     * @param dataModel dataModel 
+     * @param context context
+     * @param ret ret
+     */
+    public void plug(final Map<String, Object> dataModel, final HTTPRequestContext context, final Object ret) {
         String content = (String) dataModel.get(Plugin.PLUGINS);
+
         if (null == content) {
             dataModel.put(Plugin.PLUGINS, "");
         }
@@ -208,6 +257,7 @@ public abstract class AbstractPlugin implements Serializable {
         handleLangs(dataModel);
         fillDefault(dataModel);
 
+        postPlug(dataModel, context, ret);
 
         content = (String) dataModel.get(Plugin.PLUGINS);
         final StringBuilder contentBuilder = new StringBuilder(content);
@@ -215,9 +265,11 @@ public abstract class AbstractPlugin implements Serializable {
         contentBuilder.append(getViewContent(dataModel));
 
         final String pluginsContent = contentBuilder.toString();
+
         dataModel.put(Plugin.PLUGINS, pluginsContent);
 
         LOGGER.log(Level.FINER, "Plugin[name={0}] has been plugged", getName());
+
     }
 
     /**
@@ -232,6 +284,7 @@ public abstract class AbstractPlugin implements Serializable {
         final String variant = locale.getVariant();
 
         final StringBuilder keyBuilder = new StringBuilder(language);
+
         if (!Strings.isEmptyOrNull(country)) {
             keyBuilder.append("_").append(country);
         }
@@ -242,6 +295,7 @@ public abstract class AbstractPlugin implements Serializable {
         final String localKey = keyBuilder.toString();
         final Properties props = langs.get(localKey);
         final Set<Object> keySet = props.keySet();
+
         for (final Object key : keySet) {
             dataModel.put((String) key, props.getProperty((String) key));
         }
@@ -281,12 +335,12 @@ public abstract class AbstractPlugin implements Serializable {
         try {
             final Template template = configuration.getTemplate(Plugin.PLUGIN + ".ftl");
             final StringWriter sw = new StringWriter();
+
             template.process(dataModel, sw);
 
             return sw.toString();
         } catch (final Exception e) {
-            Logger.getLogger(getClass().getName()).
-                    log(Level.SEVERE, "Get plugin[name=" + name + "]'s view failed, will return warning", e);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Get plugin[name=" + name + "]'s view failed, will return warning", e);
             return "<div style='color: red;'>Plugin[name=" + name + "] runs failed</div>";
         }
     }
@@ -308,6 +362,7 @@ public abstract class AbstractPlugin implements Serializable {
      */
     public JSONObject toJSONObject() throws JSONException {
         final JSONObject ret = new JSONObject();
+
         ret.put(Keys.OBJECT_ID, getId());
         ret.put(Plugin.PLUGIN_NAME, getName());
         ret.put(Plugin.PLUGIN_VERSION, getVersion());
@@ -417,6 +472,22 @@ public abstract class AbstractPlugin implements Serializable {
     }
 
     /**
+     * getRendererId.
+     * @return the rendererId
+     */
+    public String getRendererId() {
+        return rendererId;
+    }
+
+    /**
+     * setRendererId.
+     * @param rendererId the rendererId to set
+     */
+    public void setRendererId(final String rendererId) {
+        this.rendererId = rendererId;
+    }
+
+    /**
      * Adds the specified type.
      * 
      * @param type the specified type
@@ -434,6 +505,7 @@ public abstract class AbstractPlugin implements Serializable {
             return false;
         }
         final AbstractPlugin other = (AbstractPlugin) obj;
+
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }
@@ -443,7 +515,31 @@ public abstract class AbstractPlugin implements Serializable {
     @Override
     public int hashCode() {
         int hash = 2;
+
         hash = 2 + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
+
+    /**
+     * when the plugin change the status,it should note the pointcut lifecycle to know.
+     * <p>
+     *      to enable :start()
+     *      to disable :stop()
+     * </p>
+     * 
+     */
+    public void changeStatus() {
+
+        switch (status) {
+        case ENABLED:
+            start();
+            break;
+
+        case DISABLED:
+            stop();
+
+        default:
+        }
+    }
+
 }

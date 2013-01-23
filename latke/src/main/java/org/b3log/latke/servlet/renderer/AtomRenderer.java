@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * Atom HTTP response renderer.
@@ -34,6 +36,7 @@ public final class AtomRenderer extends AbstractHTTPResponseRenderer {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(AtomRenderer.class.getName());
+
     /**
      * Content to render.
      */
@@ -52,10 +55,12 @@ public final class AtomRenderer extends AbstractHTTPResponseRenderer {
     public void render(final HTTPRequestContext context) {
         try {
             final HttpServletResponse response = context.getResponse();
+
             response.setContentType("application/atom+xml");
             response.setCharacterEncoding("UTF-8");
 
             final PrintWriter writer = response.getWriter();
+
             writer.write(content);
             writer.close();
         } catch (final IOException e) {

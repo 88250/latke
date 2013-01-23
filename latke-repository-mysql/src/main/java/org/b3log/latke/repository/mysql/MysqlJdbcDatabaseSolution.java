@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.mysql;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.mapping.NumberMapping;
 import org.b3log.latke.repository.jdbc.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+
 
 /**
  * DefaultJdbcDatabaseSolution,for extend .
@@ -52,9 +54,10 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     public String queryPage(final int start, final int end, final String selectSql,
-                            final String filterSql, final String orderBySql,
-                            final String tableName) {
+        final String filterSql, final String orderBySql,
+        final String tableName) {
         final StringBuilder sql = new StringBuilder();
+
         sql.append(selectSql).append(" from ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {
             sql.append(" where ").append(filterSql);
@@ -67,6 +70,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
         final StringBuilder sql = new StringBuilder();
+
         sql.append(" SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
         return sql.toString();
     }
@@ -88,13 +92,16 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     @Override
     protected void createTableBody(final StringBuilder createTableSql, final List<FieldDefinition> fieldDefinitions) {
         final List<FieldDefinition> keyDefinitionList = new ArrayList<FieldDefinition>();
+
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
 
             final String type = fieldDefinition.getType();
+
             if (type == null) {
                 throw new RuntimeException("the type of fieldDefinitions should not be null");
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
+
             if (mapping != null) {
                 createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
 
@@ -124,8 +131,10 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     private String createKeyDefinition(final List<FieldDefinition> keyDefinitionList) {
 
         final StringBuilder sql = new StringBuilder();
+
         sql.append(" PRIMARY KEY");
         boolean isFirst = true;
+
         for (FieldDefinition fieldDefinition : keyDefinitionList) {
             if (isFirst) {
                 sql.append("(");

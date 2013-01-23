@@ -15,12 +15,14 @@
  */
 package org.b3log.latke.mail.bae;
 
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.mail.MailService;
 import org.b3log.latke.mail.MailService.Message;
 import org.b3log.latke.mail.MailServiceFactory;
+
 
 /**
  * Baidu App Engine mail service.

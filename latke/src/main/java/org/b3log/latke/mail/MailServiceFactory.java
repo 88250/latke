@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.mail;
 
+
 import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+
 
 /**
  * Mail service factory.
@@ -32,6 +34,7 @@ public final class MailServiceFactory {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(MailServiceFactory.class.getName());
+
     /**
      * Mail service.
      */
@@ -46,20 +49,23 @@ public final class MailServiceFactory {
             Class<MailService> mailServiceClass;
 
             switch (runtimeEnv) {
-                case BAE:
-                    mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.bae.BAEMailService");
-                    MAIL_SERVICE = mailServiceClass.newInstance();
-                    break;
-                case LOCAL:
-                    mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.local.LocalMailService");
-                    MAIL_SERVICE = mailServiceClass.newInstance();
-                    break;
-                case GAE:
-                    mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.gae.GAEMailService");
-                    MAIL_SERVICE = mailServiceClass.newInstance();
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+            case BAE:
+                mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.bae.BAEMailService");
+                MAIL_SERVICE = mailServiceClass.newInstance();
+                break;
+
+            case LOCAL:
+                mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.local.LocalMailService");
+                MAIL_SERVICE = mailServiceClass.newInstance();
+                break;
+
+            case GAE:
+                mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.gae.GAEMailService");
+                MAIL_SERVICE = mailServiceClass.newInstance();
+                break;
+
+            default:
+                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Mail Service!", e);
@@ -80,6 +86,5 @@ public final class MailServiceFactory {
     /**
      * Private default constructor.
      */
-    private MailServiceFactory() {
-    }
+    private MailServiceFactory() {}
 }

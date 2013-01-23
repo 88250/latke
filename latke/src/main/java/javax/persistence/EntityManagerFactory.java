@@ -35,7 +35,9 @@
  */
 package javax.persistence;
 
+
 import java.util.Map;
+
 
 /**
  * The <code>EntityManagerFactory</code> interface is used 
@@ -78,8 +80,8 @@ public interface EntityManagerFactory {
     void close();
 
     /**
-    * Indicates whether or not this factory is open. Returns true
-    * until a call to close has been made.
-    */
+     * Indicates whether or not this factory is open. Returns true
+     * until a call to close has been made.
+     */
     public boolean isOpen();
 }

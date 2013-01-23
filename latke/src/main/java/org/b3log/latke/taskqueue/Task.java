@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.taskqueue;
 
+
 import java.io.Serializable;
 import org.b3log.latke.servlet.HTTPRequestMethod;
+
 
 /**
  * Task.
@@ -30,18 +32,22 @@ public final class Task implements Serializable {
      * Default serial version uid.
      */
     private static final long serialVersionUID = 1L;
+
     /**
      * URL.
      */
     private String url;
+
     /**
      * Name.
      */
     private String name;
+
     /**
      * HTTP method.
      */
     private HTTPRequestMethod requestMethod = HTTPRequestMethod.GET;
+
     /**
      * Payload.
      */
@@ -130,9 +136,8 @@ public final class Task implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder().
-                append("url=").append(url).append(", name=").append(name).append(
-                ", requestMethod=").append(requestMethod);
+        final StringBuilder stringBuilder = new StringBuilder().append("url=").append(url).append(", name=").append(name).append(", requestMethod=").append(
+            requestMethod);
 
         return stringBuilder.toString();
     }

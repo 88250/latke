@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository;
 
+
 /**
  * Projection.
  *
@@ -27,14 +28,17 @@ public class Projection {
      * Key.
      */
     private String key;
+
     /**
      * Value type.
      */
     private Class<?> type;
+
     /**
      * Initialization value for hashing.
      */
     private static final int INIT_HASH = 3;
+
     /**
      * Base for hashing.
      */
@@ -80,6 +84,7 @@ public class Projection {
         }
 
         final Projection other = (Projection) obj;
+
         if ((this.key == null) ? (other.key != null) : !this.key.equals(other.key)) {
             return false;
         }
@@ -104,6 +109,7 @@ public class Projection {
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("key=");
+
         stringBuilder.append(key).append(", typeClassName=").append(type.getClass().getName());
 
         return stringBuilder.toString();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.logging.Level;
 import org.b3log.latke.Keys;
 import java.util.Locale;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.b3log.latke.Latkes;
+
 
 /**
  * Locale utilities.
@@ -37,18 +39,22 @@ public final class Locales {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Locales.class.getName());
+
     /**
      * Language start description in Accept-Language of request header.
      */
     private static final int LANG_START = 0;
+
     /**
      * Language end description in Accept-Language of request header.
      */
     private static final int LANG_END = 2;
+
     /**
      * Country start description in Accept-Language of request header.
      */
     private static final int COUNTRY_START = 3;
+
     /**
      * Country end description in Accept-Language of request header.
      */
@@ -57,8 +63,7 @@ public final class Locales {
     /**
      * Private default constructor.
      */
-    private Locales() {
-    }
+    private Locales() {}
 
     /**
      * Gets locale with the specified request.
@@ -78,6 +83,7 @@ public final class Locales {
 
         // Gets from session
         final HttpSession session = request.getSession(false);
+
         if (session != null) {
             locale = (Locale) session.getAttribute(Keys.LOCALE);
         }
@@ -85,10 +91,12 @@ public final class Locales {
         if (null == locale) {
             // Gets from request header
             final String languageHeader = request.getHeader("Accept-Language");
+
             LOGGER.log(Level.FINER, "[Accept-Language={0}]", languageHeader);
 
             String language = "zh";
             String country = "CN";
+
             if (!Strings.isEmptyOrNull(languageHeader)) {
                 language = getLanguage(languageHeader);
                 country = getCountry(languageHeader);
@@ -147,7 +155,7 @@ public final class Locales {
         }
 
         session.setAttribute(Keys.LOCALE, locale);
-        LOGGER.log(Level.FINER, "Client[sessionId={0}] sets locale to [{1}]", new Object[]{session.getId(), locale.toString()});
+        LOGGER.log(Level.FINER, "Client[sessionId={0}] sets locale to [{1}]", new Object[] {session.getId(), locale.toString()});
     }
 
     /**
@@ -189,7 +197,8 @@ public final class Locales {
     public static Locale getLocale(final String localeString) {
         final String language = getLanguage(localeString);
         final String country = getCountry(localeString);
-        //// XXX: variant
+
+        // // XXX: variant
         return new Locale(language, country);
     }
 }

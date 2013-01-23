@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.servlet.advice;
 
+
 import java.util.Map;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * BeforeRequestProcessAdvice.
@@ -31,6 +33,5 @@ public class BeforeRequestProcessAdvice implements RequestProcessAdvice {
      * @param args the invoke method params and values.
      * @throws RequestProcessAdviceException the exception
      */
-    public void doAdvice(final HTTPRequestContext context, final Map<String, Object> args) throws RequestProcessAdviceException {
-    }
+    public void doAdvice(final HTTPRequestContext context, final Map<String, Object> args) throws RequestProcessAdviceException {}
 }

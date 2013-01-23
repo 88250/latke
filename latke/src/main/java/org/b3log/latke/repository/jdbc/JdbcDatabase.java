@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+
 import java.sql.SQLException;
 import java.util.List;
 
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+
 
 /**
  * interface JdbcDatabase.
@@ -37,7 +39,7 @@ public interface JdbcDatabase {
      * @throws SQLException SQLException 
      */
     boolean createTable(String tableName, List<FieldDefinition> fieldDefinitions)
-            throws SQLException;
+        throws SQLException;
 
     /**
      * 
@@ -64,7 +66,7 @@ public interface JdbcDatabase {
      * @return sql 
      */
     String queryPage(int start, int end, String selectSql, String filterSql,
-            String orderBySql, String tableName);
+        String orderBySql, String tableName);
 
     /**
      * getRandomlySql.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.urlfetch.local;
 
+
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -24,6 +25,7 @@ import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
+
 
 /**
  * Local URL fetch service.
@@ -41,6 +43,7 @@ public final class LocalURLFetchService implements URLFetchService {
     @Override
     public HTTPResponse fetch(final HTTPRequest request) throws IOException {
         final HTTPRequestMethod requestMethod = request.getRequestMethod();
+
         if (requestMethod == null) {
             throw new IOException("RequestMethod  for URLFetch should not be null");
         }

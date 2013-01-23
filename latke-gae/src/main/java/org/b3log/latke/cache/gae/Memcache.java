@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.cache.gae;
 
+
 import com.google.appengine.api.memcache.AsyncMemcacheService;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -25,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.util.Serializer;
+
 
 /**
  * Simple warper of <a href="http://code.google.com/appengine/docs/java/memcache/">
@@ -50,22 +52,27 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Memcache.class.getName());
+
     /**
      * Memcache service.
      */
     private MemcacheService memcacheService;
+
     /**
      * Asynchronous memcache service.
      */
     private AsyncMemcacheService asyncMemcacheService;
+
     /**
      * Name of this cache.
      */
     private String name;
+
     /**
      * Integer value for true flag.
      */
     private static final int TRUE_INT = 49;
+
     /**
      * Integer value for false flag.
      */
@@ -111,8 +118,8 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
             memcacheService.put(key, value);
         } catch (final Exception e) {
             try {
-                LOGGER.log(Level.WARNING, "Can not put memcache[key=" + key
-                                          + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
+                LOGGER.log(Level.WARNING,
+                    "Can not put memcache[key=" + key + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
             } catch (final Exception ex) {
                 LOGGER.log(Level.SEVERE, " Serializes failed", ex);
             }
@@ -133,8 +140,8 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
             asyncMemcacheService.put(key, value);
         } catch (final Exception e) {
             try {
-                LOGGER.log(Level.WARNING, "Can not put async memcache[key=" + key
-                                          + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
+                LOGGER.log(Level.WARNING,
+                    "Can not put async memcache[key=" + key + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
             } catch (final Exception ex) {
                 LOGGER.log(Level.SEVERE, " Serializes failed", ex);
             }
@@ -181,8 +188,7 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
     }
 
     @Override
-    public void setMaxCount(final long maxCount) {
-    }
+    public void setMaxCount(final long maxCount) {}
 
     @Override
     public long getMaxCount() {
@@ -192,6 +198,7 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
     @Override
     public long getHitCount() {
         final Stats statistics = memcacheService.getStatistics();
+
         if (null != statistics) {
             return statistics.getHitCount();
         }
@@ -202,6 +209,7 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
     @Override
     public long getMissCount() {
         final Stats statistics = memcacheService.getStatistics();
+
         if (null != statistics) {
             return statistics.getMissCount();
         }
@@ -217,6 +225,7 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
     @Override
     public long getCachedBytes() {
         final Stats statistics = memcacheService.getStatistics();
+
         if (null != statistics) {
             return statistics.getTotalItemBytes();
         }
@@ -227,6 +236,7 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
     @Override
     public long getHitBytes() {
         final Stats statistics = memcacheService.getStatistics();
+
         if (null != statistics) {
             return statistics.getBytesReturnedForHits();
         }
@@ -237,6 +247,7 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
     @Override
     public long getCachedCount() {
         final Stats statistics = memcacheService.getStatistics();
+
         if (null != statistics) {
             return statistics.getItemCount();
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.b3log.latke.repository.jpa;
+
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -32,6 +33,7 @@ import org.b3log.latke.repository.Repository;
 import org.b3log.latke.repository.Transaction;
 import org.json.JSONObject;
 
+
 /**
  * Entity manager implementation.
  *
@@ -49,24 +51,28 @@ public final class EntityManagerImpl implements EntityManager {
     public void persist(final Object entity) {
         final Class<? extends Object> clazz = entity.getClass();
         final MetaEntity metaEntity = Entities.getMetaEntity(clazz);
+
         if (null == metaEntity) {
-            throw new IllegalArgumentException("The specified object[class=" + clazz + ",toString="
-                                               + entity.toString() + "] is not an entity");
+            throw new IllegalArgumentException(
+                "The specified object[class=" + clazz + ",toString=" + entity.toString() + "] is not an entity");
         }
 
         final String repositoryName = metaEntity.getRepositoryName();
         final Repository repository = Repositories.getRepository(repositoryName);
+
         if (null == repository) {
-            throw new IllegalArgumentException("The specified object[class=" + clazz + ",toString="
-                                               + entity.toString() + "] is not an entity");
+            throw new IllegalArgumentException(
+                "The specified object[class=" + clazz + ",toString=" + entity.toString() + "] is not an entity");
         }
 
         try {
             final JSONObject jsonObject = toJSONObject(entity);
+
             repository.add(jsonObject);
         } catch (final Exception e) {
             // XXX: maybe a transaction required exception....
             final String errMsg = "Can not persist entity[class=" + clazz + ",toString=" + entity.toString() + "]";
+
             LOGGER.log(Level.SEVERE, errMsg, e);
 
             throw new IllegalArgumentException(errMsg);
@@ -87,10 +93,12 @@ public final class EntityManagerImpl implements EntityManager {
         final MetaEntity metaEntity = Entities.getMetaEntity(clazz);
 
         final Map<String, Field> fields = metaEntity.getFields();
+
         for (final Map.Entry<String, Field> entityField : fields.entrySet()) {
             final String fieldName = entityField.getKey();
             final Field field = entityField.getValue();
             final Class<?> fieldType = field.getType();
+
             field.setAccessible(true);
             final Object fieldValue = field.get(entity);
 
@@ -129,7 +137,7 @@ public final class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> T getReference(final Class<T> entityClass,
-                              final Object primaryKey) {
+        final Object primaryKey) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -185,13 +193,13 @@ public final class EntityManagerImpl implements EntityManager {
 
     @Override
     public Query createNativeQuery(final String sqlString,
-                                   final Class resultClass) {
+        final Class resultClass) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Query createNativeQuery(final String sqlString,
-                                   final String resultSetMapping) {
+        final String resultSetMapping) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.taskqueue.local;
 
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,6 +27,7 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
+
 
 /**
  * run the task in queue, now using httpUrlfetch to handle the request.
@@ -40,10 +42,12 @@ public final class LocalTaskRunner extends Thread {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(LocalTaskRunner.class.getName());
+
     /**
      * the task need to do .
      */
     private Task task;
+
     /**
      * the retry time of a task.
      */
@@ -59,6 +63,7 @@ public final class LocalTaskRunner extends Thread {
         this.task = task;
         this.retryLimit = retryLimit;
     }
+
     /**
      * using urlFetchService to do the TASK.
      */
@@ -69,6 +74,7 @@ public final class LocalTaskRunner extends Thread {
         urlFetchService = URLFetchServiceFactory.getURLFetchService();
 
         final HTTPRequest httpRequest = new HTTPRequest();
+
         try {
             httpRequest.setURL(new URL(Latkes.getServer() + Latkes.getContextPath() + task.getURL()));
             httpRequest.setRequestMethod(task.getRequestMethod());
@@ -78,6 +84,7 @@ public final class LocalTaskRunner extends Thread {
         }
 
         Integer retry = 0;
+
         while (retry < retryLimit) {
 
             if (!doUrlFetch(httpRequest)) {
@@ -101,10 +108,11 @@ public final class LocalTaskRunner extends Thread {
      */
     private boolean doUrlFetch(final HTTPRequest httpRequest) {
         HTTPResponse httpResponse = null;
+
         try {
             httpResponse = urlFetchService.fetch(httpRequest);
         } catch (final IOException e) {
-            LOGGER.log(Level.INFO, "The task[{0}] throw exception {1}", new Object[]{task.getURL(), e.getMessage()});
+            LOGGER.log(Level.INFO, "The task[{0}] throw exception {1}", new Object[] {task.getURL(), e.getMessage()});
             return false;
         }
 
@@ -119,7 +127,7 @@ public final class LocalTaskRunner extends Thread {
             return true;
         }
         LOGGER.log(Level.INFO, "The task[{0}] not success ,the return code is [{1}]",
-                new Object[]{task.getURL(), httpResponse.getResponseCode()});
+            new Object[] {task.getURL(), httpResponse.getResponseCode()});
 
         return false;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.annotation;
 
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,6 +24,7 @@ import java.lang.annotation.Target;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
 import org.b3log.latke.servlet.converter.ConvertSupport;
+
 
 /**
  * Indicates that an annotated method for HTTP servlet request processing.
@@ -57,7 +59,7 @@ public @interface RequestProcessing {
     /**
      * The HTTP request methods the annotated method should process.
      */
-    HTTPRequestMethod[] method() default {HTTPRequestMethod.GET};
+    HTTPRequestMethod[] method() default { HTTPRequestMethod.GET};
 
     /**
      * Checks dose whether the URI patterns with context path.

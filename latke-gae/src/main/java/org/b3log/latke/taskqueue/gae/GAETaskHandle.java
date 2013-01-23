@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.taskqueue.gae;
 
+
 import org.b3log.latke.taskqueue.TaskHandle;
+
 
 /**
  * GAE task handle. 
@@ -52,6 +54,7 @@ public final class GAETaskHandle implements TaskHandle {
     @Override
     public int getRetriedCount() {
         final Integer retryCount = gaeTaskHandle.getRetryCount();
+
         if (null == retryCount) {
             return -1;
         }

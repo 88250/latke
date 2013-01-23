@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.model;
 
+
 /**
  * This class defines all user model relevant keys.
  *
@@ -27,34 +28,42 @@ public final class User {
      * User.
      */
     public static final String USER = "user";
+
     /**
      * Users.
      */
     public static final String USERS = "users";
+
     /**
      * Key of user name.
      */
     public static final String USER_NAME = "userName";
+
     /**
      * Key of user email.
      */
     public static final String USER_EMAIL = "userEmail";
+
     /**
      * Key of user URL.
      */
     public static final String USER_URL = "userURL";
+
     /**
      * Key of user password.
      */
     public static final String USER_PASSWORD = "userPassword";
+
     /**
      * Key of user new password.
      */
     public static final String USER_NEW_PASSWORD = "userNewPassword";
+
     /**
      * Key of update time of this user.
      */
     public static final String USER_UPDATE_TIME = "userUpdateTime";
+
     /**
      * Key of user role.
      */
@@ -69,6 +78,5 @@ public final class User {
     /**
      * Private default constructor.
      */
-    private User() {
-    }
+    private User() {}
 }

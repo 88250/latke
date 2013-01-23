@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke web framework client project.
-    Version: 1.0.0.0, Apr 11, 2012
+    Version: 1.0.0.1, Jan 19, 2013
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -180,6 +180,36 @@
 
         <plugins>
             <plugin>
+                <groupId>com.tiobe.jacobe</groupId>
+                <artifactId>maven-jacobe-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <jacobeExecutable>${jacobeExecutable}</jacobeExecutable>
+                    <rules>
+                        <param>indent=4</param>
+                        <param>continuationindent=2</param>
+                    </rules>
+                    <configurationFile>src/main/resources/etc/jacobe/sun.cfg</configurationFile>
+                    <comparisonThreshold>0.01</comparisonThreshold>
+                    <javadoc>private</javadoc>
+                    <noAssert>true</noAssert>
+                    <noEnum>false</noEnum>
+                    <noBackup>true</noBackup>
+                    <overwrite>true</overwrite>
+                    <outputExtension>formatted</outputExtension>
+                    <input>${basedir}/src/main/java</input>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>jacobe</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.11</version>
@@ -220,7 +250,7 @@
                     </mapping>
                     <useDefaultMapping>true</useDefaultMapping>
                     <properties>
-                        <year>2009, 2010, 2011, 2012</year>
+                        <year>2009, 2010, 2011, 2012, 2013</year>
                         <devTeam>B3log Team</devTeam>
                     </properties>
                     <encoding>UTF-8</encoding>
@@ -346,4 +376,33 @@
             </releases>
         </repository>
     </repositories>
+    
+    <profiles>
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>linux</family>
+                </os>
+            </activation>
+            <properties>
+                <jacobeExecutable>
+                    src/main/resources/etc/jacobe/linux/jacobe.exe
+                </jacobeExecutable>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <jacobeExecutable>
+                    src/main/resources/etc/jacobe/win32/jacobe.exe
+                </jacobeExecutable>
+            </properties>
+        </profile>
+    </profiles>
 </project>

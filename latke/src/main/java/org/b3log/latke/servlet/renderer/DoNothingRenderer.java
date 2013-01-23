@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * Do nothing HTTP response renderer.
@@ -33,6 +35,7 @@ public final class DoNothingRenderer extends AbstractHTTPResponseRenderer {
     @Override
     public void render(final HTTPRequestContext context) {
         final HttpServletResponse response = context.getResponse();
+
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }

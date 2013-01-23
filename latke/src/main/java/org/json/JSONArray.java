@@ -1,27 +1,28 @@
 package org.json;
 
+
 /*
-Copyright (c) 2002 JSON.org
+ Copyright (c) 2002 JSON.org
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
 
-The Software shall be used for Good, not Evil.
+ The Software shall be used for Good, not Evil.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
  */
 import java.io.IOException;
 import java.io.Serializable;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+
 
 /**
  * A JSONArray is an ordered sequence of values. Its external text form is a
@@ -86,6 +88,7 @@ public class JSONArray implements Serializable {
      * Default serial version uid.
      */
     private static final long serialVersionUID = 1L;
+
     /**
      * The arrayList where the JSONArray's properties are kept.
      */
@@ -107,6 +110,7 @@ public class JSONArray implements Serializable {
         this();
         char c = x.nextClean();
         char q;
+
         if (c == '[') {
             q = ']';
         } else if (c == '(') {
@@ -128,22 +132,23 @@ public class JSONArray implements Serializable {
             }
             c = x.nextClean();
             switch (c) {
-                case ';':
-                case ',':
-                    if (x.nextClean() == ']') {
-                        return;
-                    }
-                    x.back();
-                    break;
-                case ']':
-                case ')':
-                    if (q != c) {
-                        throw x.syntaxError("Expected a '" + new Character(q)
-                                            + "'");
-                    }
+            case ';':
+            case ',':
+                if (x.nextClean() == ']') {
                     return;
-                default:
-                    throw x.syntaxError("Expected a ',' or ']'");
+                }
+                x.back();
+                break;
+
+            case ']':
+            case ')':
+                if (q != c) {
+                    throw x.syntaxError("Expected a '" + new Character(q) + "'");
+                }
+                return;
+
+            default:
+                throw x.syntaxError("Expected a ',' or ']'");
             }
         }
     }
@@ -164,8 +169,7 @@ public class JSONArray implements Serializable {
      * @param collection     A Collection.
      */
     public JSONArray(Collection collection) {
-        this.myArrayList = (collection == null) ? new ArrayList() : new ArrayList(
-                collection);
+        this.myArrayList = (collection == null) ? new ArrayList() : new ArrayList(collection);
     }
 
     /**
@@ -178,12 +182,13 @@ public class JSONArray implements Serializable {
         this.myArrayList = new ArrayList();
         if (collection != null) {
             Iterator iter = collection.iterator();
+
             ;
             while (iter.hasNext()) {
                 Object o = iter.next();
+
                 if (o instanceof Map) {
-                    this.myArrayList.add(new JSONObject((Map) o,
-                                                        includeSuperClass));
+                    this.myArrayList.add(new JSONObject((Map) o, includeSuperClass));
                 } else if (!JSONObject.isStandardProperty(o.getClass())) {
                     this.myArrayList.add(new JSONObject(o, includeSuperClass));
                 } else {
@@ -201,12 +206,12 @@ public class JSONArray implements Serializable {
         this();
         if (array.getClass().isArray()) {
             int length = Array.getLength(array);
+
             for (int i = 0; i < length; i += 1) {
                 this.put(Array.get(array, i));
             }
         } else {
-            throw new JSONException(
-                    "JSONArray initial value should be a string or collection or array.");
+            throw new JSONException("JSONArray initial value should be a string or collection or array.");
         }
     }
 
@@ -221,8 +226,10 @@ public class JSONArray implements Serializable {
         this();
         if (array.getClass().isArray()) {
             int length = Array.getLength(array);
+
             for (int i = 0; i < length; i += 1) {
                 Object o = Array.get(array, i);
+
                 if (JSONObject.isStandardProperty(o.getClass())) {
                     this.myArrayList.add(o);
                 } else {
@@ -230,8 +237,7 @@ public class JSONArray implements Serializable {
                 }
             }
         } else {
-            throw new JSONException(
-                    "JSONArray initial value should be a string or collection or array.");
+            throw new JSONException("JSONArray initial value should be a string or collection or array.");
         }
     }
 
@@ -244,6 +250,7 @@ public class JSONArray implements Serializable {
      */
     public Object get(int index) throws JSONException {
         Object o = opt(index);
+
         if (o == null) {
             throw new JSONException("JSONArray[" + index + "] not found.");
         }
@@ -261,11 +268,10 @@ public class JSONArray implements Serializable {
      */
     public boolean getBoolean(int index) throws JSONException {
         Object o = get(index);
-        if (o.equals(Boolean.FALSE) || (o instanceof String && ((String) o).
-                                        equalsIgnoreCase("false"))) {
+
+        if (o.equals(Boolean.FALSE) || (o instanceof String && ((String) o).equalsIgnoreCase("false"))) {
             return false;
-        } else if (o.equals(Boolean.TRUE) || (o instanceof String && ((String) o).
-                                                  equalsIgnoreCase("true"))) {
+        } else if (o.equals(Boolean.TRUE) || (o instanceof String && ((String) o).equalsIgnoreCase("true"))) {
             return true;
         }
         throw new JSONException("JSONArray[" + index + "] is not a Boolean.");
@@ -281,9 +287,9 @@ public class JSONArray implements Serializable {
      */
     public double getDouble(int index) throws JSONException {
         Object o = get(index);
+
         try {
-            return o instanceof Number ? ((Number) o).doubleValue() : Double.
-                    valueOf((String) o).doubleValue();
+            return o instanceof Number ? ((Number) o).doubleValue() : Double.valueOf((String) o).doubleValue();
         } catch (Exception e) {
             throw new JSONException("JSONArray[" + index + "] is not a number.");
         }
@@ -300,8 +306,8 @@ public class JSONArray implements Serializable {
      */
     public int getInt(int index) throws JSONException {
         Object o = get(index);
-        return o instanceof Number ? ((Number) o).intValue() : (int) getDouble(
-                index);
+
+        return o instanceof Number ? ((Number) o).intValue() : (int) getDouble(index);
     }
 
     /**
@@ -313,6 +319,7 @@ public class JSONArray implements Serializable {
      */
     public JSONArray getJSONArray(int index) throws JSONException {
         Object o = get(index);
+
         if (o instanceof JSONArray) {
             return (JSONArray) o;
         }
@@ -328,6 +335,7 @@ public class JSONArray implements Serializable {
      */
     public JSONObject getJSONObject(int index) throws JSONException {
         Object o = get(index);
+
         if (o instanceof JSONObject) {
             return (JSONObject) o;
         }
@@ -344,8 +352,8 @@ public class JSONArray implements Serializable {
      */
     public long getLong(int index) throws JSONException {
         Object o = get(index);
-        return o instanceof Number ? ((Number) o).longValue() : (long) getDouble(
-                index);
+
+        return o instanceof Number ? ((Number) o).longValue() : (long) getDouble(index);
     }
 
     /**
@@ -404,8 +412,7 @@ public class JSONArray implements Serializable {
      *              object at that index.
      */
     public Object opt(int index) {
-        return (index < 0 || index >= length()) ? null : this.myArrayList.get(
-                index);
+        return (index < 0 || index >= length()) ? null : this.myArrayList.get(index);
     }
 
     /**
@@ -502,6 +509,7 @@ public class JSONArray implements Serializable {
      */
     public JSONArray optJSONArray(int index) {
         Object o = opt(index);
+
         return o instanceof JSONArray ? (JSONArray) o : null;
     }
 
@@ -515,6 +523,7 @@ public class JSONArray implements Serializable {
      */
     public JSONObject optJSONObject(int index) {
         Object o = opt(index);
+
         return o instanceof JSONObject ? (JSONObject) o : null;
     }
 
@@ -568,6 +577,7 @@ public class JSONArray implements Serializable {
      */
     public String optString(int index, String defaultValue) {
         Object o = opt(index);
+
         return o != null ? o.toString() : defaultValue;
     }
 
@@ -602,6 +612,7 @@ public class JSONArray implements Serializable {
      */
     public JSONArray put(double value) throws JSONException {
         Double d = new Double(value);
+
         JSONObject.testValidity(d);
         put(d);
         return this;
@@ -773,6 +784,7 @@ public class JSONArray implements Serializable {
      */
     public Object remove(int index) {
         Object o = opt(index);
+
         this.myArrayList.remove(index);
         return o;
     }
@@ -791,6 +803,7 @@ public class JSONArray implements Serializable {
             return null;
         }
         JSONObject jo = new JSONObject();
+
         for (int i = 0; i < names.length(); i += 1) {
             jo.put(names.getString(i), this.opt(i));
         }
@@ -843,16 +856,18 @@ public class JSONArray implements Serializable {
      */
     String toString(int indentFactor, int indent) throws JSONException {
         int len = length();
+
         if (len == 0) {
             return "[]";
         }
         int i;
         StringBuffer sb = new StringBuffer("[");
+
         if (len == 1) {
-            sb.append(JSONObject.valueToString(this.myArrayList.get(0),
-                                               indentFactor, indent));
+            sb.append(JSONObject.valueToString(this.myArrayList.get(0), indentFactor, indent));
         } else {
             int newindent = indent + indentFactor;
+
             sb.append('\n');
             for (i = 0; i < len; i += 1) {
                 if (i > 0) {
@@ -861,8 +876,7 @@ public class JSONArray implements Serializable {
                 for (int j = 0; j < newindent; j += 1) {
                     sb.append(' ');
                 }
-                sb.append(JSONObject.valueToString(this.myArrayList.get(i),
-                                                   indentFactor, newindent));
+                sb.append(JSONObject.valueToString(this.myArrayList.get(i), indentFactor, newindent));
             }
             sb.append('\n');
             for (i = 0; i < indent; i += 1) {
@@ -894,6 +908,7 @@ public class JSONArray implements Serializable {
                     writer.write(',');
                 }
                 Object v = this.myArrayList.get(i);
+
                 if (v instanceof JSONObject) {
                     ((JSONObject) v).write(writer);
                 } else if (v instanceof JSONArray) {

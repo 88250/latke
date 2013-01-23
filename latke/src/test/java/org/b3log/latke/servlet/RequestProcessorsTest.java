@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,17 @@
  */
 package org.b3log.latke.servlet;
 
+import java.util.HashSet;
+import java.util.List;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.b3log.latke.Latkes;
 import org.b3log.latke.servlet.converter.ConvertSupport;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.servlet.renderer.DoNothingRenderer;
+import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.testhelper.MockService;
 import org.b3log.latke.testhelper.VirtualObject;
 import org.testng.annotations.Test;
@@ -29,7 +36,7 @@ import org.testng.annotations.Test;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 3, 2012
  */
-@SuppressWarnings({"unchecked", "rawtypes" })
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class RequestProcessorsTest extends TestCase {
 
     static {
@@ -151,4 +158,46 @@ public class RequestProcessorsTest extends TestCase {
         Assert.assertEquals("12", ret);
 
     }
+
+    /**
+     * test scanClass.
+     * @throws Exception Exception  
+     */
+    @Test
+    public void testScanClass() throws Exception {
+
+        RequestProcessors.discover("org.b3log,org.b3log.latke");
+        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
+        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
+        final int totalMatched = 14;
+        Assert.assertEquals(totalMatched, hashSet.size());
+
+    }
+
+    /**
+     * testInitRender.
+     */
+    @Test
+    public void testInitRender() {
+        
+        Latkes.initRuntimeEnv();
+
+        String requestURI = "/do/render";
+        final AbstractHTTPResponseRenderer ret = (AbstractHTTPResponseRenderer) RequestProcessors.invoke(requestURI, "/", "GET",
+                new HTTPRequestContext());
+        Assert.assertNotNull(ret);
+
+        requestURI = "/do/render1";
+        final List<AbstractHTTPResponseRenderer> list = (List<AbstractHTTPResponseRenderer>) RequestProcessors.invoke(requestURI, "/",
+                "GET",
+                new HTTPRequestContext());
+        final int totalMatched = 3;
+        Assert.assertEquals(list.size(), totalMatched);
+        Assert.assertTrue(list.get(0) instanceof JSONRenderer);
+        Assert.assertTrue(list.get(1) instanceof DoNothingRenderer);
+        Assert.assertTrue(list.get(2) instanceof JSONRenderer);
+        Assert.assertFalse(list.get(0) == list.get(2));
+
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+
 
 /**
  * 
@@ -39,6 +41,7 @@ public final class JdbcFactory implements JdbcDatabase {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(JdbcRepository.class.getName());
+
     /**
      * the holder of the databaseSolution.
      */
@@ -53,17 +56,16 @@ public final class JdbcFactory implements JdbcDatabase {
      * all JdbcDatabaseSolution className in here.
      */
     @SuppressWarnings("serial")
-    private static Map<RuntimeDatabase, String> jdbcDatabaseSolutionMap =
-            new HashMap<RuntimeDatabase, String>() {
-                {
-                    put(RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
-                    put(RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
-                }
-            };
+    private static Map<RuntimeDatabase, String> jdbcDatabaseSolutionMap = new HashMap<RuntimeDatabase, String>() {
+        {
+            put(RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
+            put(RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
+        }
+    };
 
     @Override
     public boolean createTable(final String tableName,
-            final List<FieldDefinition> fieldDefinitions) throws SQLException {
+        final List<FieldDefinition> fieldDefinitions) throws SQLException {
         return databaseSolution.createTable(tableName, fieldDefinitions);
     }
 
@@ -94,22 +96,21 @@ public final class JdbcFactory implements JdbcDatabase {
          * Latkes.getRuntimeDatabase(); 
          */
         final String databaseSolutionClassName = jdbcDatabaseSolutionMap.get(Latkes.getRuntimeDatabase());
+
         try {
             databaseSolution = (AbstractJdbcDatabaseSolution) Class.forName(databaseSolutionClassName).newInstance();
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "init the ["
-                    + databaseSolutionClassName + "]JdbcDatabaseSolution instance wrong", e);
+            LOGGER.log(Level.SEVERE, "init the [" + databaseSolutionClassName + "]JdbcDatabaseSolution instance wrong", e);
         }
 
     }
 
     @Override
     public String queryPage(final int start, final int end,
-            final String selectSql, final String filterSql, final String orderBySql,
-            final String tableName) {
+        final String selectSql, final String filterSql, final String orderBySql,
+        final String tableName) {
 
-        return databaseSolution.queryPage(start, end, selectSql, filterSql, orderBySql,
-                tableName);
+        return databaseSolution.queryPage(start, end, selectSql, filterSql, orderBySql, tableName);
     }
 
     @Override

@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.mail.gae;
 
+
 import com.google.appengine.api.mail.MailServiceFactory;
 import java.io.IOException;
 import org.b3log.latke.mail.MailService;
+
 
 /**
  * Google App Engine mail service.

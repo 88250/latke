@@ -1,5 +1,6 @@
 package org.json;
 
+
 /*
  * Copyright (c) 2002 JSON.org
  *
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
+
 
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its external
@@ -140,10 +142,12 @@ public class JSONObject implements Serializable {
             return "null";
         }
     }
+
     /**
      * The map where the JSONObject's properties are kept.
      */
     private Map map;
+
     /**
      * It is sometimes more convenient and less ambiguous to have a
      * <code>NULL</code> object than to use Java's
@@ -197,13 +201,15 @@ public class JSONObject implements Serializable {
         for (;;) {
             c = x.nextClean();
             switch (c) {
-                case 0:
-                    throw x.syntaxError("A JSONObject text must end with '}'");
-                case '}':
-                    return;
-                default:
-                    x.back();
-                    key = x.nextValue().toString();
+            case 0:
+                throw x.syntaxError("A JSONObject text must end with '}'");
+
+            case '}':
+                return;
+
+            default:
+                x.back();
+                key = x.nextValue().toString();
             }
 
             /*
@@ -225,17 +231,19 @@ public class JSONObject implements Serializable {
              */
 
             switch (x.nextClean()) {
-                case ';':
-                case ',':
-                    if (x.nextClean() == '}') {
-                        return;
-                    }
-                    x.back();
-                    break;
-                case '}':
+            case ';':
+            case ',':
+                if (x.nextClean() == '}') {
                     return;
-                default:
-                    throw x.syntaxError("Expected a ',' or '}'");
+                }
+                x.back();
+                break;
+
+            case '}':
+                return;
+
+            default:
+                throw x.syntaxError("Expected a ',' or '}'");
             }
         }
     }
@@ -263,13 +271,14 @@ public class JSONObject implements Serializable {
         this.map = new HashMap();
         if (map != null) {
             Iterator i = map.entrySet().iterator();
+
             while (i.hasNext()) {
                 Map.Entry e = (Map.Entry) i.next();
+
                 if (isStandardProperty(e.getValue().getClass())) {
                     this.map.put(e.getKey(), e.getValue());
                 } else {
-                    this.map.put(e.getKey(), new JSONObject(e.getValue(),
-                                                            includeSuperClass));
+                    this.map.put(e.getKey(), new JSONObject(e.getValue(), includeSuperClass));
                 }
             }
         }
@@ -338,50 +347,45 @@ public class JSONObject implements Serializable {
             includeSuperClass = false;
         }
 
-        Method[] methods = (includeSuperClass) ? klass.getMethods() : klass.
-                getDeclaredMethods();
+        Method[] methods = (includeSuperClass) ? klass.getMethods() : klass.getDeclaredMethods();
+
         for (int i = 0; i < methods.length; i += 1) {
             try {
                 Method method = methods[i];
+
                 if (Modifier.isPublic(method.getModifiers())) {
                     String name = method.getName();
                     String key = "";
+
                     if (name.startsWith("get")) {
                         key = name.substring(3);
                     } else if (name.startsWith("is")) {
                         key = name.substring(2);
                     }
-                    if (key.length() > 0 && Character.isUpperCase(key.charAt(0))
-                        && method.getParameterTypes().length == 0) {
+                    if (key.length() > 0 && Character.isUpperCase(key.charAt(0)) && method.getParameterTypes().length == 0) {
                         if (key.length() == 1) {
                             key = key.toLowerCase();
                         } else if (!Character.isUpperCase(key.charAt(1))) {
-                            key = key.substring(0, 1).toLowerCase() + key.
-                                    substring(1);
+                            key = key.substring(0, 1).toLowerCase() + key.substring(1);
                         }
 
                         Object result = method.invoke(bean, (Object[]) null);
+
                         if (result == null) {
                             map.put(key, NULL);
                         } else if (result.getClass().isArray()) {
-                            map.put(key,
-                                    new JSONArray(result, includeSuperClass));
+                            map.put(key, new JSONArray(result, includeSuperClass));
                         } else if (result instanceof Collection) { // List or Set
-                            map.put(key, new JSONArray((Collection) result,
-                                                       includeSuperClass));
+                            map.put(key, new JSONArray((Collection) result, includeSuperClass));
                         } else if (result instanceof Map) {
-                            map.put(key, new JSONObject((Map) result,
-                                                        includeSuperClass));
+                            map.put(key, new JSONObject((Map) result, includeSuperClass));
                         } else if (isStandardProperty(result.getClass())) { // Primitives, String and Wrapper
                             map.put(key, result);
                         } else {
-                            if (result.getClass().getPackage().getName().
-                                    startsWith("java") || result.getClass().
-                                    getClassLoader() == null) {
+                            if (result.getClass().getPackage().getName().startsWith("java") || result.getClass().getClassLoader() == null) {
                                 map.put(key, result.toString());
                             } else { // User defined Objects
-                                map.put(key, new JSONObject(result,
-                                                            includeSuperClass));
+                                map.put(key, new JSONObject(result, includeSuperClass));
                             }
                         }
                     }
@@ -393,14 +397,10 @@ public class JSONObject implements Serializable {
     }
 
     static boolean isStandardProperty(Class clazz) {
-        return clazz.isPrimitive() || clazz.isAssignableFrom(Byte.class)
-               || clazz.isAssignableFrom(Short.class)
-               || clazz.isAssignableFrom(Integer.class) || clazz.
-                isAssignableFrom(Long.class) || clazz.isAssignableFrom(
-                Float.class) || clazz.isAssignableFrom(Double.class) || clazz.
-                isAssignableFrom(Character.class)
-               || clazz.isAssignableFrom(String.class)
-               || clazz.isAssignableFrom(Boolean.class);
+        return clazz.isPrimitive() || clazz.isAssignableFrom(Byte.class) || clazz.isAssignableFrom(Short.class)
+            || clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(Float.class)
+            || clazz.isAssignableFrom(Double.class) || clazz.isAssignableFrom(Character.class) || clazz.isAssignableFrom(String.class)
+            || clazz.isAssignableFrom(Boolean.class);
     }
 
     /**
@@ -418,15 +418,15 @@ public class JSONObject implements Serializable {
     public JSONObject(Object object, String names[]) {
         this();
         Class c = object.getClass();
+
         for (int i = 0; i < names.length; i += 1) {
             String name = names[i];
+
             try {
                 putOpt(name, c.getField(name).get(object));
-            } catch (Exception e) {
-                /*
+            } catch (Exception e) {/*
                  * forget about it
-                 */
-            }
+                 */}
         }
     }
 
@@ -458,12 +458,12 @@ public class JSONObject implements Serializable {
      * null.
      */
     public JSONObject accumulate(String key, Object value)
-            throws JSONException {
+        throws JSONException {
         testValidity(value);
         Object o = opt(key);
+
         if (o == null) {
-            put(key, value instanceof JSONArray ? new JSONArray().put(value)
-                     : value);
+            put(key, value instanceof JSONArray ? new JSONArray().put(value) : value);
         } else if (o instanceof JSONArray) {
             ((JSONArray) o).put(value);
         } else {
@@ -485,16 +485,16 @@ public class JSONObject implements Serializable {
      * associated with the key is not a JSONArray.
      */
     public JSONObject append(String key, Object value)
-            throws JSONException {
+        throws JSONException {
         testValidity(value);
         Object o = opt(key);
+
         if (o == null) {
             put(key, new JSONArray().put(value));
         } else if (o instanceof JSONArray) {
             put(key, ((JSONArray) o).put(value));
         } else {
-            throw new JSONException("JSONObject[" + key
-                                    + "] is not a JSONArray.");
+            throw new JSONException("JSONObject[" + key + "] is not a JSONArray.");
         }
         return this;
     }
@@ -511,9 +511,10 @@ public class JSONObject implements Serializable {
             return "null";
         }
 
-// Shave off trailing zeros and decimal point, if possible.
+        // Shave off trailing zeros and decimal point, if possible.
 
         String s = Double.toString(d);
+
         if (s.indexOf('.') > 0 && s.indexOf('e') < 0 && s.indexOf('E') < 0) {
             while (s.endsWith("0")) {
                 s = s.substring(0, s.length() - 1);
@@ -534,6 +535,7 @@ public class JSONObject implements Serializable {
      */
     public Object get(String key) throws JSONException {
         Object o = opt(key);
+
         if (o == null) {
             throw new JSONException("JSONObject[" + quote(key) + "] not found.");
         }
@@ -550,16 +552,13 @@ public class JSONObject implements Serializable {
      */
     public boolean getBoolean(String key) throws JSONException {
         Object o = get(key);
-        if (o.equals(Boolean.FALSE) || (o instanceof String && ((String) o).
-                                        equalsIgnoreCase("false"))) {
+
+        if (o.equals(Boolean.FALSE) || (o instanceof String && ((String) o).equalsIgnoreCase("false"))) {
             return false;
-        } else if (o.equals(Boolean.TRUE) || (o instanceof String
-                                              && ((String) o).equalsIgnoreCase(
-                                              "true"))) {
+        } else if (o.equals(Boolean.TRUE) || (o instanceof String && ((String) o).equalsIgnoreCase("true"))) {
             return true;
         }
-        throw new JSONException("JSONObject[" + quote(key)
-                                + "] is not a Boolean.");
+        throw new JSONException("JSONObject[" + quote(key) + "] is not a Boolean.");
     }
 
     /**
@@ -572,12 +571,11 @@ public class JSONObject implements Serializable {
      */
     public double getDouble(String key) throws JSONException {
         Object o = get(key);
+
         try {
-            return o instanceof Number ? ((Number) o).doubleValue() : Double.
-                    valueOf((String) o).doubleValue();
+            return o instanceof Number ? ((Number) o).doubleValue() : Double.valueOf((String) o).doubleValue();
         } catch (Exception e) {
-            throw new JSONException("JSONObject[" + quote(key)
-                                    + "] is not a number.");
+            throw new JSONException("JSONObject[" + quote(key) + "] is not a number.");
         }
     }
 
@@ -592,8 +590,8 @@ public class JSONObject implements Serializable {
      */
     public int getInt(String key) throws JSONException {
         Object o = get(key);
-        return o instanceof Number ? ((Number) o).intValue() : (int) getDouble(
-                key);
+
+        return o instanceof Number ? ((Number) o).intValue() : (int) getDouble(key);
     }
 
     /**
@@ -606,11 +604,11 @@ public class JSONObject implements Serializable {
      */
     public JSONArray getJSONArray(String key) throws JSONException {
         Object o = get(key);
+
         if (o instanceof JSONArray) {
             return (JSONArray) o;
         }
-        throw new JSONException("JSONObject[" + quote(key)
-                                + "] is not a JSONArray.");
+        throw new JSONException("JSONObject[" + quote(key) + "] is not a JSONArray.");
     }
 
     /**
@@ -623,11 +621,11 @@ public class JSONObject implements Serializable {
      */
     public JSONObject getJSONObject(String key) throws JSONException {
         Object o = get(key);
+
         if (o instanceof JSONObject) {
             return (JSONObject) o;
         }
-        throw new JSONException("JSONObject[" + quote(key)
-                                + "] is not a JSONObject.");
+        throw new JSONException("JSONObject[" + quote(key) + "] is not a JSONObject.");
     }
 
     /**
@@ -641,8 +639,8 @@ public class JSONObject implements Serializable {
      */
     public long getLong(String key) throws JSONException {
         Object o = get(key);
-        return o instanceof Number ? ((Number) o).longValue()
-               : (long) getDouble(key);
+
+        return o instanceof Number ? ((Number) o).longValue() : (long) getDouble(key);
     }
 
     /**
@@ -652,12 +650,14 @@ public class JSONObject implements Serializable {
      */
     public static String[] getNames(JSONObject jo) {
         int length = jo.length();
+
         if (length == 0) {
             return null;
         }
         Iterator i = jo.keys();
         String[] names = new String[length];
         int j = 0;
+
         while (i.hasNext()) {
             names[j] = (String) i.next();
             j += 1;
@@ -677,10 +677,12 @@ public class JSONObject implements Serializable {
         Class klass = object.getClass();
         Field[] fields = klass.getFields();
         int length = fields.length;
+
         if (length == 0) {
             return null;
         }
         String[] names = new String[length];
+
         for (int i = 0; i < length; i += 1) {
             names[i] = fields[i].getName();
         }
@@ -748,6 +750,7 @@ public class JSONObject implements Serializable {
     public JSONArray names() {
         JSONArray ja = new JSONArray();
         Iterator keys = keys();
+
         while (keys.hasNext()) {
             ja.put(keys.next());
         }
@@ -762,15 +765,16 @@ public class JSONObject implements Serializable {
      * @throws JSONException If n is a non-finite number.
      */
     static public String numberToString(Number n)
-            throws JSONException {
+        throws JSONException {
         if (n == null) {
             throw new JSONException("Null pointer");
         }
         testValidity(n);
 
-// Shave off trailing zeros and decimal point, if possible.
+        // Shave off trailing zeros and decimal point, if possible.
 
         String s = n.toString();
+
         if (s.indexOf('.') > 0 && s.indexOf('e') < 0 && s.indexOf('E') < 0) {
             while (s.endsWith("0")) {
                 s = s.substring(0, s.length() - 1);
@@ -844,8 +848,8 @@ public class JSONObject implements Serializable {
     public double optDouble(String key, double defaultValue) {
         try {
             Object o = opt(key);
-            return o instanceof Number ? ((Number) o).doubleValue()
-                   : new Double((String) o).doubleValue();
+
+            return o instanceof Number ? ((Number) o).doubleValue() : new Double((String) o).doubleValue();
         } catch (Exception e) {
             return defaultValue;
         }
@@ -889,6 +893,7 @@ public class JSONObject implements Serializable {
      */
     public JSONArray optJSONArray(String key) {
         Object o = opt(key);
+
         return o instanceof JSONArray ? (JSONArray) o : null;
     }
 
@@ -901,6 +906,7 @@ public class JSONObject implements Serializable {
      */
     public JSONObject optJSONObject(String key) {
         Object o = opt(key);
+
         return o instanceof JSONObject ? (JSONObject) o : null;
     }
 
@@ -955,6 +961,7 @@ public class JSONObject implements Serializable {
      */
     public String optString(String key, String defaultValue) {
         Object o = opt(key);
+
         return o != null ? o.toString() : defaultValue;
     }
 
@@ -1071,8 +1078,7 @@ public class JSONObject implements Serializable {
     public JSONObject putOnce(String key, Object value) {
         if (key != null && value != null) {
             if (opt(key) != null) {
-                throw new IllegalArgumentException("Duplicate key \"" + key
-                                                   + "\"");
+                throw new IllegalArgumentException("Duplicate key \"" + key + "\"");
             }
             put(key, value);
         }
@@ -1125,40 +1131,46 @@ public class JSONObject implements Serializable {
             b = c;
             c = string.charAt(i);
             switch (c) {
-                case '\\':
-                case '"':
+            case '\\':
+            case '"':
+                sb.append('\\');
+                sb.append(c);
+                break;
+
+            case '/':
+                if (b == '<') {
                     sb.append('\\');
+                }
+                sb.append(c);
+                break;
+
+            case '\b':
+                sb.append("\\b");
+                break;
+
+            case '\t':
+                sb.append("\\t");
+                break;
+
+            case '\n':
+                sb.append("\\n");
+                break;
+
+            case '\f':
+                sb.append("\\f");
+                break;
+
+            case '\r':
+                sb.append("\\r");
+                break;
+
+            default:
+                if (c < ' ' || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
+                    t = "000" + Integer.toHexString(c);
+                    sb.append("\\u" + t.substring(t.length() - 4));
+                } else {
                     sb.append(c);
-                    break;
-                case '/':
-                    if (b == '<') {
-                        sb.append('\\');
-                    }
-                    sb.append(c);
-                    break;
-                case '\b':
-                    sb.append("\\b");
-                    break;
-                case '\t':
-                    sb.append("\\t");
-                    break;
-                case '\n':
-                    sb.append("\\n");
-                    break;
-                case '\f':
-                    sb.append("\\f");
-                    break;
-                case '\r':
-                    sb.append("\\r");
-                    break;
-                default:
-                    if (c < ' ' || (c >= '\u0080' && c < '\u00a0')
-                        || (c >= '\u2000' && c < '\u2100')) {
-                        t = "000" + Integer.toHexString(c);
-                        sb.append("\\u" + t.substring(t.length() - 4));
-                    } else {
-                        sb.append(c);
-                    }
+                }
             }
         }
         sb.append('"');
@@ -1216,44 +1228,38 @@ public class JSONObject implements Serializable {
          */
 
         char b = s.charAt(0);
+
         if ((b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+') {
             if (b == '0') {
                 if (s.length() > 2 && (s.charAt(1) == 'x' || s.charAt(1) == 'X')) {
                     try {
-                        return new Integer(Integer.parseInt(s.substring(2),
-                                                            16));
-                    } catch (Exception e) {
-                        /*
+                        return new Integer(Integer.parseInt(s.substring(2), 16));
+                    } catch (Exception e) {/*
                          * Ignore the error
-                         */
-                    }
+                         */}
                 } else {
                     try {
                         return new Integer(Integer.parseInt(s, 8));
-                    } catch (Exception e) {
-                        /*
+                    } catch (Exception e) {/*
                          * Ignore the error
-                         */
-                    }
+                         */}
                 }
             }
             try {
-                if (s.indexOf('.') > -1 || s.indexOf('e') > -1 || s.indexOf('E')
-                                                                  > -1) {
+                if (s.indexOf('.') > -1 || s.indexOf('e') > -1 || s.indexOf('E') > -1) {
                     return Double.valueOf(s);
                 } else {
                     Long myLong = new Long(s);
+
                     if (myLong.longValue() == myLong.intValue()) {
                         return new Integer(myLong.intValue());
                     } else {
                         return myLong;
                     }
                 }
-            } catch (Exception f) {
-                /*
+            } catch (Exception f) {/*
                  * Ignore the error
-                 */
-            }
+                 */}
         }
         return s;
     }
@@ -1268,13 +1274,11 @@ public class JSONObject implements Serializable {
         if (o != null) {
             if (o instanceof Double) {
                 if (((Double) o).isInfinite() || ((Double) o).isNaN()) {
-                    throw new IllegalArgumentException(
-                            "JSON does not allow non-finite numbers.");
+                    throw new IllegalArgumentException("JSON does not allow non-finite numbers.");
                 }
             } else if (o instanceof Float) {
                 if (((Float) o).isInfinite() || ((Float) o).isNaN()) {
-                    throw new IllegalArgumentException(
-                            "JSON does not allow non-finite numbers.");
+                    throw new IllegalArgumentException("JSON does not allow non-finite numbers.");
                 }
             }
         }
@@ -1294,6 +1298,7 @@ public class JSONObject implements Serializable {
             return null;
         }
         JSONArray ja = new JSONArray();
+
         for (int i = 0; i < names.length(); i += 1) {
             ja.put(this.opt(names.getString(i)));
         }
@@ -1321,6 +1326,7 @@ public class JSONObject implements Serializable {
                     sb.append(',');
                 }
                 Object o = keys.next();
+
                 sb.append(quote(o.toString()));
                 sb.append(':');
                 sb.append(valueToString(this.map.get(o)));
@@ -1364,6 +1370,7 @@ public class JSONObject implements Serializable {
     String toString(int indentFactor, int indent) throws JSONException {
         int j;
         int n = length();
+
         if (n == 0) {
             return "{}";
         }
@@ -1371,12 +1378,12 @@ public class JSONObject implements Serializable {
         StringBuffer sb = new StringBuffer("{");
         int newindent = indent + indentFactor;
         Object o;
+
         if (n == 1) {
             o = keys.next();
             sb.append(quote(o.toString()));
             sb.append(": ");
-            sb.append(valueToString(this.map.get(o), indentFactor,
-                                    indent));
+            sb.append(valueToString(this.map.get(o), indentFactor, indent));
         } else {
             while (keys.hasNext()) {
                 o = keys.next();
@@ -1390,8 +1397,7 @@ public class JSONObject implements Serializable {
                 }
                 sb.append(quote(o.toString()));
                 sb.append(": ");
-                sb.append(valueToString(this.map.get(o), indentFactor,
-                                        newindent));
+                sb.append(valueToString(this.map.get(o), indentFactor, newindent));
             }
             if (sb.length() > 1) {
                 sb.append('\n');
@@ -1431,6 +1437,7 @@ public class JSONObject implements Serializable {
         }
         if (value instanceof JSONString) {
             Object o;
+
             try {
                 o = ((JSONString) value).toJSONString();
             } catch (Exception e) {
@@ -1444,8 +1451,7 @@ public class JSONObject implements Serializable {
         if (value instanceof Number) {
             return numberToString((Number) value);
         }
-        if (value instanceof Boolean || value instanceof JSONObject
-            || value instanceof JSONArray) {
+        if (value instanceof Boolean || value instanceof JSONObject || value instanceof JSONArray) {
             return value.toString();
         }
         if (value instanceof Map) {
@@ -1475,22 +1481,21 @@ public class JSONObject implements Serializable {
      * @throws JSONException If the object contains an invalid number.
      */
     static String valueToString(Object value, int indentFactor, int indent)
-            throws JSONException {
+        throws JSONException {
         if (value == null || value.equals(null)) {
             return "null";
         }
         try {
             if (value instanceof JSONString) {
                 Object o = ((JSONString) value).toJSONString();
+
                 if (o instanceof String) {
                     return (String) o;
                 }
             }
-        } catch (Exception e) {
-            /*
+        } catch (Exception e) {/*
              * forget about it
-             */
-        }
+             */}
         if (value instanceof Number) {
             return numberToString((Number) value);
         }
@@ -1507,8 +1512,7 @@ public class JSONObject implements Serializable {
             return new JSONObject((Map) value).toString(indentFactor, indent);
         }
         if (value instanceof Collection) {
-            return new JSONArray((Collection) value).toString(indentFactor,
-                                                              indent);
+            return new JSONArray((Collection) value).toString(indentFactor, indent);
         }
         if (value.getClass().isArray()) {
             return new JSONArray(value).toString(indentFactor, indent);
@@ -1528,6 +1532,7 @@ public class JSONObject implements Serializable {
         try {
             boolean b = false;
             Iterator keys = keys();
+
             writer.write('{');
 
             while (keys.hasNext()) {
@@ -1535,9 +1540,11 @@ public class JSONObject implements Serializable {
                     writer.write(',');
                 }
                 Object k = keys.next();
+
                 writer.write(quote(k.toString()));
                 writer.write(':');
                 Object v = this.map.get(k);
+
                 if (v instanceof JSONObject) {
                     ((JSONObject) v).write(writer);
                 } else if (v instanceof JSONArray) {

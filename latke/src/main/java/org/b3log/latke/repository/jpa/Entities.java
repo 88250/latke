@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.repository.jpa;
 
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+
 
 /**
  * Entity utilities.
@@ -31,6 +33,7 @@ public final class Entities {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Entities.class.getName());
+
     /**
      * Meta entities.
      * 
@@ -62,6 +65,5 @@ public final class Entities {
     /**
      * Entity scanner.
      */
-    private Entities() {
-    }
+    private Entities() {}
 }

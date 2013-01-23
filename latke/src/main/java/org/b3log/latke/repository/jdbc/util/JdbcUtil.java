@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.b3log.latke.repository.jdbc.util;
+
 
 import java.io.IOException;
 import java.sql.Clob;
@@ -36,6 +37,7 @@ import org.b3log.latke.repository.RepositoryException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 /**
  * JDBC utilities.
@@ -64,6 +66,7 @@ public final class JdbcUtil {
 
         final Statement statement = connection.createStatement();
         final boolean isSuccess = !statement.execute(sql);
+
         statement.close();
         return isSuccess;
     }
@@ -86,6 +89,7 @@ public final class JdbcUtil {
             preparedStatement.setObject(i, paramList.get(i - 1));
         }
         final boolean isSuccess = preparedStatement.execute();
+
         preparedStatement.close();
 
         return isSuccess;
@@ -105,7 +109,7 @@ public final class JdbcUtil {
      * @throws RepositoryException repositoryException
      */
     public static JSONObject queryJsonObject(final String sql, final List<Object> paramList, final Connection connection,
-            final String tableName) throws SQLException, JSONException, RepositoryException {
+        final String tableName) throws SQLException, JSONException, RepositoryException {
 
         return queryJson(sql, paramList, connection, true, tableName);
 
@@ -125,8 +129,9 @@ public final class JdbcUtil {
      * @throws RepositoryException repositoryException
      */
     public static JSONArray queryJsonArray(final String sql, final List<Object> paramList, final Connection connection,
-            final String tableName) throws SQLException, JSONException, RepositoryException {
+        final String tableName) throws SQLException, JSONException, RepositoryException {
         final JSONObject jsonObject = queryJson(sql, paramList, connection, false, tableName);
+
         return jsonObject.getJSONArray(Keys.RESULTS);
 
     }
@@ -144,7 +149,7 @@ public final class JdbcUtil {
      * @throws RepositoryException respsitoryException
      */
     private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection,
-            final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
+        final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
         LOGGER.log(Level.FINEST, "querySql: {0}", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -156,6 +161,7 @@ public final class JdbcUtil {
         final ResultSet resultSet = preparedStatement.executeQuery();
 
         final JSONObject jsonObject = resultSetToJsonObject(resultSet, ifOnlyOne, tableName);
+
         preparedStatement.close();
         return jsonObject;
 
@@ -174,7 +180,7 @@ public final class JdbcUtil {
      * @throws RepositoryException RepositoryException
      */
     private static JSONObject resultSetToJsonObject(final ResultSet resultSet, final boolean ifOnlyOne, final String tableName)
-            throws SQLException, JSONException, RepositoryException {
+        throws SQLException, JSONException, RepositoryException {
         final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
         final List<FieldDefinition> definitioList = JdbcRepositories.getRepositoriesMap().get(tableName);
@@ -185,6 +191,7 @@ public final class JdbcUtil {
         }
 
         final Map<String, FieldDefinition> dMap = new HashMap<String, FieldDefinition>();
+
         for (FieldDefinition fieldDefinition : definitioList) {
             if (RuntimeDatabase.H2 == Latkes.getRuntimeDatabase()) {
                 dMap.put(fieldDefinition.getName().toUpperCase(), fieldDefinition);
@@ -198,6 +205,7 @@ public final class JdbcUtil {
         final JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject;
         String columnName;
+
         while (resultSet.next()) {
             jsonObject = new JSONObject();
 
@@ -205,6 +213,7 @@ public final class JdbcUtil {
                 columnName = resultSetMetaData.getColumnName(i);
 
                 final FieldDefinition definition = dMap.get(columnName);
+
                 if (definition == null) { // COUNT(OID)
                     jsonObject.put(columnName, resultSet.getObject(columnName));
                 } else {
@@ -225,11 +234,12 @@ public final class JdbcUtil {
                                 final Clob clob = (Clob) v;
 
                                 String str = null;
+
                                 try {
                                     str = IOUtils.toString(clob.getCharacterStream());
                                 } catch (final IOException e) {
-                                    LOGGER.log(Level.SEVERE, "Cant not read column[name=" + columnName + "] in table[name=" + tableName
-                                            + "] on H2", e);
+                                    LOGGER.log(Level.SEVERE,
+                                        "Cant not read column[name=" + columnName + "] in table[name=" + tableName + "] on H2", e);
                                 } finally {
                                     clob.free();
                                 }
@@ -270,6 +280,5 @@ public final class JdbcUtil {
     /**
      * Private constructor.
      */
-    private JdbcUtil() {
-    }
+    private JdbcUtil() {}
 }

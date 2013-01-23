@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.taskqueue.gae;
 
+
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import java.util.logging.Level;
@@ -24,6 +25,7 @@ import org.b3log.latke.taskqueue.Queue;
 import org.b3log.latke.taskqueue.Task;
 import org.b3log.latke.taskqueue.TaskHandle;
 import org.b3log.latke.taskqueue.TaskQueueService;
+
 
 /**
  * Google App Engine task queue service.
@@ -49,26 +51,31 @@ public final class GAETaskQueueService implements TaskQueueService {
                 final HTTPRequestMethod requestMethod = task.getRequestMethod();
 
                 switch (requestMethod) {
-                    case GET:
-                        taskOptions.method(TaskOptions.Method.GET);
-                        break;
-                    case DELETE:
-                        taskOptions.method(TaskOptions.Method.DELETE);
-                        break;
-                    case HEAD:
-                        taskOptions.method(TaskOptions.Method.HEAD);
-                        break;
-                    case POST:
-                        taskOptions.payload(task.getPayload());
-                        taskOptions.method(TaskOptions.Method.POST);
-                        break;
-                    case PUT:
-                        taskOptions.method(TaskOptions.Method.PUT);
-                        break;
-                    default:
-                        LOGGER.log(Level.WARNING, "Task request method[{0}], uses GET method instead", requestMethod);
-                        taskOptions.method(TaskOptions.Method.GET);
-                        break;
+                case GET:
+                    taskOptions.method(TaskOptions.Method.GET);
+                    break;
+
+                case DELETE:
+                    taskOptions.method(TaskOptions.Method.DELETE);
+                    break;
+
+                case HEAD:
+                    taskOptions.method(TaskOptions.Method.HEAD);
+                    break;
+
+                case POST:
+                    taskOptions.payload(task.getPayload());
+                    taskOptions.method(TaskOptions.Method.POST);
+                    break;
+
+                case PUT:
+                    taskOptions.method(TaskOptions.Method.PUT);
+                    break;
+
+                default:
+                    LOGGER.log(Level.WARNING, "Task request method[{0}], uses GET method instead", requestMethod);
+                    taskOptions.method(TaskOptions.Method.GET);
+                    break;
                 }
 
                 final com.google.appengine.api.taskqueue.TaskHandle handle = queue.add(taskOptions);

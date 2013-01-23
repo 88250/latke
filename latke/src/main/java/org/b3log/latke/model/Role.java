@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.model;
 
+
 /**
  * This class defines all role/group model relevant keys.
  *
@@ -27,39 +28,47 @@ public final class Role {
      * Role.
      */
     public static final String ROLE = "role";
+
     /**
      * Default role.
      */
     public static final String DEFAULT_ROLE = "defaultRole";
+
     /**
      * Administrator role.
      */
     public static final String ADMIN_ROLE = "adminRole";
+
     /**
      * Roles.
      */
     public static final String ROLES = "roles";
+
     /**
      * Role id.
      */
     public static final String ROLE_ID = "roleId";
+
     /**
      * Role name.
      */
     public static final String ROLE_NAME = "roleName";
+
     /**
      * Update time of this role.
      */
     public static final String ROLE_UPDATE_TIME = "roleUpdateTime";
+
     /**
      * Role permission set.
      */
     public static final String ROLE_PERMISSION_SET = "rolePermissionSet";
+
     /**
      * Role permission set relation role id.
      */
-    public static final String ROLE_PERMISSION_SET_RELATION_ROLE_ID =
-            "rolePermissionSetRelationRoleId";
+    public static final String ROLE_PERMISSION_SET_RELATION_ROLE_ID = "rolePermissionSetRelationRoleId";
+
     /**
      * Role user id.
      */
@@ -68,6 +77,5 @@ public final class Role {
     /**
      * Private default constructor.
      */
-    private Role() {
-    }
+    private Role() {}
 }

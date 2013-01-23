@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.b3log.latke.repository;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +34,7 @@ import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+
 /**
  * Repository utilities.
  *
@@ -45,6 +47,7 @@ public final class Repositories {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Repositories.class.getName());
+
     /**
      * Repository holder.
      * 
@@ -53,10 +56,12 @@ public final class Repositories {
      * <p>
      */
     private static final Map<String, Repository> REPOS_HOLDER = new ConcurrentHashMap<String, Repository>();
+
     /**
      * Repositories description (repository.json).
      */
     private static JSONObject repositoriesDescription;
+
     /**
      * Whether all repositories is writable.
      */
@@ -83,7 +88,7 @@ public final class Repositories {
 
             repository.setWritable(writable);
 
-            LOGGER.log(Level.INFO, "Sets repository[name={0}] writable[{1}]", new Object[]{repositoryName, writable});
+            LOGGER.log(Level.INFO, "Sets repository[name={0}] writable[{1}]", new Object[] {repositoryName, writable});
         }
 
         repositoryiesWritable = writable;
@@ -109,8 +114,10 @@ public final class Repositories {
         }
 
         final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
+
         for (int i = 0; i < repositories.length(); i++) {
             final JSONObject repository = repositories.optJSONObject(i);
+
             ret.put(repository.optString("name"));
         }
 
@@ -159,7 +166,7 @@ public final class Repositories {
      * @see Repository#update(java.lang.String, org.json.JSONObject) 
      */
     public static void check(final String repositoryName, final JSONObject jsonObject, final String... ignoredKeys)
-            throws RepositoryException {
+        throws RepositoryException {
         if (null == jsonObject) {
             throw new RepositoryException("Null to persist to repository[" + repositoryName + "]");
         }
@@ -170,6 +177,7 @@ public final class Repositories {
         final Set<Object> nameSet = CollectionUtils.jsonArrayToSet(names);
 
         final JSONArray keysDescription = getRepositoryKeysDescription(repositoryName);
+
         if (null == keysDescription) { // Not found repository description
             // Skips the checks
             return;
@@ -191,8 +199,8 @@ public final class Repositories {
             }
 
             if (!keyDescription.optBoolean("nullable") && !nameSet.contains(key)) {
-                throw new RepositoryException("A json object to persist to repository[name="
-                        + repositoryName + "] does not contain a key[" + key + "]");
+                throw new RepositoryException(
+                    "A json object to persist to repository[name=" + repositoryName + "] does not contain a key[" + key + "]");
             }
 
             // TODO: 88250, type and length validation
@@ -220,8 +228,8 @@ public final class Repositories {
             final String name = names.optString(i);
 
             if (!keySet.contains(name)) {
-                throw new RepositoryException("A json object to persist to repository[name="
-                        + repositoryName + "] contains an redundant key[" + name + "]");
+                throw new RepositoryException(
+                    "A json object to persist to repository[name=" + repositoryName + "] contains an redundant key[" + name + "]");
             }
         }
     }
@@ -242,15 +250,17 @@ public final class Repositories {
         }
 
         final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
+
         for (int i = 0; i < repositories.length(); i++) {
             final JSONObject repository = repositories.optJSONObject(i);
+
             if (repositoryName.equals(repository.optString("name"))) {
                 return repository.optJSONArray("keys");
             }
         }
 
-        throw new RuntimeException("Not found the repository[name="
-                + repositoryName + "] description, please define it in repositories.json");
+        throw new RuntimeException(
+            "Not found the repository[name=" + repositoryName + "] description, please define it in repositories.json");
     }
 
     /**
@@ -273,17 +283,19 @@ public final class Repositories {
 
         for (int i = 0; i < repositories.length(); i++) {
             final JSONObject repository = repositories.optJSONObject(i);
+
             if (repositoryName.equals(repository.optString("name"))) {
                 keys = repository.optJSONArray("keys");
             }
         }
 
         if (null == keys) {
-            throw new RuntimeException("Not found the repository[name=" + repositoryName
-                    + "] description, please define it in repositories.json");
+            throw new RuntimeException(
+                "Not found the repository[name=" + repositoryName + "] description, please define it in repositories.json");
         }
 
         final Set<String> ret = new HashSet<String>();
+
         for (int i = 0; i < keys.length(); i++) {
             final JSONObject keyDescription = keys.optJSONObject(i);
             final String key = keyDescription.optString("name");
@@ -320,6 +332,7 @@ public final class Repositories {
         LOGGER.log(Level.INFO, "Loading repository description....");
 
         final InputStream inputStream = AbstractRepository.class.getClassLoader().getResourceAsStream("repository.json");
+
         if (null == inputStream) {
             LOGGER.log(Level.INFO, "Not found repository description[repository.json] file under classpath");
             return;
@@ -330,17 +343,20 @@ public final class Repositories {
         try {
             final String description = IOUtils.toString(inputStream);
 
-            LOGGER.log(Level.CONFIG, "{0}{1}", new Object[]{Strings.LINE_SEPARATOR, description});
+            LOGGER.log(Level.CONFIG, "{0}{1}", new Object[] {Strings.LINE_SEPARATOR, description});
 
             repositoriesDescription = new JSONObject(description);
 
             // Repository name prefix
             final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
-                    ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_" : "";
+                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_"
+                : "";
 
             final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
+
             for (int i = 0; i < repositories.length(); i++) {
                 final JSONObject repository = repositories.optJSONObject(i);
+
                 repository.put("name", tableNamePrefix + repository.optString("name"));
             }
         } catch (final Exception e) {
@@ -358,6 +374,5 @@ public final class Repositories {
     /**
      * Private constructor.
      */
-    private Repositories() {
-    }
+    private Repositories() {}
 }

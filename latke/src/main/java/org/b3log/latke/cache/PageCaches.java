@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.b3log.latke.cache;
+
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ import org.b3log.latke.util.Serializer;
 import org.b3log.latke.util.Strings;
 import org.b3log.latke.util.freemarker.Templates;
 import org.json.JSONObject;
+
 
 /**
  * Page cache.
@@ -57,7 +59,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.3, Aug 27, 2012
+ * @version 1.0.2.4, Jan 23, 2013
  * @since 0.3.1
  */
 @SuppressWarnings("unchecked")
@@ -67,6 +69,7 @@ public final class PageCaches {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(PageCaches.class.getName());
+
     /**
      * Page cache.
      * <p>
@@ -74,54 +77,57 @@ public final class PageCaches {
      * </p>
      */
     private static final Cache<String, Serializable> CACHE;
+
     /**
      * Cached page keys.
      */
     private static final Set<String> KEYS = new HashSet<String>();
-    /**
-     * Maximum count of cacheable pages.
-     */
-    private static final int MAX_CACHEABLE_PAGE_CNT = 10240;
+
     /**
      * Key of page cache name.
      */
     public static final String PAGE_CACHE_NAME = "page";
+
     /**
      * Key of cached time.
      */
     public static final String CACHED_TIME = "cachedTime";
+
     /**
      * Key of cached bytes length.
      */
     public static final String CACHED_BYTES_LENGTH = "cachedBtypesLength";
+
     /**
      * key of cached hit count.
      */
     public static final String CACHED_HIT_COUNT = "cachedHitCount";
-    /**
-     * Maximum count of the most recent used cache.
-     */
-    private static final int MOST_RECENT_USED_MAX_COUNT = Integer.MAX_VALUE;
+
     /**
      * Key of cached title.
      */
     public static final String CACHED_TITLE = "cachedTitle";
+
     /**
      * Key of cached object id.
      */
     public static final String CACHED_OID = "cachedOid";
+
     /**
      * Key of cached HTML content.
      */
     public static final String CACHED_CONTENT = "cachedContent";
+
     /**
      * Key of cached password.
      */
     public static final String CACHED_PWD = "cachedPwd";
+
     /**
      * Key of cached type.
      */
     public static final String CACHED_TYPE = "cachedType";
+
     /**
      * Key of cached link.
      */
@@ -133,9 +139,22 @@ public final class PageCaches {
     static {
         CACHE = (Cache<String, Serializable>) CacheFactory.getCache(PAGE_CACHE_NAME);
         final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
+
         if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
-            CACHE.setMaxCount(MAX_CACHEABLE_PAGE_CNT);
-            LOGGER.log(Level.INFO, "Initialized page cache[maxCount={0}]", MAX_CACHEABLE_PAGE_CNT);
+            int maxCnt = Integer.MAX_VALUE;
+
+            final String maxPageCntStr = Latkes.getLocalProperty("cache.maxPageCnt");
+
+            if (!Strings.isEmptyOrNull(maxPageCntStr)) {
+                maxCnt = Integer.parseInt(maxPageCntStr);
+            }
+
+            if (0 >= maxCnt) {
+                Latkes.disablePageCache();
+            } else {
+                CACHE.setMaxCount(maxCnt);
+                LOGGER.log(Level.INFO, "Initialized page cache[maxCount={0}]", maxCnt);
+            }
         }
     }
 
@@ -267,6 +286,7 @@ public final class PageCaches {
         try {
             if (!Requests.searchEngineBotRequest(request) && !Requests.hasBeenServed(request, response)) {
                 final long hitCount = ret.getLong(CACHED_HIT_COUNT);
+
                 ret.put(CACHED_HIT_COUNT, hitCount + 1);
             }
 
@@ -325,7 +345,7 @@ public final class PageCaches {
         KEYS.add(pageKey);
 
         LOGGER.log(Level.FINEST, "Put a page[key={0}] into page cache, cached keys[size={1}, {2}]",
-                   new Object[]{pageKey, KEYS.size(), KEYS});
+            new Object[] {pageKey, KEYS.size(), KEYS});
     }
 
     /**
@@ -373,7 +393,7 @@ public final class PageCaches {
 
             if (!CACHE.contains(key)) {
                 toRemove.add(key);
-                //  iterator.remove() will also throw ConcurrentModificationException on GAE
+                // iterator.remove() will also throw ConcurrentModificationException on GAE
             }
         }
 
@@ -389,10 +409,7 @@ public final class PageCaches {
      * @param cachedPage the specified cached page
      */
     private static void check(final JSONObject cachedPage) {
-        if (!cachedPage.has(CACHED_CONTENT)
-            || !cachedPage.has(CACHED_OID)
-            || !cachedPage.has(CACHED_TITLE)
-            || !cachedPage.has(CACHED_TYPE)
+        if (!cachedPage.has(CACHED_CONTENT) || !cachedPage.has(CACHED_OID) || !cachedPage.has(CACHED_TITLE) || !cachedPage.has(CACHED_TYPE)
             || !cachedPage.has(CACHED_LINK)) {
             throw new IllegalArgumentException("Illegal arguments for caching page, resolve this bug first!");
         }
@@ -401,6 +418,5 @@ public final class PageCaches {
     /**
      * Private default constructor.
      */
-    private PageCaches() {
-    }
+    private PageCaches() {}
 }

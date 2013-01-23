@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.model;
 
+
 /**
  * This class defines all pagination model relevant keys.
  *
@@ -27,51 +28,54 @@ public final class Pagination {
      * Pagination.
      */
     public static final String PAGINATION = "pagination";
+
     /**
      * Pagination page count.
      */
     public static final String PAGINATION_PAGE_COUNT = "paginationPageCount";
+
     /**
      * Pagination current page number.
      */
-    public static final String PAGINATION_CURRENT_PAGE_NUM =
-            "paginationCurrentPageNum";
+    public static final String PAGINATION_CURRENT_PAGE_NUM = "paginationCurrentPageNum";
+
     /**
      * Pagination page size.
      */
     public static final String PAGINATION_PAGE_SIZE = "paginationPageSize";
+
     /**
      * Pagination window size.
      */
     public static final String PAGINATION_WINDOW_SIZE = "paginationWindowSize";
+
     /**
      * Pagination page numbers.
      */
     public static final String PAGINATION_PAGE_NUMS = "paginationPageNums";
+
     /**
      * Pagination first page number.
      */
-    public static final String PAGINATION_FIRST_PAGE_NUM =
-            "paginationFirstPageNum";
+    public static final String PAGINATION_FIRST_PAGE_NUM = "paginationFirstPageNum";
+
     /**
      * Pagination last page number.
      */
-    public static final String PAGINATION_LAST_PAGE_NUM =
-            "paginationLastPageNum";
+    public static final String PAGINATION_LAST_PAGE_NUM = "paginationLastPageNum";
+
     /**
      * Key of previous page number.
      */
-    public static final String PAGINATION_PREVIOUS_PAGE_NUM =
-            "paginationPreviousPageNum";
+    public static final String PAGINATION_PREVIOUS_PAGE_NUM = "paginationPreviousPageNum";
+
     /**
      * Key of next page number.
      */
-    public static final String PAGINATION_NEXT_PAGE_NUM =
-            "paginationNextPageNum";
+    public static final String PAGINATION_NEXT_PAGE_NUM = "paginationNextPageNum";
 
     /**
      * Private constructor.
      */
-    private Pagination() {
-    }
+    private Pagination() {}
 }

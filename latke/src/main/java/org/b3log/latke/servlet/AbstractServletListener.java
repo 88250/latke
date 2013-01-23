@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.b3log.latke.servlet;
+
 
 import java.util.logging.Level;
 import java.io.File;
@@ -32,6 +33,7 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.cron.CronService;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 
+
 /**
  * Abstract servlet listener.
  *
@@ -44,6 +46,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(AbstractServletListener.class.getName());
+
     /**
      * Web root.
      */
@@ -51,6 +54,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
     static {
         final URL resource = ClassLoader.class.getResource("/");
+
         if (null != resource) { // Running unit tests
             try {
                 webRoot = URLDecoder.decode(resource.getPath(), "UTF-8");
@@ -75,14 +79,15 @@ public abstract class AbstractServletListener implements ServletContextListener,
         LOGGER.log(Level.INFO, "Default locale[{0}]", Latkes.getLocale());
 
         final ServletContext servletContext = servletContextEvent.getServletContext();
+
         webRoot = servletContext.getRealPath("") + File.separator;
         LOGGER.log(Level.INFO, "Server[webRoot={0}, contextPath={1}]",
-                   new Object[]{webRoot, servletContextEvent.getServletContext().getContextPath()});
+            new Object[] {webRoot, servletContextEvent.getServletContext().getContextPath()});
 
-//        final String catalinaBase = System.getProperty("catalina.base");
-//        if (!Strings.isEmptyOrNull(catalinaBase)) {
-//            LOGGER.log(Level.INFO, "Servlet container[Tomcat, catalina.base={0}]", catalinaBase);
-//        }
+        // final String catalinaBase = System.getProperty("catalina.base");
+        // if (!Strings.isEmptyOrNull(catalinaBase)) {
+        // LOGGER.log(Level.INFO, "Servlet container[Tomcat, catalina.base={0}]", catalinaBase);
+        // }
 
         CronService.start();
     }

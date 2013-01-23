@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.image.local;
 
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -24,6 +25,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import org.b3log.latke.image.Image;
 import org.b3log.latke.image.ImageService;
+
 
 /**
  * Image service.
@@ -36,6 +38,7 @@ public final class LocalImageService implements ImageService {
     @Override
     public Image makeImage(final byte[] data) {
         final Image ret = new Image();
+
         ret.setData(data);
 
         return ret;
@@ -63,9 +66,11 @@ public final class LocalImageService implements ImageService {
             final Image ret = new Image();
 
             final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
             ImageIO.write(tmp, "PNG", byteArrayOutputStream);
 
             final byte[] data = byteArrayOutputStream.toByteArray();
+
             ret.setData(data);
 
             return ret;
@@ -82,14 +87,14 @@ public final class LocalImageService implements ImageService {
      * @return the spliced image
      */
     private static BufferedImage splice(final java.awt.Image image1, final java.awt.Image image2) {
-        final int[][] size = {{image1.getWidth(null), image1.getHeight(null)},
-                              {image2.getWidth(null), image2.getHeight(null)}};
+        final int[][] size = { {image1.getWidth(null), image1.getHeight(null)}, {image2.getWidth(null), image2.getHeight(null)}};
 
         final int width = size[0][0] + size[1][0];
         final int height = Math.max(size[0][1], size[1][1]);
 
         final BufferedImage ret = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         final Graphics2D g2 = ret.createGraphics();
+
         g2.drawImage(image1, 0, 0, null);
         g2.drawImage(image2, size[0][0], 0, null);
 

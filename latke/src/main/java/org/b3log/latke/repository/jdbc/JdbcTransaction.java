@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
+
 
 /**
  *
@@ -36,10 +38,12 @@ public final class JdbcTransaction implements Transaction {
      * Connection.
      */
     private Connection connection;
+
     /**
      * Is active.
      */
     private boolean isActive;
+
     /**
      * Flag of clear query cache.
      */

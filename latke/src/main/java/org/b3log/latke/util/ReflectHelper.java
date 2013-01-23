@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+
 
 /**
  * ReflectHelper while not using java reflect instead of the other class byte tool.
@@ -42,10 +44,14 @@ public final class ReflectHelper {
     private static final Logger LOGGER = Logger.getLogger(ReflectHelper.class.getName());
 
     /**
+     * the maxFindLength to get the 'this' keyword when resolving the vaibleNames.
+     */
+    private static final Integer MAX_FIND_LENGTH = 30;
+
+    /**
      * The default constructor.
      */
-    private ReflectHelper() {
-    }
+    private ReflectHelper() {}
 
     /**
      * getMethodVariableNames in user defined.
@@ -60,12 +66,14 @@ public final class ReflectHelper {
 
         try {
             final ClassPool pool = ClassPool.getDefault();
+
             pool.insertClassPath(new ClassClassPath(ReflectHelper.class));
             pool.insertClassPath(new ClassClassPath(clazz));
             pool.insertClassPath(new ClassClassPath(Thread.currentThread().getClass()));
 
             cc = pool.get(clazz.getName());
             final CtClass[] ptypes = new CtClass[types.length];
+
             for (int i = 0; i < ptypes.length; i++) {
                 ptypes[i] = pool.get(types[i].getName());
             }
@@ -82,15 +90,34 @@ public final class ReflectHelper {
         final CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
         final LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag);
         String[] variableNames = new String[0];
+
         try {
             variableNames = new String[cm.getParameterTypes().length];
         } catch (final NotFoundException e) {
             LOGGER.log(Level.SEVERE, "Get method variable names failed", e);
         }
-        final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
-        for (int i = 0; i < variableNames.length; i++) {
-            variableNames[i] = attr.variableName(i + staticIndex);
 
+        // final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
+        int j = -1;
+        String variableName = null;
+        Boolean ifkill = false;
+
+        while (!"this".equals(variableName)) {
+            j++;
+            variableName = attr.variableName(j);
+            // to prevent heap error when there being some unknown reasons to
+            // resolve the VariableNames
+            if (j > MAX_FIND_LENGTH) {
+                LOGGER.log(Level.WARNING, "maybe resolve to VariableNames error ");
+                ifkill = true;
+                break;
+            }
+        }
+
+        if (!ifkill) {
+            for (int i = 0; i < variableNames.length; i++) {
+                variableNames[i] = attr.variableName(++j);
+            }
         }
         return variableNames;
     }

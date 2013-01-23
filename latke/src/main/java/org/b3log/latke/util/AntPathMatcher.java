@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
+
 
 /**
  * PathMatcher implementation for Ant-style path patterns.
@@ -112,16 +114,13 @@ public final class AntPathMatcher {
      * <code>false</code> if it didn't
      */
     protected static boolean doMatch(String pattern, String path,
-                                     boolean fullMatch) {
-        if (path.startsWith(pathSeparator) != pattern.startsWith(
-                pathSeparator)) {
+        boolean fullMatch) {
+        if (path.startsWith(pathSeparator) != pattern.startsWith(pathSeparator)) {
             return false;
         }
 
-        String[] pattDirs =
-                tokenizeToStringArray(pattern, pathSeparator);
-        String[] pathDirs =
-                tokenizeToStringArray(path, pathSeparator);
+        String[] pattDirs = tokenizeToStringArray(pattern, pathSeparator);
+        String[] pathDirs = tokenizeToStringArray(path, pathSeparator);
 
         int pattIdxStart = 0;
         int pattIdxEnd = pattDirs.length - 1;
@@ -131,6 +130,7 @@ public final class AntPathMatcher {
         // Match all elements up to the first **
         while (pattIdxStart <= pattIdxEnd && pathIdxStart <= pathIdxEnd) {
             String patDir = pattDirs[pattIdxStart];
+
             if ("**".equals(patDir)) {
                 break;
             }
@@ -144,15 +144,12 @@ public final class AntPathMatcher {
         if (pathIdxStart > pathIdxEnd) {
             // Path is exhausted, only match if rest of pattern is * or **'s
             if (pattIdxStart > pattIdxEnd) {
-                return (pattern.endsWith(pathSeparator)
-                        ? path.endsWith(pathSeparator)
-                        : !path.endsWith(pathSeparator));
+                return (pattern.endsWith(pathSeparator) ? path.endsWith(pathSeparator) : !path.endsWith(pathSeparator));
             }
             if (!fullMatch) {
                 return true;
             }
-            if (pattIdxStart == pattIdxEnd && pattDirs[pattIdxStart].equals("*")
-                && path.endsWith(pathSeparator)) {
+            if (pattIdxStart == pattIdxEnd && pattDirs[pattIdxStart].equals("*") && path.endsWith(pathSeparator)) {
                 return true;
             }
             for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
@@ -172,6 +169,7 @@ public final class AntPathMatcher {
         // up to last '**'
         while (pattIdxStart <= pattIdxEnd && pathIdxStart <= pathIdxEnd) {
             String patDir = pattDirs[pattIdxEnd];
+
             if (patDir.equals("**")) {
                 break;
             }
@@ -193,6 +191,7 @@ public final class AntPathMatcher {
 
         while (pattIdxStart != pattIdxEnd && pathIdxStart <= pathIdxEnd) {
             int patIdxTmp = -1;
+
             for (int i = pattIdxStart + 1; i <= pattIdxEnd; i++) {
                 if (pattDirs[i].equals("**")) {
                     patIdxTmp = i;
@@ -215,6 +214,7 @@ public final class AntPathMatcher {
                 for (int j = 0; j < patLength; j++) {
                     String subPat = (String) pattDirs[pattIdxStart + j + 1];
                     String subStr = (String) pathDirs[pathIdxStart + i + j];
+
                     if (!matchStrings(subPat, subStr)) {
                         continue strLoop;
                     }
@@ -262,6 +262,7 @@ public final class AntPathMatcher {
         char ch;
 
         boolean containsStar = false;
+
         for (int i = 0; i < patArr.length; i++) {
             if (patArr[i] == '*') {
                 containsStar = true;
@@ -278,13 +279,12 @@ public final class AntPathMatcher {
                 ch = patArr[i];
                 if (ch != '?') {
                     if (ch != strArr[i]) {
-                        return false;// Character mismatch
+                        return false; // Character mismatch
                     }
                 }
             }
             return true; // String matches against pattern
         }
-
 
         if (patIdxEnd == 0) {
             return true; // Pattern contains only '*', which matches anything
@@ -294,7 +294,7 @@ public final class AntPathMatcher {
         while ((ch = patArr[patIdxStart]) != '*' && strIdxStart <= strIdxEnd) {
             if (ch != '?') {
                 if (ch != strArr[strIdxStart]) {
-                    return false;// Character mismatch
+                    return false; // Character mismatch
                 }
             }
             patIdxStart++;
@@ -315,7 +315,7 @@ public final class AntPathMatcher {
         while ((ch = patArr[patIdxEnd]) != '*' && strIdxStart <= strIdxEnd) {
             if (ch != '?') {
                 if (ch != strArr[strIdxEnd]) {
-                    return false;// Character mismatch
+                    return false; // Character mismatch
                 }
             }
             patIdxEnd--;
@@ -336,6 +336,7 @@ public final class AntPathMatcher {
         // always to a '*'.
         while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd) {
             int patIdxTmp = -1;
+
             for (int i = patIdxStart + 1; i <= patIdxEnd; i++) {
                 if (patArr[i] == '*') {
                     patIdxTmp = i;
@@ -352,6 +353,7 @@ public final class AntPathMatcher {
             int patLength = (patIdxTmp - patIdxStart - 1);
             int strLength = (strIdxEnd - strIdxStart + 1);
             int foundIdx = -1;
+
             strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
@@ -403,21 +405,19 @@ public final class AntPathMatcher {
      * and '<code>path</code>', but does <strong>not</strong> enforce this.
      */
     public String extractPathWithinPattern(String pattern, String path) {
-        String[] patternParts =
-                tokenizeToStringArray(pattern, pathSeparator);
-        String[] pathParts =
-                tokenizeToStringArray(path, pathSeparator);
+        String[] patternParts = tokenizeToStringArray(pattern, pathSeparator);
+        String[] pathParts = tokenizeToStringArray(path, pathSeparator);
 
         StringBuffer buffer = new StringBuffer();
 
         // Add any path parts that have a wildcarded pattern part.
         int puts = 0;
+
         for (int i = 0; i < patternParts.length; i++) {
             String patternPart = patternParts[i];
-            if ((patternPart.indexOf('*') > -1 || patternPart.indexOf('?') > -1)
-                && pathParts.length >= i + 1) {
-                if (puts > 0 || (i == 0 && !pattern.startsWith(
-                                 pathSeparator))) {
+
+            if ((patternPart.indexOf('*') > -1 || patternPart.indexOf('?') > -1) && pathParts.length >= i + 1) {
+                if (puts > 0 || (i == 0 && !pattern.startsWith(pathSeparator))) {
                     buffer.append(pathSeparator);
                 }
                 buffer.append(pathParts[i]);
@@ -456,15 +456,17 @@ public final class AntPathMatcher {
      * @see #delimitedListToStringArray
      */
     private static String[] tokenizeToStringArray(
-            String str, String delimiters) {
+        String str, String delimiters) {
 
         if (str == null) {
             return null;
         }
         StringTokenizer st = new StringTokenizer(str, delimiters);
         List tokens = new ArrayList();
+
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
+
             token = token.trim();
             if (token.length() > 0) {
                 tokens.add(token);

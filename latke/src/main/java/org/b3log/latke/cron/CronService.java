@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.cron;
 
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.b3log.latke.servlet.AbstractServletListener;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 
 /**
  * Cron jobs service.
@@ -46,6 +48,7 @@ public final class CronService {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(CronService.class.getName());
+
     /**
      * Cron jobs.
      */
@@ -63,27 +66,31 @@ public final class CronService {
 
         try {
             switch (runtimeEnv) {
-                case LOCAL:
-                    loadCronXML();
+            case LOCAL:
+                loadCronXML();
 
-                    for (final Cron cron : CRONS) {
-                        cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getUrl());
+                for (final Cron cron : CRONS) {
+                    cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getUrl());
 
-                        final Timer timer = new Timer();
-                        timer.scheduleAtFixedRate(cron, Cron.SIXTY * Cron.THOUSAND, cron.getPeriod());
+                    final Timer timer = new Timer();
 
-                        LOGGER.log(Level.FINER, "Scheduled a cron job[url={0}]", cron.getUrl());
-                    }
+                    timer.scheduleAtFixedRate(cron, Cron.SIXTY * Cron.THOUSAND, cron.getPeriod());
 
-                    LOGGER.log(Level.FINER, "[{0}] cron jobs", CRONS.size());
+                    LOGGER.log(Level.FINER, "Scheduled a cron job[url={0}]", cron.getUrl());
+                }
 
-                    break;
-                case GAE:
-                    break;
-                case BAE:
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                LOGGER.log(Level.FINER, "[{0}] cron jobs", CRONS.size());
+
+                break;
+
+            case GAE:
+                break;
+
+            case BAE:
+                break;
+
+            default:
+                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Cron Service!", e);
@@ -105,10 +112,12 @@ public final class CronService {
         }
 
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
         try {
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             final Document document = documentBuilder.parse(cronXML);
             final Element root = document.getDocumentElement();
+
             root.normalize();
 
             final NodeList crons = root.getElementsByTagName("cron");
@@ -123,7 +132,8 @@ public final class CronService {
                 final String url = urlElement.getTextContent();
                 final String description = descriptionElement.getTextContent();
                 final String schedule = scheduleElement.getTextContent();
-                LOGGER.log(Level.CONFIG, "Cron[url={0}, description={1}, schedule={2}]", new Object[]{url, description, schedule});
+
+                LOGGER.log(Level.CONFIG, "Cron[url={0}, description={1}, schedule={2}]", new Object[] {url, description, schedule});
 
                 CRONS.add(new Cron(url, description, schedule));
             }
@@ -136,6 +146,5 @@ public final class CronService {
     /**
      * Private default constructor.
      */
-    private CronService() {
-    }
+    private CronService() {}
 }

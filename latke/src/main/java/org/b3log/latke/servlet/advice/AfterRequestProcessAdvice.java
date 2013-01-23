@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package org.b3log.latke.servlet.advice;
 
+
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * BeforeRequestProcessAdvice.
@@ -29,6 +31,5 @@ public class AfterRequestProcessAdvice implements RequestProcessAdvice {
      * @param context {@link HTTPRequestContext}
      * @param ret  the invoke ret
      */
-    public void doAdvice(final HTTPRequestContext context, final Object ret) {
-    }
+    public void doAdvice(final HTTPRequestContext context, final Object ret) {}
 }

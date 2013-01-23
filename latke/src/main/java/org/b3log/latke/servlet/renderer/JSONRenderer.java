@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+
 import org.json.JSONObject;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
 
 /**
  * <a href="http://json.org">JSON</a> HTTP response renderer.
@@ -35,14 +37,17 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(JSONRenderer.class.getName());
+
     /**
      * JSON object to render.
      */
     private JSONObject jsonObject;
+
     /**
      * Determines whether render as JSONP.
      */
     private boolean isJSONP;
+
     /**
      * JSONP callback function name.
      */
@@ -88,6 +93,7 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
     @Override
     public void render(final HTTPRequestContext context) {
         final HttpServletResponse response = context.getResponse();
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 

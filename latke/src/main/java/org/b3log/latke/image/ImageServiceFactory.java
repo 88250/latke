@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 package org.b3log.latke.image;
 
+
 import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+
 
 /**
  * Image service factory.
@@ -30,8 +32,8 @@ public final class ImageServiceFactory {
     /**
      * Logger.
      */
-    private static final Logger LOGGER =
-            Logger.getLogger(ImageServiceFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ImageServiceFactory.class.getName());
+
     /**
      * Image service.
      */
@@ -46,19 +48,19 @@ public final class ImageServiceFactory {
             Class<ImageService> serviceClass = null;
 
             switch (runtimeEnv) {
-                case BAE:
-                case LOCAL:
-                    serviceClass =
-                            (Class<ImageService>) Class.forName("org.b3log.latke.image.local.LocalImageService");
-                    IMAGE_SERVICE = serviceClass.newInstance();
-                    break;
-                case GAE:
-                    serviceClass =
-                            (Class<ImageService>) Class.forName("org.b3log.latke.image.gae.GAEImageService");
-                    IMAGE_SERVICE = serviceClass.newInstance();
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+            case BAE:
+            case LOCAL:
+                serviceClass = (Class<ImageService>) Class.forName("org.b3log.latke.image.local.LocalImageService");
+                IMAGE_SERVICE = serviceClass.newInstance();
+                break;
+
+            case GAE:
+                serviceClass = (Class<ImageService>) Class.forName("org.b3log.latke.image.gae.GAEImageService");
+                IMAGE_SERVICE = serviceClass.newInstance();
+                break;
+
+            default:
+                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Image Service!", e);
@@ -79,6 +81,5 @@ public final class ImageServiceFactory {
     /**
      * Private default constructor.
      */
-    private ImageServiceFactory() {
-    }
+    private ImageServiceFactory() {}
 }
