@@ -118,6 +118,8 @@ public final class PluginManager {
         set.remove(plugin);
         set.add(plugin);
 
+        plugin.changeStatus();
+        
         pluginCache.put(PLUGIN_CACHE_NAME, holder);
     }
 
@@ -278,6 +280,8 @@ public final class PluginManager {
         registerEventListeners(props, classLoader, ret);
 
         register(ret, holder);
+        
+        ret.changeStatus();
 
         return ret;
     }

@@ -24,7 +24,7 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 /**
  * the default plugin for which do not need interact with the server end.
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Jan 22, 2013
+ * @version 1.1.0.0, Jan 23, 2013
  */
 @SuppressWarnings("serial")
 public class NotInteractivePlugin extends AbstractPlugin {
@@ -34,5 +34,11 @@ public class NotInteractivePlugin extends AbstractPlugin {
 
     @Override
     public void postPlug(final Map<String, Object> dataModel, final HTTPRequestContext context, final Object ret) {}
+
+    @Override
+    public void start() {}
+
+    @Override
+    public void stop() {}
 
 }
