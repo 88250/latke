@@ -75,7 +75,7 @@ public final class CronService {
                     final Timer timer = new Timer();
 
                     timer.scheduleAtFixedRate(cron, Cron.SIXTY * Cron.THOUSAND, cron.getPeriod());
-
+                    
                     LOGGER.log(Level.FINER, "Scheduled a cron job[url={0}]", cron.getUrl());
                 }
 

@@ -59,7 +59,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.3, Aug 27, 2012
+ * @version 1.0.2.4, Jan 23, 2013
  * @since 0.3.1
  */
 @SuppressWarnings("unchecked")
@@ -84,11 +84,6 @@ public final class PageCaches {
     private static final Set<String> KEYS = new HashSet<String>();
 
     /**
-     * Maximum count of cacheable pages.
-     */
-    private static final int MAX_CACHEABLE_PAGE_CNT = 10240;
-
-    /**
      * Key of page cache name.
      */
     public static final String PAGE_CACHE_NAME = "page";
@@ -107,11 +102,6 @@ public final class PageCaches {
      * key of cached hit count.
      */
     public static final String CACHED_HIT_COUNT = "cachedHitCount";
-
-    /**
-     * Maximum count of the most recent used cache.
-     */
-    private static final int MOST_RECENT_USED_MAX_COUNT = Integer.MAX_VALUE;
 
     /**
      * Key of cached title.
@@ -151,8 +141,20 @@ public final class PageCaches {
         final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
 
         if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
-            CACHE.setMaxCount(MAX_CACHEABLE_PAGE_CNT);
-            LOGGER.log(Level.INFO, "Initialized page cache[maxCount={0}]", MAX_CACHEABLE_PAGE_CNT);
+            int maxCnt = Integer.MAX_VALUE;
+
+            final String maxPageCntStr = Latkes.getLocalProperty("cache.maxPageCnt");
+
+            if (!Strings.isEmptyOrNull(maxPageCntStr)) {
+                maxCnt = Integer.parseInt(maxPageCntStr);
+            }
+
+            if (0 >= maxCnt) {
+                Latkes.disablePageCache();
+            } else {
+                CACHE.setMaxCount(maxCnt);
+                LOGGER.log(Level.INFO, "Initialized page cache[maxCount={0}]", maxCnt);
+            }
         }
     }
 

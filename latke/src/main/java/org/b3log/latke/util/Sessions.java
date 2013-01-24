@@ -19,10 +19,10 @@ package org.b3log.latke.util;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import org.b3log.latke.model.User;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.b3log.latke.model.User;
 import org.json.JSONObject;
 
 
@@ -30,7 +30,7 @@ import org.json.JSONObject;
  * Session utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.0, May 11, 2012
+ * @version 1.0.1.1, Jan 4, 2013
  */
 public final class Sessions {
 
@@ -80,7 +80,7 @@ public final class Sessions {
             final JSONObject cookieJSONObject = new JSONObject();
 
             cookieJSONObject.put(User.USER_EMAIL, user.optString(User.USER_EMAIL));
-            cookieJSONObject.put(User.USER_PASSWORD, MD5.hash(user.optString(User.USER_PASSWORD)));
+            cookieJSONObject.put(User.USER_PASSWORD, user.optString(User.USER_PASSWORD));
 
             final Cookie cookie = new Cookie("b3log-latke", cookieJSONObject.toString());
 
