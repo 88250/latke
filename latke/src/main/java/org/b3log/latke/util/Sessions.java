@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.b3log.latke.model.User;
 import org.json.JSONObject;
+
 
 /**
  * Session utilities.
@@ -36,6 +38,7 @@ public final class Sessions {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Sessions.class.getName());
+
     /**
      * Cookie expiry: one year.
      */
@@ -44,8 +47,7 @@ public final class Sessions {
     /**
      * Private default constructor.
      */
-    private Sessions() {
-    }
+    private Sessions() {}
 
     /**
      * Logins the specified user from the specified request.
@@ -76,10 +78,12 @@ public final class Sessions {
 
         try {
             final JSONObject cookieJSONObject = new JSONObject();
+
             cookieJSONObject.put(User.USER_EMAIL, user.optString(User.USER_EMAIL));
             cookieJSONObject.put(User.USER_PASSWORD, user.optString(User.USER_PASSWORD));
 
             final Cookie cookie = new Cookie("b3log-latke", cookieJSONObject.toString());
+
             cookie.setPath("/");
             cookie.setMaxAge(COOKIE_EXPIRY);
             response.addCookie(cookie);
@@ -100,6 +104,7 @@ public final class Sessions {
 
         if (null != session) {
             final Cookie cookie = new Cookie("b3log-latke", null);
+
             cookie.setMaxAge(0);
             cookie.setPath("/");
 

@@ -41,7 +41,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.8, Dec 27, 2012
+ * @version 1.0.0.9, Jan 24, 2013
  */
 public final class Connections {
 
@@ -204,7 +204,7 @@ public final class Connections {
             final Connection ret = h2.getConnection();
 
             ret.setTransactionIsolation(transactionIsolationInt);
-            
+
             return ret;
         } else if ("none".equals(poolType)) {
             return DriverManager.getConnection(url, userName, password);
@@ -219,9 +219,18 @@ public final class Connections {
     public static void shutdownConnectionPool() {
         if (null != boneCP) {
             boneCP.shutdown();
+            LOGGER.info("Closed [BoneCP] database connection pool");
         }
 
-        LOGGER.info("Shutdowns connection pool sucessfully");
+        if (null != h2) {
+            h2.dispose();
+            LOGGER.info("Closed [H2] database connection pool");
+        }
+
+        if (null != c3p0) {
+            c3p0.close();
+            LOGGER.info("Closed [c3p0] database connection pool");
+        }
     }
 
     /**
