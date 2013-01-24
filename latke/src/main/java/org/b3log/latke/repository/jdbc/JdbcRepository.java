@@ -357,7 +357,7 @@ public final class JdbcRepository implements Repository {
             if (jsonObject.get(key) == null && oldJsonObject.get(key) == null) {
                 // ???????????????????????????
                 needUpdateJsonObject.put(key, jsonObject.get(key));
-            } else if (!jsonObject.getString(key).equals(oldJsonObject.getString(key))) {
+            } else if (!jsonObject.optString(key).equals(oldJsonObject.optString(key))) {
                 needUpdateJsonObject.put(key, jsonObject.get(key));
             }
         }

@@ -65,6 +65,11 @@ public final class Plugin {
     public static final String PLUGIN_CLASS = "pluginClass";
 
     /**
+     * Key of plugin setting(json formatter).
+     */
+    public static final String PLUGIN_SETTING = "setting";
+
+    /**
      * Key of plugin event listener classes.
      */
     public static final String PLUGIN_EVENT_LISTENER_CLASSES = "eventListenerClasses";
@@ -73,7 +78,7 @@ public final class Plugin {
      * Key of plugin status.
      */
     public static final String PLUGIN_STATUS = "status";
-
+    
     /**
      * Private default constructor.
      */
