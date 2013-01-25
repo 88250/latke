@@ -18,6 +18,7 @@ package org.b3log.latke.plugin;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -31,6 +32,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
@@ -45,6 +48,8 @@ import org.b3log.latke.model.Plugin;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.latke.util.Strings;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -119,7 +124,7 @@ public final class PluginManager {
         set.add(plugin);
 
         plugin.changeStatus();
-        
+
         pluginCache.put(PLUGIN_CACHE_NAME, holder);
     }
 
@@ -280,7 +285,7 @@ public final class PluginManager {
         registerEventListeners(props, classLoader, ret);
 
         register(ret, holder);
-        
+
         ret.changeStatus();
 
         return ret;
@@ -331,6 +336,23 @@ public final class PluginManager {
         plugin.setVersion(version);
         plugin.setDir(pluginDir);
         plugin.readLangs();
+
+        // try to find the setting config.json
+        final File settingFile = new File(pluginDir.getPath() + File.separator + "config.json");
+
+        if (settingFile.exists()) {
+            try {
+                final String config = FileUtils.readFileToString(settingFile);
+                final JSONObject jsonObject = new JSONObject(config);
+
+                plugin.setSetting(jsonObject);
+            } catch (final IOException ie) {
+                LOGGER.log(Level.SEVERE, "reading the config of the plugin[" + name + "]  failed", ie);
+            } catch (final JSONException e) {
+                LOGGER.log(Level.SEVERE, "convert the  config of the plugin[" + name + "] to json failed", e);
+            }
+        }
+
         final String[] typeArray = types.split(",");
 
         for (int i = 0; i < typeArray.length; i++) {

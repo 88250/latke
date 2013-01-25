@@ -106,6 +106,11 @@ public abstract class AbstractPlugin implements Serializable {
     private PluginStatus status = PluginStatus.ENABLED;
 
     /**
+     * the setting of this plugin.
+     */
+    private JSONObject setting = new JSONObject();
+    
+    /**
      * Types of this plugin.
      */
     private Set<PluginType> types = new HashSet<PluginType>();
@@ -368,6 +373,7 @@ public abstract class AbstractPlugin implements Serializable {
         ret.put(Plugin.PLUGIN_VERSION, getVersion());
         ret.put(Plugin.PLUGIN_AUTHOR, getAuthor());
         ret.put(Plugin.PLUGIN_STATUS, getStatus().name());
+        ret.put(Plugin.PLUGIN_SETTING, getSetting().toString());
 
         return ret;
     }
@@ -460,6 +466,21 @@ public abstract class AbstractPlugin implements Serializable {
      */
     public void setVersion(final String version) {
         this.version = version;
+    }
+   
+    /**
+     * getSetting.
+     * @return the setting
+     */
+    public JSONObject getSetting() {
+        return setting;
+    }
+
+    /** setSetting.
+     * @param setting the setting to set
+     */
+    public void setSetting(final JSONObject setting) {
+        this.setting = setting;
     }
 
     /**
