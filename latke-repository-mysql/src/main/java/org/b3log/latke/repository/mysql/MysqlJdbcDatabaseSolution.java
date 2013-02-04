@@ -77,7 +77,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     protected void createDropTableSql(final StringBuilder dropTableSql, final String tableName) {
-        dropTableSql.append("DROP TABLE  IF EXISTS ").append(tableName).append(";");
+        dropTableSql.append("DROP TABLE IF EXISTS ").append(tableName).append(";");
 
     }
 
@@ -85,7 +85,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     protected void createTableHead(final StringBuilder createTableSql, final String tableName) {
         // createTableSql.append("DROP TABLE  IF EXISTS ").append(tableName)
         // .append(";");
-        createTableSql.append("CREATE TABLE  IF NOT EXISTS ").append(tableName).append("(");
+        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(");
 
     }
 

@@ -75,12 +75,12 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     protected void createDropTableSql(final StringBuilder dropTableSql, final String tableName) {
-        dropTableSql.append("DROP TABLE  IF EXISTS ").append(tableName).append(";");
+        dropTableSql.append("DROP TABLE IF EXISTS ").append(tableName).append(";");
     }
 
     @Override
     protected void createTableHead(final StringBuilder createTableSql, final String tableName) {
-        createTableSql.append("CREATE TABLE  IF NOT EXISTS ").append(tableName).append("(");
+        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(");
     }
 
     @Override

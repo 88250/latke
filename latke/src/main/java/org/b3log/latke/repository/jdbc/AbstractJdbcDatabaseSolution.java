@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
@@ -83,7 +82,7 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
      * abstract createTableHead for each DB to impl.
      * 
      * @param dropTableSql dropTableSql
-     * @param tableName talbename
+     * @param tableName table name
      */
     protected abstract void createDropTableSql(StringBuilder dropTableSql,
         String tableName);
@@ -93,7 +92,7 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
      * abstract createTableHead for each DB to impl.
      * 
      * @param createTableSql createSql
-     * @param tableName tableName
+     * @param tableName table name
      */
     protected abstract void createTableHead(StringBuilder createTableSql,
         String tableName);

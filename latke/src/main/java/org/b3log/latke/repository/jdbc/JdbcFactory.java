@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
@@ -30,7 +29,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**
  * 
- * JdbcFactory.
+ * JDBC Factory.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Dec 20, 2011
@@ -53,7 +52,7 @@ public final class JdbcFactory implements JdbcDatabase {
     private static JdbcFactory jdbcFactory;
 
     /**
-     * all JdbcDatabaseSolution className in here.
+     * All JdbcDatabaseSolution class names.
      */
     @SuppressWarnings("serial")
     private static Map<RuntimeDatabase, String> jdbcDatabaseSolutionMap = new HashMap<RuntimeDatabase, String>() {
@@ -64,8 +63,7 @@ public final class JdbcFactory implements JdbcDatabase {
     };
 
     @Override
-    public boolean createTable(final String tableName,
-        final List<FieldDefinition> fieldDefinitions) throws SQLException {
+    public boolean createTable(final String tableName, final List<FieldDefinition> fieldDefinitions) throws SQLException {
         return databaseSolution.createTable(tableName, fieldDefinitions);
     }
 
@@ -80,7 +78,6 @@ public final class JdbcFactory implements JdbcDatabase {
      * @return JdbcFactory jdbcFactory.
      */
     public static synchronized JdbcFactory createJdbcFactory() {
-
         if (jdbcFactory == null) {
             jdbcFactory = new JdbcFactory();
         }
@@ -102,21 +99,16 @@ public final class JdbcFactory implements JdbcDatabase {
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "init the [" + databaseSolutionClassName + "]JdbcDatabaseSolution instance wrong", e);
         }
-
     }
 
     @Override
-    public String queryPage(final int start, final int end,
-        final String selectSql, final String filterSql, final String orderBySql,
+    public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql,
         final String tableName) {
-
         return databaseSolution.queryPage(start, end, selectSql, filterSql, orderBySql, tableName);
     }
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
-
         return databaseSolution.getRandomlySql(tableName, fetchSize);
     }
-
 }
