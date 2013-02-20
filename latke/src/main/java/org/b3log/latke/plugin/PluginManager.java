@@ -298,16 +298,24 @@ public final class PluginManager {
      * @param holder the specified holder 
      */
     private void register(final AbstractPlugin plugin, final HashMap<String, HashSet<AbstractPlugin>> holder) {
+        
         final String rendererId = plugin.getRendererId();
 
-        HashSet<AbstractPlugin> set = holder.get(rendererId);
-
-        if (null == set) {
-            set = new HashSet<AbstractPlugin>();
-            holder.put(rendererId, set);
+        /**
+         * the rendererId support multiple,using ';' to split.
+         * and using Map to match the plugin is not flexible, a regular expression match pattern may be needed in futrue. 
+         */        
+        final String[] redererIds = rendererId.split(";");
+        for (String rid : redererIds) {
+            
+            HashSet<AbstractPlugin> set = holder.get(rid);
+            
+            if (null == set) {
+                set = new HashSet<AbstractPlugin>();
+                holder.put(rid, set);
+            }
+            set.add(plugin);
         }
-
-        set.add(plugin);
 
         LOGGER.log(Level.FINER, "Registered plugin[name={0}, version={1}] for rendererId[name={2}], [{3}] plugins totally",
             new Object[] {plugin.getName(), plugin.getVersion(), rendererId, holder.size()});
