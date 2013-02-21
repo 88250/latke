@@ -16,12 +16,15 @@
 package org.b3log.latke.remote;
 
 
-import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
@@ -322,7 +325,9 @@ public final class RepositoryAccessor {
         jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_OK);
         jsonObject.put(Keys.MSG, "Put data");
 
-        if (badPutDataRequest(request, jsonObject) || !authSucc(request, jsonObject)) {
+        final StringBuilder dataBuilder = new StringBuilder();
+
+        if (badPutDataRequest(request, jsonObject, dataBuilder) || !authSucc(request, jsonObject)) {
             return;
         }
 
@@ -338,16 +343,13 @@ public final class RepositoryAccessor {
         final Transaction transaction = repository.beginTransaction();
 
         try {
-            final String dataContent = request.getParameter("data").trim();
+            final String dataContent = dataBuilder.toString();
             final JSONArray data = new JSONArray(dataContent);
 
             for (int i = 0; i < data.length(); i++) {
                 final JSONObject record = data.getJSONObject(i);
 
                 // Date type fixing
-
-                final SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy", Locale.US);
-
                 final JSONArray keysDescription = Repositories.getRepositoryKeysDescription(repositoryName);
 
                 for (int j = 0; j < keysDescription.length(); j++) {
@@ -356,8 +358,13 @@ public final class RepositoryAccessor {
                     final String type = keyDescription.optString("type");
 
                     if ("Date".equals(type)) {
+                        final Locale defaultLocale = Locale.getDefault();
+
+                        Locale.setDefault(Locale.US);
                         record.put(key,
-                            DateUtils.parseDate(record.optString(key), new String[] {"EEE MMM d hh:mm:ss z yyyy", "yyyy-MM-dd hh:mm:ss.SSS"}));
+                            DateUtils.parseDate(record.optString(key),
+                            new String[] {"EEE MMM dd HH:mm:ss z yyyy", "EEE MMM d HH:mm:ss z yyyy", "yyyy-MM-dd HH:mm:ss.SSS"}));
+                        Locale.setDefault(defaultLocale);
                     }
                 }
 
@@ -539,9 +546,11 @@ public final class RepositoryAccessor {
      * 
      * @param request the specified request
      * @param jsonObject the specified jsonObject
+     * @param dataBuilder the specified data builder
      * @return {@code true} if it is bad, returns {@code false} otherwise
      */
-    private boolean badPutDataRequest(final HttpServletRequest request, final JSONObject jsonObject) {
+    private boolean badPutDataRequest(final HttpServletRequest request, final JSONObject jsonObject,
+        final StringBuilder dataBuilder) {
         final String repositoryName = request.getParameter("repositoryName");
 
         if (Strings.isEmptyOrNull(repositoryName)) {
@@ -550,7 +559,20 @@ public final class RepositoryAccessor {
             return true;
         }
 
-        final String dataContent = request.getParameter("data");
+        String dataContent = request.getParameter("data");
+
+        if (Strings.isEmptyOrNull(dataContent)) {
+            try {
+                final BufferedReader reader = request.getReader();
+
+                dataContent = IOUtils.toString(reader);
+                final String str = dataContent.split("=")[1];
+
+                dataContent = URLDecoder.decode(str, "UTF-8");
+            } catch (final IOException e) {
+                LOGGER.log(Level.WARNING, e.getMessage(), e);
+            }
+        }
 
         if (Strings.isEmptyOrNull(dataContent)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
@@ -565,6 +587,8 @@ public final class RepositoryAccessor {
             jsonObject.put(Keys.MSG, "Parameter[data] must be a JSON object or a JSON array");
             return true;
         }
+
+        dataBuilder.append(dataContent);
 
         return false;
     }
