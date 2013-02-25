@@ -29,7 +29,7 @@ import java.util.Map;
  * @version 1.0.0.1, Aug 16, 2010
  */
 final class SynchronizedEventQueue extends AbstractEventQueue {
-
+    
     /**
      * Synchronized event queue.
      */
