@@ -306,6 +306,7 @@ public final class PluginManager {
          * and using Map to match the plugin is not flexible, a regular expression match pattern may be needed in futrue. 
          */        
         final String[] redererIds = rendererId.split(";");
+
         for (String rid : redererIds) {
             
             HashSet<AbstractPlugin> set = holder.get(rid);
