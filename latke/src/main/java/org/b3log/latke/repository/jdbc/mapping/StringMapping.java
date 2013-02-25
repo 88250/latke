@@ -20,10 +20,11 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 
 /**
- * StringMapping.
+ * String mapping.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Jan 12, 2012
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.1, Feb 21, 2013
  */
 public class StringMapping implements Mapping {
 
@@ -37,13 +38,21 @@ public class StringMapping implements Mapping {
             definition.setLength(new Integer("0"));
         }
 
-        if (definition.getLength() > new Integer("255")) {
-            sql.append(" text");
+        final Integer length = definition.getLength();
+
+        if (length > new Integer("255")) {
+            if (length > new Integer("16777215")) {
+                sql.append(" longtext");
+            } else if (length > new Integer("65535")) {
+                sql.append(" mediumtext");
+            } else {
+                sql.append(" text");
+            }
         } else {
-            sql.append(" varchar(").append(definition.getLength() < 1 ? new Integer("100") : definition.getLength());
+            sql.append(" varchar(").append(length < 1 ? new Integer("100") : length);
             sql.append(")");
         }
-        
+
         if (!definition.getNullable()) {
             sql.append(" not null");
         }
