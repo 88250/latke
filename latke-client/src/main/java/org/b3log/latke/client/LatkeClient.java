@@ -127,7 +127,7 @@ public final class LatkeClient {
     /**
      * Backup page size.
      */
-    private static final String PAGE_SIZE = "5";
+    private static final String PAGE_SIZE = "10";
 
     /**
      * Main entry.
@@ -137,14 +137,13 @@ public final class LatkeClient {
      */
     public static void main(String[] args) throws Exception {
         // Backup Test:      
-        args = new String[] {
-            "-h", "-backup", "-repository_names", "-verbose", "-s", "localhost:8080", "-u", "test", "-p", "test", "-backup_dir",
-            "C:/b3log_backup", "-w", "true"};
-        
-        // Restore Test:
         // args = new String[] {
-        // "-h", "-restore", "-create_tables", "-verbose", "-s", "localhost:8080", "-u", "test", "-p", "test", "-backup_dir",
-        // "C:/b3log_backup"};
+        // "-h", "-backup", "-repository_names", "-verbose", "-s", "localhost:8080", "-u", "xxx", "-p", "xxx", "-backup_dir",
+        // "C:/b3log_backup", "-w", "true"};
+
+//        args = new String[] {
+//            "-h", "-restore", "-create_tables", "-verbose", "-s", "localhost:8080", "-u", "xxx", "-p", "xxx", "-backup_dir",
+//            "C:/b3log_backup"};
 
         final Options options = getOptions();
 
@@ -247,6 +246,11 @@ public final class LatkeClient {
                 final Set<String> repositoryNames = getRepositoryNames();
 
                 for (final String repositoryName : repositoryNames) {
+                    // You could specify repository manually 
+                    // if (!"archiveDate_article".equals(repositoryName)) {
+                    // continue;
+                    // }
+
                     int requestPageNum = 1;
 
                     // Backup interrupt recovery
@@ -347,6 +351,11 @@ public final class LatkeClient {
                 final Set<String> repositoryNames = getRepositoryNamesFromBackupDir();
 
                 for (final String repositoryName : repositoryNames) {
+                    // You could specify repository manually 
+                    // if (!"archiveDate_article".equals(repositoryName)) {
+                    // continue;
+                    // }
+
                     final List<File> backupFiles = getBackupFiles(repositoryName);
 
                     if (verbose) {
@@ -577,14 +586,15 @@ public final class LatkeClient {
         try {
             final JSONObject response = new JSONObject(content);
             final String sc = response.optString("sc");
-            
+
             if (!"200".equals(sc)) {
+                System.err.println(response.toString(4));
                 throw new IllegalStateException("Server response error, please check the server log for more details");
             }
-            
+
             System.out.println(response.toString(4));
         } catch (final JSONException e) {
-            System.out.println("The response is not a JSON");
+            System.out.println("The response is not a JSON [" + content + "]");
         }
     }
 
