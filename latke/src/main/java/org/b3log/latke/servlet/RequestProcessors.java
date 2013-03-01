@@ -147,7 +147,12 @@ public final class RequestProcessors {
             final String[] parameterName = processMethod.getMethodParamNames();
 
             // TODO need Optimization
-            final Map<String, String> pathVariableValueMap = processMethod.pathVariableValueMap(requestURI);
+            String relativeRequestURI = requestURI;
+
+            if (contextPath != null && contextPath.length() > 1) {
+                relativeRequestURI = requestURI.substring(contextPath.length());
+            }
+            final Map<String, String> pathVariableValueMap = processMethod.pathVariableValueMap(relativeRequestURI);
 
             final List<AbstractHTTPResponseRenderer> rendererList = new ArrayList<AbstractHTTPResponseRenderer>();
 
