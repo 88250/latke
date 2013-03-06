@@ -30,7 +30,7 @@ import org.b3log.latke.repository.jdbc.util.Connections;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, Mar 22, 2012
+ * @version 1.0.0.2, Mar 6, 2013
  */
 public final class JdbcTransaction implements Transaction {
 
@@ -72,16 +72,16 @@ public final class JdbcTransaction implements Transaction {
         try {
             connection.commit();
             ifSuccess = true;
-
-            if (clearQueryCache) {
-                PageCaches.removeAll();
-            }
         } catch (final SQLException e) {
             throw new RuntimeException("commit mistake", e);
         }
 
         if (ifSuccess) {
             dispose();
+        }
+
+        if (clearQueryCache) {
+            PageCaches.removeAll();
         }
     }
 
@@ -120,6 +120,8 @@ public final class JdbcTransaction implements Transaction {
     public void dispose() {
         try {
             connection.close();
+
+            JdbcRepository.TX.set(null);
         } catch (final SQLException e) {
             throw new RuntimeException("close connection", e);
         } finally {

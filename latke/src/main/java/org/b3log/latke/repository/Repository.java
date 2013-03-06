@@ -27,7 +27,7 @@ import org.json.JSONObject;
  * Repository.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.1, Apr 9, 2012
+ * @version 1.0.2.2, Mar 6, 2013
  */
 public interface Repository {
 
@@ -176,6 +176,13 @@ public interface Repository {
      * @return the transaction that was started.
      */
     Transaction beginTransaction();
+    
+    /**
+     * Whether the repository within a transaction.
+     * 
+     * @return {@code true} if the repository within a transaction, returns {@code false} otherwise
+     */
+    boolean hasTransactionBegun();
 
     /**
      * Is the cache enabled?

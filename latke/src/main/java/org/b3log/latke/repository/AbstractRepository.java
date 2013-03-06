@@ -43,7 +43,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.4, Dec 27, 2012
+ * @version 1.0.1.5, Mar 6, 2013
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -198,6 +198,11 @@ public abstract class AbstractRepository implements Repository {
     @Override
     public Transaction beginTransaction() {
         return repository.beginTransaction();
+    }
+    
+    @Override
+    public boolean hasTransactionBegun() {
+        return repository.hasTransactionBegun();
     }
 
     @Override

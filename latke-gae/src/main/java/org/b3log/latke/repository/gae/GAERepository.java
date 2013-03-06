@@ -77,23 +77,18 @@ import org.json.JSONObject;
  * The Datastore Java API(Low-level API)</a> of GAE.
  * 
  * <h3>Transaction</h3>
- * The invocation of {@link #add(org.json.JSONObject) add}, 
- * {@link #update(java.lang.String, org.json.JSONObject) update} and
- * {@link #remove(java.lang.String) remove} MUST in a transaction. 
- * Invocation of method {@link #get(java.lang.String) get} (by id) in a 
- * transaction will try to get object from cache of the transaction, if not hit,
- * retrieve object from transaction snapshot; if the invocation made is not in
- * a transaction, retrieve object from datastore directly. See 
- * <a href="http://88250.b3log.org/transaction_isolation.html">GAE 事务隔离</a>
- * for more details.
+ * The invocation of {@link #add(org.json.JSONObject) add}, {@link #update(java.lang.String, org.json.JSONObject) update} and
+ * {@link #remove(java.lang.String) remove} MUST in a transaction. Invocation of method {@link #get(java.lang.String) get} (by id) in a 
+ * transaction will try to get object from cache of the transaction, if not hit, retrieve object from transaction snapshot; if the 
+ * invocation made is not in a transaction, retrieve object from datastore directly. See 
+ * <a href="http://88250.b3log.org/transaction_isolation.html">GAE 事务隔离</a> for more details.
  * 
  * <h3>Caching</h3>
- * {@link #CACHE Repository cache} is used to cache the {@link #get(java.lang.String) get} 
- * and {@link #get(org.b3log.latke.repository.Query) query} results if 
- * {@link #cacheEnabled enabled} caching.
+ * {@link #CACHE Repository cache} is used to cache the {@link #get(java.lang.String) get} and 
+ * {@link #get(org.b3log.latke.repository.Query) query} results if {@link #cacheEnabled enabled} caching.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.6.0, Jun 27, 2012
+ * @version 1.0.6.1, Mar 6, 2013
  * @see Query
  * @see GAETransaction
  */
@@ -1063,6 +1058,11 @@ public final class GAERepository implements Repository {
         TX.set(ret);
 
         return ret;
+    }
+    
+    @Override
+    public boolean hasTransactionBegun() {
+        return null != TX.get();
     }
 
     @Override

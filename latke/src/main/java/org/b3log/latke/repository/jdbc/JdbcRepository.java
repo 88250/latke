@@ -60,7 +60,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.2, Jan 23, 2013
+ * @version 1.0.1.3, Mar 6, 2013
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -946,6 +946,11 @@ public final class JdbcRepository implements Repository {
         TX.set(jdbcTransaction);
 
         return jdbcTransaction;
+    }
+    
+    @Override
+    public boolean hasTransactionBegun() {
+        return null != TX.get();
     }
 
     @Override
