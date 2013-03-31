@@ -35,6 +35,11 @@ public final class Role {
     public static final String DEFAULT_ROLE = "defaultRole";
 
     /**
+     * Visitor role.
+     */
+    public static final String VISITOR_ROLE = "visitorRole";
+
+    /**
      * Administrator role.
      */
     public static final String ADMIN_ROLE = "adminRole";
