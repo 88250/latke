@@ -464,6 +464,32 @@ public final class Latkes {
     }
 
     /**
+     * Gets max page cache count.
+     * 
+     * <p>
+     * Returns the value of "cache.maxPageCnt" property in latke.properties.
+     * </p>
+     * 
+     * @return max page cache count
+     */
+    public static String getMaxPageCacheCnt() {
+        return LATKE_PROPS.getProperty("cache.maxPageCnt");
+    }
+
+    /**
+     * Gets max data cache count.
+     * 
+     * <p>
+     * Returns the value of "cache.maxDataCnt" property in latke.properties.
+     * </p>
+     * 
+     * @return max page cache count
+     */
+    public static String getMaxDataCacheCnt() {
+        return LATKE_PROPS.getProperty("cache.maxDataCnt");
+    }
+
+    /**
      * Disables the page cache.
      * 
      * <p>
