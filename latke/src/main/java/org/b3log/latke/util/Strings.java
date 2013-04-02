@@ -19,6 +19,8 @@ package org.b3log.latke.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -29,7 +31,7 @@ import java.util.regex.Pattern;
  * String utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.2, Dec 15, 2011
+ * @version 1.0.2.2, Apr 2, 2013
  */
 public final class Strings {
 
@@ -191,8 +193,7 @@ public final class Strings {
      * 
      * @param string the specified string
      * @param strings the specified strings
-     * @return {@code true} if the specified strings contains the specified 
-     * string, returns {@code false} otherwise
+     * @return {@code true} if the specified strings contains the specified string, returns {@code false} otherwise
      */
     public static boolean contains(final String string, final String[] strings) {
         if (null == strings) {
@@ -216,5 +217,21 @@ public final class Strings {
         }
 
         return false;
+    }
+
+    /**
+     * Determines whether the specified string is a valid URL.
+     * 
+     * @param string the specified string
+     * @return {@code true} if the specified string is a valid URL, returns {@code false} otherwise
+     */
+    public static boolean isURL(final String string) {
+        try {
+            new URL(string);
+
+            return true;
+        } catch (final MalformedURLException e) {
+            return false;
+        }
     }
 }
