@@ -41,7 +41,8 @@ import org.h2.jdbcx.JdbcConnectionPool;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.9, Jan 24, 2013
+ * @author <a href="mailto:385321165@qq.com">DASHU</a>
+ * @version 1.0.1.0, Apr 10, 2013
  */
 public final class Connections {
 
@@ -64,6 +65,11 @@ public final class Connections {
      * Connection pool - c3p0.
      */
     private static ComboPooledDataSource c3p0;
+
+    /**
+     * C3p0 pool check time.
+     */
+    private static final int C3P0_CHECKTIME = 60;
 
     /**
      * Connection pool - H2.
@@ -160,6 +166,8 @@ public final class Connections {
                 c3p0.setMinPoolSize(minConnCnt);
                 c3p0.setMaxPoolSize(maxConnCnt);
                 c3p0.setMaxStatementsPerConnection(maxConnCnt);
+                c3p0.setTestConnectionOnCheckin(true);
+                c3p0.setIdleConnectionTestPeriod(C3P0_CHECKTIME);
             } else if ("h2".equals(poolType)) {
                 LOGGER.log(Level.FINE, "Initialing database connection pool [h2]");
 
