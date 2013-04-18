@@ -19,18 +19,15 @@ package org.b3log.latke.urlfetch;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 
 
 /**
- * Encapsulation of a single HTTP request that is made via the 
- * {@link URLFetchService}. 
+ * Encapsulation of a single HTTP request that is made via the {@link URLFetchService}. 
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.0, Sep 4, 2012
+ * @version 1.0.1.1, Apr 18, 2013
  */
 public final class HTTPRequest {
 
@@ -43,12 +40,6 @@ public final class HTTPRequest {
      * Payload. 
      */
     private byte[] payload;
-
-    /**
-     * Payload map.
-     */
-    // XXX: payload abstraction
-    private Map<String, String> payloadMap = new HashMap<String, String>();
 
     /**
      * Request method.
@@ -76,35 +67,6 @@ public final class HTTPRequest {
      */
     public List<HTTPHeader> getHeaders() {
         return Collections.unmodifiableList(headers);
-    }
-
-    /**
-     * Gets payload map.
-     * 
-     * <p>
-     * Certain HTTP methods ({@linkplain HTTPRequestMethod#GET GET}) will 
-     * NOT have any payload, and this method will return an empty map.
-     * </p>
-     * 
-     * @return payload map
-     */
-    public Map<String, String> getPayloadMap() {
-        return Collections.unmodifiableMap(payloadMap);
-    }
-
-    /**
-     * Adds the specified name and value to payload map.
-     * 
-     * <p>
-     * This method should NOT be called for certain HTTP methods 
-     * (e.g. {@link HTTPRequestMethod#GET GET}).
-     * </p>
-     * 
-     * @param name the specified name
-     * @param value the specified value
-     */
-    public void addPayloadEntry(final String name, final String value) {
-        payloadMap.put(name, value);
     }
 
     /**

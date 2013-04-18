@@ -15,25 +15,14 @@
  */
 package org.b3log.latke.urlfetch.bae;
 
-
-import com.baidu.bae.api.fetchurl.BaeFetchurl;
-import com.baidu.bae.api.fetchurl.BaeFetchurlFactory;
-import com.baidu.bae.api.fetchurl.BasicNameValuePair;
-import com.baidu.bae.api.fetchurl.NameValuePair;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestMethod;
-import org.b3log.latke.urlfetch.HTTPHeader;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
-
 
 /**
  * Baidu App Engine URL fetch service.
@@ -48,29 +37,22 @@ public final class BAEURLFetchService implements URLFetchService {
      */
     private static final Logger LOGGER = Logger.getLogger(BAEURLFetchService.class.getName());
 
+    private URLFetchService svc;
+
+    /**
+     * Constructs a BAE URL fetch service.
+     */
+    public BAEURLFetchService() {
+        try {
+            svc = ((Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService")).newInstance();
+        } catch (final Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     @Override
     public HTTPResponse fetch(final HTTPRequest request) throws IOException {
-        final BaeFetchurl baeFetchurl = BaeFetchurlFactory.getBaeFetchurl();
-
-        addHeaders(baeFetchurl, request);
-
-        if (HTTPRequestMethod.POST == request.getRequestMethod()) {
-            final Map<String, String> payloadMap = request.getPayloadMap();
-
-            if (!payloadMap.isEmpty()) {
-                final List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-
-                for (final Map.Entry<String, String> payload : payloadMap.entrySet()) {
-                    nameValuePairs.add(new BasicNameValuePair(payload.getKey(), payload.getValue()));
-                }
-
-                baeFetchurl.setPostData(nameValuePairs);
-            }
-        }
-
-        baeFetchurl.fetch(request.getURL().toString(), request.getRequestMethod().name());
-
-        return toHTTPResponse(baeFetchurl);
+        return svc.fetch(request);
     }
 
     /**
@@ -94,40 +76,5 @@ public final class BAEURLFetchService implements URLFetchService {
         futureTask.run();
 
         return futureTask;
-    }
-
-    /**
-     * Converts the specified BAE fetchurl to a HTTP response.
-     * 
-     * @param baeFetchurl the specified BAE fetchurl
-     * @return HTTP response
-     */
-    private static HTTPResponse toHTTPResponse(final BaeFetchurl baeFetchurl) {
-        final HTTPResponse ret = new HTTPResponse();
-
-        ret.setContent(baeFetchurl.getResponseBody().getBytes());
-        ret.setResponseCode(baeFetchurl.getHttpCode());
-
-        final Map<String, String> responseHeader = baeFetchurl.getResponseHeader();
-
-        for (final Map.Entry<String, String> header : responseHeader.entrySet()) {
-            ret.addHeader(new HTTPHeader(header.getKey(), header.getValue()));
-        }
-
-        return ret;
-    }
-
-    /**
-     * Adds the HTTP headers for the specified BAE Fetchurl from the specified request.
-     * 
-     * @param baeFetchurl the specified BAE Fetchurl
-     * @param request the specified request
-     */
-    private static void addHeaders(final BaeFetchurl baeFetchurl, final HTTPRequest request) {
-        final List<HTTPHeader> headers = request.getHeaders();
-
-        for (final HTTPHeader header : headers) {
-            baeFetchurl.setHeader(header.getName(), header.getValue());
-        }
     }
 }
