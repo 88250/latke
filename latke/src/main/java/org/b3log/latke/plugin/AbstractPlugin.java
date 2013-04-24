@@ -58,7 +58,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.2.0.0, Jan 23, 2013
+ * @version 1.2.0.1, Apr 24, 2013
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -299,6 +299,11 @@ public abstract class AbstractPlugin implements Serializable {
 
         final String localKey = keyBuilder.toString();
         final Properties props = langs.get(localKey);
+        
+        if (null == props) {
+            return;
+        }
+        
         final Set<Object> keySet = props.keySet();
 
         for (final Object key : keySet) {
