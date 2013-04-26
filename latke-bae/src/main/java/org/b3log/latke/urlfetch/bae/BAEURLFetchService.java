@@ -15,14 +15,37 @@
  */
 package org.b3log.latke.urlfetch.bae;
 
+
 import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.b3log.latke.servlet.HTTPRequestMethod;
+import static org.b3log.latke.servlet.HTTPRequestMethod.DELETE;
+import static org.b3log.latke.servlet.HTTPRequestMethod.GET;
+import static org.b3log.latke.servlet.HTTPRequestMethod.HEAD;
+import static org.b3log.latke.servlet.HTTPRequestMethod.POST;
+import static org.b3log.latke.servlet.HTTPRequestMethod.PUT;
+import org.b3log.latke.urlfetch.HTTPHeader;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
+
 
 /**
  * Baidu App Engine URL fetch service.
@@ -37,22 +60,76 @@ public final class BAEURLFetchService implements URLFetchService {
      */
     private static final Logger LOGGER = Logger.getLogger(BAEURLFetchService.class.getName());
 
-    private URLFetchService svc;
-
-    /**
-     * Constructs a BAE URL fetch service.
-     */
-    public BAEURLFetchService() {
-        try {
-            svc = ((Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService")).newInstance();
-        } catch (final Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     @Override
     public HTTPResponse fetch(final HTTPRequest request) throws IOException {
-        return svc.fetch(request);
+        final HttpClient httpClient = new DefaultHttpClient();
+
+        final URL url = request.getURL();
+        final HTTPRequestMethod requestMethod = request.getRequestMethod();
+
+        HttpUriRequest httpUriRequest = null;
+
+        try {
+            final byte[] payload = request.getPayload();
+
+            switch (requestMethod) {
+
+            case GET:
+                final HttpGet httpGet = new HttpGet(url.toURI());
+
+                // FIXME: GET with payload
+                httpUriRequest = httpGet;
+                break;
+
+            case DELETE:
+                httpUriRequest = new HttpDelete(url.toURI());
+                break;
+
+            case HEAD:
+                httpUriRequest = new HttpHead(url.toURI());
+                break;
+
+            case POST:
+                final HttpPost httpPost = new HttpPost(url.toURI());
+
+                if (null != payload) {
+                    httpPost.setEntity(new ByteArrayEntity(payload));
+                }
+                httpUriRequest = httpPost;
+                break;
+
+            case PUT:
+                final HttpPut httpPut = new HttpPut(url.toURI());
+
+                if (null != payload) {
+                    httpPut.setEntity(new ByteArrayEntity(payload));
+                }
+                httpUriRequest = httpPut;
+                break;
+
+            default:
+                throw new RuntimeException("Unsupported HTTP request method[" + requestMethod.name() + "]");
+            }
+        } catch (final Exception e) {
+            LOGGER.log(Level.SEVERE, "URL fetch failed", e);
+
+            throw new IOException("URL fetch failed [msg=" + e.getMessage() + ']');
+        }
+
+        final List<HTTPHeader> headers = request.getHeaders();
+
+        for (final HTTPHeader header : headers) {
+            httpUriRequest.addHeader(header.getName(), header.getValue());
+        }
+
+        final HttpResponse res = httpClient.execute(httpUriRequest);
+
+        final HTTPResponse ret = new HTTPResponse();
+
+        ret.setContent(EntityUtils.toByteArray(res.getEntity()));
+        ret.setResponseCode(res.getStatusLine().getStatusCode());
+
+        return ret;
     }
 
     /**
