@@ -42,7 +42,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.0.1.0, Apr 10, 2013
+ * @version 1.0.1.1, Apr 26, 2013
  */
 public final class Connections {
 
@@ -205,6 +205,7 @@ public final class Connections {
             final Connection ret = c3p0.getConnection();
 
             ret.setTransactionIsolation(transactionIsolationInt);
+            ret.setAutoCommit(false);
 
             return ret;
         } else if ("h2".equals(poolType)) {
@@ -212,10 +213,15 @@ public final class Connections {
             final Connection ret = h2.getConnection();
 
             ret.setTransactionIsolation(transactionIsolationInt);
+            ret.setAutoCommit(false);
 
             return ret;
         } else if ("none".equals(poolType)) {
-            return DriverManager.getConnection(url, userName, password);
+            final Connection ret = DriverManager.getConnection(url, userName, password);
+            
+            ret.setAutoCommit(false);
+            
+            return  ret;
         }
 
         throw new IllegalStateException("Not found database connection pool [" + poolType + "]");
