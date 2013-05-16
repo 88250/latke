@@ -16,7 +16,16 @@
 package org.b3log.latke.mail.bae;
 
 
+import com.baidu.bae.api.bcms.BaeBcms;
+import com.baidu.bae.api.bcms.core.type.QueueType;
+import com.baidu.bae.api.bcms.model.concrete.CreateQueueRequest;
+import com.baidu.bae.api.bcms.model.concrete.DropQueueRequest;
+import com.baidu.bae.api.bcms.model.concrete.MailRequest;
+import com.baidu.bae.api.bcms.model.response.CreateQueueResponse;
+import com.baidu.bae.api.exception.BaeException;
+import com.baidu.bae.api.factory.BaeFactory;
 import java.io.IOException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.b3log.latke.mail.MailService;
@@ -28,11 +37,13 @@ import org.b3log.latke.mail.MailServiceFactory;
  * Baidu App Engine mail service.
  * 
  * <p>
- *   <b>NOTE</b>: This mail service done NOT send mail at present, do nothing.
+ * Uses Baidu Cloud Message Service (BCMS) to send mail, see 
+ * <a href="http://developer.baidu.com/wiki/index.php?title=docs/cplat/mq/sdk/java">here</a>
+ * for more details.
  * </p>
- *
+ * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Dec 13, 2012
+ * @version 1.0.1.0, May 16, 2013
  */
 public final class BAEMailService implements MailService {
 
@@ -43,6 +54,42 @@ public final class BAEMailService implements MailService {
 
     @Override
     public void send(final Message message) throws IOException {
-        LOGGER.log(Level.FINER, "Do not send mail on BAE");
+        final BaeBcms bcms = BaeFactory.getBaeBcms();
+
+        // Creates a queue
+        final CreateQueueRequest createQueueRequest = new CreateQueueRequest();
+
+        createQueueRequest.setAliasQueueName("mail_queue");
+        createQueueRequest.setQueueType(QueueType.BCMS_QUEUE_TYPE);
+        final CreateQueueResponse createQueueResponse = bcms.createQueue(createQueueRequest);
+
+        final String queueName = createQueueResponse.getQueueName();
+
+        try {
+            // Sends a mail
+            final MailRequest mailRequest = new MailRequest();
+
+            mailRequest.setQueueName(queueName);
+            mailRequest.setSubject(message.getSubject());
+            mailRequest.setMessage("<!--HTML-->" + message.getHtmlBody());
+            final Set<String> recipients = message.getRecipients();
+
+            for (final String recipient : recipients) {
+                mailRequest.addMailAddress(recipient);
+            }
+
+            mailRequest.setFrom(message.getFrom());
+
+            bcms.mail(mailRequest);
+        } catch (final BaeException e) {
+            LOGGER.log(Level.SEVERE, "Mail send failed", e);
+        } finally {
+            // Removes the queue
+            final DropQueueRequest dropQueueRequest = new DropQueueRequest();
+
+            dropQueueRequest.setQueueName(queueName);
+
+            bcms.dropQueue(dropQueueRequest);
+        }
     }
 }
