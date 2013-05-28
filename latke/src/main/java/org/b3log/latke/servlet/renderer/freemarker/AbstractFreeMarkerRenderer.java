@@ -117,7 +117,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
         try {
             final HttpServletRequest request = context.getRequest();
             final Template template = getTemplate((String) request.getAttribute(Keys.TEMAPLTE_DIR_NAME), templateName);
-            
+           
             if (Templates.hasExpression(template, "${request}")) {
                 dataModel.put(Keys.REQUEST, request);
             }

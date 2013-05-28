@@ -1002,19 +1002,21 @@ public final class RequestProcessors {
         @Override
         public int hashCode() {
             final int prime = 31;
-            int result = 1;
+            int ret = 1;
 
-            result = prime * result + Arrays.hashCode(methodParamNames);
-            result = prime * result + ((processorMethod == null) ? 0 : processorMethod.hashCode());
-            result = prime * result + ((uriPattern == null) ? 0 : uriPattern.hashCode());
-            return result;
+            ret = prime * ret + (this.uriPattern != null ? this.uriPattern.hashCode() : 0);
+            ret = prime * ret + (this.withContextPath ? 1 : 0);
+            ret = prime * ret + (this.uriPatternMode != null ? this.uriPatternMode.hashCode() : 0);
+            ret = prime * ret + (this.method != null ? this.method.hashCode() : 0);
+            ret = prime * ret + (this.processorClass != null ? this.processorClass.hashCode() : 0);
+            ret = prime * ret + (this.processorMethod != null ? this.processorMethod.hashCode() : 0);
+            ret = prime * ret + (this.convertClass != null ? this.convertClass.hashCode() : 0);
+            
+            return ret;
         }
 
         @Override
         public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            }
             if (obj == null) {
                 return false;
             }
@@ -1023,21 +1025,27 @@ public final class RequestProcessors {
             }
             final ProcessorMethod other = (ProcessorMethod) obj;
 
-            if (!Arrays.equals(methodParamNames, other.methodParamNames)) {
+            if ((this.uriPattern == null) ? (other.uriPattern != null) : !this.uriPattern.equals(other.uriPattern)) {
                 return false;
             }
-            if (processorMethod == null) {
-                if (other.processorMethod != null) {
-                    return false;
-                }
-            } else if (!processorMethod.equals(other.processorMethod)) {
+            if (this.withContextPath != other.withContextPath) {
                 return false;
             }
-            if (uriPattern == null) {
-                if (other.uriPattern != null) {
-                    return false;
-                }
-            } else if (!uriPattern.equals(other.uriPattern)) {
+            if (this.uriPatternMode != other.uriPatternMode) {
+                return false;
+            }
+            if ((this.method == null) ? (other.method != null) : !this.method.equals(other.method)) {
+                return false;
+            }
+            if (this.processorClass != other.processorClass
+                && (this.processorClass == null || !this.processorClass.equals(other.processorClass))) {
+                return false;
+            }
+            if (this.processorMethod != other.processorMethod
+                && (this.processorMethod == null || !this.processorMethod.equals(other.processorMethod))) {
+                return false;
+            }
+            if (this.convertClass != other.convertClass && (this.convertClass == null || !this.convertClass.equals(other.convertClass))) {
                 return false;
             }
             return true;

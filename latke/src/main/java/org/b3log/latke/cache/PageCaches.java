@@ -61,7 +61,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.3.4, Feb 25, 2013
+ * @version 1.0.3.5, May 28, 2013
  * @since 0.3.1
  */
 @SuppressWarnings("unchecked")
@@ -244,7 +244,6 @@ public final class PageCaches {
      *     "cachedTime": long
      * }
      * </pre>
-     * @see #get(java.lang.String, javax.servlet.http.HttpServletRequest) 
      */
     public static JSONObject get(final String pageCacheKey) {
         return (JSONObject) CACHE.get(pageCacheKey);

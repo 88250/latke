@@ -16,22 +16,34 @@
 package org.b3log.latke.servlet;
 
 
+import java.io.File;
+import java.io.IOException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpSessionEvent;
+import org.b3log.latke.util.freemarker.Templates;
 
 
 /**
  * Default servlet listener.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, Dec 28, 2011
+ * @version 1.0.0.2, May 28, 2013
  */
 public final class DefaultServletListener extends AbstractServletListener {
 
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
         super.contextInitialized(servletContextEvent);
+
+        final String webRootPath = getWebRoot();
+        final String skinPath = webRootPath + "skins/classic";
+
+        try {
+            Templates.MAIN_CFG.setDirectoryForTemplateLoading(new File(skinPath));
+        } catch (final IOException e) {
+            throw new IllegalStateException("Can not load the default template directory [" + skinPath + "]");
+        }
     }
 
     @Override
