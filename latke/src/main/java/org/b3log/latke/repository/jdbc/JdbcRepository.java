@@ -113,6 +113,11 @@ public final class JdbcRepository implements Repository {
      */
     public static final ThreadLocal<JdbcTransaction> TX = new InheritableThreadLocal<JdbcTransaction>();
 
+    /**
+     * The current JDBC connection.
+     */
+    public static final ThreadLocal<Connection> CONN = new ThreadLocal<Connection>();
+
     static {
         CACHE = (Cache<String, Serializable>) CacheFactory.getCache(REPOSITORY_CACHE_NAME);
 
@@ -458,8 +463,6 @@ public final class JdbcRepository implements Repository {
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "get:" + e.getMessage(), e);
             throw new RepositoryException(e);
-        } finally {
-            closeQueryConnection(connection);
         }
 
         return ret;
@@ -569,8 +572,6 @@ public final class JdbcRepository implements Repository {
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "query: " + e.getMessage(), e);
             throw new RepositoryException(e);
-        } finally {
-            closeQueryConnection(connection);
         }
 
         return ret;
@@ -831,8 +832,6 @@ public final class JdbcRepository implements Repository {
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "getRandomly:" + e.getMessage(), e);
             throw new RepositoryException(e);
-        } finally {
-            closeQueryConnection(connection);
         }
 
         return jsonObjects;
@@ -906,8 +905,6 @@ public final class JdbcRepository implements Repository {
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "count :" + e.getMessage(), e);
             throw new RepositoryException(e);
-        } finally {
-            closeQueryConnection(connection);
         }
 
         return count;
@@ -947,7 +944,7 @@ public final class JdbcRepository implements Repository {
 
         return jdbcTransaction;
     }
-    
+
     @Override
     public boolean hasTransactionBegun() {
         return null != TX.get();
@@ -995,14 +992,21 @@ public final class JdbcRepository implements Repository {
     public static void dispose() {
         final JdbcTransaction jdbcTransaction = TX.get();
 
-        if (jdbcTransaction == null) {
-            return;
-        }
-
-        if (jdbcTransaction.getConnection() != null) {
+        if (null != jdbcTransaction && jdbcTransaction.getConnection() != null) {
             jdbcTransaction.dispose();
         }
 
+        final Connection connection = CONN.get();
+
+        if (null != connection) {
+            try {
+                connection.close();
+            } catch (final SQLException e) {
+                throw new RuntimeException("Close connection failed", e);
+            } finally {
+                CONN.set(null);
+            }
+        }
     }
 
     /**
@@ -1014,15 +1018,25 @@ public final class JdbcRepository implements Repository {
     private Connection getConnection() {
         final JdbcTransaction jdbcTransaction = TX.get();
 
-        if (jdbcTransaction == null || !jdbcTransaction.isActive()) {
-            try {
-                return Connections.getConnection();
-            } catch (final SQLException e) {
-                LOGGER.log(Level.SEVERE, "Gets connection error", e);
-            }
+        if (null != jdbcTransaction && jdbcTransaction.isActive()) {
+            return jdbcTransaction.getConnection();
         }
 
-        return jdbcTransaction.getConnection();
+        Connection ret = CONN.get();
+
+        if (null != ret) {
+            return ret;
+        }
+
+        try {
+            ret = Connections.getConnection();
+
+            CONN.set(ret);
+        } catch (final SQLException e) {
+            LOGGER.log(Level.SEVERE, "Gets connection failed", e);
+        }
+        
+        return ret;
     }
 
     /**

@@ -33,7 +33,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.2, Jan 24, 2013
+ * @version 1.0.2.3, May 29, 2013
  * @see #initRuntimeEnv()
  * @see #shutdown() 
  * @see #getServePath()
@@ -745,7 +745,7 @@ public final class Latkes {
      * @return {@code true} if Latkes runs with a JDBC database, returns {@code false} otherwise
      */
     public static boolean runsWithJDBCDatabase() {
-        return RuntimeEnv.LOCAL == Latkes.getRuntimeEnv();
+        return RuntimeEnv.LOCAL == Latkes.getRuntimeEnv() || RuntimeEnv.BAE == Latkes.getRuntimeEnv();
     }
 
     /**
