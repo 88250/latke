@@ -1024,18 +1024,17 @@ public final class JdbcRepository implements Repository {
 
         Connection ret = CONN.get();
 
-        if (null != ret) {
-            return ret;
-        }
-
         try {
+            if (null != ret && !ret.isClosed()) {
+                return ret;
+            }
             ret = Connections.getConnection();
 
             CONN.set(ret);
         } catch (final SQLException e) {
             LOGGER.log(Level.SEVERE, "Gets connection failed", e);
         }
-        
+
         return ret;
     }
 
