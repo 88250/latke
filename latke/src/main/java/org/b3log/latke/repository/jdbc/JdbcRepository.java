@@ -60,7 +60,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.3, Mar 6, 2013
+ * @version 1.0.1.4, May 30, 2013
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -1028,6 +1028,7 @@ public final class JdbcRepository implements Repository {
             if (null != ret && !ret.isClosed()) {
                 return ret;
             }
+
             ret = Connections.getConnection();
 
             CONN.set(ret);
@@ -1039,41 +1040,12 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * closeQueryConnection,this connection not in JdbcTransaction, should be
-     * closed in code.
-     * 
-     * @param connection
-     *            {@link Connection}
-     * @throws RepositoryException
-     *             RepositoryException
-     */
-    private void closeQueryConnection(final Connection connection)
-        throws RepositoryException {
-        final JdbcTransaction jdbcTransaction = TX.get();
-
-        if (jdbcTransaction == null || !jdbcTransaction.isActive()) {
-            try {
-                connection.close();
-            } catch (final SQLException e) {
-                LOGGER.log(Level.SEVERE, "Can not close database connection", e);
-                throw new RepositoryException(e);
-            }
-        } else {
-            LOGGER.log(Level.FINEST, "Do not close query connection caused by in a transaction");
-        }
-    }
-
-    /**
      * Processes property filter.
      * 
-     * @param filterSql
-     *            the specified filter SQL to build
-     * @param paramList
-     *            the specified parameter list
-     * @param propertyFilter
-     *            the specified property filter
-     * @throws RepositoryException
-     *             repository exception
+     * @param filterSql the specified filter SQL to build
+     * @param paramList the specified parameter list
+     * @param propertyFilter the specified property filter
+     * @throws RepositoryException repository exception
      */
     private void processPropertyFilter(final StringBuilder filterSql,
         final List<Object> paramList, final PropertyFilter propertyFilter)
@@ -1149,14 +1121,10 @@ public final class JdbcRepository implements Repository {
     /**
      * Processes composite filter.
      * 
-     * @param filterSql
-     *            the specified filter SQL to build
-     * @param paramList
-     *            the specified parameter list
-     * @param compositeFilter
-     *            the specified composite filter
-     * @throws RepositoryException
-     *             repository exception
+     * @param filterSql the specified filter SQL to build
+     * @param paramList the specified parameter list
+     * @param compositeFilter the specified composite filter
+     * @throws RepositoryException repository exception
      */
     private void processCompositeFilter(final StringBuilder filterSql,
         final List<Object> paramList, final CompositeFilter compositeFilter)
