@@ -9,12 +9,17 @@ Without this configuration present, some functionality in the IDE may be limited
     <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
         <word>cacheable</word>
         <word>classpath</word>
+        <word>configurator</word>
+        <word>Creational</word>
         <word>cron</word>
         <word>datastore</word>
         <word>enum</word>
+        <word>inline</word>
         <word>json</word>
         <word>Latke</word>
+        <word>lifecycle</word>
         <word>namespace</word>
+        <word>nullable</word>
         <word>Plugin</word>
         <word>plugin</word>
         <word>Plugins</word>
@@ -23,6 +28,7 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>Serializer</word>
         <word>servlet</word>
         <word>servlets</word>
+        <word>validator</word>
         <word>xml</word>
     </spellchecker-wordlist>
 </project-shared-configuration>

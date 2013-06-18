@@ -1,0 +1,214 @@
+/*
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.b3log.latke.ioc.mock;
+
+
+import java.io.File;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
+
+/**
+ * A mock servlet context for test mainly.
+ *
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.2, Nov 26, 2009
+ */
+public final class MockServletContext implements ServletContext {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(MockServletContext.class.getName());
+
+    /**
+     * Web root.
+     */
+    private File webappRoot;
+
+    /**
+     * WEB-INF.
+     */
+    private File webInfRoot;
+
+    /**
+     * WEB-INF/classes/.
+     */
+    private File webInfClassesRoot;
+
+    /**
+     * Constructs a mock servlet context.
+     */
+    public MockServletContext() {
+        try {
+            final URL webxml = getClass().getResource("/WEB-INF/web.xml");
+
+            if (webxml != null) {
+                webInfRoot = new File(webxml.toURI()).getParentFile();
+                LOGGER.finest("WEB-INF: " + webInfRoot.getAbsolutePath());
+                if (webInfRoot != null) {
+                    webInfClassesRoot = new File(webInfRoot.getParentFile().getPath());
+                    LOGGER.finest("WEB-INF/classes: " + webInfClassesRoot.getAbsolutePath());
+                    webappRoot = webInfRoot.getParentFile();
+                    LOGGER.finest("Web app root: " + webappRoot.getAbsolutePath());
+                }
+            } else {
+                webappRoot = new File(getClass().getResource("/.").toURI());
+            }
+        } catch (final URISyntaxException e) {
+            LOGGER.log(Level.WARNING, "Unable to find web.xml", e);
+        }
+    }
+
+    @Override
+    public String getContextPath() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ServletContext getContext(final String uripath) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getMajorVersion() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getMinorVersion() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getMimeType(final String file) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Set getResourcePaths(final String path) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public URL getResource(final String path) throws MalformedURLException {
+        return getClass().getResource(path);
+    }
+
+    @Override
+    public InputStream getResourceAsStream(final String path) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RequestDispatcher getRequestDispatcher(final String path) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RequestDispatcher getNamedDispatcher(final String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Servlet getServlet(final String name) throws ServletException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Enumeration getServlets() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Enumeration getServletNames() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void log(final String msg) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void log(final Exception exception, final String msg) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void log(final String message, final Throwable throwable) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getRealPath(final String path) {
+        if (webappRoot != null) {
+            return webappRoot.getAbsolutePath() + path;
+        } else {
+            return path;
+        }
+    }
+
+    @Override
+    public String getServerInfo() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getInitParameter(final String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Enumeration getInitParameterNames() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Object getAttribute(final String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Enumeration getAttributeNames() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setAttribute(final String name, final Object object) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void removeAttribute(final String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getServletContextName() {
+        return "mock servlet cocntext name";
+    }
+}

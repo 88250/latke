@@ -340,23 +340,31 @@ public final class RequestProcessors {
      *   <li>package: org.b3log.process</li>
      *   <li>ant-style classpath: org/b3log/** /*process.class</li>
      * </ul>
+     * @return discovered classes
      * @throws Exception exception
      */
-    public static void discover(final String scanPath) throws Exception {
+    public static Collection<Class<?>> discover(final String scanPath) throws Exception {
+        final Set<Class<?>> ret = new HashSet<Class<?>>();
+
         // Retain the original implementation if the scanPath is unspecified
         if (Strings.isEmptyOrNull(scanPath)) {
-            discoverFromClassesDir();
-            discoverFromLibDir();
-        } else {
-            discoverFromClassPath(scanPath); // See issue #17 for more details
-            // (https://github.com/b3log/b3log-latke/issues/17)
+            discoverFromClassesDir(ret);
+            discoverFromLibDir(ret);
+
+            return ret;
         }
+
+        discoverFromClassPath(scanPath, ret); // See issue #17 (https://github.com/b3log/b3log-latke/issues/17) for more details
+
+        return ret;
     }
 
     /**
      * Scans classpath (classes directory) to discover request processor classes.
+     * 
+     * @param classSet the specified class set
      */
-    private static void discoverFromClassesDir() {
+    private static void discoverFromClassesDir(final Collection<Class<?>> classSet) {
         final String webRoot = AbstractServletListener.getWebRoot();
         final File classesDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "classes" + File.separator);
         @SuppressWarnings("unchecked")
@@ -369,6 +377,8 @@ public final class RequestProcessors {
                 final String className = StringUtils.substringBetween(path, "WEB-INF" + File.separator + "classes" + File.separator, ".class").replaceAll("\\/", ".").replaceAll(
                     "\\\\", ".");
                 final Class<?> clz = classLoader.loadClass(className);
+
+                classSet.add(clz);
 
                 if (clz.isAnnotationPresent(RequestProcessor.class)) {
                     LOGGER.log(Level.FINER, "Found a request processor[className={0}]", className);
@@ -393,8 +403,10 @@ public final class RequestProcessors {
 
     /**
      * Scans classpath (lib directory) to discover request processor classes.
+     * 
+     * @param classSet the specified class set
      */
-    private static void discoverFromLibDir() {
+    private static void discoverFromLibDir(final Collection<Class<?>> classSet) {
         final String webRoot = AbstractServletListener.getWebRoot();
         final File libDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "lib" + File.separator);
         @SuppressWarnings("unchecked")
@@ -443,6 +455,8 @@ public final class RequestProcessors {
                             final String className = classFile.getName();
                             final Class<?> clz = classLoader.loadClass(className);
 
+                            classSet.add(clz);
+
                             LOGGER.log(Level.FINER, "Found a request processor[className={0}]", className);
                             final Method[] declaredMethods = clz.getDeclaredMethods();
 
@@ -467,20 +481,27 @@ public final class RequestProcessors {
 
     /**
      * Scans classpath (from classloader) to discover request processor classes.
-     * @param scanPath scanPah using ',' as split.
-     * @throws IOException  IOException
+     * 
+     * @param scanPath scanPah using ',' as split
+     * @param classSet the specified class set
+     * @throws IOException io exception
      */
-    private static void discoverFromClassPath(final String scanPath) throws IOException {
+    private static void discoverFromClassPath(final String scanPath, final Collection<Class<?>> classSet) throws IOException {
+        final String[] splitPaths = scanPath.split(",");
 
-        final String[] paths = scanPath.split(",");
+        // Adds some built-in components
+        final String[] paths = Arrays.copyOf(splitPaths, splitPaths.length + 1);
+
+        paths[paths.length - 1] = "org.b3log.latke.remote";
+
         final Set<URL> urls = new LinkedHashSet<URL>();
 
-        /** using static ??  */
+        // XXX: using static ?
         final ClassPathResolver classPathResolver = new ClassPathResolver();
 
         for (String path : paths) {
 
-            /**
+            /*
              * the being two types of the scanPath.
              *  1 package: org.b3log.process
              *  2 ant-style classpath: org/b3log/** /*process.class
@@ -503,19 +524,21 @@ public final class RequestProcessors {
             }
 
             for (Annotation annotation : annotationsAttribute.getAnnotations()) {
-                if ((annotation.getTypeName()).equals(RequestProcessor.class.getName())) {
-                    // Found a request processor class, loads it
-                    final String className = classFile.getName();
+                final String className = classFile.getName();
 
-                    Class<?> clz;
+                Class<?> clz;
 
-                    try {
-                        clz = Thread.currentThread().getContextClassLoader().loadClass(className);
-                    } catch (final ClassNotFoundException e) {
-                        LOGGER.log(Level.SEVERE, "some error to load the class[" + className + "]", e);
-                        break;
-                    }
+                try {
+                    clz = Thread.currentThread().getContextClassLoader().loadClass(className);
+                } catch (final ClassNotFoundException e) {
+                    LOGGER.log(Level.SEVERE, "some error to load the class[" + className + "]", e);
 
+                    break;
+                }
+
+                classSet.add(clz);
+
+                if ((annotation.getTypeName()).equals(RequestProcessor.class.getName())) { // Found a request processor class, loads it
                     LOGGER.log(Level.FINER, "Found a request processor[className={0}]", className);
                     final Method[] declaredMethods = clz.getDeclaredMethods();
 
@@ -526,8 +549,10 @@ public final class RequestProcessors {
                         if (null == requestProcessingMethodAnn) {
                             continue;
                         }
-                        LOGGER.log(Level.INFO, "get the matched processing Class[{0}], method[{1}]",
+
+                        LOGGER.log(Level.CONFIG, "Got a matched processing Class[{0}], method[{1}]",
                             new Object[] {clz.getCanonicalName(), mthd.getName()});
+
                         addProcessorMethod(requestProcessingMethodAnn, clz, mthd);
                     }
                 }
@@ -1011,7 +1036,7 @@ public final class RequestProcessors {
             ret = prime * ret + (this.processorClass != null ? this.processorClass.hashCode() : 0);
             ret = prime * ret + (this.processorMethod != null ? this.processorMethod.hashCode() : 0);
             ret = prime * ret + (this.convertClass != null ? this.convertClass.hashCode() : 0);
-            
+
             return ret;
         }
 

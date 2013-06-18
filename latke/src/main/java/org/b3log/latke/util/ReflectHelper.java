@@ -108,7 +108,8 @@ public final class ReflectHelper {
             // to prevent heap error when there being some unknown reasons to
             // resolve the VariableNames
             if (j > MAX_FIND_LENGTH) {
-                LOGGER.log(Level.WARNING, "maybe resolve to VariableNames error ");
+                LOGGER.log(Level.WARNING,
+                    "Maybe resolve to VariableNames error [class=" + clazz.getName() + ", targetMethodName=" + targetMethodName + ']');
                 ifkill = true;
                 break;
             }

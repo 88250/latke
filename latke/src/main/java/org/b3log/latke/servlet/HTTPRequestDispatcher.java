@@ -18,6 +18,7 @@ package org.b3log.latke.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
 import org.b3log.latke.util.StaticResources;
@@ -105,7 +107,11 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             LOGGER.info("Discovering request processors....");
             final String scanPath = getServletConfig().getInitParameter("scanPath");
 
-            RequestProcessors.discover(scanPath);
+            final Collection<Class<?>> classes = RequestProcessors.discover(scanPath);
+
+            // Starts Latke IoC
+            Lifecycle.startApplication(classes);
+            
             LOGGER.info("Discovered request processors");
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Initializes request processors failed", e);
