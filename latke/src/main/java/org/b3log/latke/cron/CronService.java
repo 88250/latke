@@ -79,7 +79,7 @@ public final class CronService {
                     LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getUrl());
                 }
 
-                LOGGER.log(Level.DEBUG, "[{0}] cron jobs", CRONS.size());
+                LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
 
                 break;
 
@@ -122,7 +122,6 @@ public final class CronService {
 
             final NodeList crons = root.getElementsByTagName("cron");
 
-            LOGGER.log(Level.DEBUG, "Reading cron jobs: ");
             for (int i = 0; i < crons.getLength(); i++) {
                 final Element cronElement = (Element) crons.item(i);
                 final Element urlElement = (Element) cronElement.getElementsByTagName("url").item(0);
@@ -132,8 +131,6 @@ public final class CronService {
                 final String url = urlElement.getTextContent();
                 final String description = descriptionElement.getTextContent();
                 final String schedule = scheduleElement.getTextContent();
-
-                LOGGER.log(Level.DEBUG, "Cron[url={0}, description={1}, schedule={2}]", new Object[] {url, description, schedule});
 
                 CRONS.add(new Cron(url, description, schedule));
             }

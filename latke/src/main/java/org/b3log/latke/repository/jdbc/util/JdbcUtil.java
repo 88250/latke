@@ -150,7 +150,7 @@ public final class JdbcUtil {
      */
     private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection,
         final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
-        LOGGER.log(Level.TRACE, "querySql: {0}", sql);
+        LOGGER.log(Level.TRACE, "Query SQL [{0}]", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
 

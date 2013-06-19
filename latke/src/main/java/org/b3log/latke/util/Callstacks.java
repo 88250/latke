@@ -73,7 +73,7 @@ public final class Callstacks {
      */
     public static void printCallstack(final Level logLevel, final String[] carePackages, final String[] exceptablePackages) {
         if (null == logLevel) {
-            LOGGER.log(Level.WARN, "Requires parameter[logLevel]");
+            LOGGER.log(Level.WARN, "Requires parameter [logLevel]");
 
             return;
         }
@@ -100,7 +100,7 @@ public final class Callstacks {
             stackBuilder.append("    [className=").append(stackElements[i].getClassName()).append(", fileName=").append(stackElements[i].getFileName()).append(", lineNumber=").append(stackElements[i].getLineNumber()).append(", methodName=").append(stackElements[i].getMethodName()).append(']').append(
                 Strings.LINE_SEPARATOR);
         }
-        stackBuilder.append("], fullDepth=[").append(stackElements.length).append("]");
+        stackBuilder.append("], full depth [").append(stackElements.length).append("]");
 
         LOGGER.log(logLevel, stackBuilder.toString());
     }

@@ -76,18 +76,13 @@ public abstract class AbstractServletListener implements ServletContextListener,
         LOGGER.info("Initializing the context....");
 
         Latkes.setLocale(Locale.SIMPLIFIED_CHINESE);
-        LOGGER.log(Level.INFO, "Default locale[{0}]", Latkes.getLocale());
+        LOGGER.log(Level.INFO, "Default locale [{0}]", Latkes.getLocale());
 
         final ServletContext servletContext = servletContextEvent.getServletContext();
 
         webRoot = servletContext.getRealPath("") + File.separator;
-        LOGGER.log(Level.INFO, "Server[webRoot={0}, contextPath={1}]",
+        LOGGER.log(Level.INFO, "Server [webRoot={0}, contextPath={1}]",
             new Object[] {webRoot, servletContextEvent.getServletContext().getContextPath()});
-
-        // final String catalinaBase = System.getProperty("catalina.base");
-        // if (!Strings.isEmptyOrNull(catalinaBase)) {
-        // LOGGER.log(Level.INFO, "Servlet container[Tomcat, catalina.base={0}]", catalinaBase);
-        // }
 
         CronService.start();
     }

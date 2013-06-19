@@ -349,13 +349,13 @@ public final class PageCaches {
             cachedValue.put(CACHED_BYTES_LENGTH, bytes.length);
             cachedValue.put(CACHED_TIME, System.currentTimeMillis());
         } catch (final Exception e) {
-            LOGGER.log(Level.WARN, "Cache stat. failed[pageKey=" + pageKey + "]", e);
+            LOGGER.log(Level.WARN, "Cache stat. failed [pageKey=" + pageKey + "]", e);
         }
 
         CACHE.put(pageKey, cachedValue);
         KEYS.add(pageKey);
 
-        LOGGER.log(Level.TRACE, "Put a page[key={0}] into page cache, cached keys[size={1}, {2}]", new Object[] {pageKey, KEYS.size(), KEYS});
+        LOGGER.log(Level.TRACE, "Put a page [key={0}] into page cache, cached keys [size={1}, {2}]", new Object[] {pageKey, KEYS.size(), KEYS});
     }
 
     /**
@@ -421,7 +421,7 @@ public final class PageCaches {
 
         if (!toRemove.isEmpty()) {
             KEYS.removeAll(toRemove);
-            LOGGER.log(Level.DEBUG, "Removed page cache keys[{0}] for sync", toRemove);
+            LOGGER.log(Level.DEBUG, "Removed page cache keys [{0}] for sync", toRemove);
         }
     }
 

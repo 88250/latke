@@ -301,7 +301,7 @@ public final class JdbcRepository implements Repository {
         final JSONObject needUpdateJsonObject = getNeedUpdateJsonObject(oldJsonObject, jsonObject);
 
         if (needUpdateJsonObject.length() == 0) {
-            LOGGER.log(Level.INFO, "nothing to update [{0}] for repository[{1}]", new Object[] {id, getName()});
+            LOGGER.log(Level.INFO, "nothing to update [{0}] for repository [{1}]", new Object[] {id, getName()});
             return;
         }
 
@@ -432,7 +432,7 @@ public final class JdbcRepository implements Repository {
 
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.DEBUG, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got an object [cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 return ret;
             }
         }
@@ -451,7 +451,7 @@ public final class JdbcRepository implements Repository {
                 final String cacheKey = CACHE_KEY_PREFIX + id;
 
                 CACHE.putAsync(cacheKey, ret);
-                LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Added an object [cacheKey={0}] in repository cache [{1}]", new Object[] {cacheKey, getName()});
             }
 
         } catch (final SQLException e) {
@@ -509,7 +509,7 @@ public final class JdbcRepository implements Repository {
         if (cacheEnabled) {
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.DEBUG, "Got query result[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got query result [cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 return ret;
             }
 
@@ -554,7 +554,7 @@ public final class JdbcRepository implements Repository {
 
             if (cacheEnabled) {
                 CACHE.putAsync(cacheKey, ret);
-                LOGGER.log(Level.DEBUG, "Added query result[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Added query result [cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
                 try {
                     cacheQueryResults(ret.optJSONArray(Keys.RESULTS), query);
                 } catch (final JSONException e) {
@@ -592,7 +592,7 @@ public final class JdbcRepository implements Repository {
             // 1. Caching for get by id.
             cacheKey = CACHE_KEY_PREFIX + jsonObject.optString(Keys.OBJECT_ID);
             CACHE.putAsync(cacheKey, jsonObject);
-            LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}] for default index[oId]",
+            LOGGER.log(Level.DEBUG, "Added an object [cacheKey={0}] in repository cache[{1}] for default index[oId]",
                 new Object[] {cacheKey, getName()});
 
             // 2. Caching for get by query with filters (EQUAL operator) only
@@ -627,7 +627,7 @@ public final class JdbcRepository implements Repository {
                 futureQueryResults.put(jsonObject);
 
                 CACHE.putAsync(cacheKey, futureQueryRet);
-                LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
+                LOGGER.log(Level.DEBUG, "Added an object [cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
                     new Object[] {cacheKey, getName(), logMsgBuilder, futureQuery.toString()});
             }
         }
@@ -683,7 +683,7 @@ public final class JdbcRepository implements Repository {
         }
 
         if (currentPageNum > ret) {
-            LOGGER.log(Level.WARN, "Current page num[{0}] > page count[{1}]", new Object[] {currentPageNum, ret});
+            LOGGER.log(Level.WARN, "Current page num [{0}] > page count [{1}]", new Object[] {currentPageNum, ret});
         }
 
         getQuerySql(currentPageNum, pageSize, selectSql, filterSql, orderBySql, sql);
@@ -852,7 +852,7 @@ public final class JdbcRepository implements Repository {
             final Object o = CACHE.get(cacheKey);
 
             if (null != o) {
-                LOGGER.log(Level.DEBUG, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got an object [cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 try {
                     return (Long) o;
                 } catch (final Exception e) {
@@ -868,7 +868,7 @@ public final class JdbcRepository implements Repository {
 
         if (cacheEnabled) {
             CACHE.putAsync(cacheKey, ret);
-            LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+            LOGGER.log(Level.DEBUG, "Added an object [cacheKey={0}] in repository cache[name={1}]", new Object[] {cacheKey, getName()});
         }
 
         return ret;
@@ -1077,7 +1077,7 @@ public final class JdbcRepository implements Repository {
             break;
 
         default:
-            throw new RepositoryException("Unsupported filter operator[" + propertyFilter.getOperator() + "]");
+            throw new RepositoryException("Unsupported filter operator [" + propertyFilter.getOperator() + "]");
         }
 
         if (FilterOperator.IN != propertyFilter.getOperator()) {
@@ -1154,7 +1154,7 @@ public final class JdbcRepository implements Repository {
                     break;
 
                 default:
-                    throw new RepositoryException("Unsupported composite filter[operator=" + compositeFilter.getOperator() + "]");
+                    throw new RepositoryException("Unsupported composite filter [operator=" + compositeFilter.getOperator() + "]");
                 }
             }
         }
