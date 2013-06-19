@@ -176,7 +176,7 @@ public final class ConfiguratorImpl implements Configurator {
             return null;
         }
 
-        final Set<Annotation> qualifiers = Beans.getQualifiers(beanClass);
+        final Set<Annotation> qualifiers = Beans.getQualifiers(beanClass, name);
         final Class<? extends Annotation> scope = Beans.getScope(beanClass);
         final Set<Type> beanTypes = Beans.getBeanTypes(beanClass);
 

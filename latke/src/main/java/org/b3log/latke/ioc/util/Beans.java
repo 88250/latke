@@ -54,9 +54,10 @@ public final class Beans {
      * Gets qualifiers of the specified class. If no qualifiers, 
      * 
      * @param clazz the specified class
+     * @param beanName the specified bean name
      * @return qualifier annotations
      */
-    public static Set<Annotation> getQualifiers(final Class<?> clazz) {
+    public static Set<Annotation> getQualifiers(final Class<?> clazz, final String beanName) {
         final Annotation[] annotations = clazz.getAnnotations();
         final Set<Annotation> qualifierAnnotations = CollectionUtils.arrayToSet(annotations);
 
@@ -67,7 +68,7 @@ public final class Beans {
         }
 
         if (!hasNamedQualifier(clazz)) {
-            ret.add(new NamedLiteral(getBeanName(clazz)));
+            ret.add(new NamedLiteral(beanName));
         }
 
         return ret;

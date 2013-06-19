@@ -81,7 +81,7 @@ public final class JdbcUtil {
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection) throws SQLException {
-        LOGGER.log(Level.TRACE, "executeSql: {0}", sql);
+        LOGGER.log(Level.TRACE, "Execute SQL [{0}]", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
 

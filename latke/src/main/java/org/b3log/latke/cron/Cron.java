@@ -123,7 +123,7 @@ public final class Cron extends TimerTask {
         final String timeUnit = StringUtils.substringAfterLast(schedule, " ");
 
         LOGGER.log(Level.TRACE, "Parsed a cron job [schedule={0}]: [num={1}, timeUnit={2}, description={3}], ", 
-                new Object[] {schedule, num, timeUnit, description});
+            new Object[] {schedule, num, timeUnit, description});
 
         if ("hours".equals(timeUnit)) {
             period = num * SIXTY * SIXTY * THOUSAND;

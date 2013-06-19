@@ -509,7 +509,8 @@ public final class JdbcRepository implements Repository {
         if (cacheEnabled) {
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.DEBUG, "Got query result [cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got query result [cacheKey={0}] from repository cache[name={1}]",
+                    new Object[] {cacheKey, getName()});
                 return ret;
             }
 
