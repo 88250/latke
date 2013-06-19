@@ -24,7 +24,7 @@ import org.b3log.latke.ioc.drink.juice.Juice;
 import org.b3log.latke.ioc.drink.juice.JuiceBottle;
 import org.b3log.latke.ioc.drink.mix.Mix;
 import org.b3log.latke.ioc.drink.mix.MixBottle;
-import org.b3log.latke.ioc.LatkeBean;
+import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.config.Configurator;

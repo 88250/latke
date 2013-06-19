@@ -16,6 +16,7 @@
 package org.b3log.latke.ioc;
 
 
+import org.b3log.latke.ioc.bean.LatkeBean;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;

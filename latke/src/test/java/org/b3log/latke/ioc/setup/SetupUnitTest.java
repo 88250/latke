@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.ioc.setup;
 
-import org.b3log.latke.ioc.LatkeBean;
+import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.config.AbstractModule;

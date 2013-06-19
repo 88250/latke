@@ -20,7 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Set;
-import org.b3log.latke.ioc.LatkeBean;
+import org.b3log.latke.ioc.bean.LatkeBean;
 
 
 /**

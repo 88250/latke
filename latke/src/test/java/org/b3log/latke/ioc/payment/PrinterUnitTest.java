@@ -18,7 +18,7 @@ package org.b3log.latke.ioc.payment;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
-import org.b3log.latke.ioc.LatkeBean;
+import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.Lifecycle;

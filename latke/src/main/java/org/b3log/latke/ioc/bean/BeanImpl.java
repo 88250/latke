@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc;
+package org.b3log.latke.ioc.bean;
 
 
 import java.lang.annotation.Annotation;
@@ -37,6 +37,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Named;
 import javax.inject.Provider;
+import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.annotated.AnnotatedTypeImpl;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.literal.NamedLiteral;
