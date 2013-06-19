@@ -127,6 +127,13 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
+            
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+                <scope>compile</scope>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -135,6 +142,11 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
         </dependency>
        
         <dependency>
@@ -260,6 +272,7 @@
                     </includes>
                     <excludes>
                         <exclude>**/src/main/java/**/package-info.java</exclude>
+                        <exclude>**/src/main/java/com/baidu/**/*.java</exclude>
                     </excludes>
 
                     <useDefaultExcludes>true</useDefaultExcludes>
@@ -290,6 +303,9 @@
                 <configuration>
                     <configLocation>${basedir}/src/main/resources/etc/beyondtrack_checks.xml</configLocation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <excludes>
+                        com/baidu/**/*.java,
+                    </excludes>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>
                     <failsOnError>true</failsOnError>

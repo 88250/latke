@@ -26,7 +26,10 @@ import javax.inject.Qualifier;
 import javax.inject.Scope;
 import javax.inject.Singleton;
 import org.b3log.latke.ioc.literal.NamedLiteral;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.CollectionUtils;
+import org.b3log.latke.util.Strings;
 
 
 /**
@@ -36,6 +39,11 @@ import org.b3log.latke.util.CollectionUtils;
  * @version 1.0.0.6, Mar 31, 2010
  */
 public final class Beans {
+    
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(Beans.class.getName());
 
     /**
      * Private constructor.
@@ -154,6 +162,12 @@ public final class Beans {
             ret = clazz.getAnnotation(Named.class).value();
         } else {
             final String className = clazz.getSimpleName();
+            
+            LOGGER.log(Level.TRACE, "Class [name={0}, simpleName={1}]", clazz.getName(), className);
+            
+            if (Strings.isEmptyOrNull(className)) {
+                return null;
+            }
 
             ret = className.substring(0, 1).toLowerCase() + className.substring(1);
         }
