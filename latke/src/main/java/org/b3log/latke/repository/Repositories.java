@@ -23,11 +23,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.impl.UserRepositoryImpl;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Strings;
@@ -343,7 +343,7 @@ public final class Repositories {
         try {
             final String description = IOUtils.toString(inputStream);
 
-            LOGGER.log(Level.CONFIG, "{0}{1}", new Object[] {Strings.LINE_SEPARATOR, description});
+            LOGGER.log(Level.DEBUG, "{0}{1}", new Object[] {Strings.LINE_SEPARATOR, description});
 
             repositoriesDescription = new JSONObject(description);
 
@@ -360,12 +360,12 @@ public final class Repositories {
                 repository.put("name", tableNamePrefix + repository.optString("name"));
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Parses repository description failed", e);
+            LOGGER.log(Level.ERROR, "Parses repository description failed", e);
         } finally {
             try {
                 inputStream.close();
             } catch (final IOException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                LOGGER.log(Level.ERROR, e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }

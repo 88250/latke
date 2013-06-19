@@ -25,8 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.el.ELResolver;
 import javax.el.ExpressionFactory;
 import javax.enterprise.context.ContextNotActiveException;
@@ -50,6 +48,8 @@ import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.impl.ConfiguratorImpl;
 import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.ioc.util.Reflections;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -131,7 +131,7 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
      * Constructs a Latke bean manager.
      */
     private LatkeBeanManagerImpl() {
-        LOGGER.log(Level.FINER, "Creating Latke bean manager");
+        LOGGER.log(Level.DEBUG, "Creating Latke bean manager");
 
         beans = new HashSet<LatkeBean<?>>();
         contexts = new HashMap<Class<? extends Annotation>, Set<Context>>();
@@ -152,7 +152,7 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
             singletonContext.get(builtInBean, new CreationalContextImpl(builtInBean));
         }
 
-        LOGGER.log(Level.FINE, "Created Latke bean manager");
+        LOGGER.log(Level.DEBUG, "Created Latke bean manager");
     }
 
     @Override

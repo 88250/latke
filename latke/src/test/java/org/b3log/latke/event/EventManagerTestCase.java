@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.event;
 
-import java.util.logging.Logger;
 import org.json.JSONObject;
 import org.testng.annotations.Test;
 
@@ -26,11 +25,6 @@ import org.testng.annotations.Test;
  * @version 1.0.0.4, Sep 26, 2010
  */
 public final class EventManagerTestCase {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(EventManagerTestCase.class.getName());
 
     /**
      *

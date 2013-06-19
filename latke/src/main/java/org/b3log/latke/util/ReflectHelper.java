@@ -16,9 +16,6 @@
 package org.b3log.latke.util;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -27,6 +24,8 @@ import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -79,7 +78,7 @@ public final class ReflectHelper {
             }
             cm = cc.getDeclaredMethod(targetMethodName, ptypes);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Get method variable names failed", e);
+            LOGGER.log(Level.ERROR, "Get method variable names failed", e);
         }
 
         if (null == cm) {
@@ -94,7 +93,7 @@ public final class ReflectHelper {
         try {
             variableNames = new String[cm.getParameterTypes().length];
         } catch (final NotFoundException e) {
-            LOGGER.log(Level.SEVERE, "Get method variable names failed", e);
+            LOGGER.log(Level.ERROR, "Get method variable names failed", e);
         }
 
         // final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
@@ -108,7 +107,7 @@ public final class ReflectHelper {
             // to prevent heap error when there being some unknown reasons to
             // resolve the VariableNames
             if (j > MAX_FIND_LENGTH) {
-                LOGGER.log(Level.WARNING,
+                LOGGER.log(Level.WARN,
                     "Maybe resolve to VariableNames error [class=" + clazz.getName() + ", targetMethodName=" + targetMethodName + ']');
                 ifkill = true;
                 break;

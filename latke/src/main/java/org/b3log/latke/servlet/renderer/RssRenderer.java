@@ -18,9 +18,9 @@ package org.b3log.latke.servlet.renderer;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 
@@ -64,7 +64,7 @@ public final class RssRenderer extends AbstractHTTPResponseRenderer {
             writer.write(content);
             writer.close();
         } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "Render failed", e);
+            LOGGER.log(Level.ERROR, "Render failed", e);
         }
     }
 }

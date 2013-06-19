@@ -20,13 +20,13 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -71,16 +71,16 @@ public final class StaticResources {
             final Element staticFiles = (Element) root.getElementsByTagName("static-files").item(0);
             final NodeList includes = staticFiles.getElementsByTagName("include");
 
-            LOGGER.log(Level.CONFIG, "Reading static files: ");
+            LOGGER.log(Level.DEBUG, "Reading static files: ");
             for (int i = 0; i < includes.getLength(); i++) {
                 final Element include = (Element) includes.item(i);
                 final String path = include.getAttribute("path");
 
-                LOGGER.log(Level.CONFIG, "path pattern=[{0}]", path);
+                LOGGER.log(Level.DEBUG, "path pattern=[{0}]", path);
                 STATIC_RESOURCE_PATHS.add(path);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Reads appengine-web.xml failed", e);
+            LOGGER.log(Level.ERROR, "Reads appengine-web.xml failed", e);
             throw new RuntimeException(e);
         }
 

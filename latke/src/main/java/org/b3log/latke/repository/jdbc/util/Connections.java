@@ -22,10 +22,10 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Callstacks;
 import org.h2.jdbcx.JdbcConnectionPool;
 
@@ -135,7 +135,7 @@ public final class Connections {
             }
 
             if ("BoneCP".equals(poolType)) {
-                LOGGER.log(Level.FINE, "Initializing database connection pool [BoneCP]");
+                LOGGER.log(Level.DEBUG, "Initializing database connection pool [BoneCP]");
 
                 final BoneCPConfig config = new BoneCPConfig();
 
@@ -151,7 +151,7 @@ public final class Connections {
 
                 boneCP = new BoneCP(config);
             } else if ("c3p0".equals(poolType)) {
-                LOGGER.log(Level.FINE, "Initializing database connection pool [c3p0]");
+                LOGGER.log(Level.DEBUG, "Initializing database connection pool [c3p0]");
 
                 // Disable JMX
                 System.setProperty("com.mchange.v2.c3p0.management.ManagementCoordinator",
@@ -169,7 +169,7 @@ public final class Connections {
                 c3p0.setTestConnectionOnCheckin(true);
                 c3p0.setIdleConnectionTestPeriod(C3P0_CHECKTIME);
             } else if ("h2".equals(poolType)) {
-                LOGGER.log(Level.FINE, "Initialing database connection pool [h2]");
+                LOGGER.log(Level.DEBUG, "Initialing database connection pool [h2]");
 
                 h2 = JdbcConnectionPool.create(url, userName, password);
                 h2.setMaxConnections(maxConnCnt);
@@ -179,7 +179,7 @@ public final class Connections {
 
             LOGGER.info("Initialized connection pool [type=" + poolType + ']');
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Can not initialize database connection", e);
+            LOGGER.log(Level.ERROR, "Can not initialize database connection", e);
         }
     }
 
@@ -190,17 +190,17 @@ public final class Connections {
      * @throws SQLException SQL exception
      */
     public static Connection getConnection() throws SQLException {
-        if (LOGGER.isLoggable(Level.FINEST)) {
-            Callstacks.printCallstack(Level.FINEST, new String[] {"org.b3log"}, null);
+        if (LOGGER.isTraceEnabled()) {
+            Callstacks.printCallstack(Level.TRACE, new String[] {"org.b3log"}, null);
         }
 
         if ("BoneCP".equals(poolType)) {
-            LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
+            LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
                 new Object[] {boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
 
             return boneCP.getConnection();
         } else if ("c3p0".equals(poolType)) {
-            LOGGER.log(Level.FINEST, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
+            LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
                 new Object[] {c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
             final Connection ret = c3p0.getConnection();
 
@@ -209,7 +209,7 @@ public final class Connections {
 
             return ret;
         } else if ("h2".equals(poolType)) {
-            LOGGER.log(Level.FINEST, "Connection pool[leasedConns={0}]", new Object[] {h2.getActiveConnections()});
+            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[] {h2.getActiveConnections()});
             final Connection ret = h2.getConnection();
 
             ret.setTransactionIsolation(transactionIsolationInt);

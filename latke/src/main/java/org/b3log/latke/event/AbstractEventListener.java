@@ -16,12 +16,12 @@
 package org.b3log.latke.event;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
- * Abstract event listener(Observer).
+ * Abstract event listener (Observer).
  *
  * @param <T> the type of event data
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
@@ -57,7 +57,7 @@ public abstract class AbstractEventListener<T> {
         try {
             action(eventObject);
         } catch (final Exception e) {
-            LOGGER.log(Level.WARNING, "Event perform failed", e);
+            LOGGER.log(Level.WARN, "Event perform failed", e);
         } finally { // remove event from event queue
             if (eventQueue instanceof SynchronizedEventQueue) {
                 final SynchronizedEventQueue synchronizedEventQueue = (SynchronizedEventQueue) eventQueue;

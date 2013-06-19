@@ -20,8 +20,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
@@ -29,6 +27,8 @@ import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.AbstractRepository;
 import org.b3log.latke.repository.Query;
@@ -276,7 +276,7 @@ public final class RepositoryAccessor {
             jsonObject.put(Pagination.PAGINATION, pagination);
             jsonObject.put(Keys.RESULTS, data);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Gets data failed", e);
+            LOGGER.log(Level.ERROR, "Gets data failed", e);
 
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             jsonObject.put(Keys.MSG, "Gets data failed[errorMsg=" + e.getMessage() + "]");
@@ -377,7 +377,7 @@ public final class RepositoryAccessor {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.SEVERE, "Puts data failed", e);
+            LOGGER.log(Level.ERROR, "Puts data failed", e);
 
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             jsonObject.put(Keys.MSG, "Puts data failed[errorMsg=" + e.getMessage() + "]");
@@ -570,7 +570,7 @@ public final class RepositoryAccessor {
 
                 dataContent = URLDecoder.decode(str, "UTF-8");
             } catch (final IOException e) {
-                LOGGER.log(Level.WARNING, e.getMessage(), e);
+                LOGGER.log(Level.WARN, e.getMessage(), e);
             }
         }
 

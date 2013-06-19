@@ -36,21 +36,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.annotation.Annotation;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdvice;
@@ -124,8 +121,7 @@ public final class RequestProcessors {
         final ProcessorMethod processMethod = getProcessorMethod(requestURI, contextPath, method);
 
         if (null == processMethod) {
-            LOGGER.log(Level.WARNING, "Can not find process method for request[requestURI={0}, method={1}]",
-                new Object[] {requestURI, method});
+            LOGGER.log(Level.WARN, "Can not find process method for request[requestURI={0}, method={1}]", new Object[] {requestURI, method});
             return null;
         }
 
@@ -212,7 +208,7 @@ public final class RequestProcessors {
             } catch (final RequestProcessAdviceException e) {
                 final JSONObject exception = e.getJsonObject();
 
-                LOGGER.log(Level.WARNING, "Occurs an exception before request processing [errMsg={0}]", exception.optString(Keys.MSG));
+                LOGGER.log(Level.WARN, "Occurs an exception before request processing [errMsg={0}]", exception.optString(Keys.MSG));
 
                 final JSONRenderer ret = new JSONRenderer();
 
@@ -259,7 +255,7 @@ public final class RequestProcessors {
             return ret;
 
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE,
+            LOGGER.log(Level.ERROR,
                 "Invokes processor method failed [method=" + processorMethod.getDeclaringClass().getSimpleName() + '#'
                 + processorMethod.getName() + ']',
                 e);
@@ -381,7 +377,7 @@ public final class RequestProcessors {
                 classSet.add(clz);
 
                 if (clz.isAnnotationPresent(RequestProcessor.class)) {
-                    LOGGER.log(Level.FINER, "Found a request processor[className={0}]", className);
+                    LOGGER.log(Level.DEBUG, "Found a request processor[className={0}]", className);
                     final Method[] declaredMethods = clz.getDeclaredMethods();
 
                     for (int i = 0; i < declaredMethods.length; i++) {
@@ -397,7 +393,7 @@ public final class RequestProcessors {
                 }
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Scans classpath (classes directory) failed", e);
+            LOGGER.log(Level.ERROR, "Scans classpath (classes directory) failed", e);
         }
     }
 
@@ -457,7 +453,7 @@ public final class RequestProcessors {
 
                             classSet.add(clz);
 
-                            LOGGER.log(Level.FINER, "Found a request processor[className={0}]", className);
+                            LOGGER.log(Level.DEBUG, "Found a request processor[className={0}]", className);
                             final Method[] declaredMethods = clz.getDeclaredMethods();
 
                             for (int i = 0; i < declaredMethods.length; i++) {
@@ -475,7 +471,7 @@ public final class RequestProcessors {
                 }
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Scans classpath (lib directory) failed", e);
+            LOGGER.log(Level.ERROR, "Scans classpath (lib directory) failed", e);
         }
     }
 
@@ -531,7 +527,7 @@ public final class RequestProcessors {
                 try {
                     clz = Thread.currentThread().getContextClassLoader().loadClass(className);
                 } catch (final ClassNotFoundException e) {
-                    LOGGER.log(Level.SEVERE, "some error to load the class[" + className + "]", e);
+                    LOGGER.log(Level.ERROR, "some error to load the class[" + className + "]", e);
 
                     break;
                 }
@@ -539,7 +535,7 @@ public final class RequestProcessors {
                 classSet.add(clz);
 
                 if ((annotation.getTypeName()).equals(RequestProcessor.class.getName())) { // Found a request processor class, loads it
-                    LOGGER.log(Level.FINER, "Found a request processor[className={0}]", className);
+                    LOGGER.log(Level.DEBUG, "Found a request processor[className={0}]", className);
                     final Method[] declaredMethods = clz.getDeclaredMethods();
 
                     for (int i = 0; i < declaredMethods.length; i++) {
@@ -550,7 +546,7 @@ public final class RequestProcessors {
                             continue;
                         }
 
-                        LOGGER.log(Level.CONFIG, "Got a matched processing Class[{0}], method[{1}]",
+                        LOGGER.log(Level.DEBUG, "Got a matched processing Class[{0}], method[{1}]",
                             new Object[] {clz.getCanonicalName(), mthd.getName()});
 
                         addProcessorMethod(requestProcessingMethodAnn, clz, mthd);
@@ -601,7 +597,7 @@ public final class RequestProcessors {
      * @return process method, returns {@code null} if not found
      */
     private static ProcessorMethod getProcessorMethod(final String requestURI, final String contextPath, final String method) {
-        LOGGER.log(Level.FINEST, "Gets processor method[requestURI={0}, contextPath={1}, method={2}]",
+        LOGGER.log(Level.TRACE, "Gets processor method[requestURI={0}, contextPath={1}, method={2}]",
             new Object[] {requestURI, contextPath, method});
 
         final List<ProcessorMethod> matches = new ArrayList<ProcessorMethod>();
@@ -671,7 +667,7 @@ public final class RequestProcessors {
             }
             stringBuilder.append("]");
 
-            LOGGER.warning(stringBuilder.toString());
+            LOGGER.warn(stringBuilder.toString());
         }
 
         return matches.get(0);

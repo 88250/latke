@@ -31,10 +31,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.util.Strings;
@@ -162,10 +162,10 @@ public abstract class AbstractPlugin implements Serializable {
         try {
             configuration.setDirectoryForTemplateLoading(dir);
         } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            Logger.getLogger(getClass().getName()).log(Level.ERROR, e.getMessage(), e);
         }
 
-        LOGGER.log(Level.CONFIG, "Initialized template configuration");
+        LOGGER.log(Level.DEBUG, "Initialized template configuration");
     }
 
     /**
@@ -194,7 +194,7 @@ public abstract class AbstractPlugin implements Serializable {
                 props.load(new FileInputStream(lang));
                 langs.put(key, props);
             } catch (final Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Get plugin[name=" + name + "]'s language configuration failed", e);
+                Logger.getLogger(getClass().getName()).log(Level.ERROR, "Get plugin[name=" + name + "]'s language configuration failed", e);
             }
         }
     }
@@ -273,7 +273,7 @@ public abstract class AbstractPlugin implements Serializable {
 
         dataModel.put(Plugin.PLUGINS, pluginsContent);
 
-        LOGGER.log(Level.FINER, "Plugin[name={0}] has been plugged", getName());
+        LOGGER.log(Level.DEBUG, "Plugin[name={0}] has been plugged", getName());
 
     }
 
@@ -350,7 +350,7 @@ public abstract class AbstractPlugin implements Serializable {
 
             return sw.toString();
         } catch (final Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Get plugin[name=" + name + "]'s view failed, will return warning", e);
+            Logger.getLogger(getClass().getName()).log(Level.ERROR, "Get plugin[name=" + name + "]'s view failed, will return warning", e);
             return "<div style='color: red;'>Plugin[name=" + name + "] runs failed</div>";
         }
     }

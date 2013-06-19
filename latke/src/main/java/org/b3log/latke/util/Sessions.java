@@ -16,12 +16,12 @@
 package org.b3log.latke.util;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.json.JSONObject;
 
@@ -70,7 +70,7 @@ public final class Sessions {
         final HttpSession session = request.getSession(false);
 
         if (null == session) {
-            LOGGER.warning("The session is null");
+            LOGGER.warn("The session is null");
             return;
         }
 
@@ -88,7 +88,7 @@ public final class Sessions {
             cookie.setMaxAge(COOKIE_EXPIRY);
             response.addCookie(cookie);
         } catch (final Exception e) {
-            LOGGER.log(Level.WARNING, "Can not write cookie", e);
+            LOGGER.log(Level.WARN, "Can not write cookie", e);
         }
     }
 

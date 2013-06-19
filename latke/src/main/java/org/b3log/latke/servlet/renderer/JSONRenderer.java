@@ -19,9 +19,9 @@ package org.b3log.latke.servlet.renderer;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 
@@ -108,13 +108,12 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
 
             writer.close();
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "FreeMarker renders error", e);
+            LOGGER.log(Level.ERROR, "FreeMarker renders error", e);
 
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                return;
             } catch (final IOException ex) {
-                LOGGER.log(Level.SEVERE, "Can not send error 500!", ex);
+                LOGGER.log(Level.ERROR, "Can not send error 500!", ex);
             }
         }
     }

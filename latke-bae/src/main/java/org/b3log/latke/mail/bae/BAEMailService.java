@@ -26,8 +26,8 @@ import com.baidu.bae.api.exception.BaeException;
 import com.baidu.bae.api.factory.BaeFactory;
 import java.io.IOException;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.mail.MailService;
 import org.b3log.latke.mail.MailService.Message;
 import org.b3log.latke.mail.MailServiceFactory;
@@ -82,7 +82,7 @@ public final class BAEMailService implements MailService {
 
             bcms.mail(mailRequest);
         } catch (final BaeException e) {
-            LOGGER.log(Level.SEVERE, "Mail send failed", e);
+            LOGGER.log(Level.ERROR, "Mail send failed", e);
         } finally {
             // Removes the queue
             final DropQueueRequest dropQueueRequest = new DropQueueRequest();

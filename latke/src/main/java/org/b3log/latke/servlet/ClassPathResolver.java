@@ -30,13 +30,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.AntPathMatcher;
 import org.jboss.vfs.VFS;
 import org.jboss.vfs.VirtualFile;
@@ -146,7 +145,7 @@ public class ClassPathResolver {
                 rets.add(url);
             }
         } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "get the ROOT Rescources error", e);
+            LOGGER.log(Level.ERROR, "get the ROOT Rescources error", e);
         }
         return rets;
     }
@@ -223,7 +222,7 @@ public class ClassPathResolver {
             }
 
         } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "reslove jar File error", e);
+            LOGGER.log(Level.ERROR, "reslove jar File error", e);
             return result;
         }
         try {
@@ -253,7 +252,7 @@ public class ClassPathResolver {
             }
             return result;
         } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "parse the JarFile error", e);
+            LOGGER.log(Level.ERROR, "parse the JarFile error", e);
         } finally {
             // Close jar file, but only if freshly obtained -
             // not from JarURLConnection, which might cache the file reference.
@@ -261,7 +260,7 @@ public class ClassPathResolver {
                 try {
                     jarFile.close();
                 } catch (final IOException e) {
-                    LOGGER.log(Level.WARNING, " occur error when closing jarFile", e);
+                    LOGGER.log(Level.WARN, " occur error when closing jarFile", e);
                 }
             }
         }
@@ -302,7 +301,7 @@ public class ClassPathResolver {
         try {
             rootFile = new File(rootDirResource.toURI());
         } catch (final URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, "cat not resolve the rootFile", e);
+            LOGGER.log(Level.ERROR, "cat not resolve the rootFile", e);
             throw new RuntimeException("cat not resolve the rootFile", e);
         }
         String fullPattern = StringUtils.replace(rootFile.getAbsolutePath(), File.separator, "/");
@@ -338,7 +337,7 @@ public class ClassPathResolver {
                 rets.add(file.toURI().toURL());
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "convert file to URL error", e);
+            LOGGER.log(Level.ERROR, "convert file to URL error", e);
             throw new RuntimeException("convert file to URL error", e);
         }
 
@@ -381,7 +380,7 @@ public class ClassPathResolver {
                 root.visit(visitor);
                 return visitor.getResources();
             } catch (final Exception e) {
-                LOGGER.log(Level.SEVERE, "findMatchingResources in Jboss VPF wrong", e);
+                LOGGER.log(Level.ERROR, "findMatchingResources in Jboss VPF wrong", e);
                 return new HashSet<URL>();
             }
         }
@@ -429,7 +428,7 @@ public class ClassPathResolver {
                 try {
                     this.resources.add(vf.toURL());
                 } catch (final Exception e) {
-                    LOGGER.log(Level.SEVERE, "getting URL from JBOSS VirtualFile occurs error ", e);
+                    LOGGER.log(Level.ERROR, "getting URL from JBOSS VirtualFile occurs error ", e);
                     throw new RuntimeException("getting URL from JBOSS VirtualFile occurs error ", e);
                 }
             }

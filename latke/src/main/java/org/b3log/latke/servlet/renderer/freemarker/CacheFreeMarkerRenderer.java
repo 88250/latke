@@ -16,12 +16,12 @@
 package org.b3log.latke.servlet.renderer.freemarker;
 
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.util.Strings;
 import org.json.JSONObject;
@@ -70,7 +70,7 @@ public class CacheFreeMarkerRenderer extends AbstractFreeMarkerRenderer {
                 return;
             }
 
-            LOGGER.log(Level.FINEST, "Caching page[cachedPageKey={0}]", cachedPageKey);
+            LOGGER.log(Level.TRACE, "Caching page[cachedPageKey={0}]", cachedPageKey);
 
             check(request, pageContent);
 
@@ -86,7 +86,7 @@ public class CacheFreeMarkerRenderer extends AbstractFreeMarkerRenderer {
             }
 
             PageCaches.put(cachedPageKey, cachedValue, request);
-            LOGGER.log(Level.FINEST, "Cached page[cachedPageKey={0}]", cachedPageKey);
+            LOGGER.log(Level.TRACE, "Cached page[cachedPageKey={0}]", cachedPageKey);
         }
     }
 

@@ -20,13 +20,13 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.cache.Cache;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.jdbc.JDBCRepositoryException;
 import org.b3log.latke.util.Callstacks;
@@ -149,7 +149,7 @@ public abstract class AbstractRepository implements Repository {
         try {
             return repository.get(id);
         } catch (final JDBCRepositoryException e) {
-            LOGGER.log(Level.WARNING, "SQL exception[msg={0}]", e.getMessage());
+            LOGGER.log(Level.WARN, "SQL exception[msg={0}]", e.getMessage());
             return null;
         }
     }
@@ -169,7 +169,7 @@ public abstract class AbstractRepository implements Repository {
         try {
             return repository.get(query);
         } catch (final JDBCRepositoryException e) {
-            LOGGER.log(Level.WARNING, "SQL exception[msg={0}]", e.getMessage());
+            LOGGER.log(Level.WARN, "SQL exception[msg={0}]", e.getMessage());
 
             // XXX: Results.defaultPagination?
             final JSONObject ret = new JSONObject();

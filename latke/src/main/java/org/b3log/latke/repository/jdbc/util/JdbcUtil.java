@@ -27,12 +27,12 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.RepositoryException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +62,7 @@ public final class JdbcUtil {
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final Connection connection) throws SQLException {
-        LOGGER.log(Level.FINEST, "executeSql: {0}", sql);
+        LOGGER.log(Level.TRACE, "executeSql: {0}", sql);
 
         final Statement statement = connection.createStatement();
         final boolean isSuccess = !statement.execute(sql);
@@ -81,7 +81,7 @@ public final class JdbcUtil {
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection) throws SQLException {
-        LOGGER.log(Level.FINEST, "executeSql: {0}", sql);
+        LOGGER.log(Level.TRACE, "executeSql: {0}", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -150,7 +150,7 @@ public final class JdbcUtil {
      */
     private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection,
         final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
-        LOGGER.log(Level.FINEST, "querySql: {0}", sql);
+        LOGGER.log(Level.TRACE, "querySql: {0}", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -186,7 +186,7 @@ public final class JdbcUtil {
         final List<FieldDefinition> definitioList = JdbcRepositories.getRepositoriesMap().get(tableName);
 
         if (definitioList == null) {
-            LOGGER.log(Level.SEVERE, "resultSetToJsonObject: null definitioList finded for table  {0}", tableName);
+            LOGGER.log(Level.ERROR, "resultSetToJsonObject: null definitioList finded for table  {0}", tableName);
             throw new RepositoryException("resultSetToJsonObject: null definitioList finded for table  " + tableName);
         }
 
@@ -238,7 +238,7 @@ public final class JdbcUtil {
                                 try {
                                     str = IOUtils.toString(clob.getCharacterStream());
                                 } catch (final IOException e) {
-                                    LOGGER.log(Level.SEVERE,
+                                    LOGGER.log(Level.ERROR,
                                         "Cant not read column[name=" + columnName + "] in table[name=" + tableName + "] on H2", e);
                                 } finally {
                                     clob.free();

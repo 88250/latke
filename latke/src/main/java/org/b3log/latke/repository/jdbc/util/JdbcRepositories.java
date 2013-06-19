@@ -21,9 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.Repositories;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.jdbc.JdbcFactory;
@@ -120,7 +119,7 @@ public final class JdbcRepositories {
             try {
                 initRepositoriesMap();
             } catch (final Exception e) {
-                LOGGER.log(Level.SEVERE, "initRepositoriesMap mistake " + e.getMessage(), e);
+                LOGGER.log(Level.ERROR, "initRepositoriesMap mistake " + e.getMessage(), e);
             }
         }
 
@@ -137,7 +136,7 @@ public final class JdbcRepositories {
         final JSONObject jsonObject = Repositories.getRepositoriesDescription();
 
         if (jsonObject == null) {
-            LOGGER.warning("the repository description[repository.json] miss");
+            LOGGER.warn("the repository description[repository.json] miss");
             return;
         }
 
@@ -299,7 +298,7 @@ public final class JdbcRepositories {
             try {
                 isSuccess = JdbcFactory.createJdbcFactory().createTable(tableName, map.get(tableName));
             } catch (final SQLException e) {
-                LOGGER.log(Level.SEVERE, "createTable[" + tableName + "] error", e);
+                LOGGER.log(Level.ERROR, "createTable[" + tableName + "] error", e);
             }
 
             results.add(new CreateTableResult(tableName, isSuccess));

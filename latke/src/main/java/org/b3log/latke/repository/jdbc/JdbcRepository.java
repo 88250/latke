@@ -26,14 +26,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.CompositeFilter;
 import org.b3log.latke.repository.Filter;
@@ -158,10 +158,10 @@ public final class JdbcRepository implements Repository {
             id = buildAddSql(jsonObject, paramList, sql);
             JdbcUtil.executeSql(sql.toString(), paramList, connection);
         } catch (final SQLException se) {
-            LOGGER.log(Level.SEVERE, "add:" + se.getMessage(), se);
+            LOGGER.log(Level.ERROR, "add:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "add:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "add:" + e.getMessage(), e);
             throw new RepositoryException(e);
         }
 
@@ -171,15 +171,11 @@ public final class JdbcRepository implements Repository {
     /**
      * buildAddSql.
      * 
-     * @param jsonObject
-     *            jsonObject
-     * @param paramlist
-     *            paramlist
-     * @param sql
-     *            sql
+     * @param jsonObject jsonObject
+     * @param paramlist paramlist
+     * @param sql sql
      * @return id
-     * @throws Exception
-     *             exception
+     * @throws Exception exception
      */
     private String buildAddSql(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql)
         throws Exception {
@@ -274,10 +270,10 @@ public final class JdbcRepository implements Repository {
 
             JdbcUtil.executeSql(sql, paramList, connection);
         } catch (final SQLException se) {
-            LOGGER.log(Level.SEVERE, "update:" + se.getMessage(), se);
+            LOGGER.log(Level.ERROR, "update:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "update:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "update:" + e.getMessage(), e);
             throw new RepositoryException(e);
         }
     }
@@ -409,10 +405,10 @@ public final class JdbcRepository implements Repository {
             remove(id, sql);
             JdbcUtil.executeSql(sql.toString(), connection);
         } catch (final SQLException se) {
-            LOGGER.log(Level.SEVERE, "update:" + se.getMessage(), se);
+            LOGGER.log(Level.ERROR, "update:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "remove:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "remove:" + e.getMessage(), e);
             throw new RepositoryException(e);
         }
     }
@@ -436,7 +432,7 @@ public final class JdbcRepository implements Repository {
 
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 return ret;
             }
         }
@@ -455,13 +451,13 @@ public final class JdbcRepository implements Repository {
                 final String cacheKey = CACHE_KEY_PREFIX + id;
 
                 CACHE.putAsync(cacheKey, ret);
-                LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
             }
 
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "get:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "get:" + e.getMessage(), e);
             throw new RepositoryException(e);
         }
 
@@ -471,8 +467,7 @@ public final class JdbcRepository implements Repository {
     /**
      * get.
      * 
-     * @param sql
-     *            sql
+     * @param sql sql
      */
     private void get(final StringBuilder sql) {
         sql.append("select * from ").append(getName()).append(" where ").append(JdbcRepositories.OID).append("=").append("?");
@@ -514,7 +509,7 @@ public final class JdbcRepository implements Repository {
         if (cacheEnabled) {
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.FINER, "Got query result[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got query result[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 return ret;
             }
 
@@ -559,18 +554,18 @@ public final class JdbcRepository implements Repository {
 
             if (cacheEnabled) {
                 CACHE.putAsync(cacheKey, ret);
-                LOGGER.log(Level.FINER, "Added query result[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Added query result[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
                 try {
                     cacheQueryResults(ret.optJSONArray(Keys.RESULTS), query);
                 } catch (final JSONException e) {
-                    LOGGER.log(Level.WARNING, "Caches query results failed", e);
+                    LOGGER.log(Level.WARN, "Caches query results failed", e);
                 }
             }
 
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "query: " + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "query: " + e.getMessage(), e);
             throw new RepositoryException(e);
         }
 
@@ -597,7 +592,7 @@ public final class JdbcRepository implements Repository {
             // 1. Caching for get by id.
             cacheKey = CACHE_KEY_PREFIX + jsonObject.optString(Keys.OBJECT_ID);
             CACHE.putAsync(cacheKey, jsonObject);
-            LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}] for default index[oId]",
+            LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}] for default index[oId]",
                 new Object[] {cacheKey, getName()});
 
             // 2. Caching for get by query with filters (EQUAL operator) only
@@ -632,7 +627,7 @@ public final class JdbcRepository implements Repository {
                 futureQueryResults.put(jsonObject);
 
                 CACHE.putAsync(cacheKey, futureQueryRet);
-                LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
+                LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
                     new Object[] {cacheKey, getName(), logMsgBuilder, futureQuery.toString()});
             }
         }
@@ -688,7 +683,7 @@ public final class JdbcRepository implements Repository {
         }
 
         if (currentPageNum > ret) {
-            LOGGER.log(Level.WARNING, "Current page num[{0}] > page count[{1}]", new Object[] {currentPageNum, ret});
+            LOGGER.log(Level.WARN, "Current page num[{0}] > page count[{1}]", new Object[] {currentPageNum, ret});
         }
 
         getQuerySql(currentPageNum, pageSize, selectSql, filterSql, orderBySql, sql);
@@ -827,10 +822,10 @@ public final class JdbcRepository implements Repository {
                 jsonObjects.add(jsonArray.getJSONObject(i));
             }
         } catch (final SQLException se) {
-            LOGGER.log(Level.SEVERE, "update:" + se.getMessage(), se);
+            LOGGER.log(Level.ERROR, "update:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "getRandomly:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "getRandomly:" + e.getMessage(), e);
             throw new RepositoryException(e);
         }
 
@@ -857,11 +852,11 @@ public final class JdbcRepository implements Repository {
             final Object o = CACHE.get(cacheKey);
 
             if (null != o) {
-                LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 try {
                     return (Long) o;
                 } catch (final Exception e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                    LOGGER.log(Level.ERROR, e.getMessage(), e);
 
                     return -1;
                 }
@@ -873,7 +868,7 @@ public final class JdbcRepository implements Repository {
 
         if (cacheEnabled) {
             CACHE.putAsync(cacheKey, ret);
-            LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+            LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
         }
 
         return ret;
@@ -900,10 +895,10 @@ public final class JdbcRepository implements Repository {
             jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName());
             count = jsonObject.getLong(jsonObject.keys().next().toString());
         } catch (final SQLException se) {
-            LOGGER.log(Level.SEVERE, "update:" + se.getMessage(), se);
+            LOGGER.log(Level.ERROR, "update:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "count :" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "count :" + e.getMessage(), e);
             throw new RepositoryException(e);
         }
 
@@ -924,7 +919,7 @@ public final class JdbcRepository implements Repository {
         final JdbcTransaction ret = TX.get();
 
         if (null != ret) {
-            LOGGER.log(Level.FINER, "There is a transaction[isActive={0}] in current thread", ret.isActive());
+            LOGGER.log(Level.DEBUG, "There is a transaction[isActive={0}] in current thread", ret.isActive());
             if (ret.isActive()) {
                 return TX.get(); // Using 'the current transaction'
             }
@@ -935,7 +930,7 @@ public final class JdbcRepository implements Repository {
         try {
             jdbcTransaction = new JdbcTransaction();
         } catch (final SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to initialize JDBC transaction", e);
+            LOGGER.log(Level.ERROR, "Failed to initialize JDBC transaction", e);
 
             throw new IllegalStateException("Failed to initialize JDBC transaction");
         }
@@ -1033,7 +1028,7 @@ public final class JdbcRepository implements Repository {
 
             CONN.set(ret);
         } catch (final SQLException e) {
-            LOGGER.log(Level.SEVERE, "Gets connection failed", e);
+            LOGGER.log(Level.ERROR, "Gets connection failed", e);
         }
 
         return ret;

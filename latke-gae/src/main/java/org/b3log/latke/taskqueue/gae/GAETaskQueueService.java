@@ -18,8 +18,8 @@ package org.b3log.latke.taskqueue.gae;
 
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.taskqueue.Queue;
 import org.b3log.latke.taskqueue.Task;
@@ -73,7 +73,7 @@ public final class GAETaskQueueService implements TaskQueueService {
                     break;
 
                 default:
-                    LOGGER.log(Level.WARNING, "Task request method[{0}], uses GET method instead", requestMethod);
+                    LOGGER.log(Level.WARN, "Task request method[{0}], uses GET method instead", requestMethod);
                     taskOptions.method(TaskOptions.Method.GET);
                     break;
                 }

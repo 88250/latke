@@ -20,9 +20,9 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.Transaction;
 import org.json.JSONObject;
 
@@ -211,7 +211,7 @@ public final class GAETransaction implements Transaction {
                 }
 
                 --retries;
-                LOGGER.log(Level.WARNING, "Retrying to commit this transaction[id={0}, app={1}]",
+                LOGGER.log(Level.WARN, "Retrying to commit this transaction[id={0}, app={1}]",
                     new Object[] {appEngineDatastoreTx.getId(), appEngineDatastoreTx.getApp()});
             }
         }

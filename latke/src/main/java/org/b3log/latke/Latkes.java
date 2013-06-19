@@ -20,10 +20,10 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.util.Strings;
 import org.h2.tools.Server;
@@ -170,42 +170,42 @@ public final class Latkes {
     private static Server h2;
 
     static {
-        LOGGER.config("Loading latke.properties");
+        LOGGER.debug("Loading latke.properties");
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/latke.properties");
 
             if (null != resourceAsStream) {
                 LATKE_PROPS.load(resourceAsStream);
-                LOGGER.config("Loaded latke.properties");
+                LOGGER.debug("Loaded latke.properties");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Not found latke.properties");
+            LOGGER.log(Level.ERROR, "Not found latke.properties");
             throw new RuntimeException("Not found latke.properties");
         }
 
-        LOGGER.config("Loading local.properties");
+        LOGGER.debug("Loading local.properties");
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/local.properties");
 
             if (null != resourceAsStream) {
                 LOCAL_PROPS.load(resourceAsStream);
-                LOGGER.config("Loaded local.properties");
+                LOGGER.debug("Loaded local.properties");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.CONFIG, "Not found local.properties");
+            LOGGER.log(Level.DEBUG, "Not found local.properties");
             // Ignores....
         }
 
-        LOGGER.config("Loading remote.properties");
+        LOGGER.debug("Loading remote.properties");
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/remote.properties");
 
             if (null != resourceAsStream) {
                 REMOTE_PROPS.load(resourceAsStream);
-                LOGGER.config("Loaded remote.properties");
+                LOGGER.debug("Loaded remote.properties");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.CONFIG, "Not found Latke remote.properties");
+            LOGGER.log(Level.DEBUG, "Not found Latke remote.properties");
             // Ignores....
         }
     }
@@ -456,7 +456,7 @@ public final class Latkes {
         final String value = LATKE_PROPS.getProperty(serviceName);
 
         if (null == value) {
-            LOGGER.log(Level.WARNING, "Rutnime service[name={0}] is undefined, please configure it in latkes.properties", serviceName);
+            LOGGER.log(Level.WARN, "Rutnime service[name={0}] is undefined, please configure it in latkes.properties", serviceName);
             return null;
         }
 
@@ -499,7 +499,7 @@ public final class Latkes {
     public static void disablePageCache() {
         pageCacheEnabled = false;
         PageCaches.removeAll();
-        LOGGER.log(Level.FINER, "Disabled page cache");
+        LOGGER.log(Level.TRACE, "Disabled page cache");
     }
 
     /**
@@ -507,7 +507,7 @@ public final class Latkes {
      */
     public static void enablePageCache() {
         pageCacheEnabled = true;
-        LOGGER.log(Level.FINER, "Enabled page cache");
+        LOGGER.log(Level.TRACE, "Enabled page cache");
     }
 
     /**
@@ -529,7 +529,7 @@ public final class Latkes {
     public static void disableDataCache() {
         dataCacheEnabled = false;
         PageCaches.removeAll();
-        LOGGER.log(Level.FINER, "Disabled data cache");
+        LOGGER.log(Level.TRACE, "Disabled data cache");
     }
 
     /**
@@ -537,7 +537,7 @@ public final class Latkes {
      */
     public static void enableDataCache() {
         dataCacheEnabled = true;
-        LOGGER.log(Level.FINER, "Enabled data cache");
+        LOGGER.log(Level.TRACE, "Enabled data cache");
     }
 
     /**
@@ -577,7 +577,7 @@ public final class Latkes {
      * @see RuntimeEnv
      */
     public static void initRuntimeEnv() {
-        LOGGER.log(Level.FINEST, "Initializes runtime environment from configuration file");
+        LOGGER.log(Level.TRACE, "Initializes runtime environment from configuration file");
         final String runtimeEnvValue = LATKE_PROPS.getProperty("runtimeEnv");
 
         if (null != runtimeEnvValue) {
@@ -585,7 +585,7 @@ public final class Latkes {
         }
 
         if (null == runtimeEnv) {
-            LOGGER.log(Level.FINEST, "Initializes runtime environment by class loading");
+            LOGGER.log(Level.TRACE, "Initializes runtime environment by class loading");
 
             try {
                 runtimeEnv = RuntimeEnv.GAE;
@@ -600,7 +600,7 @@ public final class Latkes {
         if (null != runtimeModeValue) {
             runtimeMode = RuntimeMode.valueOf(runtimeModeValue);
         } else {
-            LOGGER.log(Level.FINEST, "Can't parse runtime mode in latke.properties, default to [DEVELOPMENT]");
+            LOGGER.log(Level.TRACE, "Can't parse runtime mode in latke.properties, default to [DEVELOPMENT]");
             runtimeMode = RuntimeMode.DEVELOPMENT;
         }
 
@@ -634,14 +634,14 @@ public final class Latkes {
 
                     port = StringUtils.substringBefore(port, "/");
 
-                    LOGGER.log(Level.FINEST, "H2 TCP port [{0}]", port);
+                    LOGGER.log(Level.TRACE, "H2 TCP port [{0}]", port);
 
                     try {
                         h2 = Server.createTcpServer(new String[] {"-tcpPort", port, "-tcpAllowOthers"}).start();
                     } catch (final SQLException e) {
                         final String msg = "H2 TCP server create failed";
 
-                        LOGGER.log(Level.SEVERE, msg, e);
+                        LOGGER.log(Level.ERROR, msg, e);
                         throw new IllegalStateException(msg);
                     }
 
@@ -806,7 +806,7 @@ public final class Latkes {
 
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Shutdowns Latke failed", e);
+            LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
         }
     }
 

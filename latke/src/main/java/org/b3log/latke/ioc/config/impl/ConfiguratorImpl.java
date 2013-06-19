@@ -24,8 +24,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.inject.spi.Bean;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,6 +34,8 @@ import org.b3log.latke.ioc.config.AbstractModule;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.InjectionPointValidator;
 import org.b3log.latke.ioc.util.Beans;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -163,7 +163,7 @@ public final class ConfiguratorImpl implements Configurator {
         try {
             return (LatkeBean<T>) beanManager.getBean(beanClass);
         } catch (final Exception e) {
-            LOGGER.log(Level.FINEST, "Not found bean [beanClass={0}], so to create it", beanClass);
+            LOGGER.log(Level.TRACE, "Not found bean [beanClass={0}], so to create it", beanClass);
         }
 
         Beans.checkClass(beanClass);
@@ -171,7 +171,7 @@ public final class ConfiguratorImpl implements Configurator {
         final String name = Beans.getBeanName(beanClass);
 
         if (null == name) {
-            LOGGER.log(Level.CONFIG, "Class[beanClass={0}] can''t be created as bean caused by it has no bean name.", beanClass);
+            LOGGER.log(Level.DEBUG, "Class[beanClass={0}] can''t be created as bean caused by it has no bean name.", beanClass);
 
             return null;
         }
@@ -180,7 +180,7 @@ public final class ConfiguratorImpl implements Configurator {
         final Class<? extends Annotation> scope = Beans.getScope(beanClass);
         final Set<Type> beanTypes = Beans.getBeanTypes(beanClass);
 
-        LOGGER.log(Level.CONFIG, "Adding a bean[name={0}, scope={1}, class={2}] to the bean manager....",
+        LOGGER.log(Level.DEBUG, "Adding a bean[name={0}, scope={1}, class={2}] to the bean manager....",
             new Object[] {name, scope.getName(), beanClass.getName()});
 
         final LatkeBean<T> ret = new BeanImpl<T>(beanManager, name, scope, qualifiers, beanClass, beanTypes);

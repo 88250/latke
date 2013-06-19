@@ -16,9 +16,9 @@
 package org.b3log.latke.mail;
 
 
-import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+import org.b3log.latke.logging.Logger;
 
 
 /**

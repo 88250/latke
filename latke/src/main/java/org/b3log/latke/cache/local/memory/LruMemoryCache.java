@@ -19,9 +19,9 @@ package org.b3log.latke.cache.local.memory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.cache.local.util.DoubleLinkedMap;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Serializer;
 
 
@@ -72,7 +72,7 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
             try {
                 map.addFirst(key, Serializer.serialize((Serializable) value));
             } catch (final IOException e) {
-                LOGGER.log(Level.SEVERE, "Cache error[key={0}]", key);
+                LOGGER.log(Level.ERROR, "Cache error[key=" + key + ']', e);
                 return;
             }
 
@@ -105,7 +105,7 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
             try {
                 return (V) Serializer.deserialize(bytes);
             } catch (final Exception e) {
-                LOGGER.log(Level.SEVERE, "Gets cached object failed[key=" + key + "]", e);
+                LOGGER.log(Level.ERROR, "Gets cached object failed[key=" + key + "]", e);
                 return null;
             }
         }

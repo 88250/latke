@@ -30,9 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
@@ -44,6 +41,8 @@ import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.util.Stopwatchs;
@@ -214,10 +213,10 @@ public final class PluginManager {
                             plugins.add(plugin);
                         }
                     } catch (final Exception e) {
-                        LOGGER.log(Level.WARNING, "Load plugin under directory[" + pluginDir.getName() + "] failed", e);
+                        LOGGER.log(Level.WARN, "Load plugin under directory[" + pluginDir.getName() + "] failed", e);
                     }
                 } else {
-                    LOGGER.log(Level.WARNING, "It[{0}] is not a directory under " + "directory plugins, ignored", pluginDir.getName());
+                    LOGGER.log(Level.WARN, "It[{0}] is not a directory under " + "directory plugins, ignored", pluginDir.getName());
                 }
             }
         }
@@ -269,13 +268,13 @@ public final class PluginManager {
         final String rendererId = props.getProperty(Plugin.PLUGIN_RENDERER_ID);
 
         if (StringUtils.isBlank(rendererId)) {
-            LOGGER.log(Level.WARNING, "no renderer defined by this plugin[" + pluginDir.getName() + "]，this plugin will be ignore!");
+            LOGGER.log(Level.WARN, "no renderer defined by this plugin[" + pluginDir.getName() + "]，this plugin will be ignore!");
             return null;
         }
 
         final Class<?> pluginClass = classLoader.loadClass(pluginClassName);
 
-        LOGGER.log(Level.FINEST, "Loading plugin class[name={0}]", pluginClassName);
+        LOGGER.log(Level.TRACE, "Loading plugin class[name={0}]", pluginClassName);
         final AbstractPlugin ret = (AbstractPlugin) pluginClass.newInstance();
 
         ret.setRendererId(rendererId);
@@ -298,19 +297,19 @@ public final class PluginManager {
      * @param holder the specified holder 
      */
     private void register(final AbstractPlugin plugin, final HashMap<String, HashSet<AbstractPlugin>> holder) {
-        
+
         final String rendererId = plugin.getRendererId();
 
         /**
          * the rendererId support multiple,using ';' to split.
          * and using Map to match the plugin is not flexible, a regular expression match pattern may be needed in futrue. 
-         */        
+         */
         final String[] redererIds = rendererId.split(";");
 
         for (String rid : redererIds) {
-            
+
             HashSet<AbstractPlugin> set = holder.get(rid);
-            
+
             if (null == set) {
                 set = new HashSet<AbstractPlugin>();
                 holder.put(rid, set);
@@ -318,7 +317,7 @@ public final class PluginManager {
             set.add(plugin);
         }
 
-        LOGGER.log(Level.FINER, "Registered plugin[name={0}, version={1}] for rendererId[name={2}], [{3}] plugins totally",
+        LOGGER.log(Level.DEBUG, "Registered plugin[name={0}, version={1}] for rendererId[name={2}], [{3}] plugins totally",
             new Object[] {plugin.getName(), plugin.getVersion(), rendererId, holder.size()});
     }
 
@@ -337,7 +336,7 @@ public final class PluginManager {
         final String version = props.getProperty(Plugin.PLUGIN_VERSION);
         final String types = props.getProperty(Plugin.PLUGIN_TYPES);
 
-        LOGGER.log(Level.FINEST, "Plugin[name={0}, author={1}, version={2}, types={3}]", new Object[] {name, author, version, types});
+        LOGGER.log(Level.TRACE, "Plugin[name={0}, author={1}, version={2}, types={3}]", new Object[] {name, author, version, types});
 
         plugin.setAuthor(author);
         plugin.setName(name);
@@ -356,9 +355,9 @@ public final class PluginManager {
 
                 plugin.setSetting(jsonObject);
             } catch (final IOException ie) {
-                LOGGER.log(Level.SEVERE, "reading the config of the plugin[" + name + "]  failed", ie);
+                LOGGER.log(Level.ERROR, "reading the config of the plugin[" + name + "]  failed", ie);
             } catch (final JSONException e) {
-                LOGGER.log(Level.SEVERE, "convert the  config of the plugin[" + name + "] to json failed", e);
+                LOGGER.log(Level.ERROR, "convert the  config of the plugin[" + name + "] to json failed", e);
             }
         }
 
@@ -403,7 +402,7 @@ public final class PluginManager {
                 return;
             }
 
-            LOGGER.log(Level.FINER, "Loading event listener[className={0}]", eventListenerClassName);
+            LOGGER.log(Level.DEBUG, "Loading event listener[className={0}]", eventListenerClassName);
 
             final Class<?> eventListenerClass = classLoader.loadClass(eventListenerClassName);
             final Method getInstance = eventListenerClass.getMethod("getInstance");
@@ -412,7 +411,7 @@ public final class PluginManager {
             final EventManager eventManager = EventManager.getInstance();
 
             eventManager.registerListener(eventListener);
-            LOGGER.log(Level.FINER, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",
+            LOGGER.log(Level.DEBUG, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",
                 new Object[] {eventListener.getClass(), eventListener.getEventType(), plugin.getName()});
         }
     }

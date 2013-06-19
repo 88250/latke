@@ -20,8 +20,6 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
@@ -33,6 +31,8 @@ import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.impl.ApplicationContext;
 import org.b3log.latke.ioc.context.impl.RequestContext;
 import org.b3log.latke.ioc.context.impl.SessionContext;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -84,7 +84,7 @@ public final class Lifecycle {
      * @param classes the specified bean class, nullable
      */
     public static void startApplication(final Collection<Class<?>> classes) {
-        LOGGER.log(Level.FINE, "Initializing Latke IoC container");
+        LOGGER.log(Level.DEBUG, "Initializing Latke IoC container");
 
         beanManager = LatkeBeanManagerImpl.getInstance();
 
@@ -95,7 +95,7 @@ public final class Lifecycle {
 
         configurator.createBeans(classes);
 
-        LOGGER.log(Level.FINE, "Initialized Latke IoC container");
+        LOGGER.log(Level.DEBUG, "Initialized Latke IoC container");
     }
 
     /**
@@ -113,7 +113,7 @@ public final class Lifecycle {
 
         beanManager.clearContexts();
 
-        LOGGER.log(Level.FINE, "Latke IoC container ended");
+        LOGGER.log(Level.DEBUG, "Latke IoC container ended");
     }
 
     /**

@@ -18,8 +18,8 @@ package org.b3log.latke.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -59,7 +59,7 @@ public final class MD5 {
         try {
             messageDigest = MessageDigest.getInstance("MD5");
         } catch (final NoSuchAlgorithmException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }

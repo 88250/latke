@@ -22,10 +22,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -77,7 +77,7 @@ public final class CacheFactory {
                 final Cache<String, ?> cache = entry.getValue();
 
                 cache.removeAll();
-                LOGGER.log(Level.FINEST, "Clears cache[name={0}]", entry.getKey());
+                LOGGER.log(Level.TRACE, "Clears cache[name={0}]", entry.getKey());
             }
 
             break;

@@ -19,12 +19,10 @@ package org.b3log.latke.taskqueue.local;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.taskqueue.Queue;
 import org.b3log.latke.taskqueue.TaskQueueService;
@@ -73,7 +71,7 @@ public final class LocalTaskQueueService implements TaskQueueService {
 
             final NodeList queueRoot = root.getElementsByTagName("queue-entries");
 
-            LOGGER.log(Level.CONFIG, "Reading tasks: ");
+            LOGGER.log(Level.DEBUG, "Reading tasks: ");
             for (int i = 0; i < queueRoot.getLength(); i++) {
                 final Element queueNode = (Element) queueRoot.item(i);
                 final String queueName = queueNode.getElementsByTagName("name").item(0).getTextContent();
@@ -84,7 +82,7 @@ public final class LocalTaskQueueService implements TaskQueueService {
 
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Reads queue.xml failed", e);
+            LOGGER.log(Level.ERROR, "Reads queue.xml failed", e);
             throw new RuntimeException(e);
         }
 

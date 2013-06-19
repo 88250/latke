@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -35,6 +33,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import static org.b3log.latke.servlet.HTTPRequestMethod.DELETE;
 import static org.b3log.latke.servlet.HTTPRequestMethod.GET;
@@ -111,7 +111,7 @@ public final class BAEURLFetchService implements URLFetchService {
                 throw new RuntimeException("Unsupported HTTP request method[" + requestMethod.name() + "]");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "URL fetch failed", e);
+            LOGGER.log(Level.ERROR, "URL fetch failed", e);
 
             throw new IOException("URL fetch failed [msg=" + e.getMessage() + ']');
         }

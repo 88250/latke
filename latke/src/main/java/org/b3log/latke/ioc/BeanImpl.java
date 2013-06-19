@@ -27,8 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedConstructor;
 import javax.enterprise.inject.spi.AnnotatedField;
@@ -46,6 +44,8 @@ import org.b3log.latke.ioc.point.FieldInjectionPoint;
 import org.b3log.latke.ioc.point.ParameterInjectionPoint;
 import org.b3log.latke.ioc.provider.FieldProvider;
 import org.b3log.latke.ioc.provider.ParameterProvider;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -392,7 +392,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     @Override
     public void destroy(final T instance, final CreationalContext<T> creationalContext) {
-        LOGGER.log(Level.FINER, "Destroy bean [name={0}]", name);
+        LOGGER.log(Level.DEBUG, "Destroy bean [name={0}]", name);
     }
 
     @Override
@@ -451,7 +451,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
             resolveDependencies(ret);
         } catch (final Exception ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+            LOGGER.log(Level.ERROR, ex.getMessage(), ex);
         }
 
         return ret;

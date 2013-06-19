@@ -19,20 +19,18 @@ package org.b3log.latke.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
 import org.b3log.latke.util.StaticResources;
@@ -111,10 +109,10 @@ public final class HTTPRequestDispatcher extends HttpServlet {
 
             // Starts Latke IoC
             Lifecycle.startApplication(classes);
-            
+
             LOGGER.info("Discovered request processors");
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Initializes request processors failed", e);
+            LOGGER.log(Level.ERROR, "Initializes request processors failed", e);
         } finally {
             Stopwatchs.end();
         }
@@ -138,7 +136,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             // TODO: Loads from local.properties
         }
 
-        LOGGER.log(Level.CONFIG, "The default servlet for serving static resource is [{0}]", defaultServletName);
+        LOGGER.log(Level.DEBUG, "The default servlet for serving static resource is [{0}]", defaultServletName);
     }
 
     /**
@@ -154,7 +152,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         final String resourcePath = request.getPathTranslated();
         final String requestURI = request.getRequestURI();
 
-        LOGGER.log(Level.FINEST, "Request[contextPath={0}, pathTranslated={1}, requestURI={2}]",
+        LOGGER.log(Level.TRACE, "Request[contextPath={0}, pathTranslated={1}, requestURI={2}]",
             new Object[] {request.getContextPath(), resourcePath, requestURI});
 
         if (StaticResources.isStatic(request)) {
@@ -215,14 +213,14 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             method = request.getMethod();
         }
 
-        LOGGER.log(Level.FINER, "Request[requestURI={0}, method={1}]", new Object[] {requestURI, method});
+        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[] {requestURI, method});
 
         try {
             final Object processorMethodRet = RequestProcessors.invoke(requestURI, Latkes.getContextPath(), method, context);
         } catch (final Exception e) {
             final String exceptionTypeName = e.getClass().getName();
 
-            LOGGER.log(Level.FINER,
+            LOGGER.log(Level.DEBUG,
                 "Occured error while processing request[requestURI={0}, method={1}, exceptionTypeName={2}, errorMsg={3}]",
                 new Object[] {requestURI, method, exceptionTypeName, e.getMessage()});
             if ("com.google.apphosting.api.ApiProxy$OverQuotaException".equals(exceptionTypeName)) {
@@ -236,10 +234,10 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         } catch (final Error e) {
             final Runtime runtime = Runtime.getRuntime();
 
-            LOGGER.log(Level.FINER, "Memory status[total={0}, max={1}, free={2}]",
+            LOGGER.log(Level.DEBUG, "Memory status[total={0}, max={1}, free={2}]",
                 new Object[] {runtime.totalMemory(), runtime.maxMemory(), runtime.freeMemory()});
 
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
 
             throw e;
         }
@@ -283,7 +281,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             return new JSONObject();
         }
 
-        LOGGER.log(Level.FINEST, "Client is using QueryString[{0}]", tmp);
+        LOGGER.log(Level.TRACE, "Client is using QueryString[{0}]", tmp);
         final StringBuilder sb = new StringBuilder();
 
         sb.append("{");

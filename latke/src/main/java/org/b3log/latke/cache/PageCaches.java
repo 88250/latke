@@ -20,8 +20,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Latkes;
@@ -29,6 +27,8 @@ import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Serializer;
 import org.b3log.latke.util.Strings;
@@ -187,7 +187,7 @@ public final class PageCaches {
 
             return ret;
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
         }
 
         return ret;
@@ -304,7 +304,7 @@ public final class PageCaches {
             CACHE.put(pageCacheKey, ret);
             KEYS.add(pageCacheKey);
         } catch (final Exception e) {
-            LOGGER.log(Level.WARNING, "Set stat. of cached page[pageCacheKey=" + pageCacheKey + "] failed", e);
+            LOGGER.log(Level.WARN, "Set stat. of cached page[pageCacheKey=" + pageCacheKey + "] failed", e);
         }
 
         return ret;
@@ -349,14 +349,13 @@ public final class PageCaches {
             cachedValue.put(CACHED_BYTES_LENGTH, bytes.length);
             cachedValue.put(CACHED_TIME, System.currentTimeMillis());
         } catch (final Exception e) {
-            LOGGER.log(Level.WARNING, "Cache stat. failed[pageKey=" + pageKey + "]", e);
+            LOGGER.log(Level.WARN, "Cache stat. failed[pageKey=" + pageKey + "]", e);
         }
 
         CACHE.put(pageKey, cachedValue);
         KEYS.add(pageKey);
 
-        LOGGER.log(Level.FINEST, "Put a page[key={0}] into page cache, cached keys[size={1}, {2}]",
-            new Object[] {pageKey, KEYS.size(), KEYS});
+        LOGGER.log(Level.TRACE, "Put a page[key={0}] into page cache, cached keys[size={1}, {2}]", new Object[] {pageKey, KEYS.size(), KEYS});
     }
 
     /**
@@ -390,7 +389,7 @@ public final class PageCaches {
         try {
             EVT_SVC.fireEventSynchronously(new Event<Void>(REMOVE_CACHE, null));
         } catch (final EventException e) {
-            LOGGER.log(Level.SEVERE, "Remove page cache event execute failed, can not remove all cache", e);
+            LOGGER.log(Level.ERROR, "Remove page cache event execute failed, can not remove all cache", e);
 
             return;
         }
@@ -422,7 +421,7 @@ public final class PageCaches {
 
         if (!toRemove.isEmpty()) {
             KEYS.removeAll(toRemove);
-            LOGGER.log(Level.FINER, "Removed page cache keys[{0}] for sync", toRemove);
+            LOGGER.log(Level.DEBUG, "Removed page cache keys[{0}] for sync", toRemove);
         }
     }
 

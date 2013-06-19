@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke web framework project.
-    Version: 1.0.8.0, Jun 18 2013
+    Version: 1.0.8.1, Jun 18, 2013
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -25,6 +25,7 @@
         <commons-io.version>1.4</commons-io.version>
         <commons-lang.version>2.5</commons-lang.version>
         <javassist.version>3.12.1.GA</javassist.version>
+        <slf4j.version>1.7.5</slf4j.version>
         
         <!-- JBoss VFS -->
         <jboss-vfs.version>3.1.0.Final</jboss-vfs.version>
@@ -141,6 +142,19 @@
             </dependency>
             
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            
+            <dependency>
                 <groupId>javax.el</groupId>
                 <artifactId>el-api</artifactId>
                 <version>${el-api.version}</version>
@@ -227,6 +241,16 @@
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
         </dependency>
         
         <dependency>

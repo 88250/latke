@@ -18,14 +18,14 @@ package org.b3log.latke.util.freemarker;
 
 import freemarker.core.TemplateElement;
 import java.util.Enumeration;
-import java.util.logging.Level;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -106,7 +106,7 @@ public final class Templates {
         final String canonicalForm = templateElement.getCanonicalForm();
 
         if (canonicalForm.startsWith(expression)) {
-            LOGGER.log(Level.FINEST, "Template has expression[nodeName={0}, expression={1}]",
+            LOGGER.log(Level.TRACE, "Template has expression[nodeName={0}, expression={1}]",
                 new Object[] {templateElement.getNodeName(), expression});
 
             return true;
@@ -152,7 +152,7 @@ public final class Templates {
                     return MOBILE_CFG.getTemplate(templateName);
                 }
             } catch (final Exception e) {
-                LOGGER.log(Level.SEVERE, "Can not load mobile template[templateDirName={0}, templateName={1}]",
+                LOGGER.log(Level.ERROR, "Can not load mobile template[templateDirName={0}, templateName={1}]",
                     new Object[] {templateDirName, templateName});
                 return null;
             }
@@ -162,7 +162,7 @@ public final class Templates {
             }
 
             if (null != ret) {
-                LOGGER.log(Level.FINEST, "Got template[templateName={0}] from cache", templateName);
+                LOGGER.log(Level.TRACE, "Got template[templateName={0}] from cache", templateName);
                 return ret;
             }
 
@@ -170,12 +170,12 @@ public final class Templates {
 
             if (cacheEnabled) {
                 CACHE.put(templateDirName + File.separator + templateName, ret);
-                LOGGER.log(Level.FINEST, "Got template[templateName={0}], then put it into template cache", templateName);
+                LOGGER.log(Level.TRACE, "Got template[templateName={0}], then put it into template cache", templateName);
             }
 
             return ret;
         } catch (final IOException e) {
-            LOGGER.log(Level.WARNING, "Gets template[name={0}] failed: [{1}]", new Object[] {templateName, e.getMessage()});
+            LOGGER.log(Level.WARN, "Gets template[name={0}] failed: [{1}]", new Object[] {templateName, e.getMessage()});
             return null;
         }
     }

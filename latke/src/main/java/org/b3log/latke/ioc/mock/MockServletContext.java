@@ -23,12 +23,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -68,18 +68,18 @@ public final class MockServletContext implements ServletContext {
 
             if (webxml != null) {
                 webInfRoot = new File(webxml.toURI()).getParentFile();
-                LOGGER.finest("WEB-INF: " + webInfRoot.getAbsolutePath());
+                LOGGER.trace("WEB-INF: " + webInfRoot.getAbsolutePath());
                 if (webInfRoot != null) {
                     webInfClassesRoot = new File(webInfRoot.getParentFile().getPath());
-                    LOGGER.finest("WEB-INF/classes: " + webInfClassesRoot.getAbsolutePath());
+                    LOGGER.trace("WEB-INF/classes: " + webInfClassesRoot.getAbsolutePath());
                     webappRoot = webInfRoot.getParentFile();
-                    LOGGER.finest("Web app root: " + webappRoot.getAbsolutePath());
+                    LOGGER.trace("Web app root: " + webappRoot.getAbsolutePath());
                 }
             } else {
                 webappRoot = new File(getClass().getResource("/.").toURI());
             }
         } catch (final URISyntaxException e) {
-            LOGGER.log(Level.WARNING, "Unable to find web.xml", e);
+            LOGGER.log(Level.WARN, "Unable to find web.xml", e);
         }
     }
 

@@ -16,9 +16,9 @@
 package org.b3log.latke.repository.impl;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Role;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.AbstractRepository;
@@ -65,7 +65,7 @@ public final class UserRepositoryImpl extends AbstractRepository {
 
             return array.getJSONObject(0);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
 
             return null;
         }
@@ -91,7 +91,7 @@ public final class UserRepositoryImpl extends AbstractRepository {
 
             return array.getJSONObject(0);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
 
             return null;
         }
@@ -114,7 +114,7 @@ public final class UserRepositoryImpl extends AbstractRepository {
         try {
             return Role.ADMIN_ROLE.equals(user.getString(User.USER_ROLE));
         } catch (final JSONException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
 
             throw new RepositoryException(e);
         }

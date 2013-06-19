@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
@@ -54,7 +54,6 @@ public final class LocalURLFetchService implements URLFetchService {
     @Override
     public Future<?> fetchAsync(final HTTPRequest request) {
         final FutureTask<HTTPResponse> futureTask = new FutureTask<HTTPResponse>(new Callable<HTTPResponse>() {
-
             @Override
             public HTTPResponse call() throws Exception {
                 return fetch(request);

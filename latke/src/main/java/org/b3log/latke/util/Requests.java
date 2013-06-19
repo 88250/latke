@@ -19,13 +19,13 @@ package org.b3log.latke.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -138,7 +138,7 @@ public final class Requests {
                 }
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Parses cookie failed", e);
+            LOGGER.log(Level.ERROR, "Parses cookie failed", e);
         }
 
         return ret;
@@ -236,7 +236,7 @@ public final class Requests {
                 response.addCookie(c);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.WARNING, "Parses cookie failed, clears the cookie[name=visited]", e);
+            LOGGER.log(Level.WARN, "Parses cookie failed, clears the cookie[name=visited]", e);
 
             final Cookie c = new Cookie("visited", null);
 
@@ -303,7 +303,7 @@ public final class Requests {
      * @see #PAGINATION_PATH_PATTERN
      */
     public static int getCurrentPageNum(final String path) {
-        LOGGER.log(Level.FINEST, "Getting current page number[path={0}]", path);
+        LOGGER.log(Level.TRACE, "Getting current page number[path={0}]", path);
 
         if (Strings.isEmptyOrNull(path) || path.equals("/")) {
             return 1;
@@ -326,7 +326,7 @@ public final class Requests {
      * @see #PAGINATION_PATH_PATTERN
      */
     public static int getPageSize(final String path) {
-        LOGGER.log(Level.FINEST, "Page number[string={0}]", path);
+        LOGGER.log(Level.TRACE, "Page number[string={0}]", path);
 
         if (Strings.isEmptyOrNull(path)) {
             return DEFAULT_PAGE_SIZE;
@@ -355,7 +355,7 @@ public final class Requests {
      * @see #PAGINATION_PATH_PATTERN
      */
     public static int getWindowSize(final String path) {
-        LOGGER.log(Level.FINEST, "Page number[string={0}]", path);
+        LOGGER.log(Level.TRACE, "Page number[string={0}]", path);
 
         if (Strings.isEmptyOrNull(path)) {
             return DEFAULT_WINDOW_SIZE;
@@ -418,7 +418,7 @@ public final class Requests {
 
             return new JSONObject(tmp);
         } catch (final Exception ex) {
-            LOGGER.log(Level.SEVERE, errMsg, ex);
+            LOGGER.log(Level.ERROR, errMsg, ex);
 
             return new JSONObject();
         }

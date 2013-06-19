@@ -19,7 +19,6 @@ package org.b3log.latke.mail.local;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.logging.Logger;
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -40,11 +39,6 @@ import org.b3log.latke.util.Strings;
  * @version 1.0.0.3, Jan 4, 2013
  */
 final class MailSender {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(MailSender.class.getName());
 
     /**
      * Mail configurations.

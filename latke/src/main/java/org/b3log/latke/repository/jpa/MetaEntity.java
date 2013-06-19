@@ -20,13 +20,13 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jpa.util.EntityClassCheckers;
 
 
@@ -64,7 +64,7 @@ public final class MetaEntity {
      * @param entityClass the specified entity class
      */
     public MetaEntity(final Class<?> entityClass) {
-        LOGGER.log(Level.FINER, "Analysing an entity scheme....");
+        LOGGER.log(Level.DEBUG, "Analysing an entity scheme....");
 
         // XXX: Resolver checker for checks fail error messages output
 
@@ -78,7 +78,7 @@ public final class MetaEntity {
 
         repositoryName = entityClassName.substring(0, 1).toLowerCase() + entityClassName.substring(1);
 
-        LOGGER.log(Level.FINER, "Entity[classSimpleName={0}] to repository[name={1}]",
+        LOGGER.log(Level.DEBUG, "Entity[classSimpleName={0}] to repository[name={1}]",
             new Object[] {entityClass.getSimpleName(), repositoryName});
 
         final Field[] allFields = entityClass.getDeclaredFields();

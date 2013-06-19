@@ -20,10 +20,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 
@@ -97,7 +97,7 @@ public final class JdbcFactory implements JdbcDatabase {
         try {
             databaseSolution = (AbstractJdbcDatabaseSolution) Class.forName(databaseSolutionClassName).newInstance();
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "init the [" + databaseSolutionClassName + "]JdbcDatabaseSolution instance wrong", e);
+            LOGGER.log(Level.ERROR, "init the [" + databaseSolutionClassName + "]JdbcDatabaseSolution instance wrong", e);
         }
     }
 

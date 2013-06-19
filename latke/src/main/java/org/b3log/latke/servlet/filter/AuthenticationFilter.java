@@ -16,10 +16,8 @@
 package org.b3log.latke.servlet.filter;
 
 
-import java.util.logging.Level;
 import org.b3log.latke.util.Sessions;
 import java.io.IOException;
-import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,6 +26,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -63,7 +63,7 @@ public final class AuthenticationFilter implements Filter {
         final HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         if (!hasLoggedIn(httpServletRequest)) {
-            LOGGER.log(Level.WARNING, "Authenticate fail for request[{0}]", request);
+            LOGGER.log(Level.WARN, "Authenticate fail for request[{0}]", request);
 
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
@@ -84,11 +84,11 @@ public final class AuthenticationFilter implements Filter {
         final String requestURI = request.getRequestURI();
         final String requestURL = request.getRequestURL().toString();
 
-        LOGGER.log(Level.FINEST, "Request[URI={0}, URL={1}]", new Object[] {requestURI, requestURL});
+        LOGGER.log(Level.TRACE, "Request[URI={0}, URL={1}]", new Object[] {requestURI, requestURL});
 
         final String userName = Sessions.currentUserName(request);
 
-        LOGGER.log(Level.FINEST, "Session[userName={0}]", userName);
+        LOGGER.log(Level.TRACE, "Session[userName={0}]", userName);
 
         return null != userName ? true : false;
     }

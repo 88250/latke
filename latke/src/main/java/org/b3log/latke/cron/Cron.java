@@ -18,9 +18,9 @@ package org.b3log.latke.cron;
 
 import java.net.URL;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.URLFetchService;
@@ -95,7 +95,7 @@ public final class Cron extends TimerTask {
 
     @Override
     public void run() {
-        LOGGER.finer("Executing scheduled task....");
+        LOGGER.debug("Executing scheduled task....");
 
         final URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
 
@@ -106,9 +106,9 @@ public final class Cron extends TimerTask {
             request.setRequestMethod(HTTPRequestMethod.GET);
             urlFetchService.fetchAsync(request);
 
-            LOGGER.log(Level.FINER, "Executed scheduled task[url={0}]", url);
+            LOGGER.log(Level.DEBUG, "Executed scheduled task[url={0}]", url);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Scheduled task execute failed", e);
+            LOGGER.log(Level.ERROR, "Scheduled task execute failed", e);
 
         }
     }
@@ -122,7 +122,7 @@ public final class Cron extends TimerTask {
         final int num = Integer.valueOf(StringUtils.substringBetween(schedule, " ", " "));
         final String timeUnit = StringUtils.substringAfterLast(schedule, " ");
 
-        LOGGER.log(Level.FINEST, "Parsed cron job[schedule={0}]: [num={1}, timeUnit={2}]", new Object[] {schedule, num, timeUnit});
+        LOGGER.log(Level.TRACE, "Parsed cron job[schedule={0}]: [num={1}, timeUnit={2}]", new Object[] {schedule, num, timeUnit});
 
         if ("hours".equals(timeUnit)) {
             period = num * SIXTY * SIXTY * THOUSAND;

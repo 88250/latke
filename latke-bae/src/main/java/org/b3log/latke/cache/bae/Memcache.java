@@ -22,9 +22,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.cache.Cache;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Serializer;
 
 
@@ -105,10 +105,10 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
             keys.add(key.toString());
         } catch (final Exception e) {
             try {
-                LOGGER.log(Level.WARNING,
+                LOGGER.log(Level.WARN,
                     "Can not put memcache[key=" + key + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
             } catch (final Exception ex) {
-                LOGGER.log(Level.SEVERE, " Serializes failed", ex);
+                LOGGER.log(Level.ERROR, " Serializes failed", ex);
             }
         }
     }

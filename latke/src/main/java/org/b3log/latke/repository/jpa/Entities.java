@@ -18,7 +18,6 @@ package org.b3log.latke.repository.jpa;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 
 /**
@@ -28,11 +27,6 @@ import java.util.logging.Logger;
  * @version 1.0.0.0, Oct 9, 2011
  */
 public final class Entities {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(Entities.class.getName());
 
     /**
      * Meta entities.

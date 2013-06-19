@@ -45,14 +45,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.RuntimeMode;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.Blob;
 import org.b3log.latke.repository.Filter;
@@ -258,11 +258,11 @@ public final class GAERepository implements Repository {
 
             datastoreService.put(entity);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
             throw new RepositoryException(e);
         }
 
-        LOGGER.log(Level.FINER, "Added an object[oId={0}] in repository[{1}]", new Object[] {ret, getName()});
+        LOGGER.log(Level.DEBUG, "Added an object[oId={0}] in repository[{1}]", new Object[] {ret, getName()});
 
         return ret;
     }
@@ -331,7 +331,7 @@ public final class GAERepository implements Repository {
             // 1. Caching for get by id.
             cacheKey = CACHE_KEY_PREFIX + jsonObject.optString(Keys.OBJECT_ID);
             CACHE.putAsync(cacheKey, jsonObject);
-            LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}] for default index[oId]",
+            LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}] for default index[oId]",
                 new Object[] {cacheKey, getName()});
 
             // 2. Caching for get by query with filters (EQUAL operator) only
@@ -363,7 +363,7 @@ public final class GAERepository implements Repository {
                 futureQueryResults.put(jsonObject);
 
                 CACHE.putAsync(cacheKey, futureQueryRet);
-                LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
+                LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
                     new Object[] {cacheKey, getName(), logMsgBuilder, futureQuery.toString()});
             }
         }
@@ -390,11 +390,11 @@ public final class GAERepository implements Repository {
 
             datastoreService.put(entity);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
             throw new RepositoryException(e);
         }
 
-        LOGGER.log(Level.FINER, "Updated an object[oId={0}] in repository[name={1}]", new Object[] {id, getName()});
+        LOGGER.log(Level.DEBUG, "Updated an object[oId={0}] in repository[name={1}]", new Object[] {id, getName()});
     }
 
     /**
@@ -434,7 +434,7 @@ public final class GAERepository implements Repository {
         final Key key = KeyFactory.createKey(parentKey, getName(), id);
 
         datastoreService.delete(key);
-        LOGGER.log(Level.FINER, "Removed an object[oId={0}] from repository[name={1}]", new Object[] {id, getName()});
+        LOGGER.log(Level.DEBUG, "Removed an object[oId={0}] from repository[name={1}]", new Object[] {id, getName()});
     }
 
     /**
@@ -446,7 +446,7 @@ public final class GAERepository implements Repository {
      */
     @Override
     public JSONObject get(final String id) throws RepositoryException {
-        LOGGER.log(Level.FINEST, "Getting with id[{0}]", id);
+        LOGGER.log(Level.TRACE, "Getting with id[{0}]", id);
 
         if (Strings.isEmptyOrNull(id)) {
             return null;
@@ -475,7 +475,7 @@ public final class GAERepository implements Repository {
     @Override
     @SuppressWarnings("unchecked")
     public Map<String, JSONObject> get(final Iterable<String> ids) throws RepositoryException {
-        LOGGER.log(Level.FINEST, "Getting with ids[{0}]", ids);
+        LOGGER.log(Level.TRACE, "Getting with ids[{0}]", ids);
 
         final GAETransaction currentTransaction = TX.get();
 
@@ -487,7 +487,7 @@ public final class GAERepository implements Repository {
 
                 ret = (Map<String, JSONObject>) CACHE.get(cacheKey);
                 if (null != ret) {
-                    LOGGER.log(Level.FINER, "Got objects[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                    LOGGER.log(Level.DEBUG, "Got objects[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                     return ret;
                 }
             }
@@ -508,13 +508,13 @@ public final class GAERepository implements Repository {
                 ret.put(entry.getKey().getName(), entity2JSONObject(entry.getValue()));
             }
 
-            LOGGER.log(Level.FINER, "Got objects[oIds={0}] from repository[name={1}]", new Object[] {ids, getName()});
+            LOGGER.log(Level.DEBUG, "Got objects[oIds={0}] from repository[name={1}]", new Object[] {ids, getName()});
 
             if (cacheEnabled) {
                 final String cacheKey = CACHE_KEY_PREFIX + ids.hashCode();
 
                 CACHE.putAsync(cacheKey, (Serializable) ret);
-                LOGGER.log(Level.FINER, "Added objects[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Added objects[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
             }
 
             return ret;
@@ -541,7 +541,7 @@ public final class GAERepository implements Repository {
 
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 return ret;
             }
         }
@@ -553,16 +553,16 @@ public final class GAERepository implements Repository {
 
             ret = entity2JSONObject(entity);
 
-            LOGGER.log(Level.FINER, "Got an object[oId={0}] from repository[name={1}]", new Object[] {id, getName()});
+            LOGGER.log(Level.DEBUG, "Got an object[oId={0}] from repository[name={1}]", new Object[] {id, getName()});
 
             if (cacheEnabled) {
                 final String cacheKey = CACHE_KEY_PREFIX + id;
 
                 CACHE.putAsync(cacheKey, ret);
-                LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
             }
         } catch (final EntityNotFoundException e) {
-            LOGGER.log(Level.WARNING, "Not found an object[oId={0}] in repository[name={1}]", new Object[] {id, getName()});
+            LOGGER.log(Level.WARN, "Not found an object[oId={0}] in repository[name={1}]", new Object[] {id, getName()});
             return null;
         }
 
@@ -580,12 +580,12 @@ public final class GAERepository implements Repository {
 
         final String cacheKey = CACHE_KEY_PREFIX + query.getCacheKey() + "_" + getName();
 
-        LOGGER.log(Level.FINEST, "Executing a query[cacheKey={0}, query=[{1}]]", new Object[] {cacheKey, query.toString()});
+        LOGGER.log(Level.TRACE, "Executing a query[cacheKey={0}, query=[{1}]]", new Object[] {cacheKey, query.toString()});
 
         if (cacheEnabled) {
             ret = (JSONObject) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.FINER, "Got query result[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got query result[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 return ret;
             }
         }
@@ -607,12 +607,12 @@ public final class GAERepository implements Repository {
 
         if (cacheEnabled) {
             CACHE.putAsync(cacheKey, ret);
-            LOGGER.log(Level.FINER, "Added query result[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+            LOGGER.log(Level.DEBUG, "Added query result[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
 
             try {
                 cacheQueryResults(ret.optJSONArray(Keys.RESULTS), query);
             } catch (final JSONException e) {
-                LOGGER.log(Level.WARNING, "Caches query results failed", e);
+                LOGGER.log(Level.WARN, "Caches query results failed", e);
             }
         }
 
@@ -778,7 +778,7 @@ public final class GAERepository implements Repository {
             logMsgBuilder.deleteCharAt(logMsgBuilder.length() - 1);
 
             logMsgBuilder.append("]");
-            LOGGER.log(Level.FINEST, logMsgBuilder.toString());
+            LOGGER.log(Level.TRACE, logMsgBuilder.toString());
 
             ret = new Query.FilterPredicate(propertyFilter.getKey(), Query.FilterOperator.IN, values);
         }
@@ -834,11 +834,11 @@ public final class GAERepository implements Repository {
             final Object o = CACHE.get(cacheKey);
 
             if (null != o) {
-                LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
+                LOGGER.log(Level.DEBUG, "Got an object[cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
                 try {
                     return (Long) o;
                 } catch (final Exception e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                    LOGGER.log(Level.ERROR, e.getMessage(), e);
 
                     return -1;
                 }
@@ -852,7 +852,7 @@ public final class GAERepository implements Repository {
 
         if (cacheEnabled) {
             CACHE.putAsync(cacheKey, ret);
-            LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
+            LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
         }
 
         return ret;
@@ -969,7 +969,7 @@ public final class GAERepository implements Repository {
                 final Object o = CACHE.get(countCacheKey);
 
                 if (null != o) {
-                    LOGGER.log(Level.FINER, "Got an object[cacheKey={0}] from repository cache[name={1}]",
+                    LOGGER.log(Level.DEBUG, "Got an object[cacheKey={0}] from repository cache[name={1}]",
                         new Object[] {countCacheKey, getName()});
                     count = (Long) o;
                 }
@@ -977,11 +977,11 @@ public final class GAERepository implements Repository {
 
             if (-1 == count) {
                 count = preparedQuery.countEntities(FetchOptions.Builder.withDefaults());
-                LOGGER.log(Level.WARNING, "Invoked countEntities() for repository[name={0}, count={1}]", new Object[] {getName(), count});
+                LOGGER.log(Level.WARN, "Invoked countEntities() for repository[name={0}, count={1}]", new Object[] {getName(), count});
 
                 if (cacheEnabled) {
                     CACHE.putAsync(countCacheKey, count);
-                    LOGGER.log(Level.FINER, "Added an object[cacheKey={0}] in repository cache[{1}]",
+                    LOGGER.log(Level.DEBUG, "Added an object[cacheKey={0}] in repository cache[{1}]",
                         new Object[] {countCacheKey, getName()});
                 }
             }
@@ -1017,10 +1017,10 @@ public final class GAERepository implements Repository {
                 results.put(jsonObject);
             }
 
-            LOGGER.log(Level.FINER, "Found objects[size={0}] at page[currentPageNum={1}, pageSize={2}] in repository[{3}]",
+            LOGGER.log(Level.DEBUG, "Found objects[size={0}] at page[currentPageNum={1}, pageSize={2}] in repository[{3}]",
                 new Object[] {results.length(), currentPageNum, pageSize, getName()});
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
             throw new RepositoryException(e);
         }
 
@@ -1036,7 +1036,7 @@ public final class GAERepository implements Repository {
         final String timeMillisId = Ids.genTimeMillisId();
         final long inc = CACHE.inc("id-step-generator", 1);
 
-        LOGGER.log(Level.FINEST, "[timeMillisId={0}, inc={1}]", new Object[] {timeMillisId, inc});
+        LOGGER.log(Level.TRACE, "[timeMillisId={0}, inc={1}]", new Object[] {timeMillisId, inc});
 
         return String.valueOf(Long.parseLong(timeMillisId) + inc);
     }
@@ -1046,7 +1046,7 @@ public final class GAERepository implements Repository {
         GAETransaction ret = TX.get();
 
         if (null != ret) {
-            LOGGER.log(Level.FINER, "There is a transaction[isActive={0}] in current thread", ret.isActive());
+            LOGGER.log(Level.DEBUG, "There is a transaction[isActive={0}] in current thread", ret.isActive());
             if (ret.isActive()) {
                 return TX.get(); // Using 'the current transaction'
             }
@@ -1114,7 +1114,7 @@ public final class GAERepository implements Repository {
 
             ret = (Cursor) CACHE.get(cacheKey);
             if (null != ret) {
-                LOGGER.log(Level.FINEST, "Found a query cursor[{0}] in repository cache[name={1}]", new Object[] {i, getName()});
+                LOGGER.log(Level.TRACE, "Found a query cursor[{0}] in repository cache[name={1}]", new Object[] {i, getName()});
                 // Found the nearest cursor
                 break;
             }

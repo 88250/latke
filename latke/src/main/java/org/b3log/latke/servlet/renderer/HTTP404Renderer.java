@@ -17,9 +17,9 @@ package org.b3log.latke.servlet.renderer;
 
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 
@@ -42,10 +42,8 @@ public final class HTTP404Renderer extends AbstractHTTPResponseRenderer {
 
         try {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
-
-            return;
         } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "Renders 404 error", e);
+            LOGGER.log(Level.ERROR, "Renders 404 error", e);
         }
     }
 }

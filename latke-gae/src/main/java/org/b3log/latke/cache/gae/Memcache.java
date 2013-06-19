@@ -22,9 +22,9 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.api.memcache.Stats;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.cache.Cache;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Serializer;
 
 
@@ -118,10 +118,10 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
             memcacheService.put(key, value);
         } catch (final Exception e) {
             try {
-                LOGGER.log(Level.WARNING,
+                LOGGER.log(Level.WARN,
                     "Can not put memcache[key=" + key + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
             } catch (final Exception ex) {
-                LOGGER.log(Level.SEVERE, " Serializes failed", ex);
+                LOGGER.log(Level.ERROR, " Serializes failed", ex);
             }
         }
     }
@@ -140,10 +140,10 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
             asyncMemcacheService.put(key, value);
         } catch (final Exception e) {
             try {
-                LOGGER.log(Level.WARNING,
+                LOGGER.log(Level.WARN,
                     "Can not put async memcache[key=" + key + ", valueSize=" + Serializer.serialize((Serializable) value).length, e);
             } catch (final Exception ex) {
-                LOGGER.log(Level.SEVERE, " Serializes failed", ex);
+                LOGGER.log(Level.ERROR, " Serializes failed", ex);
             }
         }
     }
@@ -184,7 +184,7 @@ public final class Memcache<K extends Serializable, V extends Serializable> impl
     @Override
     public void removeAll() {
         memcacheService.clearAll(); // Will clear in all namespaces
-        LOGGER.finest("Clear all caches");
+        LOGGER.trace("Clear all caches");
     }
 
     @Override

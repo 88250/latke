@@ -20,12 +20,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -76,10 +76,10 @@ public final class CronService {
 
                     timer.scheduleAtFixedRate(cron, Cron.SIXTY * Cron.THOUSAND, cron.getPeriod());
                     
-                    LOGGER.log(Level.FINER, "Scheduled a cron job[url={0}]", cron.getUrl());
+                    LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getUrl());
                 }
 
-                LOGGER.log(Level.FINER, "[{0}] cron jobs", CRONS.size());
+                LOGGER.log(Level.DEBUG, "[{0}] cron jobs", CRONS.size());
 
                 break;
 
@@ -122,7 +122,7 @@ public final class CronService {
 
             final NodeList crons = root.getElementsByTagName("cron");
 
-            LOGGER.log(Level.CONFIG, "Reading cron jobs: ");
+            LOGGER.log(Level.DEBUG, "Reading cron jobs: ");
             for (int i = 0; i < crons.getLength(); i++) {
                 final Element cronElement = (Element) crons.item(i);
                 final Element urlElement = (Element) cronElement.getElementsByTagName("url").item(0);
@@ -133,12 +133,12 @@ public final class CronService {
                 final String description = descriptionElement.getTextContent();
                 final String schedule = scheduleElement.getTextContent();
 
-                LOGGER.log(Level.CONFIG, "Cron[url={0}, description={1}, schedule={2}]", new Object[] {url, description, schedule});
+                LOGGER.log(Level.DEBUG, "Cron[url={0}, description={1}, schedule={2}]", new Object[] {url, description, schedule});
 
                 CRONS.add(new Cron(url, description, schedule));
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Reads cron.xml failed", e);
+            LOGGER.log(Level.ERROR, "Reads cron.xml failed", e);
             throw new RuntimeException(e);
         }
     }

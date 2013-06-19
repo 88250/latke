@@ -18,8 +18,6 @@ package org.b3log.latke.repository.jpa;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
@@ -27,6 +25,8 @@ import javax.persistence.Id;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.Repositories;
 import org.b3log.latke.repository.Repository;
@@ -73,7 +73,7 @@ public final class EntityManagerImpl implements EntityManager {
             // XXX: maybe a transaction required exception....
             final String errMsg = "Can not persist entity[class=" + clazz + ",toString=" + entity.toString() + "]";
 
-            LOGGER.log(Level.SEVERE, errMsg, e);
+            LOGGER.log(Level.ERROR, errMsg, e);
 
             throw new IllegalArgumentException(errMsg);
         }

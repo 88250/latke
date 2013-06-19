@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke Repository (H2).
-    Version: 1.0.0.0, Dec 27, 2012
+    Version: 1.0.0.1, Jun 19, 2013
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -20,8 +20,6 @@
     <!-- Version -->
     <properties>
         <org.b3log.latke.version>0.5.0-SNAPSHOT</org.b3log.latke.version>
-        <!-- Logging -->
-        <slf4j.version>1.5.10</slf4j.version>
         <!-- Maven Plugin -->
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
         <maven-checkstyle-plugin.version>2.5</maven-checkstyle-plugin.version>
@@ -129,12 +127,6 @@
                 <scope>test</scope>
             </dependency>
             
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            
         </dependencies>
     </dependencyManagement>
 
@@ -151,11 +143,6 @@
             <scope>test</scope>
         </dependency>
         
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>

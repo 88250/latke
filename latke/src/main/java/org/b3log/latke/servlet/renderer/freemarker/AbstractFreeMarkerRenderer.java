@@ -24,14 +24,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.util.freemarker.Templates;
 import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -102,7 +102,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
             try {
                 writer = new PrintWriter(response.getOutputStream());
             } catch (final IOException ex) {
-                LOGGER.log(Level.SEVERE, "Can not get response writer", ex);
+                LOGGER.log(Level.ERROR, "Can not get response writer", ex);
                 return;
             }
         }
@@ -130,12 +130,12 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
             afterRender(context);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "FreeMarker renders error", e);
+            LOGGER.log(Level.ERROR, "FreeMarker renders error", e);
 
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (final IOException ex) {
-                LOGGER.log(Level.SEVERE, "Can not send error 500!", ex);
+                LOGGER.log(Level.ERROR, "Can not send error 500!", ex);
             }
         }
     }

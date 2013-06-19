@@ -19,8 +19,6 @@ package org.b3log.latke.servlet.filter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -32,6 +30,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -66,7 +66,7 @@ public abstract class AbstractGZIPFilter implements Filter {
         final String requestURI = httpServletRequest.getRequestURI();
 
         if (shouldSkip(requestURI)) {
-            LOGGER.log(Level.FINEST, "Skip GZIP filter request[URI={0}]", requestURI);
+            LOGGER.log(Level.TRACE, "Skip GZIP filter request[URI={0}]", requestURI);
             chain.doFilter(request, response);
 
             return;

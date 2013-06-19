@@ -18,8 +18,8 @@ package org.b3log.latke.repository.jpa;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Strings;
 
 
@@ -99,7 +99,7 @@ final class Relationships {
             return;
         }
 
-        LOGGER.log(Level.FINER, "Found a new many to many relationship[repositoryName={0}]", manyToManyRepositoryName);
+        LOGGER.log(Level.DEBUG, "Found a new many to many relationship[repositoryName={0}]", manyToManyRepositoryName);
         manyToManyRepositoryNames.add(manyToManyRepositoryName);
     }
 

@@ -16,15 +16,15 @@
 package org.b3log.latke.util;
 
 
-import java.util.logging.Level;
 import org.b3log.latke.Keys;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -92,7 +92,7 @@ public final class Locales {
             // Gets from request header
             final String languageHeader = request.getHeader("Accept-Language");
 
-            LOGGER.log(Level.FINER, "[Accept-Language={0}]", languageHeader);
+            LOGGER.log(Level.DEBUG, "[Accept-Language={0}]", languageHeader);
 
             String language = "zh";
             String country = "CN";
@@ -107,12 +107,12 @@ public final class Locales {
             if (!hasLocale(locale)) {
                 // Uses default
                 locale = Latkes.getLocale();
-                LOGGER.log(Level.FINER, "Using the default locale[{0}]", locale.toString());
+                LOGGER.log(Level.DEBUG, "Using the default locale[{0}]", locale.toString());
             } else {
-                LOGGER.log(Level.FINER, "Got locale[{0}] from request.", locale.toString());
+                LOGGER.log(Level.DEBUG, "Got locale[{0}] from request.", locale.toString());
             }
         } else {
-            LOGGER.log(Level.FINER, "Got locale[{0}] from session.", locale.toString());
+            LOGGER.log(Level.DEBUG, "Got locale[{0}] from session.", locale.toString());
         }
 
         return locale;
@@ -149,13 +149,13 @@ public final class Locales {
         final HttpSession session = request.getSession(false);
 
         if (null == session) {
-            LOGGER.warning("Ignores set locale caused by no session");
+            LOGGER.warn("Ignores set locale caused by no session");
 
             return;
         }
 
         session.setAttribute(Keys.LOCALE, locale);
-        LOGGER.log(Level.FINER, "Client[sessionId={0}] sets locale to [{1}]", new Object[] {session.getId(), locale.toString()});
+        LOGGER.log(Level.DEBUG, "Client[sessionId={0}] sets locale to [{1}]", new Object[] {session.getId(), locale.toString()});
     }
 
     /**

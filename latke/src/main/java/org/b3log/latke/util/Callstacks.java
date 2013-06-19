@@ -16,9 +16,9 @@
 package org.b3log.latke.util;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -46,7 +46,7 @@ public final class Callstacks {
         final StackTraceElement[] stackElements = throwable.getStackTrace();
 
         if (null == stackElements) {
-            LOGGER.log(Level.WARNING, "Empty call stack");
+            LOGGER.log(Level.WARN, "Empty call stack");
 
             return false;
         }
@@ -73,7 +73,7 @@ public final class Callstacks {
      */
     public static void printCallstack(final Level logLevel, final String[] carePackages, final String[] exceptablePackages) {
         if (null == logLevel) {
-            LOGGER.log(Level.WARNING, "Requires parameter[logLevel]");
+            LOGGER.log(Level.WARN, "Requires parameter[logLevel]");
 
             return;
         }
@@ -82,7 +82,7 @@ public final class Callstacks {
         final StackTraceElement[] stackElements = throwable.getStackTrace();
 
         if (null == stackElements) {
-            LOGGER.log(Level.WARNING, "Empty call stack");
+            LOGGER.log(Level.WARN, "Empty call stack");
 
             return;
         }

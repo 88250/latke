@@ -15,7 +15,7 @@
         <latke.version>0.5.0-SNAPSHOT</latke.version>
         <gae.version>1.6.2.1</gae.version>
         <freemarker-gae.version>2.3.18</freemarker-gae.version>
-        
+        <slf4j.version>1.7.5</slf4j.version>
         <maven-gae-plugin.version>0.9.2</maven-gae-plugin.version>
         <gae.dev_sever.port>8080</gae.dev_sever.port>
         
@@ -24,6 +24,12 @@
     
     <dependencyManagement>
         <dependencies>
+            
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
         
             <dependency>
                 <groupId>javax.servlet</groupId>
