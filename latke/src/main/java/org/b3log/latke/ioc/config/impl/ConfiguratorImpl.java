@@ -171,7 +171,7 @@ public final class ConfiguratorImpl implements Configurator {
         final String name = Beans.getBeanName(beanClass);
 
         if (null == name) {
-            LOGGER.log(Level.DEBUG, "Class[beanClass={0}] can''t be created as bean caused by it has no bean name.", beanClass);
+            LOGGER.log(Level.DEBUG, "Class[beanClass={0}] can't be created as bean caused by it has no bean name.", beanClass);
 
             return null;
         }
