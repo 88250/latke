@@ -71,13 +71,25 @@ public final class StaticResources {
             final Element staticFiles = (Element) root.getElementsByTagName("static-files").item(0);
             final NodeList includes = staticFiles.getElementsByTagName("include");
 
-            LOGGER.log(Level.DEBUG, "Reading static files: ");
+            final StringBuilder logBuilder = new StringBuilder("Reading static files: [").append(Strings.LINE_SEPARATOR);
+
             for (int i = 0; i < includes.getLength(); i++) {
                 final Element include = (Element) includes.item(i);
                 final String path = include.getAttribute("path");
 
-                LOGGER.log(Level.DEBUG, "path pattern=[{0}]", path);
                 STATIC_RESOURCE_PATHS.add(path);
+
+                logBuilder.append("    ").append("path pattern [").append(path).append("]");
+                if (i < includes.getLength() - 1) {
+                    logBuilder.append(",");
+                }
+                logBuilder.append(Strings.LINE_SEPARATOR);
+            }
+
+            logBuilder.append("]");
+
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.debug(logBuilder.toString());
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Reads appengine-web.xml failed", e);
@@ -98,7 +110,9 @@ public final class StaticResources {
         }
         logBuilder.append("], ").append('[').append(STATIC_RESOURCE_PATHS.size()).append("] path patterns");
 
-        LOGGER.log(Level.INFO, logBuilder.toString());
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(logBuilder.toString());
+        }
     }
 
     /**
@@ -120,7 +134,7 @@ public final class StaticResources {
         request.setAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE, false);
 
         final String requestURI = request.getRequestURI();
-        
+
         for (final String pattern : STATIC_RESOURCE_PATHS) {
             if (AntPathMatcher.match(Latkes.getContextPath() + pattern, requestURI)) {
                 request.setAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE, true);

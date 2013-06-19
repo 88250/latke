@@ -44,6 +44,7 @@ public final class BeanModule {
      * @param beanClasses the specified bean classes
      */
     public BeanModule(final String name, final Collection<Class<?>> beanClasses) {
+        this.name = name;
         this.beanClasses = beanClasses;
     }
     
