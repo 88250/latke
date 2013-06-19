@@ -29,6 +29,7 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
@@ -108,7 +109,9 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             final Collection<Class<?>> classes = RequestProcessors.discover(scanPath);
 
             // Starts Latke IoC
-            Lifecycle.startApplication(classes);
+            final BeanModule processorModule = new BeanModule("ProcessorModule", classes);
+
+            Lifecycle.startApplication(null, processorModule);
 
             LOGGER.info("Discovered request processors");
         } catch (final Exception e) {

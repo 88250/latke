@@ -15,10 +15,12 @@
  */
 package org.b3log.latke.ioc.setup;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
-import org.b3log.latke.ioc.config.AbstractModule;
+import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.ioc.Lifecycle;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -28,7 +30,7 @@ import org.testng.annotations.AfterTest;
 /**
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Nov 17, 2009
+ * @version 1.0.0.1, Jun 20, 2013
  */
 final public class SetupUnitTest {
 
@@ -46,10 +48,13 @@ final public class SetupUnitTest {
 
         beanManager = LatkeBeanManagerImpl.getInstance();
 
-        Lifecycle.startApplication(null);
+        final Set<Class<?>> beanClasses = new HashSet<Class<?>>();
+        beanClasses.add(Bean1.class);
+        beanClasses.add(Bean2.class);
+        beanClasses.add(Bean3.class);
+        final BeanModule setupModule = new BeanModule("SetupModule", beanClasses);
+        Lifecycle.startApplication(null, setupModule);
 
-        final AbstractModule setupModule = new SetupModule();
-        beanManager.getConfigurator().addModule(setupModule);
         final LatkeBean<?> bean = beanManager.getBean("bean3");
         bean3 = (Bean3) beanManager.getReference(bean);
     }

@@ -30,7 +30,7 @@ import javax.inject.Named;
 import org.b3log.latke.ioc.bean.BeanImpl;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.config.AbstractModule;
+import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.InjectionPointValidator;
 import org.b3log.latke.ioc.util.Beans;
@@ -59,7 +59,7 @@ public final class ConfiguratorImpl implements Configurator {
     /**
      * Modules.
      */
-    private Set<AbstractModule> modules;
+    private Set<BeanModule> modules;
 
     /**
      * &lt;BeanType, BeanClasses&gt;.
@@ -88,7 +88,7 @@ public final class ConfiguratorImpl implements Configurator {
         typeClasses = new HashMap<Type, Set<Class<?>>>();
         classQualifiers = new HashMap<Class<?>, Set<Annotation>>();
         qualifierClasses = new HashMap<Annotation, Set<Class<?>>>();
-        modules = new HashSet<AbstractModule>();
+        modules = new HashSet<BeanModule>();
     }
 
     @Override
@@ -211,8 +211,10 @@ public final class ConfiguratorImpl implements Configurator {
     }
 
     @Override
-    public void addModule(final AbstractModule module) {
+    public void addModule(final BeanModule module) {
         modules.add(module);
-        createBeans(module.configure());
+        createBeans(module.getBeanClasses());
+        
+        LOGGER.log(Level.DEBUG, "Added a module[name={0}]", module.getName());
     }
 }

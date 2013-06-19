@@ -23,14 +23,45 @@ import java.util.Collection;
  * Module.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Nov 17, 2009
+ * @version 1.0.0.1, Jun 20, 2013
  */
-public abstract class AbstractModule {
+public final class BeanModule {
+    
+    /**
+     * Name of this module.
+     */
+    private String name;
+
+    /**
+     * Bean classes of this module.
+     */
+    private Collection<Class<?>> beanClasses;
+
+    /**
+     * Constructs a module with the specified module name and the specified bean classes.
+     * 
+     * @param name the specified module name
+     * @param beanClasses the specified bean classes
+     */
+    public BeanModule(final String name, final Collection<Class<?>> beanClasses) {
+        this.beanClasses = beanClasses;
+    }
+    
+    /**
+     * Gets name of this module.
+     * 
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
 
     /**
      * Gets the bean classes of this module.
      * 
      * @return bean classes
      */
-    public abstract Collection<Class<?>> configure();
+    public Collection<Class<?>> getBeanClasses() {
+        return beanClasses;
+    }
 }

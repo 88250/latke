@@ -97,5 +97,5 @@ public interface Configurator {
      * 
      * @param module the specified module
      */
-    void addModule(final AbstractModule module);
+    void addModule(final BeanModule module);
 }

@@ -27,6 +27,7 @@ import javax.enterprise.context.spi.Context;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.impl.ApplicationContext;
 import org.b3log.latke.ioc.context.impl.RequestContext;
@@ -79,11 +80,13 @@ public final class Lifecycle {
     private Lifecycle() {}
 
     /**
-     * Starts the application with the specified bean class.
+     * Starts the application with the specified bean class and bean modules.
      * 
      * @param classes the specified bean class, nullable
+     * @param beanModule the specified bean modules 
      */
-    public static void startApplication(final Collection<Class<?>> classes) {
+    public static void startApplication(final Collection<Class<?>> classes,
+        final BeanModule... beanModule) {
         LOGGER.log(Level.DEBUG, "Initializing Latke IoC container");
 
         beanManager = LatkeBeanManagerImpl.getInstance();
@@ -94,6 +97,12 @@ public final class Lifecycle {
         final Configurator configurator = beanManager.getConfigurator();
 
         configurator.createBeans(classes);
+        
+        if (null != beanModule && 0 < beanModule.length) {
+            for (int i = 0; i < beanModule.length; i++) {
+                configurator.addModule(beanModule[i]);
+            }
+        }
 
         LOGGER.log(Level.DEBUG, "Initialized Latke IoC container");
     }
