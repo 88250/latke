@@ -21,6 +21,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
+import javax.enterprise.inject.Stereotype;
 import javax.inject.Named;
 import javax.inject.Qualifier;
 import javax.inject.Scope;
@@ -39,7 +40,7 @@ import org.b3log.latke.util.Strings;
  * @version 1.0.0.6, Mar 31, 2010
  */
 public final class Beans {
-    
+
     /**
      * Logger.
      */
@@ -97,11 +98,10 @@ public final class Beans {
      * @return 
      */
     public static Set<Annotation> selectQualifiers(final Set<Annotation> annotations) {
-        Set<Annotation> ret = getAnnotations(annotations, Qualifier.class);
+        final Set<Annotation> ret = getAnnotations(annotations, Qualifier.class);
         Annotation named = selectNamedQualifier(annotations);
 
-        if (ret == null) {
-            ret = new HashSet<Annotation>();
+        if (ret.isEmpty()) {
             if (named != null) {
                 ret.add(named);
             } else {
@@ -130,15 +130,37 @@ public final class Beans {
      * @param clazz the specified class
      * @return scope of the specified class, returns {@link Singleton} class as the default scope of the specified class
      */
-    public static final Class<? extends Annotation> getScope(final Class<?> clazz) {
+    public static Class<? extends Annotation> getScope(final Class<?> clazz) {
         final Set<Annotation> annotations = CollectionUtils.arrayToSet(clazz.getAnnotations());
         final Set<Annotation> ret = getAnnotations(annotations, Scope.class);
 
-        if (ret != null && ret.size() != 1) {
+        if (!ret.isEmpty() && ret.size() != 1) {
             throw new RuntimeException("A bean class can only has one scope!");
         }
 
-        return ret == null ? Singleton.class : ret.iterator().next().annotationType();
+        return ret.isEmpty() ? Singleton.class : ret.iterator().next().annotationType();
+    }
+
+    /**
+     * Gets stereo types of the specified class.
+     * 
+     * @param clazz the specified class
+     * @return stereo types of the specified class
+     */
+    public static Set<Class<? extends Annotation>> getStereotypes(final Class<?> clazz) {
+        final Set<Class<? extends Annotation>> ret = new HashSet<Class<? extends Annotation>>();
+
+        final Set<Annotation> annotations = getAnnotations(CollectionUtils.arrayToSet(clazz.getAnnotations()), Stereotype.class);
+
+        if (annotations.isEmpty()) {
+            return ret;
+        }
+
+        for (final Annotation annotation : annotations) {
+            ret.add(annotation.annotationType());
+        }
+
+        return ret;
     }
 
     public static final boolean hasNamedQualifier(final Class<?> clazz) {
@@ -163,9 +185,9 @@ public final class Beans {
             ret = clazz.getAnnotation(Named.class).value();
         } else {
             final String className = clazz.getSimpleName();
-            
+
             LOGGER.log(Level.TRACE, "Class [name={0}, simpleName={1}]", clazz.getName(), className);
-            
+
             if (Strings.isEmptyOrNull(className)) {
                 return null;
             }
@@ -176,11 +198,18 @@ public final class Beans {
         return ret;
     }
 
-    public static final void checkClass(final Class<?> clazz) {
+    /**
+     * Determines whether the specified could create bean.
+     * 
+     * @param clazz the specified class
+     * @return {@code true} if it could create bean, returns {@code false} otherwise
+     */
+    public static boolean checkClass(final Class<?> clazz) {
         if (Reflections.isAbstract(clazz) || Reflections.isInterface(clazz)) {
-            throw new RuntimeException(
-                "Can't create bean for class[" + clazz.getName() + "] caused by it is an interface or " + "an abstract class.");
+            return false;
         }
+        
+        return true;
     }
 
     public static final <T> Set<Type> getBeanTypes(final Class<T> beanClass) {
@@ -205,7 +234,8 @@ public final class Beans {
             if (genericSuperclass != Object.class) {
                 ret.add(genericSuperclass);
             }
-            if (genericInterfaces.length != 0) {
+            
+            if (null != genericInterfaces && 0 != genericInterfaces.length) {
                 for (final Type genericInterface : genericInterfaces) {
                     ret.add(genericInterface);
                     ret.addAll(getInterfaces((Class<? super T>) genericInterface));
@@ -247,7 +277,7 @@ public final class Beans {
      * 
      * @param annotations the specified annotations
      * @param neededAnnotationType the needed annotation type
-     * @return annotation set, returns {@code null} if not found
+     * @return annotation set, returns an empty set if not found
      */
     private static Set<Annotation> getAnnotations(final Set<Annotation> annotations,
         final Class<? extends Annotation> neededAnnotationType) {
@@ -264,6 +294,6 @@ public final class Beans {
             }
         }
 
-        return ret.isEmpty() ? null : ret;
+        return ret;
     }
 }

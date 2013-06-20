@@ -57,7 +57,7 @@ import org.b3log.latke.logging.Logger;
  * Latke bean manager implementation.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, Mar 31, 2010
+ * @version 1.0.0.4, Jun 20, 2013
  */
 @Named("beanManager")
 @Singleton
@@ -164,6 +164,21 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
     @Override
     public Set<LatkeBean<?>> getBeans() {
         return beans;
+    }
+
+    @Override
+    public Set<LatkeBean<?>> getBeans(final Class<? extends Annotation> stereoType) {
+        final Set<LatkeBean<?>> ret = new HashSet<LatkeBean<?>>();
+
+        for (final LatkeBean<?> bean : beans) {
+            final Set<Class<? extends Annotation>> stereotypes = bean.getStereotypes();
+
+            if (stereotypes.contains(stereoType)) {
+                ret.add(bean);
+            }
+        }
+
+        return ret;
     }
 
     @Override
@@ -431,6 +446,12 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
     @Override
     public Object getReference(final LatkeBean<?> bean) {
         return getReference(bean, new CreationalContextImpl(bean));
+    }
 
+    @Override
+    public Object getReference(final Class<?> beanClass) {
+        final LatkeBean<?> bean = getBean(beanClass);
+        
+        return getReference(bean);
     }
 }

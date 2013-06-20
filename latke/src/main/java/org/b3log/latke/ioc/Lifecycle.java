@@ -85,8 +85,7 @@ public final class Lifecycle {
      * @param classes the specified bean class, nullable
      * @param beanModule the specified bean modules 
      */
-    public static void startApplication(final Collection<Class<?>> classes,
-        final BeanModule... beanModule) {
+    public static void startApplication(final Collection<Class<?>> classes, final BeanModule... beanModule) {
         LOGGER.log(Level.DEBUG, "Initializing Latke IoC container");
 
         beanManager = LatkeBeanManagerImpl.getInstance();
@@ -97,7 +96,7 @@ public final class Lifecycle {
         final Configurator configurator = beanManager.getConfigurator();
 
         configurator.createBeans(classes);
-        
+
         if (null != beanModule && 0 < beanModule.length) {
             for (int i = 0; i < beanModule.length; i++) {
                 configurator.addModule(beanModule[i]);
@@ -253,5 +252,14 @@ public final class Lifecycle {
      */
     public static RequestContext getRequestContext() {
         return requestContext.get();
+    }
+
+    /**
+     * Gets bean manager.
+     * 
+     * @return bean manager
+     */
+    public static LatkeBeanManager getBeanManager() {
+        return beanManager;
     }
 }

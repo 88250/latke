@@ -19,6 +19,7 @@ package org.b3log.latke.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Set;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -28,10 +29,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.config.BeanModule;
+import org.b3log.latke.ioc.bean.LatkeBean;
+import org.b3log.latke.ioc.config.Discoverer;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
 import org.b3log.latke.util.StaticResources;
@@ -106,12 +110,16 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             LOGGER.info("Discovering request processors....");
             final String scanPath = getServletConfig().getInitParameter("scanPath");
 
-            final Collection<Class<?>> classes = RequestProcessors.discover(scanPath);
+            final Collection<Class<?>> beanClasses = Discoverer.discover(scanPath);
 
-            // Starts Latke IoC
-            final BeanModule processorModule = new BeanModule("ProcessorModule", classes);
+            Lifecycle.startApplication(beanClasses); // Starts Latke IoC container
 
-            Lifecycle.startApplication(null, processorModule);
+            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+
+            // Build processors
+            final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
+
+            RequestProcessors.buildProcessorMethod(processBeans);
 
             LOGGER.info("Discovered request processors");
         } catch (final Exception e) {

@@ -30,7 +30,7 @@ import org.b3log.latke.ioc.config.Configurator;
  * Latke bean manager.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, Apr 2, 2010
+ * @version 1.0.0.1, Jun 20, 2013
  */
 public interface LatkeBeanManager extends BeanManager {
 
@@ -65,6 +65,14 @@ public interface LatkeBeanManager extends BeanManager {
      * @return bean
      */
     LatkeBean<?> getBean(final String name);
+    
+    /**
+     * Gets a reference with the specified bean class.
+     * 
+     * @param beanClass the specified bean class
+     * @return reference
+     */
+    Object getReference(final Class<?> beanClass);
 
     /**
      * Gets a reference of the specified bean.
@@ -96,6 +104,14 @@ public interface LatkeBeanManager extends BeanManager {
      * @return beans
      */
     Set<LatkeBean<?>> getBeans();
+    
+    /**
+     * Gets beans with the specified stereo type.
+     * 
+     * @param stereoType the specified stereo type
+     * @return beans
+     */
+    Set<LatkeBean<?>> getBeans(final Class<? extends Annotation> stereoType);
 
     /**
      * Adds the specified context.

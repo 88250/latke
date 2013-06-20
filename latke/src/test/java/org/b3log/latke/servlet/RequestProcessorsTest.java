@@ -15,18 +15,24 @@
  */
 package org.b3log.latke.servlet;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.b3log.latke.Latkes;
+import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.bean.LatkeBean;
+import org.b3log.latke.ioc.config.Discoverer;
+import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.DoNothingRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
-import org.b3log.latke.testhelper.MockService;
 import org.b3log.latke.testhelper.VirtualObject;
 import org.testng.annotations.Test;
 
@@ -34,27 +40,40 @@ import org.testng.annotations.Test;
  * test for {@link RequestProcessors}.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 3, 2012
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.0.2, Jun 20, 2013
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class RequestProcessorsTest extends TestCase {
 
     static {
         /**
-        final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
-        final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
-        final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
-        hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
-                ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString11", new Class<?>[]{Integer.class, String.class},
-                ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
-                ConvertSupport.class));
-        hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
-                MockConverSupport.class));
+         final VirtualObject service = new VirtualObject("org.b3log.latke.testhelper.MockService");
+         final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
+         final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
+         hashSet.add(registerServiceAndMethod(service, "/string", "getString", new Class<?>[]{}, ConvertSupport.class));
+         hashSet.add(registerServiceAndMethod(service, "/string/{id}/{name}", "getString1", new Class<?>[]{Integer.class, String.class},
+         ConvertSupport.class));
+         hashSet.add(registerServiceAndMethod(service, "/string/{id}p{name}", "getString11", new Class<?>[]{Integer.class, String.class},
+         ConvertSupport.class));
+         hashSet.add(registerServiceAndMethod(service, "/{name}--{password}", "getString2", new Class<?>[]{String.class, String.class},
+         ConvertSupport.class));
+         hashSet.add(registerServiceAndMethod(service, "/date/{id}/{date}", "getString2", new Class<?>[]{Integer.class, Date.class},
+         MockConverSupport.class));
          */
-        RequestProcessors.discoverFromClass(MockService.class);
+        try {
+            final Collection<Class<?>> classes = Discoverer.discover("org.blog,org.b3log.latke");
+
+            Lifecycle.startApplication(classes);
+
+            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+
+            // Build processors
+            final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
+            RequestProcessors.buildProcessorMethod(processBeans);
+        } catch (final Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /**
@@ -80,7 +99,7 @@ public class RequestProcessorsTest extends TestCase {
         processorMethod.setValue("processorMethod", service.getInstanceMethod(methodName, clazz));
         processorMethod.setValue("convertClass", convertClazz);
         try {
-            processorMethod.getInstanceMethod("analysis", new Class[] {}).invoke(processorMethod.getInstance(), null);
+            processorMethod.getInstanceMethod("analysis", new Class[]{}).invoke(processorMethod.getInstance(), null);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -165,8 +184,6 @@ public class RequestProcessorsTest extends TestCase {
      */
     @Test
     public void testScanClass() throws Exception {
-
-        RequestProcessors.discover("org.b3log,org.b3log.latke");
         final VirtualObject requestProcessors = new VirtualObject("org.b3log.latke.servlet.RequestProcessors");
         final HashSet hashSet = (HashSet<?>) requestProcessors.getValue("processorMethods");
         final int totalMatched = 14;
@@ -179,7 +196,7 @@ public class RequestProcessorsTest extends TestCase {
      */
     @Test
     public void testInitRender() {
-        
+
         Latkes.initRuntimeEnv();
 
         String requestURI = "/do/render";
@@ -199,5 +216,4 @@ public class RequestProcessorsTest extends TestCase {
         Assert.assertFalse(list.get(0) == list.get(2));
 
     }
-
 }

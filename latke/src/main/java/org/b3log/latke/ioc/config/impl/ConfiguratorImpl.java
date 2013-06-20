@@ -166,7 +166,12 @@ public final class ConfiguratorImpl implements Configurator {
             LOGGER.log(Level.TRACE, "Not found bean [beanClass={0}], so to create it", beanClass);
         }
 
-        Beans.checkClass(beanClass);
+        if (!Beans.checkClass(beanClass)) {
+            LOGGER.log(Level.TRACE,
+                "Can't create bean for class[" + beanClass.getName() + "] caused by it is an interface or " + "an abstract class.");
+            
+            return null;
+        }
 
         final String name = Beans.getBeanName(beanClass);
 
@@ -179,11 +184,12 @@ public final class ConfiguratorImpl implements Configurator {
         final Set<Annotation> qualifiers = Beans.getQualifiers(beanClass, name);
         final Class<? extends Annotation> scope = Beans.getScope(beanClass);
         final Set<Type> beanTypes = Beans.getBeanTypes(beanClass);
+        final Set<Class<? extends Annotation>> stereotypes = Beans.getStereotypes(beanClass);
 
         LOGGER.log(Level.DEBUG, "Adding a bean[name={0}, scope={1}, class={2}] to the bean manager....",
             new Object[] {name, scope.getName(), beanClass.getName()});
 
-        final LatkeBean<T> ret = new BeanImpl<T>(beanManager, name, scope, qualifiers, beanClass, beanTypes);
+        final LatkeBean<T> ret = new BeanImpl<T>(beanManager, name, scope, qualifiers, beanClass, beanTypes, stereotypes);
 
         beanManager.addBean(ret);
 
@@ -214,7 +220,7 @@ public final class ConfiguratorImpl implements Configurator {
     public void addModule(final BeanModule module) {
         modules.add(module);
         createBeans(module.getBeanClasses());
-        
+
         LOGGER.log(Level.DEBUG, "Added a module[name={0}]", module.getName());
     }
 }

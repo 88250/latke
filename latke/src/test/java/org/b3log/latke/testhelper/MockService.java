@@ -53,8 +53,7 @@ public class MockService {
      */
     @RequestProcessing(value = "/string/{id}/{name}")
     public String getString1(final Integer id, final String name) {
-        return id
-                + name;
+        return id + name;
     }
 
     /**
@@ -65,8 +64,7 @@ public class MockService {
      */
     @RequestProcessing(value = "/string/{id}p{name}")
     public String getString11(final Integer id, final String name) {
-        return id
-                + name;
+        return id + name;
     }
 
     /**
@@ -77,8 +75,7 @@ public class MockService {
      */
     @RequestProcessing(value = "/{name}--{password}")
     public String getString2(@PathVariable("password") final String name, @PathVariable("name") final String password) {
-        return name
-                + password;
+        return name + password;
     }
 
     /**
@@ -89,8 +86,7 @@ public class MockService {
      */
     @RequestProcessing(value = "/date/{id}/{date}", convertClass = MockConverSupport.class)
     public String getString2(final Integer id, final Date date) {
-        return ""
-                + id + date.getTime();
+        return "" + id + date.getTime();
     }
 
     /**
@@ -123,7 +119,6 @@ public class MockService {
      * @param renderer2 renderer2
      * @return all of the renderer.
      */
-
     @RequestProcessing(value = "/do/render1")
     public List<AbstractHTTPResponseRenderer> testRender1(final JSONRenderer renderer1, final DoNothingRenderer doNothingRenderer,
             final JSONRenderer renderer2) {
@@ -133,5 +128,4 @@ public class MockService {
         ret.add(renderer2);
         return ret;
     }
-
 }

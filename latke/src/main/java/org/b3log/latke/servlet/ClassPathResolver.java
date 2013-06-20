@@ -44,12 +44,13 @@ import org.jboss.vfs.VisitorAttributes;
 
 
 /**
- * the Resolver for scanning the classpath.
+ * Resolver for scanning the classpath.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.1.0, Jan 11, 2013
+ * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @version 1.0.1.1, Jan 20, 2013
  */
-public class ClassPathResolver {
+public final class ClassPathResolver {
 
     /**
      * Logger.
@@ -70,14 +71,19 @@ public class ClassPathResolver {
      * URL protocol for a JBoss VFS resource: "vfs".
      */
     public static final String URL_PROTOCOL_VFS = "vfs";
+    
+    /**
+     * Private constructor.
+     */
+    private ClassPathResolver() {}
 
     /**
-     * get all URL(Resource) under the pattern. 
+     * Gets all URLs (resources) under the pattern. 
      * 
      * @param locationPattern  the pattern of classPath (a ant-style string) 
      * @return all URLS
      */
-    public Set<URL> getResources(final String locationPattern) {
+    public static Set<URL> getResources(final String locationPattern) {
 
         final Set<URL> result = new HashSet<URL>();
 
@@ -88,7 +94,7 @@ public class ClassPathResolver {
         for (final URL rootDirResource : rootDirResources) {
             LOGGER.log(Level.INFO, "RootDirResource [protocol={0}, path={1}]",
                 new Object[] {rootDirResource.getProtocol(), rootDirResource.getPath()});
-            
+
             if (isJarURL(rootDirResource)) {
                 result.addAll(doFindPathMatchingJarResources(rootDirResource, subPattern));
             } else if (rootDirResource.getProtocol().startsWith(URL_PROTOCOL_VFS)) {
@@ -110,7 +116,7 @@ public class ClassPathResolver {
      * @param locationPattern locationPattern
      * @return the RootPath string.
      */
-    private String getRootPath(final String locationPattern) {
+    private static String getRootPath(final String locationPattern) {
 
         int rootDirEnd = locationPattern.length();
 
@@ -125,7 +131,7 @@ public class ClassPathResolver {
      * @param rootPath  rootPath
      * @return the URLS under the Root path
      */
-    private Set<URL> getResourcesFromRoot(final String rootPath) {
+    private static Set<URL> getResourcesFromRoot(final String rootPath) {
 
         final Set<URL> rets = new LinkedHashSet<URL>();
 
@@ -155,7 +161,7 @@ public class ClassPathResolver {
      * @param rootDirResource  rootDirResource
      * @return isJAR
      */
-    private boolean isJarURL(final URL rootDirResource) {
+    private static boolean isJarURL(final URL rootDirResource) {
 
         final String protocol = rootDirResource.getProtocol();
 
@@ -176,7 +182,7 @@ public class ClassPathResolver {
      * @param subPattern subPattern
      * @return the URLs of all the matched classes 
      */
-    private Collection<? extends URL> doFindPathMatchingJarResources(final URL rootDirResource, final String subPattern) {
+    private static Collection<? extends URL> doFindPathMatchingJarResources(final URL rootDirResource, final String subPattern) {
 
         final Set<URL> result = new LinkedHashSet<URL>();
 
@@ -273,7 +279,7 @@ public class ClassPathResolver {
      * @return the JarFile
      * @throws IOException IOException
      */
-    private JarFile getJarFile(final String jarFileUrl) throws IOException {
+    private static JarFile getJarFile(final String jarFileUrl) throws IOException {
         if (jarFileUrl.startsWith(FILE_URL_PREFIX)) {
             try {
                 return new JarFile(toURI(jarFileUrl).getSchemeSpecificPart());
@@ -293,7 +299,7 @@ public class ClassPathResolver {
      * @param subPattern subPattern
      * @return the URLs of all the matched classes 
      */
-    private Collection<? extends URL> doFindPathMatchingFileResources(final URL rootDirResource, final String subPattern) {
+    private static Collection<? extends URL> doFindPathMatchingFileResources(final URL rootDirResource, final String subPattern) {
 
         File rootFile = null;
         final Set<URL> rets = new LinkedHashSet<URL>();
@@ -313,7 +319,6 @@ public class ClassPathResolver {
 
         @SuppressWarnings("unchecked")
         final Collection<File> files = FileUtils.listFiles(rootFile, new IOFileFilter() {
-
             @Override
             public boolean accept(final File dir, final String name) {
                 return true;
@@ -350,7 +355,7 @@ public class ClassPathResolver {
      * @return the URI instance
      * @throws URISyntaxException if the location wasn't a valid URI
      */
-    private URI toURI(final String location) throws URISyntaxException {
+    private static URI toURI(final String location) throws URISyntaxException {
         return new URI(StringUtils.replace(location, " ", "%20"));
     }
 

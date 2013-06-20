@@ -16,36 +16,26 @@
 package org.b3log.latke.servlet;
 
 
-import java.io.DataInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javassist.bytecode.AnnotationsAttribute;
-import javassist.bytecode.ClassFile;
-import javassist.bytecode.annotation.Annotation;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
@@ -65,7 +55,6 @@ import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ReflectHelper;
 import org.b3log.latke.util.RegexPathMatcher;
-import org.b3log.latke.util.Strings;
 import org.json.JSONObject;
 
 
@@ -131,7 +120,7 @@ public final class RequestProcessors {
 
         try {
             if (null == processorObject) {
-                final Object instance = processorClass.newInstance();
+                final Object instance = Lifecycle.getBeanManager().getReference(processorClass);
 
                 processors.put(processorMethod, instance);
                 processorObject = instance;
@@ -272,7 +261,6 @@ public final class RequestProcessors {
      * @return string
      */
     private static String getRendererId(final Class<?> processorClass, final Method processorMethod, final int i) {
-
         final StringBuilder sb = new StringBuilder();
 
         if (processorClass.isAnnotationPresent(Render.class)) {
@@ -316,242 +304,42 @@ public final class RequestProcessors {
      * @return {@link ConvertSupport}
      */
     private static ConvertSupport getConverter(final Class<? extends ConvertSupport> convertClass) throws Exception {
+        ConvertSupport ret = convertMap.get(convertClass);
 
-        ConvertSupport convertSupport = convertMap.get(convertClass);
-
-        if (convertSupport == null) {
-            convertSupport = convertClass.newInstance();
-            convertMap.put(convertClass, convertSupport);
+        if (ret == null) {
+            ret = convertClass.newInstance();
+            convertMap.put(convertClass, ret);
         }
-
-        return convertSupport;
-    }
-
-    /**
-     * Scans classpath to discover request processor classes via annotation 
-     * {@linkplain org.b3log.latke.servlet.annotation.RequestProcessor}.
-     * 
-     * @param scanPath the root ScanPath, using ',' as the split. There are two types of the scanPath: 
-     * <ul>
-     *   <li>package: org.b3log.process</li>
-     *   <li>ant-style classpath: org/b3log/** /*process.class</li>
-     * </ul>
-     * @return discovered classes
-     * @throws Exception exception
-     */
-    public static Collection<Class<?>> discover(final String scanPath) throws Exception {
-        final Set<Class<?>> ret = new HashSet<Class<?>>();
-
-        // Retain the original implementation if the scanPath is unspecified
-        if (Strings.isEmptyOrNull(scanPath)) {
-            discoverFromClassesDir(ret);
-            discoverFromLibDir(ret);
-
-            return ret;
-        }
-
-        discoverFromClassPath(scanPath, ret); // See issue #17 (https://github.com/b3log/b3log-latke/issues/17) for more details
 
         return ret;
     }
 
     /**
-     * Scans classpath (classes directory) to discover request processor classes.
+     * Builds processor method for the specified processor beans.
      * 
-     * @param classSet the specified class set
+     * @param processorBeans the specified processor beans
+     * @throws IOException io exception
      */
-    private static void discoverFromClassesDir(final Collection<Class<?>> classSet) {
-        final String webRoot = AbstractServletListener.getWebRoot();
-        final File classesDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "classes" + File.separator);
-        @SuppressWarnings("unchecked")
-        final Collection<File> classes = FileUtils.listFiles(classesDir, new String[] {"class"}, true);
-        final ClassLoader classLoader = RequestProcessors.class.getClassLoader();
+    public static void buildProcessorMethod(final Set<LatkeBean<?>> processorBeans) throws IOException {
+        for (final LatkeBean<?> latkeBean : processorBeans) {
+            final Class<?> clz = latkeBean.getBeanClass();
 
-        try {
-            for (final File classFile : classes) {
-                final String path = classFile.getPath();
-                final String className = StringUtils.substringBetween(path, "WEB-INF" + File.separator + "classes" + File.separator, ".class").replaceAll("\\/", ".").replaceAll(
-                    "\\\\", ".");
-                final Class<?> clz = classLoader.loadClass(className);
+            final Method[] declaredMethods = clz.getDeclaredMethods();
 
-                classSet.add(clz);
+            for (int i = 0; i < declaredMethods.length; i++) {
+                final Method mthd = declaredMethods[i];
+                final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);
 
-                if (clz.isAnnotationPresent(RequestProcessor.class)) {
-                    LOGGER.log(Level.DEBUG, "Found a request processor[className={0}]", className);
-                    final Method[] declaredMethods = clz.getDeclaredMethods();
-
-                    for (int i = 0; i < declaredMethods.length; i++) {
-                        final Method mthd = declaredMethods[i];
-                        final RequestProcessing annotation = mthd.getAnnotation(RequestProcessing.class);
-
-                        if (null == annotation) {
-                            continue;
-                        }
-
-                        addProcessorMethod(annotation, clz, mthd);
-                    }
-                }
-            }
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Scans classpath (classes directory) failed", e);
-        }
-    }
-
-    /**
-     * Scans classpath (lib directory) to discover request processor classes.
-     * 
-     * @param classSet the specified class set
-     */
-    private static void discoverFromLibDir(final Collection<Class<?>> classSet) {
-        final String webRoot = AbstractServletListener.getWebRoot();
-        final File libDir = new File(webRoot + File.separator + "WEB-INF" + File.separator + "lib" + File.separator);
-        @SuppressWarnings("unchecked")
-        final Collection<File> files = FileUtils.listFiles(libDir, new String[] {"jar"}, true);
-
-        final ClassLoader classLoader = RequestProcessors.class.getClassLoader();
-
-        try {
-            for (final File file : files) {
-                if (file.getName().contains("appengine-api") || file.getName().startsWith("freemarker")
-                    || file.getName().startsWith("javassist") || file.getName().startsWith("commons") || file.getName().startsWith("mail")
-                    || file.getName().startsWith("activation") || file.getName().startsWith("slf4j") || file.getName().startsWith("bonecp")
-                    || file.getName().startsWith("jsoup") || file.getName().startsWith("guava") || file.getName().startsWith("markdown")
-                    || file.getName().startsWith("mysql") || file.getName().startsWith("c3p0")) {
-                    // Just skips some known dependencies hardly....
-                    LOGGER.log(Level.INFO, "Skipped request processing discovery[jarName={0}]", file.getName());
+                if (null == requestProcessingMethodAnn) {
+                    LOGGER.log(Level.WARN, "The processor[className={0}] has no processing method", clz.getCanonicalName());
 
                     continue;
                 }
 
-                final JarFile jarFile = new JarFile(file.getPath());
-                final Enumeration<JarEntry> entries = jarFile.entries();
+                LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]",
+                    new Object[] {clz.getCanonicalName(), mthd.getName()});
 
-                while (entries.hasMoreElements()) {
-                    final JarEntry jarEntry = entries.nextElement();
-                    final String classFileName = jarEntry.getName();
-
-                    if (classFileName.contains("$") // Skips inner class
-                        || !classFileName.endsWith(".class")) {
-                        continue;
-                    }
-
-                    final DataInputStream classInputStream = new DataInputStream(jarFile.getInputStream(jarEntry));
-
-                    final ClassFile classFile = new ClassFile(classInputStream);
-                    final AnnotationsAttribute annotationsAttribute = (AnnotationsAttribute) classFile.getAttribute(
-                        AnnotationsAttribute.visibleTag);
-
-                    if (null == annotationsAttribute) {
-                        continue;
-                    }
-
-                    for (Annotation annotation : annotationsAttribute.getAnnotations()) {
-                        if ((annotation.getTypeName()).equals(RequestProcessor.class.getName())) {
-                            // Found a request processor class, loads it
-                            final String className = classFile.getName();
-                            final Class<?> clz = classLoader.loadClass(className);
-
-                            classSet.add(clz);
-
-                            LOGGER.log(Level.DEBUG, "Found a request processor[className={0}]", className);
-                            final Method[] declaredMethods = clz.getDeclaredMethods();
-
-                            for (int i = 0; i < declaredMethods.length; i++) {
-                                final Method mthd = declaredMethods[i];
-                                final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);
-
-                                if (null == requestProcessingMethodAnn) {
-                                    continue;
-                                }
-
-                                addProcessorMethod(requestProcessingMethodAnn, clz, mthd);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Scans classpath (lib directory) failed", e);
-        }
-    }
-
-    /**
-     * Scans classpath (from classloader) to discover request processor classes.
-     * 
-     * @param scanPath scanPah using ',' as split
-     * @param classSet the specified class set
-     * @throws IOException io exception
-     */
-    private static void discoverFromClassPath(final String scanPath, final Collection<Class<?>> classSet) throws IOException {
-        final String[] splitPaths = scanPath.split(",");
-
-        // Adds some built-in components
-        final String[] paths = Arrays.copyOf(splitPaths, splitPaths.length + 1);
-
-        paths[paths.length - 1] = "org.b3log.latke.remote";
-
-        final Set<URL> urls = new LinkedHashSet<URL>();
-
-        // XXX: using static ?
-        final ClassPathResolver classPathResolver = new ClassPathResolver();
-
-        for (String path : paths) {
-
-            /*
-             * the being two types of the scanPath.
-             *  1 package: org.b3log.process
-             *  2 ant-style classpath: org/b3log/** /*process.class
-             */
-            if (!AntPathMatcher.isPattern(path)) {
-                path = path.replaceAll("\\.", "/") + "/**/*.class";
-            }
-
-            urls.addAll(classPathResolver.getResources(path));
-        }
-
-        for (URL url : urls) {
-            final DataInputStream classInputStream = new DataInputStream(url.openStream());
-
-            final ClassFile classFile = new ClassFile(classInputStream);
-            final AnnotationsAttribute annotationsAttribute = (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
-
-            if (null == annotationsAttribute) {
-                continue;
-            }
-
-            for (Annotation annotation : annotationsAttribute.getAnnotations()) {
-                final String className = classFile.getName();
-
-                Class<?> clz;
-
-                try {
-                    clz = Thread.currentThread().getContextClassLoader().loadClass(className);
-                } catch (final ClassNotFoundException e) {
-                    LOGGER.log(Level.ERROR, "some error to load the class[" + className + "]", e);
-
-                    break;
-                }
-
-                classSet.add(clz);
-
-                if ((annotation.getTypeName()).equals(RequestProcessor.class.getName())) { // Found a request processor class, loads it
-                    LOGGER.log(Level.DEBUG, "Found a request processor[className={0}]", className);
-                    final Method[] declaredMethods = clz.getDeclaredMethods();
-
-                    for (int i = 0; i < declaredMethods.length; i++) {
-                        final Method mthd = declaredMethods[i];
-                        final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);
-
-                        if (null == requestProcessingMethodAnn) {
-                            continue;
-                        }
-
-                        LOGGER.log(Level.DEBUG, "Got a matched processing Class[{0}], method[{1}]",
-                            new Object[] {clz.getCanonicalName(), mthd.getName()});
-
-                        addProcessorMethod(requestProcessingMethodAnn, clz, mthd);
-                    }
-                }
+                addProcessorMethod(requestProcessingMethodAnn, clz, mthd);
             }
         }
 
@@ -567,7 +355,6 @@ public final class RequestProcessors {
      * @param clazz the specific clazz need to be add Request Mapping
      */
     public static void discoverFromClass(final Class<?> clazz) {
-
         final RequestProcessor requestProcessor = clazz.getAnnotation(RequestProcessor.class);
 
         if (null == requestProcessor) {

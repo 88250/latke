@@ -139,6 +139,11 @@ public class BeanImpl<T> implements LatkeBean<T> {
     private Map<AnnotatedMethod<?>, List<ParameterProvider<?>>> methodParameterProviders;
 
     /**
+     * Stereo types.
+     */
+    private final Set<Class<? extends Annotation>> stereotypes;
+
+    /**
      * Constructs a Latke bean.
      * 
      * @param beanManager the specified bean manager
@@ -147,15 +152,18 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * @param qualifiers the specified bean qualifiers
      * @param beanClass the specified bean class
      * @param types the specified bean types
+     * @param stereotypes the specified stereo types 
      */
     public BeanImpl(final LatkeBeanManager beanManager, final String name, final Class<? extends Annotation> scope,
-        final Set<Annotation> qualifiers, final Class<T> beanClass, final Set<Type> types) {
+        final Set<Annotation> qualifiers, final Class<T> beanClass, final Set<Type> types, 
+        final Set<Class<? extends Annotation>> stereotypes) {
         this.beanManager = beanManager;
         this.name = name;
         this.scope = scope;
         this.qualifiers = qualifiers;
         this.beanClass = beanClass;
         this.types = types;
+        this.stereotypes = stereotypes;
 
         this.configurator = beanManager.getConfigurator();
         annotatedType = new AnnotatedTypeImpl<T>(beanClass);
@@ -378,7 +386,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     @Override
     public Set<Class<? extends Annotation>> getStereotypes() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return stereotypes;
     }
 
     @Override
