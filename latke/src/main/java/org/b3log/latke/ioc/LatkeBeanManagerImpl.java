@@ -182,10 +182,10 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
     }
 
     @Override
-    public LatkeBean<?> getBean(final Class<?> beanClass) {
+    public <T> LatkeBean<T> getBean(final Class<T> beanClass) {
         for (final LatkeBean<?> bean : beans) {
             if (bean.getBeanClass().equals(beanClass)) {
-                return bean;
+                return (LatkeBean<T>) bean;
             }
         }
 
@@ -444,14 +444,14 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
     }
 
     @Override
-    public Object getReference(final LatkeBean<?> bean) {
-        return getReference(bean, new CreationalContextImpl(bean));
+    public <T> T getReference(final LatkeBean<T> bean) {
+        return (T) getReference(bean, new CreationalContextImpl(bean));
     }
 
     @Override
-    public Object getReference(final Class<?> beanClass) {
-        final LatkeBean<?> bean = getBean(beanClass);
-        
+    public <T> T getReference(final Class<T> beanClass) {
+        final LatkeBean<T> bean = getBean(beanClass);
+
         return getReference(bean);
     }
 }

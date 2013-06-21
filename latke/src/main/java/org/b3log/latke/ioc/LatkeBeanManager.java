@@ -53,10 +53,11 @@ public interface LatkeBeanManager extends BeanManager {
     /**
      * Gets a bean with the specified bean class.
      * 
+     * @param <T> tye type of bean class
      * @param beanClass the specified bean class
      * @return bean
      */
-    LatkeBean<?> getBean(final Class<?> beanClass);
+    <T> LatkeBean<T> getBean(final Class<T> beanClass);
 
     /**
      * Gets a bean with the specified name.
@@ -69,18 +70,20 @@ public interface LatkeBeanManager extends BeanManager {
     /**
      * Gets a reference with the specified bean class.
      * 
+     * @param <T> the type of bean class
      * @param beanClass the specified bean class
      * @return reference
      */
-    Object getReference(final Class<?> beanClass);
+    <T> T getReference(final Class<T> beanClass);
 
     /**
      * Gets a reference of the specified bean.
      * 
+     * @param <T> the type of bean class
      * @param bean the specified bean
      * @return reference
      */
-    Object getReference(final LatkeBean<?> bean);
+    <T> T getReference(final LatkeBean<T> bean);
 
     /**
      * Gets a reference of the specified bean and creational context.

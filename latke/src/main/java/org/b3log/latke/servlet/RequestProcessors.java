@@ -141,6 +141,8 @@ public final class RequestProcessors {
 
             final List<AbstractHTTPResponseRenderer> rendererList = new ArrayList<AbstractHTTPResponseRenderer>();
 
+            // TODO: IoC managed
+            
             for (int i = 0; i < parameterTypes.length; i++) {
                 final Class<?> paramClass = parameterTypes[i];
 
