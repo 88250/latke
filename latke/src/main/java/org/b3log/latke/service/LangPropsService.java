@@ -22,6 +22,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
@@ -37,6 +39,8 @@ import org.json.JSONObject;
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.1.4, Sep 30, 2011
  */
+@Named
+@Singleton
 public final class LangPropsService {
 
     /**
@@ -180,38 +184,5 @@ public final class LangPropsService {
 
             return ResourceBundle.getBundle(baseName, Latkes.getLocale()).getString(key);
         }
-    }
-
-    /**
-     * Gets the {@link LangPropsService} singleton.
-     *
-     * @return the singleton
-     */
-    public static LangPropsService getInstance() {
-        return SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private LangPropsService() {}
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, Jan 12, 2011
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final LangPropsService SINGLETON = new LangPropsService();
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {}
     }
 }

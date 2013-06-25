@@ -51,13 +51,14 @@ import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.ioc.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.service.LangPropsService;
 
 
 /**
  * Latke bean manager implementation.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.4, Jun 20, 2013
+ * @version 1.0.0.5, Jun 25, 2013
  */
 @Named("beanManager")
 @Singleton
@@ -86,12 +87,12 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
     /**
      * Built-in beans.
      */
-    private static Set<Bean<?>> builtInBeans;
+    private static Set<LatkeBean<?>> builtInBeans;
 
     /**
      * Built-in bean classes.
      */
-    private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList();
+    private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsService.class);
 
     @Override
     public ELResolver getELResolver() {
@@ -136,22 +137,26 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
 
         beans = new HashSet<LatkeBean<?>>();
         contexts = new HashMap<Class<? extends Annotation>, Set<Context>>();
-        builtInBeans = new HashSet<Bean<?>>();
+        builtInBeans = new HashSet<LatkeBean<?>>();
         configurator = new ConfiguratorImpl(this);
 
-        // Constructs the built-in beans:
+        // Init Singleton context
         final SingletonContext singletonContext = new SingletonContext();
         final Bean<LatkeBeanManagerImpl> beanManagerBean = configurator.createBean(LatkeBeanManagerImpl.class);
 
         singletonContext.add(beanManagerBean, this);
         singletonContext.setActive(true);
         addContext(singletonContext);
+        
+        // Constructs the built-in beans with singleton
         for (final Class<?> builtInBeanClass : builtInBeanClasses) {
-            final Bean<?> builtInBean = configurator.createBean(builtInBeanClass);
+            final LatkeBean<?> builtInBean = configurator.createBean(builtInBeanClass);
 
             builtInBeans.add(builtInBean);
             singletonContext.get(builtInBean, new CreationalContextImpl(builtInBean));
         }
+        
+        beans.addAll(builtInBeans);
 
         LOGGER.log(Level.DEBUG, "Created Latke bean manager");
     }
