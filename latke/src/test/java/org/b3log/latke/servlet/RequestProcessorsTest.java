@@ -55,7 +55,7 @@ public class RequestProcessorsTest {
 
         // Build processors
         final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
-        RequestProcessors.buildProcessorMethod(processBeans);
+        RequestProcessors.buildProcessorMethods(processBeans);
     }
 
     /**

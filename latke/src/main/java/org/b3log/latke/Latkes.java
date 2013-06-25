@@ -33,7 +33,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.3, May 29, 2013
+ * @version 1.0.2.4, Jun 25, 2013
  * @see #initRuntimeEnv()
  * @see #shutdown() 
  * @see #getServePath()
@@ -148,6 +148,11 @@ public final class Latkes {
      * Static path.
      */
     private static String staticPath;
+    
+    /**
+     * IoC scan path.
+     */
+    private static String scanPath;
 
     /**
      * Latke configurations (latke.properties).
@@ -436,6 +441,19 @@ public final class Latkes {
         }
 
         return staticPath;
+    }
+    
+    /**
+     * Gets IoC scan path.
+     * 
+     * @return scan path
+     */
+    public static String getScanPath() {
+        if (null == scanPath) {
+            scanPath = LATKE_PROPS.getProperty("scanPath");
+        }
+        
+        return scanPath;
     }
 
     /**

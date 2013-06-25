@@ -19,7 +19,9 @@ package org.b3log.latke.servlet;
 import java.io.File;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Collection;
 import java.util.Locale;
+import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -29,9 +31,15 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cron.CronService;
+import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.bean.LatkeBean;
+import org.b3log.latke.ioc.config.Discoverer;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
+import org.b3log.latke.servlet.annotation.RequestProcessor;
+import org.b3log.latke.util.Stopwatchs;
 
 
 /**
@@ -84,6 +92,37 @@ public abstract class AbstractServletListener implements ServletContextListener,
         LOGGER.log(Level.INFO, "Server [webRoot={0}, contextPath={1}]",
             new Object[] {webRoot, servletContextEvent.getServletContext().getContextPath()});
 
+        Stopwatchs.start("Init Latke IoC container");
+        try {
+            Stopwatchs.start("Discover bean classes");
+            final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
+
+            Stopwatchs.end();
+
+            Stopwatchs.start("Create beans");
+            Lifecycle.startApplication(beanClasses); // Starts Latke IoC container
+            Stopwatchs.end();
+
+            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+
+            // Build processors
+            final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
+
+            Stopwatchs.start("Build processor methods");
+            RequestProcessors.buildProcessorMethods(processBeans);
+            Stopwatchs.end();
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Initializes request processors failed", e);
+            
+            throw new IllegalStateException("Initializes request processors failed");
+        } finally {
+            Stopwatchs.end();
+            
+            LOGGER.debug(Stopwatchs.getTimingStat());
+            
+            Stopwatchs.release();
+        }
+        
         CronService.start();
     }
 

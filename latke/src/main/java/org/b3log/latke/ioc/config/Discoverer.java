@@ -76,6 +76,8 @@ public final class Discoverer {
         if (Strings.isEmptyOrNull(scanPath)) {
             throw new IllegalStateException("Please specify the [scanPath]");
         }
+        
+        LOGGER.debug("scanPath[" + scanPath + "]");
 
         // See issue #17 (https://github.com/b3log/b3log-latke/issues/17) for more details
 

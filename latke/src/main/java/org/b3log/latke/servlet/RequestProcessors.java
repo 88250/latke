@@ -317,12 +317,12 @@ public final class RequestProcessors {
     }
 
     /**
-     * Builds processor method for the specified processor beans.
+     * Builds processor methods for the specified processor beans.
      * 
      * @param processorBeans the specified processor beans
      * @throws IOException io exception
      */
-    public static void buildProcessorMethod(final Set<LatkeBean<?>> processorBeans) throws IOException {
+    public static void buildProcessorMethods(final Set<LatkeBean<?>> processorBeans) throws IOException {
         for (final LatkeBean<?> latkeBean : processorBeans) {
             final Class<?> clz = latkeBean.getBeanClass();
 

@@ -18,8 +18,6 @@ package org.b3log.latke.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Set;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -29,17 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.PageCaches;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.bean.LatkeBean;
-import org.b3log.latke.ioc.config.Discoverer;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
 import org.b3log.latke.util.StaticResources;
-import org.b3log.latke.util.Stopwatchs;
 import org.b3log.latke.util.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,7 +89,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
      * Initializes this servlet.
      * 
      * <p>
-     * Scans classpath for discovering request processors, configured the 'default' servlet for static resource processing.
+     * Configures the 'default' servlet for static resource processing.
      * </p>
      * 
      * @throws ServletException servlet exception
@@ -105,29 +97,6 @@ public final class HTTPRequestDispatcher extends HttpServlet {
      */
     @Override
     public void init() throws ServletException {
-        Stopwatchs.start("Discovering Request Processors");
-        try {
-            LOGGER.info("Discovering request processors....");
-            final String scanPath = getServletConfig().getInitParameter("scanPath");
-
-            final Collection<Class<?>> beanClasses = Discoverer.discover(scanPath);
-
-            Lifecycle.startApplication(beanClasses); // Starts Latke IoC container
-
-            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
-
-            // Build processors
-            final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
-
-            RequestProcessors.buildProcessorMethod(processBeans);
-
-            LOGGER.info("Discovered request processors");
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Initializes request processors failed", e);
-        } finally {
-            Stopwatchs.end();
-        }
-
         final ServletContext servletContext = getServletContext();
 
         if (servletContext.getNamedDispatcher(COMMON_DEFAULT_SERVLET_NAME) != null) {
@@ -143,8 +112,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
         } else {
             throw new IllegalStateException(
                 "Unable to locate the default servlet for serving static content. "
-                    + "Please set the 'defaultServletName' property explicitly.");
-            // TODO: Loads from local.properties
+                    + "Please report this bug on https://github.com/b3log/b3log-latke/issues/new");
         }
 
         LOGGER.log(Level.DEBUG, "The default servlet for serving static resource is [{0}]", defaultServletName);
@@ -175,6 +143,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
             }
 
             requestDispatcher.forward(request, response);
+
             return;
         }
 
