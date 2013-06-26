@@ -17,6 +17,8 @@ package org.b3log.latke.servlet.advice;
 
 
 import java.util.Map;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 
@@ -25,6 +27,8 @@ import org.b3log.latke.servlet.HTTPRequestContext;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Sep 30, 2012
  */
+@Named
+@Singleton
 public class BeforeRequestProcessAdvice implements RequestProcessAdvice {
 
     /**

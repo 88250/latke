@@ -52,6 +52,8 @@ import org.b3log.latke.ioc.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.LangPropsService;
+import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
+import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 
 
 /**
@@ -92,7 +94,8 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
     /**
      * Built-in bean classes.
      */
-    private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsService.class);
+    private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsService.class, BeforeRequestProcessAdvice.class,
+        AfterRequestProcessAdvice.class);
 
     @Override
     public ELResolver getELResolver() {
@@ -147,7 +150,7 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
         singletonContext.add(beanManagerBean, this);
         singletonContext.setActive(true);
         addContext(singletonContext);
-        
+
         // Constructs the built-in beans with singleton
         for (final Class<?> builtInBeanClass : builtInBeanClasses) {
             final LatkeBean<?> builtInBean = configurator.createBean(builtInBeanClass);
@@ -155,7 +158,7 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
             builtInBeans.add(builtInBean);
             singletonContext.get(builtInBean, new CreationalContextImpl(builtInBean));
         }
-        
+
         beans.addAll(builtInBeans);
 
         LOGGER.log(Level.DEBUG, "Created Latke bean manager");

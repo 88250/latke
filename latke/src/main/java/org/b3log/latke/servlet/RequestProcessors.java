@@ -34,13 +34,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.RequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 import org.b3log.latke.servlet.advice.RequestReturnAdviceException;
 import org.b3log.latke.servlet.annotation.After;
@@ -81,11 +81,6 @@ public final class RequestProcessors {
      * Processors.
      */
     private static Map<Method, Object> processors = new HashMap<Method, Object>();
-
-    /**
-     * the BeforeRequestProcessAdvice instance holder.
-     */
-    private static Map<Class<? extends RequestProcessAdvice>, ? extends RequestProcessAdvice> adviceMap = new HashMap<Class<? extends RequestProcessAdvice>, RequestProcessAdvice>();
 
     /**
      * the renderer class Holder(do not  instantiate it witch has the different values of the variables>.
@@ -142,7 +137,7 @@ public final class RequestProcessors {
             final List<AbstractHTTPResponseRenderer> rendererList = new ArrayList<AbstractHTTPResponseRenderer>();
 
             // TODO: IoC managed
-            
+
             for (int i = 0; i < parameterTypes.length; i++) {
                 final Class<?> paramClass = parameterTypes[i];
 
@@ -184,14 +179,14 @@ public final class RequestProcessors {
                 beforeAdviceClassList.addAll(Arrays.asList(ac));
             }
 
+            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+
             BeforeRequestProcessAdvice binstance;
 
             try {
                 for (Class<? extends BeforeRequestProcessAdvice> clz : beforeAdviceClassList) {
-                    binstance = (BeforeRequestProcessAdvice) adviceMap.get(clz);
-                    if (binstance == null) {
-                        binstance = clz.newInstance();
-                    }
+                    binstance = beanManager.getReference(clz);
+
                     binstance.doAdvice(context, args);
                 }
             } catch (final RequestReturnAdviceException re) {
@@ -236,10 +231,8 @@ public final class RequestProcessors {
             AfterRequestProcessAdvice instance;
 
             for (Class<? extends AfterRequestProcessAdvice> clz : afterAdviceClassList) {
-                instance = (AfterRequestProcessAdvice) adviceMap.get(clz);
-                if (instance == null) {
-                    instance = clz.newInstance();
-                }
+                instance = beanManager.getReference(clz);
+                
                 instance.doAdvice(context, ret);
             }
 

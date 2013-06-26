@@ -16,6 +16,8 @@
 package org.b3log.latke.servlet.advice;
 
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 
@@ -24,6 +26,8 @@ import org.b3log.latke.servlet.HTTPRequestContext;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Oct 14, 2012
  */
+@Named
+@Singleton
 public class AfterRequestProcessAdvice implements RequestProcessAdvice {
 
     /**
