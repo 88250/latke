@@ -15,6 +15,12 @@
     <url>https://github.com/b3log/b3log-latke</url>
     <description>Yet another simple web framework based on Java servlet technology.</description>
     <inceptionYear>2009</inceptionYear>
+    
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <!-- Version -->
     <properties>
@@ -87,6 +93,12 @@
             <timezone>+8</timezone>
         </developer>
     </developers>
+    
+    <scm>
+        <connection>scm:git:git@github.com:b3log/b3log-latke.git</connection>
+        <developerConnection>scm:git:git@github.com:b3log/b3log-latke.git</developerConnection>
+        <url>git@github.com:b3log/b3log-latke.git</url>
+    </scm>
 
     <issueManagement>
         <system>Google Code Issues</system>
@@ -110,21 +122,6 @@
             </plugin>
         </plugins>
     </reporting>
-
-    <distributionManagement>
-        <repository>
-            <id>m2-release</id>
-            <name>Maven Repository at Google</name>
-            <url>https://m2-repos.googlecode.com/svn/release</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>m2-snapshot</id>
-            <name>Maven Repository at Google</name>
-            <url>https://m2-repos.googlecode.com/svn/snapshot</url>
-            <uniqueVersion>true</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -566,20 +563,6 @@
         </pluginManagement>
     </build>
 
-    <repositories>
-        <repository>
-            <id>m2-release</id>
-            <name>88250 at Google Maven repository of releases</name>
-            <url>http://m2-repos.googlecode.com/svn/release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
-    
     <profiles>
         <profile>
             <id>linux</id>

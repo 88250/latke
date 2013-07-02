@@ -11,12 +11,17 @@
     <artifactId>maven-min-plugin</artifactId>
     <version>0.5.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
-
     <name>Latke Min Plugin</name>
     <description>Latke application JavaScript and CSS files compression.</description>
     <inceptionYear>2011</inceptionYear>
     
-     <!-- Properties -->
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+    
+    <!-- Properties -->
     <properties>
         <maven-plugin-api.version>3.0.3</maven-plugin-api.version>
         <yuicompressor.version>
@@ -58,22 +63,13 @@
     <prerequisites>
         <maven>2.2.1</maven>
     </prerequisites>
-
-    <distributionManagement>
-        <repository>
-            <id>m2-release</id>
-            <name>Maven Repository at Google</name>
-            <url>https://m2-repos.googlecode.com/svn/release</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>m2-snapshot</id>
-            <name>Maven Repository at Google</name>
-            <url>https://m2-repos.googlecode.com/svn/snapshot</url>
-            <uniqueVersion>true</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
     
+    <scm>
+        <connection>scm:git:git@github.com:b3log/b3log-latke.git</connection>
+        <developerConnection>scm:git:git@github.com:b3log/b3log-latke.git</developerConnection>
+        <url>git@github.com:b3log/b3log-latke.git</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -90,7 +86,6 @@
     </dependencies>
     
     <build>
-        
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
