@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke Min Plugin POM.
-    Version: 1.0.0.0, Jun 11, 2012
+    Version: 1.0.0.1, Jul 2, 2013
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.b3log.latke</groupId>
+    <groupId>org.b3log</groupId>
     <artifactId>maven-min-plugin</artifactId>
     <version>0.5.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
@@ -24,9 +24,7 @@
     <!-- Properties -->
     <properties>
         <maven-plugin-api.version>3.0.3</maven-plugin-api.version>
-        <yuicompressor.version>
-            2.4.6
-        </yuicompressor.version>
+        <yuicompressor.version>2.4.6</yuicompressor.version>
         <!-- maven plugin -->
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
