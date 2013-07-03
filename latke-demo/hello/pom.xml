@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.b3log</groupId>
+        <artifactId>latke-demo</artifactId>
+        <version>0.1.0</version>
+    </parent>
+
+    <artifactId>latke-h2-hello</artifactId>
+    <packaging>war</packaging>
+
+    <name>Latke H2 Hello Demo</name>
+    <description>Latke hello demo with Latke Repository H2.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.b3log</groupId>
+            <artifactId>latke</artifactId>
+        </dependency>
+            
+        <dependency>
+            <groupId>org.b3log</groupId>
+            <artifactId>latke-repository-h2</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>hello</finalName>
+        
+        <plugins>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.22</version>
+                <configuration>
+                    <stopKey>stop</stopKey>
+                    <stopPort>4500</stopPort>
+                    <contextPath>/</contextPath>
+
+                    <reload>manual</reload>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
