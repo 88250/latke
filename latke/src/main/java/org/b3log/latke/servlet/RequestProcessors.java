@@ -63,7 +63,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.2.0.0, Jan 22, 2013
+ * @version 1.2.0.1, Jul 2, 2013
  */
 public final class RequestProcessors {
 
@@ -326,8 +326,6 @@ public final class RequestProcessors {
                 final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);
 
                 if (null == requestProcessingMethodAnn) {
-                    LOGGER.log(Level.WARN, "The processor[className={0}] has no processing method", clz.getCanonicalName());
-
                     continue;
                 }
 
