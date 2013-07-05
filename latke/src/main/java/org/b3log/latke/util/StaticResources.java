@@ -37,7 +37,7 @@ import org.w3c.dom.NodeList;
  * Static resource utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, May 11, 2012
+ * @version 1.0.0.4, Jul 5, 2013
  */
 public final class StaticResources {
 
@@ -50,25 +50,46 @@ public final class StaticResources {
      * Static resource path patterns.
      * 
      * <p>
-     * Initializes from  file appengine-web.xml.
+     * Initializes from file static-resources.xml, if not found, initializes it from appengine-web.xml.
      * </p>
      */
     private static final Set<String> STATIC_RESOURCE_PATHS = new TreeSet<String>();
 
     static {
         final String webRoot = AbstractServletListener.getWebRoot();
-        final File appengineWeb = new File(webRoot + File.separator + "WEB-INF" + File.separator + "appengine-web.xml");
+
+        LOGGER.trace("Reads static resources definition from [static-resources.xml]");
+
+        File staticResources = new File(webRoot + File.separator + "WEB-INF" + File.separator + "static-resources.xml");
+        boolean useStaticResources = true;
+
+        if (!staticResources.exists()) {
+            LOGGER.trace("Not found [static-resources.xml], so reads static resources definition from [appengine-web.xml]");
+            staticResources = new File(webRoot + File.separator + "WEB-INF" + File.separator + "appengine-web.xml");
+            useStaticResources = false;
+        }
+
+        if (!staticResources.exists()) {
+            throw new IllegalStateException("Not found static resources definition from [static-resources.xml] or [appengine-web.xml]");
+        }
 
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
         try {
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            final Document document = documentBuilder.parse(appengineWeb);
+            final Document document = documentBuilder.parse(staticResources);
             final Element root = document.getDocumentElement();
 
             root.normalize();
 
-            final Element staticFiles = (Element) root.getElementsByTagName("static-files").item(0);
+            Element staticFiles;
+
+            if (useStaticResources) {
+                staticFiles = root;
+            } else {
+                staticFiles = (Element) root.getElementsByTagName("static-files").item(0);
+            }
+
             final NodeList includes = staticFiles.getElementsByTagName("include");
 
             final StringBuilder logBuilder = new StringBuilder("Reading static files: [").append(Strings.LINE_SEPARATOR);
@@ -92,7 +113,7 @@ public final class StaticResources {
                 LOGGER.debug(logBuilder.toString());
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Reads appengine-web.xml failed", e);
+            LOGGER.log(Level.ERROR, "Reads [" + staticResources.getName() + "] failed", e);
             throw new RuntimeException(e);
         }
 

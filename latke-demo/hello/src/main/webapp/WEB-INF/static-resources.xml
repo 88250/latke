@@ -17,13 +17,11 @@
 
 -->
 <!--
-    Description: Web deployment descriptor for GAE. See
-                 http://code.google.com/intl/en/appengine/docs/java/config/appconfig.html
-                 for more details.
-    Version: 1.0.0.1, Sep 12, 2011
+    Description: Static resources definition.
+    Version: 1.0.0.0, Jul 5, 2013
     Author: Liang Ding
 -->
-<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">   
-    <static-files />
-</appengine-web-app>
+<static-files>
+    <include path="/skins/**/logo.png" />
+</static-files>
 

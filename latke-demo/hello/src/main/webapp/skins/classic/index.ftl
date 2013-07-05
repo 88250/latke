@@ -2,6 +2,7 @@
 <html>
     <body>
         ${greeting}
+        <img src="${staticServePath}/skins/classic/images/logo.png" />
         
         <div>
             Request:<br/>

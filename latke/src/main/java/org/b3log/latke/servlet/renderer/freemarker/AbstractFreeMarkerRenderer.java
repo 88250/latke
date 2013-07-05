@@ -117,10 +117,9 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
         try {
             final HttpServletRequest request = context.getRequest();
             final Template template = getTemplate((String) request.getAttribute(Keys.TEMAPLTE_DIR_NAME), templateName);
-           
-            if (Templates.hasExpression(template, "${request}")) {
-                dataModel.put(Keys.REQUEST, request);
-            }
+
+            dataModel.put(Keys.REQUEST, request);
+            Keys.fillServer(dataModel);
 
             beforeRender(context);
 
@@ -241,7 +240,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     public void setTemplateName(final String templateName) {
         this.templateName = templateName;
     }
-    
+
     @Override
     public Map<String, Object> getRenderDataModel() {
         return dataModel;
