@@ -54,7 +54,7 @@ import org.json.JSONObject;
  * @version 1.0.1.4, Jan 19, 2013
  */
 @RequestProcessor
-public final class RepositoryAccessor {
+public class RepositoryAccessor {
 
     /**
      * Logger.

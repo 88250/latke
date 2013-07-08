@@ -51,7 +51,7 @@ import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.ioc.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.service.LangPropsService;
+import org.b3log.latke.service.LangPropsServiceImpl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 
@@ -94,7 +94,7 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
     /**
      * Built-in bean classes.
      */
-    private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsService.class, BeforeRequestProcessAdvice.class,
+    private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsServiceImpl.class, BeforeRequestProcessAdvice.class,
         AfterRequestProcessAdvice.class);
 
     @Override

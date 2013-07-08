@@ -22,6 +22,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang.ClassUtils;
 import org.b3log.latke.util.CollectionUtils;
 
 

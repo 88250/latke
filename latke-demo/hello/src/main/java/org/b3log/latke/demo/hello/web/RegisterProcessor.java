@@ -36,7 +36,7 @@ import org.b3log.latke.util.Strings;
  * @version 1.0.0.1, Oct 9, 2012
  */
 @RequestProcessor
-public final class RegisterProcessor {
+public class RegisterProcessor {
 
     /**
      * Logger.

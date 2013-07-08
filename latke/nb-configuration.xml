@@ -16,6 +16,7 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>datastore</word>
         <word>enum</word>
         <word>inline</word>
+        <word>Javassist</word>
         <word>json</word>
         <word>Latke</word>
         <word>lifecycle</word>

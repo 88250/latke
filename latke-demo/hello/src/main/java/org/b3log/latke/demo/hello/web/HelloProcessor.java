@@ -35,7 +35,7 @@ import org.b3log.latke.util.Strings;
  * @version 1.0.0.4, Oct 9, 2012
  */
 @RequestProcessor
-public final class HelloProcessor {
+public class HelloProcessor {
 
     private static final Logger LOGGER = Logger.getLogger(HelloProcessor.class.getName());
 

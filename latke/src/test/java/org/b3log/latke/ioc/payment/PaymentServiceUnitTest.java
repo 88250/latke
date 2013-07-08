@@ -24,7 +24,6 @@ import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.mock.MockServletContext;
 import org.b3log.latke.ioc.payment.annotation.PayLiteral;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;

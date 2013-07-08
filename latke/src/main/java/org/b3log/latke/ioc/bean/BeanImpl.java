@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedConstructor;
 import javax.enterprise.inject.spi.AnnotatedField;
@@ -37,6 +40,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Named;
 import javax.inject.Provider;
+import org.apache.commons.lang.ClassUtils;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.annotated.AnnotatedTypeImpl;
 import org.b3log.latke.ioc.config.Configurator;
@@ -92,6 +96,26 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * Bean class.
      */
     private Class<T> beanClass;
+
+    /**
+     * Proxy class.
+     */
+    private Class<T> proxyClass;
+
+    /**
+     * Determines whether is using JDK proxy.
+     */
+    private boolean usingJDKProxy;
+
+    /**
+     * Javassist method handler.
+     */
+    private JavassistMethodHandler javassistMethodHandler;
+
+    /**
+     * JDK invocation handler.
+     */
+    private JDKInvocationHandler jdkInvocationHandler;
 
     /**
      * Bean types.
@@ -155,7 +179,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * @param stereotypes the specified stereo types 
      */
     public BeanImpl(final LatkeBeanManager beanManager, final String name, final Class<? extends Annotation> scope,
-        final Set<Annotation> qualifiers, final Class<T> beanClass, final Set<Type> types, 
+        final Set<Annotation> qualifiers, final Class<T> beanClass, final Set<Type> types,
         final Set<Class<? extends Annotation>> stereotypes) {
         this.beanManager = beanManager;
         this.name = name;
@@ -166,7 +190,23 @@ public class BeanImpl<T> implements LatkeBean<T> {
         this.stereotypes = stereotypes;
 
         this.configurator = beanManager.getConfigurator();
-        annotatedType = new AnnotatedTypeImpl<T>(beanClass);
+
+        usingJDKProxy = !ClassUtils.getAllInterfaces(beanClass).isEmpty();
+
+        if (usingJDKProxy) {
+            jdkInvocationHandler = new JDKInvocationHandler();
+            annotatedType = new AnnotatedTypeImpl<T>(beanClass);
+        } else {
+            javassistMethodHandler = new JavassistMethodHandler();
+
+            final ProxyFactory proxyFactory = new ProxyFactory();
+
+            proxyFactory.setSuperclass(beanClass);
+            proxyFactory.setFilter(javassistMethodHandler.getMethodFilter());
+            proxyClass = proxyFactory.createClass();
+            annotatedType = new AnnotatedTypeImpl<T>(beanClass);
+        }
+
         resolver = new ResolverImpl();
         constructorParameterInjectionPoints = new HashMap<AnnotatedConstructor<T>, List<ParameterInjectionPoint>>();
         constructorParameterProviders = new ArrayList<ParameterProvider<?>>();
@@ -202,7 +242,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * @throws Exception exception
      */
     private T instantiateReference() throws Exception {
-        T ret = null;
+        T ret;
 
         if (constructorParameterInjectionPoints.size() == 1) {
             // only one constructor allow to be annotated with @Inject
@@ -229,13 +269,25 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
             ret = annotatedConstructor.getJavaMember().newInstance(args);
         } else {
-            ret = beanClass.newInstance();
+            if (usingJDKProxy) {
+                ret = beanClass.newInstance();
+            } else {
+                ret = proxyClass.newInstance();
+            }
         }
 
-        // if (isInterceptionEnabled) {
-        // final BeanInterceptor interceptor = new BeanInterceptor(ret, this);
-        // ret = wrap(ret, interceptor);
-        // }
+        if (usingJDKProxy) {
+            final List<Class<?>> allInterfaces = ClassUtils.getAllInterfaces(beanClass);
+            final Class<?>[] interfaces = allInterfaces.<Class<?>>toArray(new Class<?>[0]);
+            
+            Proxy.newProxyInstance(interfaces[0].getClassLoader(), interfaces, jdkInvocationHandler);
+
+            LOGGER.log(Level.TRACE, "Uses JDK invocation handler for bean[class={0}]", beanClass.getName());
+        } else {
+            ((ProxyObject) ret).setHandler(javassistMethodHandler);
+
+            LOGGER.log(Level.TRACE, "Uses Javassist method handler for bean[class={0}]", beanClass.getName());
+        }
 
         return ret;
     }

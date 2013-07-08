@@ -15,11 +15,12 @@
  */
 package org.b3log.latke.demo.hello.service;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.b3log.latke.demo.hello.repository.UserRepository;
-import org.b3log.latke.repository.Transaction;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
+import org.b3log.latke.repository.RepositoryException;
+import org.b3log.latke.repository.annotation.Transactional;
 import org.b3log.latke.service.annotation.Service;
 import org.json.JSONObject;
 
@@ -30,7 +31,7 @@ import org.json.JSONObject;
  * @version 1.0.0.0, Jul 2, 2013
  */
 @Service
-public final class UserService {
+public class UserService {
 
     /**
      * Logger.
@@ -43,25 +44,22 @@ public final class UserService {
     @Inject
     private UserRepository userRepository;
 
+    @Transactional
     public void saveUser(final String name, final int age) {
-        final Transaction transaction = userRepository.beginTransaction();
+        final JSONObject user = new JSONObject();
+        user.put("name", name);
+        user.put("age", age);
+
+        String userId;
 
         try {
-            final JSONObject user = new JSONObject();
-            user.put("name", name);
-            user.put("age", age);
-
-            final String userId = userRepository.add(user);
-
-            transaction.commit();
-
-            LOGGER.log(Level.INFO, "Saves a user successfully [userId={0}]", userId);
-        } catch (final Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-
-            LOGGER.log(Level.SEVERE, "Can not save user[name=" + name + ']', e);
+            userId = userRepository.add(user);
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Saves user failed", e);
+            
+            throw new IllegalStateException("Saves user failed"); // Throws an exception to rollback transaction
         }
+
+        LOGGER.log(Level.INFO, "Saves a user successfully [userId={0}]", userId);
     }
 }

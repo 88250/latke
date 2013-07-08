@@ -141,8 +141,7 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
      * Builds the annotated fields of this annotated type.
      */
     private void initAnnotatedFields() {
-        // final Set<Field> inheritedFields =
-        // ReflectionUtil.getInheritedFields(beanClass);
+        final Set<Field> inheritedFields = Reflections.getInheritedFields(beanClass);
         final Set<Field> hiddenFields = Reflections.getHiddenFields(beanClass);
         final Set<Field> ownFields = Reflections.getOwnFields(beanClass);
 
@@ -157,17 +156,16 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
             }
         }
 
-        // for (final Field field : inheritedFields) {
-        // boolean isNeedToBeInjected =
-        // field.isAnnotationPresent(Inject.class);
-        // if (isNeedToBeInjected) {
-        // final AnnotatedField<T> annotatedField =
-        // new AnnotatedFieldImpl<T>(field);
-        //
-        // field.setAccessible(true);
-        // annotatedFields.add(annotatedField);
-        // }
-        // }
+        for (final Field field : inheritedFields) {
+            final boolean isNeedToBeInjected = field.isAnnotationPresent(Inject.class);
+
+            if (isNeedToBeInjected) {
+                final AnnotatedField<T> annotatedField = new AnnotatedFieldImpl<T>(field);
+
+                field.setAccessible(true);
+                annotatedFields.add(annotatedField);
+            }
+        }
 
         for (final Field field : ownFields) {
             final boolean isNeedToBeInjected = field.isAnnotationPresent(Inject.class);
@@ -185,8 +183,7 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
      * Builds the annotated methods of this annotated type.
      */
     private void initAnnotatedMethods() {
-        // final Set<Method> inheritedMethods =
-        // ReflectionUtil.getInheritedMethods(beanClass);
+        final Set<Method> inheritedMethods = Reflections.getInheritedMethods(beanClass);
         final Set<Method> overriddenMethods = Reflections.getOverriddenMethods(beanClass);
         final Set<Method> ownMethods = Reflections.getOwnMethods(beanClass);
 
@@ -201,17 +198,16 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
             }
         }
 
-        // for (final Method method : inheritedMethods) {
-        // boolean isNeedToBeInjected =
-        // method.isAnnotationPresent(Inject.class);
-        // if (isNeedToBeInjected) {
-        // final AnnotatedMethod<T> annotatedMethod =
-        // new AnnotatedMethodImpl<T>(method);
-        //
-        // method.setAccessible(true);
-        // annotatedMethods.add(annotatedMethod);
-        // }
-        // }
+        for (final Method method : inheritedMethods) {
+            final boolean isNeedToBeInjected = method.isAnnotationPresent(Inject.class);
+
+            if (isNeedToBeInjected) {
+                final AnnotatedMethod<T> annotatedMethod = new AnnotatedMethodImpl<T>(method);
+
+                method.setAccessible(true);
+                annotatedMethods.add(annotatedMethod);
+            }
+        }
 
         for (final Method method : ownMethods) {
             final boolean isNeedToBeInjected = method.isAnnotationPresent(Inject.class);

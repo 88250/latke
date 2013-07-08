@@ -167,10 +167,9 @@ public final class ConfiguratorImpl implements Configurator {
         }
 
         if (!Beans.checkClass(beanClass)) {
-            LOGGER.log(Level.TRACE,
-                "Can't create bean for class[" + beanClass.getName() + "] caused by it is an interface or " + "an abstract class.");
-            
-            return null;
+            throw new IllegalStateException(
+                "Can't create bean for class[" + beanClass.getName()
+                + "] caused by it is an interface or an abstract class, or it dose not implement any interface");
         }
 
         final String name = Beans.getBeanName(beanClass);
