@@ -95,7 +95,9 @@ public final class Lifecycle {
         beanManager.addContext(applicationContext);
         final Configurator configurator = beanManager.getConfigurator();
 
-        configurator.createBeans(classes);
+        if (null != classes && !classes.isEmpty()) {
+            configurator.createBeans(classes);
+        }
 
         if (null != beanModule && 0 < beanModule.length) {
             for (int i = 0; i < beanModule.length; i++) {

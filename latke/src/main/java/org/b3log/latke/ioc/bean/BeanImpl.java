@@ -17,7 +17,9 @@ package org.b3log.latke.ioc.bean;
 
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
@@ -38,6 +40,7 @@ import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import org.apache.commons.lang.ClassUtils;
@@ -49,6 +52,7 @@ import org.b3log.latke.ioc.point.FieldInjectionPoint;
 import org.b3log.latke.ioc.point.ParameterInjectionPoint;
 import org.b3log.latke.ioc.provider.FieldProvider;
 import org.b3log.latke.ioc.provider.ParameterProvider;
+import org.b3log.latke.ioc.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -195,7 +199,6 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
         if (usingJDKProxy) {
             jdkInvocationHandler = new JDKInvocationHandler();
-            annotatedType = new AnnotatedTypeImpl<T>(beanClass);
         } else {
             javassistMethodHandler = new JavassistMethodHandler();
 
@@ -204,8 +207,9 @@ public class BeanImpl<T> implements LatkeBean<T> {
             proxyFactory.setSuperclass(beanClass);
             proxyFactory.setFilter(javassistMethodHandler.getMethodFilter());
             proxyClass = proxyFactory.createClass();
-            annotatedType = new AnnotatedTypeImpl<T>(beanClass);
         }
+
+        annotatedType = new AnnotatedTypeImpl<T>(beanClass);
 
         resolver = new ResolverImpl();
         constructorParameterInjectionPoints = new HashMap<AnnotatedConstructor<T>, List<ParameterInjectionPoint>>();
@@ -242,7 +246,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * @throws Exception exception
      */
     private T instantiateReference() throws Exception {
-        T ret;
+        T ret = null;
 
         if (constructorParameterInjectionPoints.size() == 1) {
             // only one constructor allow to be annotated with @Inject
@@ -267,7 +271,15 @@ public class BeanImpl<T> implements LatkeBean<T> {
                 args[i++] = arg;
             }
 
-            ret = annotatedConstructor.getJavaMember().newInstance(args);
+            final Constructor<T> oriBeanConstructor = annotatedConstructor.getJavaMember();
+
+            if (usingJDKProxy) {
+                ret = annotatedConstructor.getJavaMember().newInstance(args);
+            } else {
+                final Constructor<T> constructor = proxyClass.getConstructor(oriBeanConstructor.getParameterTypes());
+
+                ret = constructor.newInstance(args);
+            }
         } else {
             if (usingJDKProxy) {
                 ret = beanClass.newInstance();
@@ -279,7 +291,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
         if (usingJDKProxy) {
             final List<Class<?>> allInterfaces = ClassUtils.getAllInterfaces(beanClass);
             final Class<?>[] interfaces = allInterfaces.<Class<?>>toArray(new Class<?>[0]);
-            
+
             Proxy.newProxyInstance(interfaces[0].getClassLoader(), interfaces, jdkInvocationHandler);
 
             LOGGER.log(Level.TRACE, "Uses JDK invocation handler for bean[class={0}]", beanClass.getName());
@@ -407,10 +419,10 @@ public class BeanImpl<T> implements LatkeBean<T> {
             return;
         }
 
-        final BeanImpl<?> bean = (BeanImpl<?>) beanManager.getBean(clazz);
+        final BeanImpl<?> superBean = (BeanImpl<?>) beanManager.getBean(clazz);
 
         for (final Map.Entry<AnnotatedMethod<?>, List<ParameterInjectionPoint>> methodParameterInjectionPoint
-            : bean.methodParameterInjectionPoints.entrySet()) {
+            : superBean.methodParameterInjectionPoints.entrySet()) {
             final List<ParameterInjectionPoint> paraSet = methodParameterInjectionPoint.getValue();
             final Object[] args = new Object[paraSet.size()];
             int i = 0;
@@ -419,7 +431,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
                 Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
 
                 if (arg == null) {
-                    for (final ParameterProvider<?> provider : bean.methodParameterProviders.get(methodParameterInjectionPoint.getKey())) {
+                    for (final ParameterProvider<?> provider : superBean.methodParameterProviders.get(methodParameterInjectionPoint.getKey())) {
                         if (provider.getAnnotated().equals(paraInjectionPoint.getAnnotated())) {
                             arg = provider;
                             break;
@@ -430,9 +442,14 @@ public class BeanImpl<T> implements LatkeBean<T> {
                 args[i++] = arg;
             }
 
-            final AnnotatedMethod<?> annotatedMethod = methodParameterInjectionPoint.getKey();
+            final AnnotatedMethod<?> superAnnotatedMethod = methodParameterInjectionPoint.getKey();
 
-            resolver.resolveMethod(annotatedMethod, reference, args);
+            final Method superMethod = superAnnotatedMethod.getJavaMember();
+            final Method overrideMethod = Reflections.getOverrideMethod(superMethod, beanClass);
+
+            if (overrideMethod.isAnnotationPresent(Inject.class)) {
+                resolver.resolveMethod(superAnnotatedMethod, reference, args);
+            }
         }
     }
 

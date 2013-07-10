@@ -18,7 +18,7 @@ package org.b3log.latke.ioc.main;
 import javax.inject.Named;
 
 @Named("dependencyA")
-final public class DependencyA {
+public class DependencyA {
 
     public void method1() {
     }

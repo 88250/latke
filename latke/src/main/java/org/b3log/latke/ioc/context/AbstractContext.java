@@ -91,8 +91,7 @@ public abstract class AbstractContext implements LatkeBeansContext {
     }
 
     @Override
-    public <T> T get(final Contextual<T> bean,
-        final CreationalContext<T> creationalContext) {
+    public <T> T get(final Contextual<T> bean, final CreationalContext<T> creationalContext) {
         return getReference(bean, creationalContext);
     }
 

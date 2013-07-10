@@ -25,7 +25,6 @@ import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.literal.NamedLiteral;
-import org.b3log.latke.ioc.mock.MockServletContext;
 import org.b3log.latke.ioc.moon.annotation.ArtificalLiteral;
 import org.b3log.latke.ioc.moon.annotation.WaterLiteral;
 import org.b3log.latke.ioc.moon.water.WaterMoon;
@@ -80,12 +79,10 @@ final public class MoonUnitTest {
         artificalMoon = (ArtificalMoon) beanManager.getReference(artificalMoonBean);
         assertNotNull(artificalMoon);
 
-        final Set<Annotation> waterMoonQualifiers =
-                new HashSet<Annotation>();
+        final Set<Annotation> waterMoonQualifiers = new HashSet<Annotation>();
         waterMoonQualifiers.add(new ArtificalLiteral());
         waterMoonQualifiers.add(new WaterLiteral());
-        final LatkeBean<?> waterMoonBean = beanManager.getBean(WaterMoon.class,
-                waterMoonQualifiers);
+        final LatkeBean<?> waterMoonBean = beanManager.getBean(WaterMoon.class, waterMoonQualifiers);
         waterMoon = (WaterMoon) beanManager.getReference(waterMoonBean);
         assertNotNull(waterMoon);
     }

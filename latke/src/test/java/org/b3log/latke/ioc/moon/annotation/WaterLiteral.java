@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.ioc.moon.annotation;
 
-import org.b3log.latke.ioc.moon.annotation.Water;
 import org.b3log.latke.ioc.literal.AbstractAnnotationLiteral;
 
 /**

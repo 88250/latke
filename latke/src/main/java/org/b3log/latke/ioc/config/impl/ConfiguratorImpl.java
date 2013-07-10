@@ -34,6 +34,7 @@ import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.InjectionPointValidator;
 import org.b3log.latke.ioc.util.Beans;
+import org.b3log.latke.ioc.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -206,9 +207,11 @@ public final class ConfiguratorImpl implements Configurator {
 
     @Override
     public void createBeans(final Collection<Class<?>> classes) {
-        if (null == classes) {
+        if (null == classes || classes.isEmpty()) {
             return;
         }
+        
+        filterClasses(classes);
 
         for (final Class<?> clazz : classes) {
             createBean(clazz);
@@ -218,8 +221,37 @@ public final class ConfiguratorImpl implements Configurator {
     @Override
     public void addModule(final BeanModule module) {
         modules.add(module);
-        createBeans(module.getBeanClasses());
+
+        final Collection<Class<?>> classes = module.getBeanClasses();
+
+        if (null != classes && !classes.isEmpty()) {
+            createBeans(classes);
+        }
 
         LOGGER.log(Level.DEBUG, "Added a module[name={0}]", module.getName());
+    }
+
+    /**
+     * Filters no-bean classes with the specified classes. 
+     * 
+     * A valid bean is <b>NOT</b>:
+     * <ul>
+     *   <li>an annotation</li>
+     *   <li>interface</li>
+     *   <li>abstract</li>
+     * </ul>
+     * 
+     * @param classes the specified classes to filter
+     */
+    private static void filterClasses(final Collection<Class<?>> classes) {
+        final Iterator<Class<?>> iterator = classes.iterator();
+
+        while (iterator.hasNext()) {
+            final Class<?> clazz = iterator.next();
+
+            if (clazz.isAnnotation() || !Reflections.isConcrete(clazz)) {
+                iterator.remove();
+            }
+        }
     }
 }

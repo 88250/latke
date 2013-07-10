@@ -25,7 +25,7 @@ import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.Lifecycle;
 
 @Named("Main")
-final public class Main {
+public class Main {
 
     @Inject
     DependencyA dependencyA;

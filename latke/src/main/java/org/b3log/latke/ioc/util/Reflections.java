@@ -54,9 +54,7 @@ final public class Reflections {
         return Modifier.isAbstract(clazz.getModifiers());
     }
 
-    public static boolean isAccessable(final Package subclassPackage,
-        final Package superclassPackage,
-        final int superMemberModifiers) {
+    public static boolean isAccessable(final Package subclassPackage, final Package superclassPackage, final int superMemberModifiers) {
         if (subclassPackage.equals(superclassPackage)) {
             switch (superMemberModifiers) {
             case Modifier.PRIVATE:
@@ -272,8 +270,7 @@ final public class Reflections {
         }
     }
 
-    public static boolean matchInheritance(final Field subclassField,
-        final Field superclassField) {
+    public static boolean matchInheritance(final Field subclassField, final Field superclassField) {
         if (Modifier.isStatic(superclassField.getModifiers()) || subclassField.equals(superclassField)) {
             return false;
         }
@@ -289,9 +286,7 @@ final public class Reflections {
         }
     }
 
-    public static boolean matchInheritance(final Method subclassMethod,
-        final Method superclassMethod) {
-
+    public static boolean matchInheritance(final Method subclassMethod, final Method superclassMethod) {
         if (Modifier.isStatic(superclassMethod.getModifiers()) || subclassMethod.equals(superclassMethod)) {
             return false;
         }

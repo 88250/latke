@@ -92,9 +92,13 @@ public class UrlFetchTestCase {
         final String content = URLEncoder.encode("username=b3logtest&password=b3logtest", "UTF-8");
         request.setPayload(content.getBytes());
 
-        final HTTPResponse httpResponse = fetchService.fetch(request);
+        try {
+            final HTTPResponse httpResponse = fetchService.fetch(request);
 
-        printHttpResponse(httpResponse);
+            printHttpResponse(httpResponse);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
