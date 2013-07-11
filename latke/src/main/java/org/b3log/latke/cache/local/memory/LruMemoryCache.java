@@ -33,7 +33,7 @@ import org.b3log.latke.util.Serializer;
  *
  * @param <K> the type of the key of the object
  * @param <V> the type of the objects
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.9, Dec 3, 2011
  */
 public final class LruMemoryCache<K extends Serializable, V extends Serializable> extends AbstractMemoryCache<K, V> implements Serializable {

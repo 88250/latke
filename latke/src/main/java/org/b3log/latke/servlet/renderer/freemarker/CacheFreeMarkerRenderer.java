@@ -34,7 +34,7 @@ import org.json.JSONObject;
  * This renderer will put page content into cache.
  * <p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.4, May 5, 2012
  */
 public class CacheFreeMarkerRenderer extends AbstractFreeMarkerRenderer {

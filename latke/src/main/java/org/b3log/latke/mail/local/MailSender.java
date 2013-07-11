@@ -35,7 +35,7 @@ import org.b3log.latke.util.Strings;
  * Email sender.
  * 
  * @author <a href="mailto:jiangzezhou1989@gmail.com">zezhou jiang</a>
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.3, Jan 4, 2013
  */
 final class MailSender {

@@ -26,7 +26,7 @@ import org.b3log.latke.servlet.HTTPRequestMethod;
 /**
  * Encapsulation of a single HTTP request that is made via the {@link URLFetchService}. 
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.1, Apr 18, 2013
  */
 public final class HTTPRequest {

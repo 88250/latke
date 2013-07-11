@@ -26,7 +26,7 @@ import java.io.Serializable;
  * 
  * @param <K> the type of the key of this map's elements
  * @param <V> the type of the nodes of this map
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.5, Oct 26, 2010
  */
 public final class DoubleLinkedMap<K, V> implements Serializable {
@@ -323,7 +323,7 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
  *
  * @param <K> the type of the key of this node's element
  * @param <V> the type of this node
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.1, Aug 15, 2010
  */
 final class DoubleLinkedMapNode<K, V> implements Serializable {

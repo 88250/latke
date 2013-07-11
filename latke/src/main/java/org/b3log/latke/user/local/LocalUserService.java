@@ -35,7 +35,7 @@ import org.json.JSONObject;
  * Local user service.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, May 4, 2012
  */
 public final class LocalUserService implements UserService {

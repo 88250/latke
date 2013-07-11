@@ -32,7 +32,7 @@ import javax.inject.Named;
  * In Latke IoC container, a service is {@link javax.inject.Singleton singleton} scope by default.
  * </p>
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Jun 20, 2013
  */
 @Named

@@ -26,7 +26,7 @@ import java.util.List;
  * Encapsulation of the result of a {@link HTTPRequest HTTP request} made via 
  * the {@link URLFetchService}. 
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Aug 8, 2011
  */
 public final class HTTPResponse {

@@ -40,7 +40,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
  * </p>
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
  * @version 1.0.1.1, Apr 26, 2013
  */

@@ -18,7 +18,7 @@ package org.b3log.latke.servlet;
 /**
  * Enumerations of HTTP request methods.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Aug 8, 2011
  */
 public enum HTTPRequestMethod {

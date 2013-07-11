@@ -20,7 +20,7 @@ import org.b3log.latke.ioc.speaker.annotation.Morning;
 
 /**
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Nov 14, 2009
  */
 @Named("morningSpeaker")

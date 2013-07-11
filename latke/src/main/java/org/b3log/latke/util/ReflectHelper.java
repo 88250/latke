@@ -32,7 +32,7 @@ import org.b3log.latke.logging.Logger;
  * ReflectHelper while not using java reflect instead of the other class byte tool.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.4, Dec 21, 2012
  */
 public final class ReflectHelper {

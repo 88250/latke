@@ -29,7 +29,7 @@ import java.util.Collection;
  * 
  * @param <K> the key of an object
  * @param <V> the type of objects
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Sep 19, 2012
  */
 public final class NoCache<K extends Serializable, V extends Serializable> implements Cache<K, V> {

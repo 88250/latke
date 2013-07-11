@@ -32,7 +32,7 @@ import org.b3log.latke.logging.Logger;
  * Utilities of <a href="http://www.freemarker.org">FreeMarker</a> 
  * template engine.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.3, May 22, 2012
  */
 public final class Templates {

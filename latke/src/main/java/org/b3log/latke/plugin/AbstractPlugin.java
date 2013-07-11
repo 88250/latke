@@ -56,7 +56,7 @@ import org.json.JSONObject;
  *   details.
  * </p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.2.0.1, Apr 24, 2013
  * @see PluginManager

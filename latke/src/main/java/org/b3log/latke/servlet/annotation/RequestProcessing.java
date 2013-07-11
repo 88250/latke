@@ -29,7 +29,7 @@ import org.b3log.latke.servlet.converter.ConvertSupport;
 /**
  * Indicates that an annotated method for HTTP servlet request processing.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.4, May 1, 2012
  * @see RequestProcessor

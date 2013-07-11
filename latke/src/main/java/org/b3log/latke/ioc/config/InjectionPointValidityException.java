@@ -19,7 +19,7 @@ package org.b3log.latke.ioc.config;
 /**
  * Injection point validity exception.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 20, 2009
  */
 public final class InjectionPointValidityException extends RuntimeException {

@@ -29,7 +29,7 @@ import org.testng.annotations.AfterTest;
 
 /**
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Jun 20, 2013
  */
 final public class SetupUnitTest {

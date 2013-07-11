@@ -24,7 +24,7 @@ import org.b3log.latke.logging.Logger;
 /**
  * Call stack utilities.
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.4, Apr 11, 2012
  */
 public final class Callstacks {

@@ -20,7 +20,7 @@ import java.util.Arrays;
 /**
  * Composite filter operator.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Jun 27, 2012
  * @see CompositeFilter
  */

@@ -24,7 +24,7 @@ package org.b3log.latke.taskqueue;
  * in a task queue.
  * </p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 15, 2011
  */
 public interface TaskHandle {

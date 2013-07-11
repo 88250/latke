@@ -17,7 +17,7 @@ package org.b3log.latke.ioc.payment;
 
 /**
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Aug 29, 2009
  */
 public interface PaymentProcessor {

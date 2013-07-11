@@ -45,7 +45,7 @@ import org.b3log.latke.util.Stopwatchs;
 /**
  * Abstract servlet listener.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.3.0, Apr 5, 2012
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {

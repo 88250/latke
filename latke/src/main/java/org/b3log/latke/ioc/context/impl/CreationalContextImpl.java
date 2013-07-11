@@ -26,7 +26,7 @@ import javax.enterprise.inject.spi.Bean;
  * Creational context.
  *
  * @param <T> the type of incomplete instance
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Jun 8, 2009
  */
 public class CreationalContextImpl<T> implements CreationalContext<T> {

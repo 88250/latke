@@ -26,7 +26,7 @@ import org.json.JSONObject;
 /**
  * Repository.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.2, Mar 6, 2013
  */
 public interface Repository {

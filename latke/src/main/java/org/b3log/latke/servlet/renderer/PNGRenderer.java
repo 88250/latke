@@ -28,7 +28,7 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 /**
  * PNG HTTP response renderer.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Sep 12, 2011
  */
 public final class PNGRenderer extends AbstractHTTPResponseRenderer {

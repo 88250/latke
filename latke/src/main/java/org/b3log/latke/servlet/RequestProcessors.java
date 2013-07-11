@@ -61,7 +61,7 @@ import org.json.JSONObject;
 /**
  * Request processor utilities.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.2.0.1, Jul 2, 2013
  */
@@ -498,7 +498,7 @@ public final class RequestProcessors {
     /**
      * Request processor method.
      *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.2, May 1, 2012
      */
     private static final class ProcessorMethod {

@@ -29,7 +29,7 @@ package org.b3log.latke.service;
  * </p>
  *
  * @param <T> the type of result
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Oct 25, 2011
  */
 // TODO: 88250, service result?
@@ -116,7 +116,7 @@ public final class ServiceResult<T> {
      * clarity.
      * </p>
      *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.0, Oct 25, 2011
      */
     public static final class Null {

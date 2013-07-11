@@ -59,7 +59,7 @@ import org.json.JSONObject;
  * JDBC repository implementation.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.4, May 30, 2013
  */
 @SuppressWarnings("unchecked")

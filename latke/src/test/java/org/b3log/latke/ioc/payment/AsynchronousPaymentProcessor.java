@@ -21,7 +21,7 @@ import org.b3log.latke.ioc.payment.annotation.Asynchronous;
 
 /**
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Sep 3, 2009
  */
 @Named("asynchronousPaymentProcessor")

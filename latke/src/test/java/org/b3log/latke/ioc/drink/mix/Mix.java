@@ -23,7 +23,7 @@ import org.b3log.latke.ioc.drink.juice.Juice;
 
 /**
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Oct 28, 2009
  */
 public class Mix extends Juice implements Drink {

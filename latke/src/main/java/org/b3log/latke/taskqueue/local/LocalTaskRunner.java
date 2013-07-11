@@ -33,7 +33,7 @@ import org.b3log.latke.urlfetch.URLFetchServiceFactory;
  * run the task in queue, now using httpUrlfetch to handle the request.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Sep 20, 2012
  */
 public final class LocalTaskRunner extends Thread {

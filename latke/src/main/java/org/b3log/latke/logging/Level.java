@@ -29,7 +29,7 @@ package org.b3log.latke.logging;
  * In addition there is a level OFF that can be used to turn off logging, and a level ALL that can be used to enable logging of all 
  * messages.
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Jun 19, 2013
  */
 public enum Level {

@@ -34,7 +34,7 @@ import org.json.JSONObject;
 /**
  * Request utilities.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
  * @version 1.0.2.2, Dec 21, 2012
  * @see #PAGINATION_PATH_PATTERN

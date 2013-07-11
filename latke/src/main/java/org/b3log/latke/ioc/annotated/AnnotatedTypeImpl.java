@@ -37,7 +37,7 @@ import org.b3log.latke.util.CollectionUtils;
  * An annotated type.
  *
  * @param <T> the declaring type
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.5, Mar 30, 2010
  */
 public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {

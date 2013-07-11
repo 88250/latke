@@ -42,7 +42,7 @@ import org.json.JSONObject;
  * {@link #AbstractRepository(java.lang.String) constructor} with {@link Latkes#getRuntimeEnv() the current runtime environment}.
  * </p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.5, Mar 6, 2013
  */
 public abstract class AbstractRepository implements Repository {

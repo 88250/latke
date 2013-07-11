@@ -19,7 +19,7 @@ package org.b3log.latke.image;
 /**
  * Image.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Sep 18, 2012
  */
 public final class Image {

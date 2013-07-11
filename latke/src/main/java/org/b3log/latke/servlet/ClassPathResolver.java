@@ -47,7 +47,7 @@ import org.jboss.vfs.VisitorAttributes;
  * Resolver for scanning the classpath.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.1, Jan 20, 2013
  */
 public final class ClassPathResolver {

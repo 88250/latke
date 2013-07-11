@@ -24,7 +24,7 @@ import javax.enterprise.inject.spi.Bean;
 /**
  * Field injection point.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.1, Nov 16, 2009
  */
 public class FieldInjectionPoint extends AbstractInjectionPoint {

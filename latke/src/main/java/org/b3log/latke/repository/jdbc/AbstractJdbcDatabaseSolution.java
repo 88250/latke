@@ -32,7 +32,7 @@ import org.b3log.latke.repository.jdbc.util.JdbcUtil;
  * JdbcDatabaseSolution.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Mar 9, 2012
  */
 public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {

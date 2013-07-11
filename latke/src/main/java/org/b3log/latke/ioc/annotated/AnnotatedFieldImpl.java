@@ -31,7 +31,7 @@ import javax.enterprise.inject.spi.AnnotatedType;
  * An annotated field.
  *
  * @param <T> the declaring type
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.6, Mar 30, 2010
  */
 public class AnnotatedFieldImpl<T> implements AnnotatedField<T> {

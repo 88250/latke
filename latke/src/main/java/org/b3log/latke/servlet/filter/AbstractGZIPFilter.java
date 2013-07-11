@@ -37,7 +37,7 @@ import org.b3log.latke.logging.Logger;
 /**
  * Abstract HTTP response GZIP filter.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Dec 16, 2010
  */
 public abstract class AbstractGZIPFilter implements Filter {
@@ -112,7 +112,7 @@ public abstract class AbstractGZIPFilter implements Filter {
     /**
      * HTTP response wrapper for GZIP.
      *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.0, Dec 16, 2010
      */
     private class GZIPServletResponseWrapper extends HttpServletResponseWrapper {

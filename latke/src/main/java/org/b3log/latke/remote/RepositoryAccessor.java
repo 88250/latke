@@ -50,7 +50,7 @@ import org.json.JSONObject;
 /**
  * Accesses repository via HTTP protocol.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.4, Jan 19, 2013
  */
 @RequestProcessor

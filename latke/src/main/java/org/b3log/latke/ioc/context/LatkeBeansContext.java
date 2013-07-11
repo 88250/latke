@@ -22,7 +22,7 @@ import javax.enterprise.context.spi.Contextual;
 /**
  * Latke beans context.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.1, Nov 27, 2009
  */
 public interface LatkeBeansContext extends javax.enterprise.context.spi.Context {

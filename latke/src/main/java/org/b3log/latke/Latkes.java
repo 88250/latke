@@ -32,7 +32,7 @@ import org.h2.tools.Server;
 /**
  * Latke framework configuration utility facade.
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.4, Jun 25, 2013
  * @see #initRuntimeEnv()
  * @see #shutdown() 

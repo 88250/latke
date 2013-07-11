@@ -38,7 +38,7 @@ import org.b3log.latke.logging.Logger;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response 
  * renderer.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.7, Dec 3, 2011
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {

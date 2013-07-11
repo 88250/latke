@@ -19,7 +19,7 @@ package org.b3log.latke.model;
 /**
  * This class defines all role/group model relevant keys.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.5, Jul 23, 2010
  */
 public final class Role {

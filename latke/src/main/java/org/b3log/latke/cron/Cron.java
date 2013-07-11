@@ -30,7 +30,7 @@ import org.b3log.latke.urlfetch.URLFetchServiceFactory;
 /**
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Apr 5, 2012
  */
 public final class Cron extends TimerTask {

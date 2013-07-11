@@ -26,7 +26,7 @@ import java.util.concurrent.FutureTask;
 /**
  * Event manager.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.3, Jun 23, 2011
  */
 public final class EventManager {
@@ -98,7 +98,7 @@ public final class EventManager {
     /**
      * Event manager singleton holder.
      *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.0, Aug 12, 2010
      */
     private static final class EventManagerSingletonHolder {

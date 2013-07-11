@@ -86,7 +86,7 @@ import java.util.List;
  * </pre>
  * <p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.3, May 30, 2012
  * @see Stopwatch
  * @see #getTimingStat() 
@@ -303,7 +303,7 @@ public final class Stopwatchs {
      * if exists two tasks with the same title in a task tree, 
      * </p>
      * 
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.0, Oct 12, 2011
      */
     private static class Stopwatch {

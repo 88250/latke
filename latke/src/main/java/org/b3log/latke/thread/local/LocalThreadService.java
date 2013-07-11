@@ -23,7 +23,7 @@ import org.b3log.latke.thread.ThreadService;
 /**
  * Local thread service.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Sep 20, 2012
  */
 public final class LocalThreadService implements ThreadService {
