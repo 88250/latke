@@ -29,7 +29,7 @@ import static org.testng.Assert.*;
 /**
  * {@link GAERepository} test case.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Dec 29, 2011
  */
 public class GAERepositoryTestCase {

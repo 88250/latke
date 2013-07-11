@@ -27,7 +27,7 @@ import org.apache.maven.plugin.MojoFailureException;
 /**
  * Goal which compress CSS and JavaScript sources.
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.3, Sep 3, 2011
  * @goal min
  * @phase process-resources

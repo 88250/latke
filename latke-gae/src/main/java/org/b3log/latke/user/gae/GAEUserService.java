@@ -26,7 +26,7 @@ import org.b3log.latke.user.UserService;
 /**
  * Google App Engine user service.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.0, Sep 27, 2011
  */
 public final class GAEUserService implements UserService {

@@ -22,7 +22,7 @@ import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 /**
  * User repository.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Oct 4, 2011
  */
 @Repository
@@ -33,7 +33,8 @@ public final class UserRepository extends AbstractRepository {
      */
     public UserRepository() {
         super("user");
-        
-        JdbcRepositories.initAllTables(); // Generates database tables
+
+        // Generates database tables
+        JdbcRepositories.initAllTables();
     }
 }

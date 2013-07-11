@@ -43,7 +43,7 @@ import org.b3log.latke.util.Serializer;
  *
  * @param <K> the key of an object
  * @param <V> the type of objects
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.6, Dec 3, 2011
  */
 public final class Memcache<K extends Serializable, V extends Serializable> implements Cache<K, V> {

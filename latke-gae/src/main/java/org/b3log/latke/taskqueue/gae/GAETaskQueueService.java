@@ -30,7 +30,7 @@ import org.b3log.latke.taskqueue.TaskQueueService;
 /**
  * Google App Engine task queue service.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Feb 21, 2012
  */
 public final class GAETaskQueueService implements TaskQueueService {

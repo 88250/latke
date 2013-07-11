@@ -27,20 +27,14 @@ import org.json.JSONObject;
 /**
  * User service.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Jul 2, 2013
  */
 @Service
 public class UserService {
-
-    /**
-     * Logger.
-     */
+    
     private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
-
-    /**
-     * User repository.
-     */
+    
     @Inject
     private UserRepository userRepository;
 
@@ -57,7 +51,8 @@ public class UserService {
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Saves user failed", e);
             
-            throw new IllegalStateException("Saves user failed"); // Throws an exception to rollback transaction
+            // Throws an exception to rollback transaction
+            throw new IllegalStateException("Saves user failed");
         }
 
         LOGGER.log(Level.INFO, "Saves a user successfully [userId={0}]", userId);

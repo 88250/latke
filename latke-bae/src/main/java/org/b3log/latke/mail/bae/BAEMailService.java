@@ -42,7 +42,7 @@ import org.b3log.latke.mail.MailServiceFactory;
  * for more details.
  * </p>
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.0, May 16, 2013
  */
 public final class BAEMailService implements MailService {

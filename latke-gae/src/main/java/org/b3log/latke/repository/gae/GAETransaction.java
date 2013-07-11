@@ -36,7 +36,7 @@ import org.json.JSONObject;
  * {@link #remove(java.lang.String) remove} will effect on the {@link  #cache transaction cache}, operation results specified by id.
  * </p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.8, Dec 3, 2011
  * @see GAERepository
  */

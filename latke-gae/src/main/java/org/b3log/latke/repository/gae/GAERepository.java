@@ -87,7 +87,7 @@ import org.json.JSONObject;
  * {@link #CACHE Repository cache} is used to cache the {@link #get(java.lang.String) get} and 
  * {@link #get(org.b3log.latke.repository.Query) query} results if {@link #cacheEnabled enabled} caching.
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.6.1, Mar 6, 2013
  * @see Query
  * @see GAETransaction

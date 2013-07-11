@@ -21,7 +21,7 @@ import org.apache.maven.plugin.logging.Log;
 /**
  * Abstract sources processing task for compression (minimization).
  * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Sep 3, 2011
  */
 public abstract class SourcesProcessor implements Runnable {
