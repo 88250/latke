@@ -61,7 +61,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.5, May 28, 2013
+ * @version 1.0.3.6, Jul 18, 2013
  * @since 0.3.1
  */
 @SuppressWarnings("unchecked")
@@ -155,7 +155,7 @@ public final class PageCaches {
         if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
             int maxCnt = Integer.MAX_VALUE;
 
-            final String maxPageCntStr = Latkes.getLocalProperty("cache.maxPageCnt");
+            final String maxPageCntStr = Latkes.getMaxPageCacheCnt();
 
             if (!Strings.isEmptyOrNull(maxPageCntStr)) {
                 maxCnt = Integer.parseInt(maxPageCntStr);

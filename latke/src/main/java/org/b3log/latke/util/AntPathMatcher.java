@@ -62,6 +62,7 @@ public final class AntPathMatcher {
 
     /** Default path separator: "/" */
     private static final String DEFAULT_PATH_SEPARATOR = "/";
+
     private static final String pathSeparator = DEFAULT_PATH_SEPARATOR;
 
     /**
@@ -445,18 +446,14 @@ public final class AntPathMatcher {
      * @param str the String to tokenize
      * @param delimiters the delimiter characters, assembled as String
      * (each of those characters is individually considered as delimiter)
-     * @param trimTokens trim the tokens via String's <code>trim</code>
-     * @param ignoreEmptyTokens omit empty tokens from the result array
      * (only applies to tokens that are empty after trimming; StringTokenizer
      * will not consider subsequent delimiters as token in the first place).
      * @return an array of the tokens (<code>null</code> if the input String
      * was <code>null</code>)
      * @see java.util.StringTokenizer
      * @see java.lang.String#trim()
-     * @see #delimitedListToStringArray
      */
-    private static String[] tokenizeToStringArray(
-        String str, String delimiters) {
+    private static String[] tokenizeToStringArray(String str, String delimiters) {
 
         if (str == null) {
             return null;

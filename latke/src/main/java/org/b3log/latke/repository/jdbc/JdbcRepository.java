@@ -60,7 +60,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.4, May 30, 2013
+ * @version 1.0.1.5, Jul 18, 2013
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -126,10 +126,10 @@ public final class JdbcRepository implements Repository {
         if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
             int maxCnt = Integer.MAX_VALUE;
 
-            final String maxPageCntStr = Latkes.getLocalProperty("cache.maxPageCnt");
+            final String maxDataCntStr = Latkes.getMaxDataCacheCnt();
 
-            if (!Strings.isEmptyOrNull(maxPageCntStr)) {
-                maxCnt = Integer.parseInt(maxPageCntStr);
+            if (!Strings.isEmptyOrNull(maxDataCntStr)) {
+                maxCnt = Integer.parseInt(maxDataCntStr);
             }
 
             if (0 >= maxCnt) {
