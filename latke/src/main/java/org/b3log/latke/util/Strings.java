@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.2, Apr 2, 2013
+ * @version 1.0.2.3, Aug 29, 2013
  */
 public final class Strings {
 
@@ -164,7 +164,7 @@ public final class Strings {
      * {@code null}, returns {@code false} otherwise
      */
     public static boolean isEmptyOrNull(final String string) {
-        return string == null || string.trim().length() == 0;
+        return string == null || string.length() == 0;
     }
 
     /**
