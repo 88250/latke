@@ -521,7 +521,7 @@ public final class JdbcRepository implements Repository {
         final int pageSize = query.getPageSize();
         // final Map<String, SortDirection> sorts = query.getSorts();
         // final Set<Projection> projections = query.getProjections();
-        // Asssumes the application call need to ccount page
+        // Asssumes the application call need to count page
         int pageCount = -1;
 
         // If the application caller need not to count page, gets the page count

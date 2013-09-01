@@ -39,14 +39,13 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
-import org.b3log.latke.util.Stopwatchs;
 
 
 /**
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.0, Apr 5, 2012
+ * @version 1.0.3.1, Aug 29, 2012
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -92,37 +91,23 @@ public abstract class AbstractServletListener implements ServletContextListener,
         LOGGER.log(Level.INFO, "Server [webRoot={0}, contextPath={1}]",
             new Object[] {webRoot, servletContextEvent.getServletContext().getContextPath()});
 
-        Stopwatchs.start("Init Latke IoC container");
         try {
-            Stopwatchs.start("Discover bean classes");
             final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
 
-            Stopwatchs.end();
-
-            Stopwatchs.start("Create beans");
             Lifecycle.startApplication(beanClasses); // Starts Latke IoC container
-            Stopwatchs.end();
 
             final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
 
             // Build processors
             final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
 
-            Stopwatchs.start("Build processor methods");
             RequestProcessors.buildProcessorMethods(processBeans);
-            Stopwatchs.end();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Initializes request processors failed", e);
-            
+
             throw new IllegalStateException("Initializes request processors failed");
-        } finally {
-            Stopwatchs.end();
-            
-            LOGGER.debug(Stopwatchs.getTimingStat());
-            
-            Stopwatchs.release();
         }
-        
+
         CronService.start();
     }
 
