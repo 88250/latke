@@ -30,7 +30,7 @@ import org.b3log.latke.repository.impl.UserRepositoryImpl;
  * Javassist method handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 8, 2013
+ * @version 1.0.1.0, Sep 2, 2013
  */
 public final class JavassistMethodHandler implements MethodHandler {
 
@@ -54,10 +54,12 @@ public final class JavassistMethodHandler implements MethodHandler {
         LOGGER.trace("Processing invocation: " + method.toString());
 
         final boolean withTransaction = method.isAnnotationPresent(Transactional.class);
+        final boolean alreadyInTransaction = UserRepositoryImpl.getInstance().hasTransactionBegun();
 
         Transaction transaction = null;
-
-        if (withTransaction) {
+        
+        // Transaction Propagation: REQUIRED (Support a current transaction, create a new one if none exists)
+        if (withTransaction && !alreadyInTransaction) {
             transaction = UserRepositoryImpl.getInstance().beginTransaction();
         }
 
@@ -66,13 +68,13 @@ public final class JavassistMethodHandler implements MethodHandler {
         try {
             ret = proceed.invoke(proxy, params);
 
-            if (withTransaction) {
+            if (withTransaction && !alreadyInTransaction) {
                 transaction.commit();
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Invoke [" + method.toString() + "] failed", e);
 
-            if (withTransaction) {
+            if (withTransaction && !alreadyInTransaction) {
                 if (null != transaction && transaction.isActive()) {
                     transaction.rollback();
                 }
