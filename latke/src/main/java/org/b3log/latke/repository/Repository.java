@@ -27,7 +27,7 @@ import org.json.JSONObject;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.2, Mar 6, 2013
+ * @version 1.0.2.3, Sep 2, 2013
  */
 public interface Repository {
 
@@ -91,10 +91,10 @@ public interface Repository {
      * Gets json objects by the specified query.
      * 
      * <h4>Pagination</h4>
-     * If the "paginationPageCount" has been specified by caller (as the argument
-     * {@link Query#pageCount}), the value will be used in the returned value. 
-     * In other words, the page count result will not be calculated by this 
-     * interface.
+     * If the "paginationPageCount" has been specified (not with {@code -1} or {@code null}) by caller 
+     * (as the argument {@link Query#pageCount}), the value will be used in the returned value. In other words, the page count result will 
+     * not be calculated by this interface, otherwise, the returned value pagination.paginationPageCount and 
+     * pagination.paginationRecordCount will be calculated with query condition.
      * 
      * <h4>Caching</h4>
      * Each object in the result list (specified by {@value org.b3log.latke.Keys#RESULTS} 
@@ -115,7 +115,9 @@ public interface Repository {
      * <pre>
      * {
      *     "pagination": {
-     *       "paginationPageCount": 88250 // May be specified by the specified query.pageCount
+     *       "paginationPageCount": 10, // May be specified by the specified query.pageCount
+     *       "paginationRecordCount": "100" // If query.pageCount has been specified with not {@code -1} or {@code null}, this value will 
+     *                                         be {@code 0} also
      *     },
      *     "rslts": [{
      *         "oId": "...."

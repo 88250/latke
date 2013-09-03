@@ -88,7 +88,7 @@ import org.json.JSONObject;
  * {@link #get(org.b3log.latke.repository.Query) query} results if {@link #cacheEnabled enabled} caching.
  * 
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.6.1, Mar 6, 2013
+ * @version 1.0.7.1, Sep 2, 2013
  * @see Query
  * @see GAETransaction
  */
@@ -598,7 +598,7 @@ public final class GAERepository implements Repository {
         // Asssumes the application call need to count page
         int pageCount = -1;
 
-        // If the application caller need not to count page, gets the page count the caller specified 
+        // If the application caller dose NOT want to count page, gets the page count the caller specified
         if (null != query.getPageCount()) {
             pageCount = query.getPageCount();
         }
@@ -625,7 +625,8 @@ public final class GAERepository implements Repository {
      *
      * @param currentPageNum the specified current page number
      * @param pageSize the specified page size
-     * @param pageCount the specified page count
+     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise, 
+     * the returned pageCnt will be this pageCount, and recordCnt will be {@code 0}, means these values will not be calculated
      * @param projections the specified projections
      * @param sorts the specified sorts
      * @param filter the specified filter
@@ -939,13 +940,16 @@ public final class GAERepository implements Repository {
      * @param query the specified query
      * @param currentPageNum the specified current page number
      * @param pageSize the specified page size
-     * @param pageCount the specified page count
+     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise, 
+     * the returned pageCnt will be this pageCount, and recordCnt will be {@code 0}, means these values will not be calculated
      * @param cacheKey the specified cache key of a query
      * @return for example,
      * <pre>
      * {
      *     "pagination": {
-     *       "paginationPageCount": 88250
+     *       "paginationPageCount": 10, // May be specified by the specified query.pageCount
+     *       "paginationRecordCount": "100" // If query.pageCount has been specified with not {@code -1} or {@code null}, this value will 
+     *                                         be {@code 0} also
      *     },
      *     "rslts": [{
      *         "oId": "...."
@@ -959,6 +963,7 @@ public final class GAERepository implements Repository {
         final PreparedQuery preparedQuery = datastoreService.prepare(query);
 
         int pageCnt = pageCount;
+        int recordCnt = 0;
 
         if (-1 == pageCnt) { // Application caller dose not specify the page count
             // Calculates the page count
@@ -986,6 +991,7 @@ public final class GAERepository implements Repository {
                 }
             }
 
+            recordCnt = (int) count;
             pageCnt = (int) Math.ceil((double) count / (double) pageSize);
         }
 
@@ -996,6 +1002,7 @@ public final class GAERepository implements Repository {
 
             ret.put(Pagination.PAGINATION, pagination);
             pagination.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
+            pagination.put(Pagination.PAGINATION_RECORD_COUNT, recordCnt);
 
             QueryResultList<Entity> queryResultList;
 
@@ -1059,7 +1066,7 @@ public final class GAERepository implements Repository {
 
         return ret;
     }
-    
+
     @Override
     public boolean hasTransactionBegun() {
         return null != TX.get();

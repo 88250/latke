@@ -60,7 +60,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.5, Jul 18, 2013
+ * @version 1.0.2.5, Sep 2, 2013
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -519,13 +519,11 @@ public final class JdbcRepository implements Repository {
 
         final int currentPageNum = query.getCurrentPageNum();
         final int pageSize = query.getPageSize();
-        // final Map<String, SortDirection> sorts = query.getSorts();
-        // final Set<Projection> projections = query.getProjections();
+
         // Asssumes the application call need to count page
         int pageCount = -1;
 
-        // If the application caller need not to count page, gets the page count
-        // the caller specified
+        // If the application caller dose NOT want to count page, gets the page count the caller specified
         if (null != query.getPageCount()) {
             pageCount = query.getPageCount();
         }
@@ -535,16 +533,20 @@ public final class JdbcRepository implements Repository {
         final List<Object> paramList = new ArrayList<Object>();
 
         try {
-            final int pageCnt = get(currentPageNum, pageSize, pageCount, query, sql, paramList);
+            final Map<String, Object> paginationCnt = get(currentPageNum, pageSize, pageCount, query, sql, paramList);
 
             // page
             final JSONObject pagination = new JSONObject();
 
+            final int pageCnt = (Integer) paginationCnt.get(Pagination.PAGINATION_PAGE_COUNT);
+
             pagination.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
+            pagination.put(Pagination.PAGINATION_RECORD_COUNT, paginationCnt.get(Pagination.PAGINATION_RECORD_COUNT));
+
             ret.put(Pagination.PAGINATION, pagination);
 
             // result
-            if (pageCnt == 0) {
+            if (0 == pageCnt) {
                 ret.put(Keys.RESULTS, new JSONArray());
                 return ret;
             }
@@ -635,29 +637,28 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * 
      * getQuery sql.
      * 
-     * @param currentPageNum
-     *            currentPageNum
-     * @param pageSize
-     *            pageSize
-     * @param pageCount
-     *            pageCount
-     * @param query
-     *            query
-     * @param sql
-     *            sql
-     * @param paramList
-     *            paramList
-     * @return pageCnt
-     * @throws RepositoryException
-     *             RepositoryException
+     * @param currentPageNum currentPageNum
+     * @param pageSize pageSize
+     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise, 
+     * the returned pageCnt will be this pageCount, and recordCnt will be {@code 0}, means these values will not be calculated
+     * @param query query
+     * @param sql sql
+     * @param paramList paramList
+     * @return &lt;pageCnt, Integer&gt;,<br/>
+     *          &lt;recordCnt, Integer&gt;<br/>
+     * @throws RepositoryException RepositoryException
      */
-    private int get(final int currentPageNum, final int pageSize,
-        final int pageCount, final Query query, final StringBuilder sql,
-        final List<Object> paramList) throws RepositoryException {
-        int ret = pageCount;
+    private Map<String, Object> get(final int currentPageNum, final int pageSize, final int pageCount,
+        final Query query, final StringBuilder sql, final List<Object> paramList) throws RepositoryException {
+        final Map<String, Object> ret = new HashMap<String, Object>();
+
+        int pageCnt = pageCount;
+        int recordCnt = 0;
+
+        ret.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
+        ret.put(Pagination.PAGINATION_RECORD_COUNT, recordCnt);
 
         final StringBuilder selectSql = new StringBuilder();
         final StringBuilder filterSql = new StringBuilder();
@@ -674,17 +675,20 @@ public final class JdbcRepository implements Repository {
                 countSql.append(" where ").append(filterSql);
             }
 
-            final long count = count(countSql, paramList);
+            recordCnt = (int) count(countSql, paramList);
 
-            ret = (int) Math.ceil((double) count / (double) pageSize);
-
-            if (ret == 0) {
-                return 0;
+            if (0 == recordCnt) {
+                return ret;
             }
+
+            pageCnt = (int) Math.ceil((double) recordCnt / (double) pageSize);
         }
 
-        if (currentPageNum > ret) {
-            LOGGER.log(Level.WARN, "Current page num [{0}] > page count [{1}]", new Object[] {currentPageNum, ret});
+        ret.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
+        ret.put(Pagination.PAGINATION_RECORD_COUNT, recordCnt);
+
+        if (currentPageNum > pageCnt) {
+            LOGGER.log(Level.WARN, "Current page num [{0}] > page count [{1}]", new Object[] {currentPageNum, pageCnt});
         }
 
         getQuerySql(currentPageNum, pageSize, selectSql, filterSql, orderBySql, sql);
