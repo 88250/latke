@@ -25,23 +25,15 @@ import java.util.Set;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
 
 
 /**
  * Abstract context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.7, Mar 30, 2010
+ * @version 1.0.1.8, Sep 5, 2013
  */
 public abstract class AbstractContext implements LatkeBeansContext {
-
-    /**
-     * Bean manager.
-     */
-    @Inject
-    private BeanManager beanManager;
 
     /**
      * Whether the context is active or not.
