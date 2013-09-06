@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.enterprise.inject.spi.Bean;
-import javax.inject.Inject;
 import javax.inject.Named;
 import org.b3log.latke.ioc.bean.BeanImpl;
 import org.b3log.latke.ioc.bean.LatkeBean;
@@ -82,7 +81,6 @@ public final class ConfiguratorImpl implements Configurator {
      * 
      * @param beanManager the specified bean manager
      */
-    @Inject
     public ConfiguratorImpl(final LatkeBeanManager beanManager) {
         this.beanManager = beanManager;
 
