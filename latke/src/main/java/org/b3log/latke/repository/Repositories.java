@@ -39,7 +39,7 @@ import org.json.JSONObject;
  * Repository utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.8, Oct 18, 2012
+ * @version 1.0.0.9, Sep 10, 2013
  */
 public final class Repositories {
 
@@ -157,7 +157,7 @@ public final class Repositories {
      * keys definitions.
      * </p>
      * 
-     * @param repositoryName the given repository name
+     * @param repositoryName the given repository name (maybe with table name prefix)
      * @param jsonObject the specified json object
      * @param ignoredKeys the specified keys to ignore
      * @throws RepositoryException if the specified json object can not be 
@@ -237,7 +237,7 @@ public final class Repositories {
     /**
      * Gets the keys description of an repository specified by the given repository name.
      * 
-     * @param repositoryName the given repository name
+     * @param repositoryName the given repository name (maybe with table name prefix)
      * @return keys description, returns {@code null} if not found
      */
     public static JSONArray getRepositoryKeysDescription(final String repositoryName) {

@@ -23,6 +23,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
@@ -335,7 +336,12 @@ public class RepositoryAccessor {
         Repository repository = Repositories.getRepository(repositoryName);
 
         if (null == repository) {
-            repository = new AbstractRepository(repositoryName) {};
+            final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
+                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_"
+                : "";
+            final String withoutTablePrefix = StringUtils.substringAfter(repositoryName, tableNamePrefix);
+
+            repository = new AbstractRepository(withoutTablePrefix) {};
         }
 
         repository.setCacheEnabled(false);

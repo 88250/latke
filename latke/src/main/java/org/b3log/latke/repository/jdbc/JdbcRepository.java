@@ -910,6 +910,13 @@ public final class JdbcRepository implements Repository {
         return count;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * <b>Note</b>: The returned name maybe with table name prefix.
+     * </p>
+     */
     @Override
     public String getName() {
         final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
