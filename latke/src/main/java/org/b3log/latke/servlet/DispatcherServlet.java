@@ -50,6 +50,7 @@ public final class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+
         sysHandler.add(new StaticResourceHandler(getServletContext()));
         sysHandler.add(new RequestMatchHandler());
         sysHandler.add(new AdviceHandler());

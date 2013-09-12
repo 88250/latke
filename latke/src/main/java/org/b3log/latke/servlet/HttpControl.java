@@ -34,11 +34,10 @@ public class HttpControl {
 
     public void nextHandler() {
         if (ihandlerIterable.hasNext()) {
-
             try {
                 ihandlerIterable.next().handle(httpRequestContext, this);
             } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
     }
