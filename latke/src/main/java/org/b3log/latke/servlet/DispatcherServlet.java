@@ -61,9 +61,11 @@ public final class DispatcherServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         HTTPRequestContext httpRequestContext = new HTTPRequestContext();
+
         httpRequestContext.setRequest(req);
         httpRequestContext.setResponse(resp);
         HttpControl httpControl = new HttpControl(sysHandler.iterator(), httpRequestContext);
+
         httpControl.nextHandler();
     }
 }

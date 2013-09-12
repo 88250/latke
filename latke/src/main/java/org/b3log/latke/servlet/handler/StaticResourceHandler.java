@@ -1,4 +1,20 @@
+/*
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.b3log.latke.servlet.handler;
+
 
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -11,6 +27,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * User: steveny
@@ -52,18 +69,16 @@ public class StaticResourceHandler implements Ihandler {
     /**
      * the holder of All option Servlet Name.
      */
-    private static final String[] OPTION_SERVLET_NAME = new String[]{
-            COMMON_DEFAULT_SERVLET_NAME, GAE_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
-            WEBSPHERE_DEFAULT_SERVLET_NAME};
+    private static final String[] OPTION_SERVLET_NAME = new String[] {
+        COMMON_DEFAULT_SERVLET_NAME, GAE_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
+        WEBSPHERE_DEFAULT_SERVLET_NAME};
 
     /**
      * default servlet which container provide to resolve static resource.
      */
     private RequestDispatcher requestDispatcher;
 
-
     private String defaultServletName;
-
 
     public StaticResourceHandler(ServletContext servletContext) {
 
@@ -76,8 +91,8 @@ public class StaticResourceHandler implements Ihandler {
         }
         if (requestDispatcher == null) {
             throw new IllegalStateException(
-                    "Unable to locate the default servlet for serving static content. "
-                            + "Please report this bug on https://github.com/b3log/b3log-latke/issues/new");
+                "Unable to locate the default servlet for serving static content. "
+                    + "Please report this bug on https://github.com/b3log/b3log-latke/issues/new");
         }
 
         LOGGER.log(Level.DEBUG, "The default servlet for serving static resource is [{0}]", defaultServletName);
@@ -92,7 +107,7 @@ public class StaticResourceHandler implements Ihandler {
         if (StaticResources.isStatic(request)) {
             if (null == requestDispatcher) {
                 throw new IllegalStateException(
-                        "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
+                    "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
             }
             requestDispatcher.forward(request, response);
         } else {
