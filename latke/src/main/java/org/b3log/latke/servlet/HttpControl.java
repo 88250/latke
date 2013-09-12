@@ -14,6 +14,7 @@ import java.util.Map;
 public class HttpControl {
 
     public HttpControl(Iterator<Ihandler> ihandlerIterable, HTTPRequestContext httpRequestContext) {
+
         this.ihandlerIterable = ihandlerIterable;
         this.httpRequestContext = httpRequestContext;
     }
