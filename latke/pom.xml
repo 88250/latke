@@ -310,6 +310,16 @@
             <groupId>org.jboss</groupId>
             <artifactId>jboss-vfs</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.weborganic</groupId>
+            <artifactId>furi</artifactId>
+            <version>0.8.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/wo-furi-0.8.4.jar</systemPath>
+        </dependency>
+
+
     </dependencies>
 
     <build>
