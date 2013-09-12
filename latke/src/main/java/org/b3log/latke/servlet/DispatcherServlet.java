@@ -17,8 +17,7 @@ package org.b3log.latke.servlet;
 
 
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.handler.Ihandler;
-import org.b3log.latke.servlet.handler.StaticResourceHandler;
+import org.b3log.latke.servlet.handler.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,6 +51,9 @@ public final class DispatcherServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         sysHandler.add(new StaticResourceHandler(getServletContext()));
+        sysHandler.add(new RequestMatchHandler());
+        sysHandler.add(new AdviceHandler());
+        sysHandler.add(new MethodInvokeHandler());
     }
 
     @Override

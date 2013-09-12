@@ -2,7 +2,9 @@ package org.b3log.latke.servlet;
 
 import org.b3log.latke.servlet.handler.Ihandler;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * User: steveny
@@ -12,7 +14,6 @@ import java.util.Iterator;
 public class HttpControl {
 
     public HttpControl(Iterator<Ihandler> ihandlerIterable, HTTPRequestContext httpRequestContext) {
-
         this.ihandlerIterable = ihandlerIterable;
         this.httpRequestContext = httpRequestContext;
     }
@@ -20,6 +21,16 @@ public class HttpControl {
     private Iterator<Ihandler> ihandlerIterable;
 
     private HTTPRequestContext httpRequestContext;
+
+    private Map<String, Object> controlContext = new HashMap<String, Object>();
+
+    public void data(String key, String value) {
+        controlContext.put(key, value);
+    }
+
+    public Object data(String key) {
+        return controlContext.get(key);
+    }
 
     public void nextHandler() {
         if (ihandlerIterable.hasNext()) {
