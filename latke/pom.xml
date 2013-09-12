@@ -316,7 +316,7 @@
             <artifactId>furi</artifactId>
             <version>0.8.4</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/wo-furi-0.8.4.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/lib/wo-furi-0.8.4.jar</systemPath>
         </dependency>
 
 
