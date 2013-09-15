@@ -28,7 +28,6 @@ public class MatchResult {
 
     private final List<AbstractHTTPResponseRenderer> rendererList = new ArrayList<AbstractHTTPResponseRenderer>();
 
-
     MatchResult(ProcessorInfo processorInfo, String requestURI, String matchedMethod, String matchedPattern) {
         this.processorInfo = processorInfo;
         this.requestURI = requestURI;
