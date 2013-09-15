@@ -22,7 +22,7 @@ public class MatchResult {
 
     private String matchedPattern;
 
-    private Method invokeMethond;
+    private Method invokeMethod;
 
     private Map<String, Object> mapValues;
 
@@ -34,7 +34,7 @@ public class MatchResult {
         this.requestURI = requestURI;
         this.matchedMethod = matchedMethod;
         this.matchedPattern = matchedPattern;
-        this.invokeMethond = processorInfo.getInvokeHolder();
+        this.invokeMethod = processorInfo.getInvokeHolder();
     }
 
     public MatchResult() {
@@ -80,12 +80,12 @@ public class MatchResult {
         this.mapValues = mapValues;
     }
 
-    public Method getInvokeMethond() {
-        return invokeMethond;
+    public Method getInvokeMethod() {
+        return invokeMethod;
     }
 
-    public void setInvokeMethond(Method invokeMethond) {
-        this.invokeMethond = invokeMethond;
+    public void setInvokeMethod(Method invokeMethod) {
+        this.invokeMethod = invokeMethod;
     }
 
     public void addRenders(AbstractHTTPResponseRenderer ins) {

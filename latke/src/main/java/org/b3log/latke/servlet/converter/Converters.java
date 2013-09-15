@@ -53,8 +53,6 @@ public class Converters {
     }
 
 
-
-
 }
 
 interface IConverters {
@@ -124,7 +122,7 @@ class RendererConvert implements IConverters {
     public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
 
         final AbstractHTTPResponseRenderer ins = (AbstractHTTPResponseRenderer) parameterType.newInstance();
-        final String rid = getRendererId(result.getInvokeMethond().getDeclaringClass(), result.getInvokeMethond(), sequence);
+        final String rid = getRendererId(result.getInvokeMethod().getDeclaringClass(), result.getInvokeMethod(), sequence);
         ins.setRendererId(rid);
         result.addRenders(ins);
         return ins;
@@ -178,24 +176,32 @@ class RendererConvert implements IConverters {
 }
 
 
- class PathVariableConvert implements IConverters {
+class PathVariableConvert implements IConverters {
     @Override
     public Boolean isMatched(Class<?> parameterType, String paramterName) {
-         return true;
+        return true;
     }
 
     @Override
     public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
 
         Object ret = result.getMapValues().get(paramterName);
-        if(ret!=null){
-
+        if (ret != null) {
+            // re-design
         }
+        return null;
+    }
 
-
-
-
-
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    /**
+     * get the converter in this method,using cache.
+     *
+     * @param convertClass the class of {@link ConvertSupport}
+     * @return {@link ConvertSupport}
+     * @throws Exception Exception
+     */
+    private static ConvertSupport getConverter(final Class<? extends ConvertSupport> convertClass) throws Exception {
+        ConvertSupport ret = convertClass.newInstance();
+        //do not cache
+        return ret;
     }
 }
