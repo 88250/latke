@@ -22,10 +22,8 @@ public class ResultRenderHandler implements Ihandler {
 
         if (response.isCommitted()) { // Sends rdirect or send error
             final PrintWriter writer = response.getWriter();
-
             writer.flush();
             writer.close();
-
             return;
         }
 
