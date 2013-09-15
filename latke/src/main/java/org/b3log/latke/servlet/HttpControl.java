@@ -42,7 +42,7 @@ public class HttpControl {
 
     private Map<String, Object> controlContext = new HashMap<String, Object>();
 
-    public void data(String key, String value) {
+    public void data(String key, Object value) {
         controlContext.put(key, value);
     }
 

@@ -76,6 +76,7 @@ public @interface RequestProcessing {
      * means to serve /index.
      * </p>
      */
+    @Deprecated
     boolean isWithContextPath() default true;
 
     /**
