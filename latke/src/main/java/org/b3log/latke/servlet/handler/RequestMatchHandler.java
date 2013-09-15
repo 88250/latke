@@ -54,7 +54,7 @@ public class RequestMatchHandler implements Ihandler {
     /**
      * the shared-matched-result-data name.
      */
-    private static final String MATCH_RESULT = "MATCH_RESULT";
+    public static final String MATCH_RESULT = "MATCH_RESULT";
 
     /**
      * all processors holder for match.
@@ -81,7 +81,7 @@ public class RequestMatchHandler implements Ihandler {
         MatchResult result = doMatch(requestURI, method);
 
         if (result != null) {
-            //do loger
+            //do logger
             httpControl.data(MATCH_RESULT, result);
             httpControl.nextHandler();
         } else {

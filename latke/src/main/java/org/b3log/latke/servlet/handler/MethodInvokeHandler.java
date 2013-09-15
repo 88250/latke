@@ -16,16 +16,54 @@
 package org.b3log.latke.servlet.handler;
 
 
+import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
 
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * User: steveny
  * Date: 13-9-12
  * Time: 下午4:30
  */
-public class MethodInvokeHandler implements  Ihandler {
+public class MethodInvokeHandler implements Ihandler {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(MethodInvokeHandler.class.getName());
+
+    /**
+     * the shared-invoke-result-data name.
+     */
+    public static final String INVOKE_RESULT = "INVOKE_RESULT";
+
+
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {}
+    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
+
+        MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
+        Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
+
+        //get class instance
+        final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+        final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
+
+        final Map<String, Object> args = new LinkedHashMap<String, Object>();
+
+        final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
+        for (int i = 0; i < parameterTypes.length; i++) {
+
+        }
+
+        final Object ret = invokeHolder.invoke(classHolder, args.values().toArray());
+
+        httpControl.data(INVOKE_RESULT, ret);
+        httpControl.nextHandler();
+    }
 }
