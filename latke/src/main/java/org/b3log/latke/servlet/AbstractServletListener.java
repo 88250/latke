@@ -16,19 +16,6 @@
 package org.b3log.latke.servlet;
 
 
-import java.io.File;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Set;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.LatkeBeanManager;
@@ -39,6 +26,16 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+import java.io.File;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Set;
 
 
 /**

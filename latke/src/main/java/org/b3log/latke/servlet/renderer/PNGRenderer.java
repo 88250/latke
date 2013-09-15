@@ -16,13 +16,14 @@
 package org.b3log.latke.servlet.renderer;
 
 
-import java.io.IOException;
-import java.io.OutputStream;
-import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.image.Image;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 /**

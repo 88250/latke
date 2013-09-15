@@ -16,10 +16,11 @@
 package org.b3log.latke.servlet.advice;
 
 
-import java.util.Map;
+import org.b3log.latke.servlet.HTTPRequestContext;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import java.util.Map;
 
 
 /**

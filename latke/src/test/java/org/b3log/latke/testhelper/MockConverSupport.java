@@ -39,7 +39,6 @@ public class MockConverSupport extends ConvertSupport {
             } catch (final ParseException e) {
                 e.printStackTrace();
             }
-
         }
 
         return super.convert(pName, value, clazz);

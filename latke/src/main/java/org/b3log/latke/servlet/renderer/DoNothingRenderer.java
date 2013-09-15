@@ -16,8 +16,9 @@
 package org.b3log.latke.servlet.renderer;
 
 
-import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**

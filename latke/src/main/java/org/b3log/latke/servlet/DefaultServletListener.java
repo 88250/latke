@@ -16,12 +16,13 @@
 package org.b3log.latke.servlet;
 
 
-import java.io.File;
-import java.io.IOException;
+import org.b3log.latke.util.freemarker.Templates;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpSessionEvent;
-import org.b3log.latke.util.freemarker.Templates;
+import java.io.File;
+import java.io.IOException;
 
 
 /**

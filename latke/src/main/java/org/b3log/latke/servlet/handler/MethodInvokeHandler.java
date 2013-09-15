@@ -51,7 +51,7 @@ public class MethodInvokeHandler implements Ihandler {
     public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
 
         MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
-        Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
+        Method invokeHolder = result.getInvokeMethond();
 
         //get class instance
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
@@ -62,7 +62,7 @@ public class MethodInvokeHandler implements Ihandler {
         final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
         final String[] paramterNames = getParamterNames(invokeHolder);
         for (int i = 0; i < parameterTypes.length; i++) {
-            doParamter(args, parameterTypes[i], paramterNames[i], context,result);
+            doParamter(args, parameterTypes[i], paramterNames[i], context, result,i);
         }
 
         final Object ret = invokeHolder.invoke(classHolder, args.values().toArray());
@@ -71,10 +71,10 @@ public class MethodInvokeHandler implements Ihandler {
         httpControl.nextHandler();
     }
 
-    private void doParamter(Map<String, Object> args, Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result) {
+    private void doParamter(Map<String, Object> args, Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) {
 
-        //first for special-class-convert(mainly for context) then name-matched-convert
-
+        Object ret = Converters.doConvert(parameterType, paramterName, context, result,sequence);
+        args.put(paramterName,ret);
     }
 
     private String[] getParamterNames(Method invokeMethond) {

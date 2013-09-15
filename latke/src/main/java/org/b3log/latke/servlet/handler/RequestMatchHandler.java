@@ -31,13 +31,15 @@ import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.RegexMatcher;
-import org.b3log.latke.util.RegexPathMatcher;
 import org.b3log.latke.util.Strings;
 import org.weborganic.furi.URIResolveResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -257,65 +259,5 @@ class ProcessorInfo {
     }
 }
 
-class MatchResult {
 
-    private ProcessorInfo processorInfo;
 
-    private String requestURI;
-
-    private String matchedMethod;
-
-    private String matchedPattern;
-
-    private Map<String, Object> mapValues;
-
-    MatchResult(ProcessorInfo processorInfo, String requestURI, String matchedMethod, String matchedPattern) {
-        this.processorInfo = processorInfo;
-        this.requestURI = requestURI;
-        this.matchedMethod = matchedMethod;
-        this.matchedPattern = matchedPattern;
-    }
-
-    public MatchResult() {
-    }
-
-    ProcessorInfo getProcessorInfo() {
-        return processorInfo;
-    }
-
-    void setProcessorInfo(ProcessorInfo processorInfo) {
-        this.processorInfo = processorInfo;
-    }
-
-    Map<String, Object> getMapValues() {
-        return mapValues;
-    }
-
-    void setMapValues(Map<String, Object> mapValues) {
-        this.mapValues = mapValues;
-    }
-
-    String getRequestURI() {
-        return requestURI;
-    }
-
-    void setRequestURI(String requestURI) {
-        this.requestURI = requestURI;
-    }
-
-    String getMatchedMethod() {
-        return matchedMethod;
-    }
-
-    void setMatchedMethod(String matchedMethod) {
-        this.matchedMethod = matchedMethod;
-    }
-
-    String getMatchedPattern() {
-        return matchedPattern;
-    }
-
-    void setMatchedPattern(String matchedPattern) {
-        this.matchedPattern = matchedPattern;
-    }
-}

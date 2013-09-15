@@ -16,22 +16,23 @@
 package org.b3log.latke.servlet.renderer.freemarker;
 
 
-import java.io.StringWriter;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.lang.time.DateFormatUtils;
 import freemarker.template.Template;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
-import org.b3log.latke.servlet.HTTPRequestContext;
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.util.freemarker.Templates;
 import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.util.freemarker.Templates;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

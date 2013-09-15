@@ -16,9 +16,10 @@
 package org.b3log.latke.servlet.advice;
 
 
+import org.b3log.latke.servlet.HTTPRequestContext;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.b3log.latke.servlet.HTTPRequestContext;
 
 
 /**

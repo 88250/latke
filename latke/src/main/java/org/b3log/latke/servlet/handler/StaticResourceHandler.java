@@ -19,7 +19,6 @@ package org.b3log.latke.servlet.handler;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
-import org.b3log.latke.servlet.HTTPRequestDispatcher;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.util.StaticResources;
 
