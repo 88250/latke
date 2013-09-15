@@ -21,6 +21,9 @@ import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
+import org.b3log.latke.servlet.annotation.PathVariable;
+import org.b3log.latke.servlet.converter.Converters;
+import org.b3log.latke.util.ReflectHelper;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
@@ -57,13 +60,36 @@ public class MethodInvokeHandler implements Ihandler {
         final Map<String, Object> args = new LinkedHashMap<String, Object>();
 
         final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
+        final String[] paramterNames = getParamterNames(invokeHolder);
         for (int i = 0; i < parameterTypes.length; i++) {
-
+            doParamter(args, parameterTypes[i], paramterNames[i], context,result);
         }
 
         final Object ret = invokeHolder.invoke(classHolder, args.values().toArray());
 
         httpControl.data(INVOKE_RESULT, ret);
         httpControl.nextHandler();
+    }
+
+    private void doParamter(Map<String, Object> args, Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result) {
+
+        //first for special-class-convert(mainly for context) then name-matched-convert
+
+    }
+
+    private String[] getParamterNames(Method invokeMethond) {
+        String[] methodParamNames = ReflectHelper.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
+                invokeMethond.getParameterTypes());
+        int i = 0;
+
+        for (java.lang.annotation.Annotation[] annotations : invokeMethond.getParameterAnnotations()) {
+            for (java.lang.annotation.Annotation annotation : annotations) {
+                if (annotation instanceof PathVariable) {
+                    methodParamNames[i] = ((PathVariable) annotation).value();
+                }
+            }
+            i++;
+        }
+        return methodParamNames;
     }
 }
