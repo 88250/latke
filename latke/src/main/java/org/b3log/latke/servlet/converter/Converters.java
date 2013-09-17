@@ -22,6 +22,7 @@ import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.annotation.Render;
 import org.b3log.latke.servlet.handler.MatchResult;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +46,7 @@ public class Converters {
         registerConverters(new RequestConvert());
         registerConverters(new ResponseConvert());
         registerConverters(new RendererConvert());
+        registerConverters(new JSONObjectConvert());
         registerConverters(new PathVariableConvert());
 
     }
@@ -207,7 +209,17 @@ class PathVariableConvert implements IConverters {
         Object ret = result.getMapValues().get(paramterName);
 
         if (ret != null) {// re-design
+            return getConverter(result.getProcessorInfo().getConvertClass())
+                    .convert(paramterName, ret, parameterType);
         }
+
+        HttpServletRequest request = context.getRequest();
+        ret = (request.getParameter(paramterName));
+        if (ret != null) {// re-design
+            return getConverter(result.getProcessorInfo().getConvertClass())
+                    .convert(paramterName, ret, parameterType);
+        }
+
         return null;
     }
 
@@ -225,3 +237,33 @@ class PathVariableConvert implements IConverters {
         return ret;
     }
 }
+
+
+class JSONObjectConvert implements IConverters {
+
+    @Override
+    public Boolean isMatched(Class<?> parameterType, String paramterName) {
+
+        if (parameterType.equals(JSONObject.class)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
+
+        JSONObject ret = new JSONObject();
+
+        HttpServletRequest request = context.getRequest();
+        for (Object o : request.getParameterMap().keySet()) {
+            ret.put(String.valueOf(o), request.getParameterMap().get(o));
+        }
+        //
+        for (String key : result.getMapValues().keySet()) {
+            ret.put(key, result.getMapValues().get(key));
+        }
+        return ret;
+    }
+}
+
