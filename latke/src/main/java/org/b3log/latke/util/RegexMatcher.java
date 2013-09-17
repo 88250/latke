@@ -23,7 +23,6 @@ import org.weborganic.furi.URIResolver;
 
 public final class RegexMatcher {
 
-
     public static URIResolveResult match(final String pattern, final String requestPath) {
 
         URIResolver uriResolver = new URIResolver(requestPath);
@@ -36,6 +35,5 @@ public final class RegexMatcher {
     /**
      * Private constructor.
      */
-    private RegexMatcher() {
-    }
+    private RegexMatcher() {}
 }

@@ -27,13 +27,6 @@ import org.b3log.latke.servlet.HttpControl;
  */
 public class AdviceHandler implements Ihandler {
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
-
-
-
-
-
-
-    }
+    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {}
 }
 

@@ -53,6 +53,7 @@ public class RequestMatchHandler implements Ihandler {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(RequestMatchHandler.class.getName());
+
     /**
      * the shared-matched-result-data name.
      */
@@ -78,16 +79,15 @@ public class RequestMatchHandler implements Ihandler {
         String requestURI = getRequestURI(request);
         String method = getMethod(request);
 
-        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[]{requestURI, method});
+        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[] {requestURI, method});
 
         MatchResult result = doMatch(requestURI, method);
 
         if (result != null) {
-            //do logger
+            // do logger
             httpControl.data(MATCH_RESULT, result);
             httpControl.nextHandler();
-        } else {
-            //TODO
+        } else {// TODO
         }
     }
 
@@ -123,31 +123,33 @@ public class RequestMatchHandler implements Ihandler {
 
         switch (processorInfo.getUriPatternMode()) {
 
-            case ANT_PATH:
-                boolean ret = AntPathMatcher.match(uriPattern, requestURI);
-                if (ret) {
-                    return new MatchResult(processorInfo, requestURI, method, uriPattern);
+        case ANT_PATH:
+            boolean ret = AntPathMatcher.match(uriPattern, requestURI);
+
+            if (ret) {
+                return new MatchResult(processorInfo, requestURI, method, uriPattern);
+            }
+            break;
+
+        case REGEX:
+            URIResolveResult rett = RegexMatcher.match(uriPattern, requestURI);
+
+            if (rett.getStatus().equals(URIResolveResult.Status.RESOLVED)) {
+                MatchResult result = new MatchResult(processorInfo, requestURI, method, uriPattern);
+
+                HashMap<String, Object> map = new HashMap<String, Object>();
+
+                for (String s : rett.names()) {
+                    map.put(s, rett.get(s));
                 }
-                break;
+                result.setMapValues(map);
+                return result;
+            }
+            break;
 
-            case REGEX:
-                URIResolveResult rett = RegexMatcher.match(uriPattern, requestURI);
-                if (rett.getStatus().equals(URIResolveResult.Status.RESOLVED)) {
-                    MatchResult result = new MatchResult(processorInfo, requestURI, method, uriPattern);
-
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    for (String s : rett.names()) {
-                        map.put(s, rett.get(s));
-                    }
-                    result.setMapValues(map);
-                    return result;
-                }
-                break;
-
-            default:
-                throw new IllegalStateException(
-                        "Can not process URI pattern[uriPattern=" + uriPattern + ", mode="
-                                + processorInfo.getUriPatternMode() + "]");
+        default:
+            throw new IllegalStateException(
+                "Can not process URI pattern[uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
         }
         return null;
     }
@@ -186,7 +188,7 @@ public class RequestMatchHandler implements Ihandler {
                 }
 
                 LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]",
-                        new Object[]{clz.getCanonicalName(), mthd.getName()});
+                    new Object[] {clz.getCanonicalName(), mthd.getName()});
 
                 addProcessorInfo(requestProcessingMethodAnn, mthd);
             }
@@ -198,6 +200,7 @@ public class RequestMatchHandler implements Ihandler {
         // anotation to bean
 
         ProcessorInfo processorInfo = new ProcessorInfo();
+
         processorInfo.setPattern(requestProcessingMethodAnn.value());
         processorInfo.setUriPatternMode(requestProcessingMethodAnn.uriPatternsMode());
         processorInfo.setHttpMethod(requestProcessingMethodAnn.method());
@@ -258,6 +261,4 @@ class ProcessorInfo {
         return convertClass;
     }
 }
-
-
 

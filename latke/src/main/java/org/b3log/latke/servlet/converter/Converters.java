@@ -1,4 +1,20 @@
+/*
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.b3log.latke.servlet.converter;
+
 
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -13,6 +29,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * User: mainlove
  * Date: 13-9-15
@@ -23,20 +40,18 @@ public class Converters {
     private static final List<IConverters> convertersList = new ArrayList<IConverters>();
 
     static {
-        //first for special-class-convert(mainly for context) then name-matched-convert
+        // first for special-class-convert(mainly for context) then name-matched-convert
         registerConverters(new ContextConvert());
         registerConverters(new RequestConvert());
         registerConverters(new ResponseConvert());
         registerConverters(new RendererConvert());
         registerConverters(new PathVariableConvert());
 
-
     }
 
     public static void registerConverters(IConverters converter) {
         convertersList.add(converter);
     }
-
 
     public static Object doConvert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) {
 
@@ -45,15 +60,15 @@ public class Converters {
                 try {
                     return iConverters.convert(parameterType, paramterName, context, result, sequence);
                 } catch (Exception e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
                 }
             }
         }
         return null;
     }
 
-
 }
+
 
 interface IConverters {
 
@@ -62,6 +77,7 @@ interface IConverters {
     Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception;
 
 }
+
 
 class ContextConvert implements IConverters {
     @Override
@@ -78,6 +94,7 @@ class ContextConvert implements IConverters {
     }
 }
 
+
 class RequestConvert implements IConverters {
     @Override
     public Boolean isMatched(Class<?> parameterType, String paramterName) {
@@ -92,6 +109,7 @@ class RequestConvert implements IConverters {
         return context.getRequest();
     }
 }
+
 
 class ResponseConvert implements IConverters {
     @Override
@@ -108,11 +126,11 @@ class ResponseConvert implements IConverters {
     }
 }
 
+
 class RendererConvert implements IConverters {
     @Override
     public Boolean isMatched(Class<?> parameterType, String paramterName) {
-        if (AbstractHTTPResponseRenderer.class.isAssignableFrom(parameterType)
-                && !parameterType.equals(AbstractHTTPResponseRenderer.class)) {
+        if (AbstractHTTPResponseRenderer.class.isAssignableFrom(parameterType) && !parameterType.equals(AbstractHTTPResponseRenderer.class)) {
             return true;
         }
         return false;
@@ -123,6 +141,7 @@ class RendererConvert implements IConverters {
 
         final AbstractHTTPResponseRenderer ins = (AbstractHTTPResponseRenderer) parameterType.newInstance();
         final String rid = getRendererId(result.getInvokeMethod().getDeclaringClass(), result.getInvokeMethod(), sequence);
+
         ins.setRendererId(rid);
         result.addRenders(ins);
         return ins;
@@ -186,8 +205,8 @@ class PathVariableConvert implements IConverters {
     public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
 
         Object ret = result.getMapValues().get(paramterName);
-        if (ret != null) {
-            // re-design
+
+        if (ret != null) {// re-design
         }
         return null;
     }
@@ -201,7 +220,8 @@ class PathVariableConvert implements IConverters {
      */
     private static ConvertSupport getConverter(final Class<? extends ConvertSupport> convertClass) throws Exception {
         ConvertSupport ret = convertClass.newInstance();
-        //do not cache
+
+        // do not cache
         return ret;
     }
 }

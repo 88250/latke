@@ -29,6 +29,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 /**
  * User: steveny
  * Date: 13-9-12
@@ -46,14 +47,13 @@ public class MethodInvokeHandler implements Ihandler {
      */
     public static final String INVOKE_RESULT = "INVOKE_RESULT";
 
-
     @Override
     public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
 
         MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
         Method invokeHolder = result.getInvokeMethod();
 
-        //get class instance
+        // get class instance
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
 
@@ -61,8 +61,9 @@ public class MethodInvokeHandler implements Ihandler {
 
         final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
         final String[] paramterNames = getParamterNames(invokeHolder);
+
         for (int i = 0; i < parameterTypes.length; i++) {
-            doParamter(args, parameterTypes[i], paramterNames[i], context, result,i);
+            doParamter(args, parameterTypes[i], paramterNames[i], context, result, i);
         }
 
         final Object ret = invokeHolder.invoke(classHolder, args.values().toArray());
@@ -73,13 +74,14 @@ public class MethodInvokeHandler implements Ihandler {
 
     private void doParamter(Map<String, Object> args, Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) {
 
-        Object ret = Converters.doConvert(parameterType, paramterName, context, result,sequence);
-        args.put(paramterName,ret);
+        Object ret = Converters.doConvert(parameterType, paramterName, context, result, sequence);
+
+        args.put(paramterName, ret);
     }
 
     private String[] getParamterNames(Method invokeMethond) {
         String[] methodParamNames = ReflectHelper.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
-                invokeMethond.getParameterTypes());
+            invokeMethond.getParameterTypes());
         int i = 0;
 
         for (java.lang.annotation.Annotation[] annotations : invokeMethond.getParameterAnnotations()) {
