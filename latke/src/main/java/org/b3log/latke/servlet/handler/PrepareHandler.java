@@ -34,7 +34,7 @@ public class PrepareHandler implements Ihandler {
             doParamter(args, parameterTypes[i], paramterNames[i], context, result, i);
         }
 
-        httpControl.data("PREPARE_ARGS",args);
+        httpControl.data(PREPARE_ARGS,args);
         httpControl.nextHandler();
     }
 
