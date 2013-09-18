@@ -54,7 +54,6 @@ public class MethodInvokeHandler implements Ihandler {
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
 
-
         final Object ret = invokeHolder.invoke(classHolder, args.values().toArray());
 
         httpControl.data(INVOKE_RESULT, ret);
