@@ -15,7 +15,7 @@ import java.util.Map;
  * Date: 13-9-18
  * Time: 上午10:12
  */
-public class PrepareHandler implements Ihandler {
+public class PrepareAndExecuteHandler implements Ihandler {
 
     public static final String PREPARE_ARGS = "PREPARE_ARGS";
 
@@ -34,7 +34,12 @@ public class PrepareHandler implements Ihandler {
             doParamter(args, parameterTypes[i], paramterNames[i], context, result, i);
         }
 
-        httpControl.data(PREPARE_ARGS,args);
+        httpControl.data(PREPARE_ARGS, args);
+
+        //do advice and real method invoke
+        httpControl.nextHandler();
+
+        //do result return
         httpControl.nextHandler();
     }
 
