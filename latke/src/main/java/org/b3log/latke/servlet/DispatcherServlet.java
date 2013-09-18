@@ -55,6 +55,7 @@ public final class DispatcherServlet extends HttpServlet {
         sysHandler.add(new CacheHandler());
         sysHandler.add(new StaticResourceHandler(getServletContext()));
         sysHandler.add(new RequestMatchHandler());
+        sysHandler.add(new PrepareHandler());
         sysHandler.add(new AdviceHandler());
         sysHandler.add(new MethodInvokeHandler());
         sysHandler.add(new ResultRenderHandler());

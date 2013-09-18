@@ -19,6 +19,8 @@ package org.b3log.latke.servlet.handler;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
 
+import java.util.Map;
+
 
 /**
  * User: steveny
@@ -27,6 +29,14 @@ import org.b3log.latke.servlet.HttpControl;
  */
 public class AdviceHandler implements Ihandler {
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {}
+    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
+
+        MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
+        Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareHandler.PREPARE_ARGS);
+
+
+
+
+    }
 }
 

@@ -142,7 +142,7 @@ class RendererConvert implements IConverters {
     public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
 
         final AbstractHTTPResponseRenderer ins = (AbstractHTTPResponseRenderer) parameterType.newInstance();
-        final String rid = getRendererId(result.getInvokeMethod().getDeclaringClass(), result.getInvokeMethod(), sequence);
+        final String rid = getRendererId(result.getProcessorInfo().getInvokeHolder().getDeclaringClass(), result.getProcessorInfo().getInvokeHolder(), sequence);
 
         ins.setRendererId(rid);
         result.addRenders(ins);
