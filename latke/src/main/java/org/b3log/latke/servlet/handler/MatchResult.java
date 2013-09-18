@@ -78,8 +78,7 @@ public class MatchResult {
     /**
      * the default constructor.
      */
-    public MatchResult() {
-    }
+    public MatchResult() {}
 
     /**
      * getProcessorInfo.

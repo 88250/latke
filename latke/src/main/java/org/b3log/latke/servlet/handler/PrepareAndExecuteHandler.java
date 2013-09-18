@@ -91,7 +91,7 @@ public class PrepareAndExecuteHandler implements Ihandler {
      */
     private String[] getParamterNames(final Method invokeMethond) {
         final String[] methodParamNames = ReflectHelper.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
-                invokeMethond.getParameterTypes());
+            invokeMethond.getParameterTypes());
         int i = 0;
 
         // PathVariable will conver

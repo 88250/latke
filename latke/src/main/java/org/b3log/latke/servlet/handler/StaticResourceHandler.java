@@ -69,9 +69,9 @@ public class StaticResourceHandler implements Ihandler {
     /**
      * the holder of All option Servlet Name.
      */
-    private static final String[] OPTION_SERVLET_NAME = new String[]{
-            COMMON_DEFAULT_SERVLET_NAME, GAE_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
-            WEBSPHERE_DEFAULT_SERVLET_NAME};
+    private static final String[] OPTION_SERVLET_NAME = new String[] {
+        COMMON_DEFAULT_SERVLET_NAME, GAE_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
+        WEBSPHERE_DEFAULT_SERVLET_NAME};
 
     /**
      * default servlet which container provide to resolve static resource.
@@ -99,8 +99,8 @@ public class StaticResourceHandler implements Ihandler {
         }
         if (requestDispatcher == null) {
             throw new IllegalStateException(
-                    "Unable to locate the default servlet for serving static content. "
-                            + "Please report this bug on https://github.com/b3log/b3log-latke/issues/new");
+                "Unable to locate the default servlet for serving static content. "
+                    + "Please report this bug on https://github.com/b3log/b3log-latke/issues/new");
         }
 
         LOGGER.log(Level.DEBUG, "The default servlet for serving static resource is [{0}]", defaultServletName);
@@ -115,7 +115,7 @@ public class StaticResourceHandler implements Ihandler {
         if (StaticResources.isStatic(request)) {
             if (null == requestDispatcher) {
                 throw new IllegalStateException(
-                        "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
+                    "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
             }
             requestDispatcher.forward(request, response);
         } else {

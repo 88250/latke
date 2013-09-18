@@ -82,7 +82,7 @@ public class RequestMatchHandler implements Ihandler {
         final String requestURI = getRequestURI(request);
         final String method = getMethod(request);
 
-        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[]{requestURI, method});
+        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[] {requestURI, method});
 
         final MatchResult result = doMatch(requestURI, method);
 
@@ -144,33 +144,33 @@ public class RequestMatchHandler implements Ihandler {
 
         switch (processorInfo.getUriPatternMode()) {
 
-            case ANT_PATH:
-                final boolean ret = AntPathMatcher.match(uriPattern, requestURI);
+        case ANT_PATH:
+            final boolean ret = AntPathMatcher.match(uriPattern, requestURI);
 
-                if (ret) {
-                    return new MatchResult(processorInfo, requestURI, method, uriPattern);
+            if (ret) {
+                return new MatchResult(processorInfo, requestURI, method, uriPattern);
+            }
+            break;
+
+        case REGEX:
+            final URIResolveResult rett = RegexMatcher.match(uriPattern, requestURI);
+
+            if (rett.getStatus().equals(URIResolveResult.Status.RESOLVED)) {
+                final MatchResult result = new MatchResult(processorInfo, requestURI, method, uriPattern);
+
+                final HashMap<String, Object> map = new HashMap<String, Object>();
+
+                for (String s : rett.names()) {
+                    map.put(s, rett.get(s));
                 }
-                break;
+                result.setMapValues(map);
+                return result;
+            }
+            break;
 
-            case REGEX:
-                final URIResolveResult rett = RegexMatcher.match(uriPattern, requestURI);
-
-                if (rett.getStatus().equals(URIResolveResult.Status.RESOLVED)) {
-                    final MatchResult result = new MatchResult(processorInfo, requestURI, method, uriPattern);
-
-                    final HashMap<String, Object> map = new HashMap<String, Object>();
-
-                    for (String s : rett.names()) {
-                        map.put(s, rett.get(s));
-                    }
-                    result.setMapValues(map);
-                    return result;
-                }
-                break;
-
-            default:
-                throw new IllegalStateException(
-                        "Can not process URI pattern[uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
+        default:
+            throw new IllegalStateException(
+                "Can not process URI pattern[uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
         }
         return null;
     }
@@ -226,7 +226,7 @@ public class RequestMatchHandler implements Ihandler {
                 }
 
                 LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]",
-                        new Object[]{clz.getCanonicalName(), mthd.getName()});
+                    new Object[] {clz.getCanonicalName(), mthd.getName()});
 
                 addProcessorInfo(requestProcessingMethodAnn, mthd);
             }

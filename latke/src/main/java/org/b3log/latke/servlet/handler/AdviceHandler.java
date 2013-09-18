@@ -70,6 +70,7 @@ public class AdviceHandler implements Ihandler {
 
         try {
             BeforeRequestProcessAdvice binstance = null;
+
             for (Class<? extends BeforeRequestProcessAdvice> clz : beforeAdviceClassList) {
                 binstance = beanManager.getReference(clz);
                 binstance.doAdvice(context, args);

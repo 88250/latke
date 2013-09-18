@@ -28,6 +28,5 @@ import org.b3log.latke.servlet.HttpControl;
  */
 public class CacheHandler implements Ihandler {
     @Override
-    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
-    }
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {}
 }

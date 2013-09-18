@@ -49,6 +49,5 @@ public final class RegexMatcher {
     /**
      * Private constructor.
      */
-    private RegexMatcher() {
-    }
+    private RegexMatcher() {}
 }
