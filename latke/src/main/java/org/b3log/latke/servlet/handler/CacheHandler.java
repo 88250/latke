@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.servlet;
+package org.b3log.latke.servlet.handler;
 
 
-import org.b3log.latke.servlet.handler.Ihandler;
+import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.HttpControl;
 
 
 /**
- * User: mainlove
- * Date: 13-9-15
- * Time: 下午5:40
+ * the cathe handle for 88250 to write.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public class CacheHandler implements Ihandler {
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {}
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
+    }
 }

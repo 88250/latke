@@ -66,12 +66,12 @@ public class AdviceHandler implements Ihandler {
 
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
 
-        final  List<Class<? extends BeforeRequestProcessAdvice>> beforeAdviceClassList = getBeforeList(invokeHolder, processorClass);
+        final List<Class<? extends BeforeRequestProcessAdvice>> beforeAdviceClassList = getBeforeList(invokeHolder, processorClass);
 
         try {
-            BeforeRequestProcessAdvice binstance =null;
+            BeforeRequestProcessAdvice binstance = null;
             for (Class<? extends BeforeRequestProcessAdvice> clz : beforeAdviceClassList) {
-                 binstance = beanManager.getReference(clz);
+                binstance = beanManager.getReference(clz);
                 binstance.doAdvice(context, args);
             }
         } catch (final RequestReturnAdviceException re) {
@@ -108,11 +108,12 @@ public class AdviceHandler implements Ihandler {
 
     /**
      * get BeforeRequestProcessAdvice from annotation.
-     * @param invokeHolder  the real invoked method
-     * @param processorClass  the class of the invoked methond
-     * @return  the list of BeforeRequestProcessAdvice
+     *
+     * @param invokeHolder   the real invoked method
+     * @param processorClass the class of the invoked methond
+     * @return the list of BeforeRequestProcessAdvice
      */
-    private List<Class<? extends BeforeRequestProcessAdvice>> getBeforeList(final Method invokeHolder,final Class<?> processorClass) {
+    private List<Class<? extends BeforeRequestProcessAdvice>> getBeforeList(final Method invokeHolder, final Class<?> processorClass) {
         // before invoke(first class before advice and then method before advice).
         final List<Class<? extends BeforeRequestProcessAdvice>> beforeAdviceClassList = new ArrayList<Class<? extends BeforeRequestProcessAdvice>>();
 
@@ -132,9 +133,10 @@ public class AdviceHandler implements Ihandler {
 
     /**
      * get AfterRequestProcessAdvice from annotation.
-     * @param invokeHolder  the real invoked method
-     * @param processorClass  the class of the invoked methond
-     * @return  the list of AfterRequestProcessAdvice
+     *
+     * @param invokeHolder   the real invoked method
+     * @param processorClass the class of the invoked methond
+     * @return the list of AfterRequestProcessAdvice
      */
     private List<Class<? extends AfterRequestProcessAdvice>> getAfterList(final Method invokeHolder, final Class<?> processorClass) {
         // after invoke(first method before advice and then class before advice).

@@ -69,11 +69,13 @@ public class PrepareAndExecuteHandler implements Ihandler {
      *
      * @param args          the method args
      * @param parameterType parameterType
-     * @param parameterType parameterType
+     * @param paramterName  paramterName
      * @param context       HTTPRequestContext
      * @param result        MatchResult
      * @param sequence      the sequence of the param in methon
      */
+
+
     private void doParamter(final Map<String, Object> args, final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) {
 
         final Object ret = Converters.doConvert(parameterType, paramterName, context, result, sequence);

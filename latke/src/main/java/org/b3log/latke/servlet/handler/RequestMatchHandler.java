@@ -90,7 +90,9 @@ public class RequestMatchHandler implements Ihandler {
             // do logger
             httpControl.data(MATCH_RESULT, result);
             httpControl.nextHandler();
-        } else {// TODO
+        } else {
+            // TODO
+            httpControl.notify();
         }
     }
 
@@ -101,7 +103,7 @@ public class RequestMatchHandler implements Ihandler {
      * @param method     http-method
      * @return MatchResult
      */
-    private MatchResult doMatch(String requestURI, String method) {
+    private MatchResult doMatch(final String requestURI, final String method) {
 
         MatchResult ret = null;
 
@@ -206,7 +208,7 @@ public class RequestMatchHandler implements Ihandler {
     /**
      * scan beans to get the processor info.
      *
-     * @param processBeans
+     * @param processBeans processBeans which contains {@link RequestProcessor}
      */
     private void genInfo(final Set<LatkeBean<?>> processBeans) {
 

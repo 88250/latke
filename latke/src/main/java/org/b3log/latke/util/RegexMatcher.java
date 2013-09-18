@@ -21,13 +21,27 @@ import org.weborganic.furi.URIResolveResult;
 import org.weborganic.furi.URIResolver;
 
 
+/**
+ * the url-match util.
+ * using https://code.google.com/p/wo-furi/ which is Deprecated.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
+ */
 public final class RegexMatcher {
 
+    /**
+     * do match.
+     *
+     * @param pattern     patternurl
+     * @param requestPath requestUrl
+     * @return {@link URIResolveResult}
+     */
     public static URIResolveResult match(final String pattern, final String requestPath) {
 
-        URIResolver uriResolver = new URIResolver(requestPath);
-        URIPattern uriPattern = new URIPattern(pattern);
-        URIResolveResult resolveResult = uriResolver.resolve(uriPattern);
+        final URIResolver uriResolver = new URIResolver(requestPath);
+        final URIPattern uriPattern = new URIPattern(pattern);
+        final URIResolveResult resolveResult = uriResolver.resolve(uriPattern);
 
         return resolveResult;
     }
@@ -35,5 +49,6 @@ public final class RegexMatcher {
     /**
      * Private constructor.
      */
-    private RegexMatcher() {}
+    private RegexMatcher() {
+    }
 }

@@ -32,13 +32,24 @@ import java.util.List;
 
 
 /**
- * User: mainlove
- * Date: 13-9-15
- * Time: 下午6:38
+ * the params-converts whick latke provides.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
-public class Converters {
+public final class Converters {
 
-    private static final List<IConverters> convertersList = new ArrayList<IConverters>();
+    /**
+     * CONVERTERS_LIST holder.
+     */
+    private static final List<IConverters> CONVERTERS_LIST = new ArrayList<IConverters>();
+
+    /**
+     * the private constructor.
+     */
+    private Converters(){
+
+    }
 
     static {
         // first for special-class-convert(mainly for context) then name-matched-convert
@@ -51,17 +62,32 @@ public class Converters {
 
     }
 
-    public static void registerConverters(IConverters converter) {
-        convertersList.add(converter);
+    /**
+     * registerConverters.
+     *
+     * @param converter converter
+     */
+    public static void registerConverters(final IConverters converter) {
+        CONVERTERS_LIST.add(converter);
     }
 
-    public static Object doConvert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) {
+    /**
+     * doConvert one by one.
+     *
+     * @param parameterType parameterType
+     * @param paramterName  paramterName
+     * @param context       HTTPRequestContext
+     * @param result        MatchResult
+     * @param sequence      sequence
+     * @return ret
+     */
+    public static Object doConvert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) {
 
-        for (IConverters iConverters : convertersList) {
+        for (IConverters iConverters : CONVERTERS_LIST) {
             if (iConverters.isMatched(parameterType, paramterName)) {
                 try {
                     return iConverters.convert(parameterType, paramterName, context, result, sequence);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
                 }
             }
@@ -72,18 +98,48 @@ public class Converters {
 }
 
 
+/**
+ * the interface of the converter.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
+ */
 interface IConverters {
 
+    /**
+     * should be converted.
+     *
+     * @param parameterType parameterType
+     * @param paramterName  paramterName
+     * @return isMatched
+     */
     Boolean isMatched(Class<?> parameterType, String paramterName);
 
+    /**
+     * do Real-convert.
+     *
+     * @param parameterType parameterType
+     * @param paramterName  paramterName
+     * @param context       HTTPRequestContext
+     * @param result        MatchResult
+     * @param sequence      sequence
+     * @return ret
+     * @throws Exception the convert-Exception
+     */
     Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception;
 
 }
 
 
+/**
+ * to inject HTTPRequestContext.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
+ */
 class ContextConvert implements IConverters {
     @Override
-    public Boolean isMatched(Class<?> parameterType, String paramterName) {
+    public Boolean isMatched(final Class<?> parameterType, final String paramterName) {
         if (parameterType.equals(HTTPRequestContext.class)) {
             return true;
         }
@@ -91,15 +147,20 @@ class ContextConvert implements IConverters {
     }
 
     @Override
-    public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
         return context;
     }
 }
 
-
+/**
+ * to inject  HttpServletRequest.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
+ */
 class RequestConvert implements IConverters {
     @Override
-    public Boolean isMatched(Class<?> parameterType, String paramterName) {
+    public Boolean isMatched(final Class<?> parameterType, final String paramterName) {
         if (parameterType.equals(HttpServletRequest.class)) {
             return true;
         }
@@ -107,15 +168,20 @@ class RequestConvert implements IConverters {
     }
 
     @Override
-    public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
         return context.getRequest();
     }
 }
 
-
+/**
+ * to inject HttpServletResponse.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
+ */
 class ResponseConvert implements IConverters {
     @Override
-    public Boolean isMatched(Class<?> parameterType, String paramterName) {
+    public Boolean isMatched(final Class<?> parameterType, final String paramterName) {
         if (parameterType.equals(HttpServletResponse.class)) {
             return true;
         }
@@ -123,15 +189,20 @@ class ResponseConvert implements IConverters {
     }
 
     @Override
-    public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
         return context.getResponse();
     }
 }
 
-
+/**
+ * to init and inject AbstractHTTPResponseRenderer.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
+ */
 class RendererConvert implements IConverters {
     @Override
-    public Boolean isMatched(Class<?> parameterType, String paramterName) {
+    public Boolean isMatched(final Class<?> parameterType, final String paramterName) {
         if (AbstractHTTPResponseRenderer.class.isAssignableFrom(parameterType) && !parameterType.equals(AbstractHTTPResponseRenderer.class)) {
             return true;
         }
@@ -139,11 +210,11 @@ class RendererConvert implements IConverters {
     }
 
     @Override
-    public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
 
         final AbstractHTTPResponseRenderer ins = (AbstractHTTPResponseRenderer) parameterType.newInstance();
         final String rid = getRendererId(result.getProcessorInfo().getInvokeHolder().getDeclaringClass(),
-            result.getProcessorInfo().getInvokeHolder(), sequence);
+                result.getProcessorInfo().getInvokeHolder(), sequence);
 
         ins.setRendererId(rid);
         result.addRenders(ins);
@@ -197,26 +268,33 @@ class RendererConvert implements IConverters {
 
 }
 
-
+/**
+ * the default PathVariable name-matched convert.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
+ */
 class PathVariableConvert implements IConverters {
     @Override
-    public Boolean isMatched(Class<?> parameterType, String paramterName) {
+    public Boolean isMatched(final Class<?> parameterType, final String paramterName) {
         return true;
     }
 
     @Override
-    public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
 
         Object ret = result.getMapValues().get(paramterName);
 
-        if (ret != null) { // re-design
+        if (ret != null) {
+            // the dafault sys-convert.
             return getConverter(result.getProcessorInfo().getConvertClass()).convert(paramterName, ret, parameterType);
         }
 
-        HttpServletRequest request = context.getRequest();
+        final HttpServletRequest request = context.getRequest();
 
-        ret = (request.getParameter(paramterName));
-        if (ret != null) { // re-design
+        ret = request.getParameter(paramterName);
+        if (ret != null) {
+            //the user-customer converter.
             return getConverter(result.getProcessorInfo().getConvertClass()).convert(paramterName, ret, parameterType);
         }
 
@@ -231,7 +309,7 @@ class PathVariableConvert implements IConverters {
      * @throws Exception Exception
      */
     private static ConvertSupport getConverter(final Class<? extends ConvertSupport> convertClass) throws Exception {
-        ConvertSupport ret = convertClass.newInstance();
+       final ConvertSupport ret = convertClass.newInstance();
 
         // do not cache
         return ret;
@@ -239,10 +317,16 @@ class PathVariableConvert implements IConverters {
 }
 
 
+/**
+ * to store request-params in jsonObject.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
+ */
 class JSONObjectConvert implements IConverters {
 
     @Override
-    public Boolean isMatched(Class<?> parameterType, String paramterName) {
+    public Boolean isMatched(final Class<?> parameterType, final String paramterName) {
 
         if (parameterType.equals(JSONObject.class)) {
             return true;
@@ -251,16 +335,16 @@ class JSONObjectConvert implements IConverters {
     }
 
     @Override
-    public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
 
-        JSONObject ret = new JSONObject();
+        final JSONObject ret = new JSONObject();
 
-        HttpServletRequest request = context.getRequest();
+        final HttpServletRequest request = context.getRequest();
 
         for (Object o : request.getParameterMap().keySet()) {
             ret.put(String.valueOf(o), request.getParameterMap().get(o));
         }
-        //
+        // mapValue will cover
         for (String key : result.getMapValues().keySet()) {
             ret.put(key, result.getMapValues().get(key));
         }

@@ -74,14 +74,14 @@ public class ProcessorInfo {
 
     /**
      * setUriPatternMode.
-     * @param uriPatternMode
+     * @param uriPatternMode uriPatternMode
      */
     public void setUriPatternMode(final URIPatternMode uriPatternMode) {
         this.uriPatternMode = uriPatternMode;
     }
 
     /**
-     * getUriPatternMode
+     * getUriPatternMode.
      * @return  uriPatternMode
      */
     public URIPatternMode getUriPatternMode() {
@@ -113,7 +113,7 @@ public class ProcessorInfo {
     }
 
     /**
-     * getInvokeHolder
+     * getInvokeHolder.
      * @return invokeHolder
      */
     public Method getInvokeHolder() {

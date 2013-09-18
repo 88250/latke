@@ -24,37 +24,68 @@ import java.util.Map;
 
 
 /**
- * User: steveny
- * Date: 13-9-12
- * Time: 下午2:36
+ * the HttpControl for one request to do the data-stored and handler process.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public class HttpControl {
 
-    public HttpControl(Iterator<Ihandler> ihandlerIterable, HTTPRequestContext httpRequestContext) {
+    /**
+     * the constructor.
+     *
+     * @param ihandlerIterable   Iterator<Ihandler>
+     * @param httpRequestContext HTTPRequestContext
+     */
+    public HttpControl(final Iterator<Ihandler> ihandlerIterable, final HTTPRequestContext httpRequestContext) {
 
         this.ihandlerIterable = ihandlerIterable;
         this.httpRequestContext = httpRequestContext;
     }
 
+    /**
+     * Iterator<Ihandler>.
+     */
     private Iterator<Ihandler> ihandlerIterable;
 
+    /**
+     * HTTPRequestContext.
+     */
     private HTTPRequestContext httpRequestContext;
 
+    /**
+     * the share-data in one request.
+     */
     private Map<String, Object> controlContext = new HashMap<String, Object>();
 
-    public void data(String key, Object value) {
+    /**
+     * set the shared-data.
+     *
+     * @param key   key
+     * @param value value
+     */
+    public void data(final String key, final Object value) {
         controlContext.put(key, value);
     }
 
-    public Object data(String key) {
+    /**
+     * get the shared-data.
+     *
+     * @param key key
+     * @return value
+     */
+    public Object data(final String key) {
         return controlContext.get(key);
     }
 
+    /**
+     * nextHandler.
+     */
     public void nextHandler() {
         if (ihandlerIterable.hasNext()) {
             try {
                 ihandlerIterable.next().handle(httpRequestContext, this);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
         }

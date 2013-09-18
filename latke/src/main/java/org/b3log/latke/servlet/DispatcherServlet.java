@@ -17,7 +17,14 @@ package org.b3log.latke.servlet;
 
 
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.handler.*;
+import org.b3log.latke.servlet.handler.AdviceHandler;
+import org.b3log.latke.servlet.handler.CacheHandler;
+import org.b3log.latke.servlet.handler.Ihandler;
+import org.b3log.latke.servlet.handler.MethodInvokeHandler;
+import org.b3log.latke.servlet.handler.PrepareAndExecuteHandler;
+import org.b3log.latke.servlet.handler.RequestMatchHandler;
+import org.b3log.latke.servlet.handler.ResultRenderHandler;
+import org.b3log.latke.servlet.handler.StaticResourceHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -46,29 +53,32 @@ public final class DispatcherServlet extends HttpServlet {
      */
     private static final Logger LOGGER = Logger.getLogger(HTTPRequestDispatcher.class.getName());
 
-    private static final List<Ihandler> sysHandler = new ArrayList<Ihandler>();
+    /**
+     * the holder of all the sys-handler.
+     */
+    private static final List<Ihandler> SYS_HANDLER = new ArrayList<Ihandler>();
 
     @Override
     public void init() throws ServletException {
 
         // before StaticResourceHandler ?
-        sysHandler.add(new CacheHandler());
-        sysHandler.add(new StaticResourceHandler(getServletContext()));
-        sysHandler.add(new RequestMatchHandler());
-        sysHandler.add(new PrepareAndExecuteHandler());
-        sysHandler.add(new AdviceHandler());
-        sysHandler.add(new MethodInvokeHandler());
-        sysHandler.add(new ResultRenderHandler());
+        SYS_HANDLER.add(new CacheHandler());
+        SYS_HANDLER.add(new StaticResourceHandler(getServletContext()));
+        SYS_HANDLER.add(new RequestMatchHandler());
+        SYS_HANDLER.add(new PrepareAndExecuteHandler());
+        SYS_HANDLER.add(new AdviceHandler());
+        SYS_HANDLER.add(new MethodInvokeHandler());
+        SYS_HANDLER.add(new ResultRenderHandler());
     }
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
-        HTTPRequestContext httpRequestContext = new HTTPRequestContext();
+        final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
 
         httpRequestContext.setRequest(req);
         httpRequestContext.setResponse(resp);
-        HttpControl httpControl = new HttpControl(sysHandler.iterator(), httpRequestContext);
+        final HttpControl httpControl = new HttpControl(SYS_HANDLER.iterator(), httpRequestContext);
 
         httpControl.nextHandler();
     }
