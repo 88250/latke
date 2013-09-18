@@ -27,9 +27,10 @@ import java.util.Map;
 
 
 /**
- * User: steveny
- * Date: 13-9-12
- * Time: 下午4:30
+ * the handler to do the real method invoke!.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public class MethodInvokeHandler implements Ihandler {
 
@@ -44,13 +45,13 @@ public class MethodInvokeHandler implements Ihandler {
     public static final String INVOKE_RESULT = "INVOKE_RESULT";
 
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
 
-        MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
-        Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+        final MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
+        final Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareAndExecuteHandler.PREPARE_ARGS);
 
         // get class instance
-        Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
+        final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
 

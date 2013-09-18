@@ -142,7 +142,8 @@ class RendererConvert implements IConverters {
     public Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception {
 
         final AbstractHTTPResponseRenderer ins = (AbstractHTTPResponseRenderer) parameterType.newInstance();
-        final String rid = getRendererId(result.getProcessorInfo().getInvokeHolder().getDeclaringClass(), result.getProcessorInfo().getInvokeHolder(), sequence);
+        final String rid = getRendererId(result.getProcessorInfo().getInvokeHolder().getDeclaringClass(),
+            result.getProcessorInfo().getInvokeHolder(), sequence);
 
         ins.setRendererId(rid);
         result.addRenders(ins);
@@ -208,16 +209,15 @@ class PathVariableConvert implements IConverters {
 
         Object ret = result.getMapValues().get(paramterName);
 
-        if (ret != null) {// re-design
-            return getConverter(result.getProcessorInfo().getConvertClass())
-                    .convert(paramterName, ret, parameterType);
+        if (ret != null) { // re-design
+            return getConverter(result.getProcessorInfo().getConvertClass()).convert(paramterName, ret, parameterType);
         }
 
         HttpServletRequest request = context.getRequest();
+
         ret = (request.getParameter(paramterName));
-        if (ret != null) {// re-design
-            return getConverter(result.getProcessorInfo().getConvertClass())
-                    .convert(paramterName, ret, parameterType);
+        if (ret != null) { // re-design
+            return getConverter(result.getProcessorInfo().getConvertClass()).convert(paramterName, ret, parameterType);
         }
 
         return null;
@@ -256,6 +256,7 @@ class JSONObjectConvert implements IConverters {
         JSONObject ret = new JSONObject();
 
         HttpServletRequest request = context.getRequest();
+
         for (Object o : request.getParameterMap().keySet()) {
             ret.put(String.valueOf(o), request.getParameterMap().get(o));
         }

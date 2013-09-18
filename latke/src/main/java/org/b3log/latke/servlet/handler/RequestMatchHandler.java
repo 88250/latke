@@ -25,10 +25,8 @@ import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.HttpControl;
-import org.b3log.latke.servlet.URIPatternMode;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
-import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.RegexMatcher;
 import org.b3log.latke.util.Strings;
@@ -43,9 +41,10 @@ import java.util.Set;
 
 
 /**
- * User: steveny
- * Date: 13-9-12
- * Time: 下午3:42
+ * to match one method of processor to do the reqest handler.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public class RequestMatchHandler implements Ihandler {
 
@@ -64,24 +63,28 @@ public class RequestMatchHandler implements Ihandler {
      */
     private final List<ProcessorInfo> processorInfos = new ArrayList<ProcessorInfo>();
 
+    /**
+     * constructor.
+     */
     public RequestMatchHandler() {
 
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
 
+        // do scan in  beanManager
         genInfo(processBeans);
     }
 
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
-        HttpServletRequest request = context.getRequest();
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
+        final HttpServletRequest request = context.getRequest();
 
-        String requestURI = getRequestURI(request);
-        String method = getMethod(request);
+        final String requestURI = getRequestURI(request);
+        final String method = getMethod(request);
 
-        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[] {requestURI, method});
+        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[]{requestURI, method});
 
-        MatchResult result = doMatch(requestURI, method);
+        final MatchResult result = doMatch(requestURI, method);
 
         if (result != null) {
             // do logger
@@ -91,6 +94,13 @@ public class RequestMatchHandler implements Ihandler {
         }
     }
 
+    /**
+     * doMatch.
+     *
+     * @param requestURI requestURI
+     * @param method     http-method
+     * @return MatchResult
+     */
     private MatchResult doMatch(String requestURI, String method) {
 
         MatchResult ret = null;
@@ -100,7 +110,7 @@ public class RequestMatchHandler implements Ihandler {
             for (HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
                 if (method.equals(httpRequestMethod)) {
 
-                    String[] uriPatterns = processorInfo.getPattern();
+                    final String[] uriPatterns = processorInfo.getPattern();
 
                     for (String uriPattern : uriPatterns) {
                         ret = getResult(uriPattern, processorInfo, requestURI, method);
@@ -115,7 +125,16 @@ public class RequestMatchHandler implements Ihandler {
 
     }
 
-    private MatchResult getResult(String uriPattern, ProcessorInfo processorInfo, String requestURI, String method) {
+    /**
+     * get MatchResult.
+     *
+     * @param uriPattern    uriPattern
+     * @param processorInfo processorInfo
+     * @param requestURI    requestURI
+     * @param method        http method
+     * @return MatchResult
+     */
+    private MatchResult getResult(final String uriPattern, final ProcessorInfo processorInfo, final String requestURI, final String method) {
 
         if (requestURI.equals(uriPattern)) {
             return new MatchResult(processorInfo, requestURI, method, uriPattern);
@@ -123,38 +142,44 @@ public class RequestMatchHandler implements Ihandler {
 
         switch (processorInfo.getUriPatternMode()) {
 
-        case ANT_PATH:
-            boolean ret = AntPathMatcher.match(uriPattern, requestURI);
+            case ANT_PATH:
+                final boolean ret = AntPathMatcher.match(uriPattern, requestURI);
 
-            if (ret) {
-                return new MatchResult(processorInfo, requestURI, method, uriPattern);
-            }
-            break;
-
-        case REGEX:
-            URIResolveResult rett = RegexMatcher.match(uriPattern, requestURI);
-
-            if (rett.getStatus().equals(URIResolveResult.Status.RESOLVED)) {
-                MatchResult result = new MatchResult(processorInfo, requestURI, method, uriPattern);
-
-                HashMap<String, Object> map = new HashMap<String, Object>();
-
-                for (String s : rett.names()) {
-                    map.put(s, rett.get(s));
+                if (ret) {
+                    return new MatchResult(processorInfo, requestURI, method, uriPattern);
                 }
-                result.setMapValues(map);
-                return result;
-            }
-            break;
+                break;
 
-        default:
-            throw new IllegalStateException(
-                "Can not process URI pattern[uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
+            case REGEX:
+                final URIResolveResult rett = RegexMatcher.match(uriPattern, requestURI);
+
+                if (rett.getStatus().equals(URIResolveResult.Status.RESOLVED)) {
+                    final MatchResult result = new MatchResult(processorInfo, requestURI, method, uriPattern);
+
+                    final HashMap<String, Object> map = new HashMap<String, Object>();
+
+                    for (String s : rett.names()) {
+                        map.put(s, rett.get(s));
+                    }
+                    result.setMapValues(map);
+                    return result;
+                }
+                break;
+
+            default:
+                throw new IllegalStateException(
+                        "Can not process URI pattern[uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
         }
         return null;
     }
 
-    private String getMethod(HttpServletRequest request) {
+    /**
+     * get real-Http-method.
+     *
+     * @param request request
+     * @return http-method
+     */
+    private String getMethod(final HttpServletRequest request) {
         String method = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
 
         if (Strings.isEmptyOrNull(method)) {
@@ -163,7 +188,13 @@ public class RequestMatchHandler implements Ihandler {
         return method;
     }
 
-    private String getRequestURI(HttpServletRequest request) {
+    /**
+     * get real-requestURI.
+     *
+     * @param request request
+     * @return requestURI
+     */
+    private String getRequestURI(final HttpServletRequest request) {
         String requestURI = (String) request.getAttribute(Keys.HttpRequest.REQUEST_URI);
 
         if (Strings.isEmptyOrNull(requestURI)) {
@@ -172,7 +203,12 @@ public class RequestMatchHandler implements Ihandler {
         return requestURI;
     }
 
-    private void genInfo(Set<LatkeBean<?>> processBeans) {
+    /**
+     * scan beans to get the processor info.
+     *
+     * @param processBeans
+     */
+    private void genInfo(final Set<LatkeBean<?>> processBeans) {
 
         for (final LatkeBean<?> latkeBean : processBeans) {
             final Class<?> clz = latkeBean.getBeanClass();
@@ -188,18 +224,24 @@ public class RequestMatchHandler implements Ihandler {
                 }
 
                 LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]",
-                    new Object[] {clz.getCanonicalName(), mthd.getName()});
+                        new Object[]{clz.getCanonicalName(), mthd.getName()});
 
                 addProcessorInfo(requestProcessingMethodAnn, mthd);
             }
         }
     }
 
-    private void addProcessorInfo(RequestProcessing requestProcessingMethodAnn, Method mthd) {
+    /**
+     * addProcessorInfo.
+     *
+     * @param requestProcessingMethodAnn requestProcessingMethodAnn
+     * @param mthd                       the invoke method
+     */
+    private void addProcessorInfo(final RequestProcessing requestProcessingMethodAnn, final Method mthd) {
 
         // anotation to bean
 
-        ProcessorInfo processorInfo = new ProcessorInfo();
+        final ProcessorInfo processorInfo = new ProcessorInfo();
 
         processorInfo.setPattern(requestProcessingMethodAnn.value());
         processorInfo.setUriPatternMode(requestProcessingMethodAnn.uriPatternsMode());
@@ -211,7 +253,4 @@ public class RequestMatchHandler implements Ihandler {
     }
 
 }
-
-
-
 

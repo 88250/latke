@@ -41,9 +41,10 @@ import java.util.Map;
 
 
 /**
- * User: steveny
- * Date: 13-9-12
- * Time: 下午4:28
+ * the handler to do the advice work in configs.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public class AdviceHandler implements Ihandler {
 
@@ -52,32 +53,35 @@ public class AdviceHandler implements Ihandler {
      */
     private static final Logger LOGGER = Logger.getLogger(AdviceHandler.class.getName());
 
-
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
 
-        MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
-        Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+        // the data which pre-handler provided.
+        final MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
+        final Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareAndExecuteHandler.PREPARE_ARGS);
 
-        Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
-        Class<?> processorClass = invokeHolder.getDeclaringClass();
-        List<AbstractHTTPResponseRenderer> rendererList = result.getRendererList();
+        final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
+        final Class<?> processorClass = invokeHolder.getDeclaringClass();
+        final List<AbstractHTTPResponseRenderer> rendererList = result.getRendererList();
 
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
 
-        List<Class<? extends BeforeRequestProcessAdvice>> beforeAdviceClassList = getBeforeList(invokeHolder, processorClass);
+        final  List<Class<? extends BeforeRequestProcessAdvice>> beforeAdviceClassList = getBeforeList(invokeHolder, processorClass);
 
         try {
+            BeforeRequestProcessAdvice binstance =null;
             for (Class<? extends BeforeRequestProcessAdvice> clz : beforeAdviceClassList) {
-                BeforeRequestProcessAdvice binstance = beanManager.getReference(clz);
+                 binstance = beanManager.getReference(clz);
                 binstance.doAdvice(context, args);
             }
         } catch (final RequestReturnAdviceException re) {
             return;
         } catch (final RequestProcessAdviceException e) {
             final JSONObject exception = e.getJsonObject();
+
             LOGGER.log(Level.WARN, "Occurs an exception before request processing [errMsg={0}]", exception.optString(Keys.MSG));
             final JSONRenderer ret = new JSONRenderer();
+
             ret.setJSONObject(exception);
             context.setRenderer(ret);
             return;
@@ -93,7 +97,7 @@ public class AdviceHandler implements Ihandler {
             rendererList.get(j).postRender(context, httpControl.data(MethodInvokeHandler.INVOKE_RESULT));
         }
 
-        List<Class<? extends AfterRequestProcessAdvice>> afterAdviceClassList = getAfterList(invokeHolder, processorClass);
+        final List<Class<? extends AfterRequestProcessAdvice>> afterAdviceClassList = getAfterList(invokeHolder, processorClass);
         AfterRequestProcessAdvice instance;
 
         for (Class<? extends AfterRequestProcessAdvice> clz : afterAdviceClassList) {
@@ -102,23 +106,37 @@ public class AdviceHandler implements Ihandler {
         }
     }
 
-    private List<Class<? extends BeforeRequestProcessAdvice>> getBeforeList(Method invokeHolder, Class<?> processorClass) {
+    /**
+     * get BeforeRequestProcessAdvice from annotation.
+     * @param invokeHolder  the real invoked method
+     * @param processorClass  the class of the invoked methond
+     * @return  the list of BeforeRequestProcessAdvice
+     */
+    private List<Class<? extends BeforeRequestProcessAdvice>> getBeforeList(final Method invokeHolder,final Class<?> processorClass) {
         // before invoke(first class before advice and then method before advice).
         final List<Class<? extends BeforeRequestProcessAdvice>> beforeAdviceClassList = new ArrayList<Class<? extends BeforeRequestProcessAdvice>>();
 
         if (processorClass.isAnnotationPresent(Before.class)) {
             final Class<? extends BeforeRequestProcessAdvice>[] ac = processorClass.getAnnotation(Before.class).adviceClass();
+
             beforeAdviceClassList.addAll(Arrays.asList(ac));
         }
         if (invokeHolder.isAnnotationPresent(Before.class)) {
             final Class<? extends BeforeRequestProcessAdvice>[] ac = invokeHolder.getAnnotation(Before.class).adviceClass();
+
             beforeAdviceClassList.addAll(Arrays.asList(ac));
         }
 
         return beforeAdviceClassList;
     }
 
-    private List<Class<? extends AfterRequestProcessAdvice>> getAfterList(Method invokeHolder, Class<?> processorClass) {
+    /**
+     * get AfterRequestProcessAdvice from annotation.
+     * @param invokeHolder  the real invoked method
+     * @param processorClass  the class of the invoked methond
+     * @return  the list of AfterRequestProcessAdvice
+     */
+    private List<Class<? extends AfterRequestProcessAdvice>> getAfterList(final Method invokeHolder, final Class<?> processorClass) {
         // after invoke(first method before advice and then class before advice).
         final List<Class<? extends AfterRequestProcessAdvice>> afterAdviceClassList = new ArrayList<Class<? extends AfterRequestProcessAdvice>>();
 

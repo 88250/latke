@@ -26,14 +26,15 @@ import java.io.PrintWriter;
 
 
 /**
- * User: mainlove
- * Date: 13-9-15
- * Time: 下午5:38
+ * the handler to get the http response.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public class ResultRenderHandler implements Ihandler {
 
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
 
         final HttpServletResponse response = context.getResponse();
 

@@ -21,12 +21,18 @@ import org.b3log.latke.servlet.HttpControl;
 
 
 /**
- * User: steveny
- * Date: 13-9-12
- * Time: 下午2:32
+ * the handler interface for  {@link org.b3log.latke.servlet.DispatcherServlet} to do the inner process.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public interface Ihandler {
 
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception;
+    /**
+     * @param context     {@link HTTPRequestContext}
+     * @param httpControl {@link HttpControl}
+     * @throws Exception {@link Exception}
+     */
+    void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception;
 
 }

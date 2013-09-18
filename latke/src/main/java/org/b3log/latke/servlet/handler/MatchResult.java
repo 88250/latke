@@ -18,88 +18,161 @@ package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
 /**
- * User: mainlove
- * Date: 13-9-15
- * Time: 下午7:19
+ * the matched-result bean.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public class MatchResult {
 
+    /**
+     * the processorInfo which be matched.
+     */
     private ProcessorInfo processorInfo;
 
+    /**
+     *  requestURI.
+     */
     private String requestURI;
 
+    /**
+     * matchedMethod: http-method.
+     */
     private String matchedMethod;
 
+    /**
+     * the real matchedPattern in processors.
+     */
     private String matchedPattern;
 
-
-
+    /**
+     * the mapValue from url mapping.
+     */
     private Map<String, Object> mapValues;
 
+    /**
+     * the {@link AbstractHTTPResponseRenderer}  holders which be inited by sys, for advice to do the pre and post work.
+     */
     private final List<AbstractHTTPResponseRenderer> rendererList = new ArrayList<AbstractHTTPResponseRenderer>();
 
-    MatchResult(ProcessorInfo processorInfo, String requestURI, String matchedMethod, String matchedPattern) {
+    /**
+     *
+     * @param processorInfo processorInfo
+     * @param requestURI requestURI from request
+     * @param matchedMethod matched http-Method
+     * @param matchedPattern matchedPattern in processors
+     */
+    MatchResult(final ProcessorInfo processorInfo, final String requestURI, final String matchedMethod, final String matchedPattern) {
         this.processorInfo = processorInfo;
         this.requestURI = requestURI;
         this.matchedMethod = matchedMethod;
         this.matchedPattern = matchedPattern;
     }
 
-    public MatchResult() {}
+    /**
+     * the default constructor.
+     */
+    public MatchResult() {
+    }
 
+    /**
+     * getProcessorInfo.
+     * @return processorInfo
+     */
     public ProcessorInfo getProcessorInfo() {
         return processorInfo;
     }
 
-    public void setProcessorInfo(ProcessorInfo processorInfo) {
+    /**
+     *setProcessorInfo.
+     * @param processorInfo processorInfo
+     */
+    public void setProcessorInfo(final ProcessorInfo processorInfo) {
         this.processorInfo = processorInfo;
     }
 
+    /**
+     * getRequestURI.
+     * @return requestURI
+     */
     public String getRequestURI() {
         return requestURI;
     }
 
-    public void setRequestURI(String requestURI) {
+    /**
+     * setRequestURI.
+     * @param requestURI requestURI
+     */
+    public void setRequestURI(final String requestURI) {
         this.requestURI = requestURI;
     }
 
+    /**
+     * getMatchedMethod.
+     * @return  matchedMethod
+     */
     public String getMatchedMethod() {
         return matchedMethod;
     }
 
-    public void setMatchedMethod(String matchedMethod) {
+    /**
+     * setMatchedMethod.
+     * @param matchedMethod matchedMethod
+     */
+    public void setMatchedMethod(final String matchedMethod) {
         this.matchedMethod = matchedMethod;
     }
 
+    /**
+     *   getMatchedPattern.
+     * @return  matchedPattern
+     */
     public String getMatchedPattern() {
         return matchedPattern;
     }
 
-    public void setMatchedPattern(String matchedPattern) {
+    /**
+     * setMatchedPattern.
+     * @param matchedPattern matchedPattern
+     */
+    public void setMatchedPattern(final String matchedPattern) {
         this.matchedPattern = matchedPattern;
     }
 
+    /**
+     * getMapValues.
+     * @return mapValues
+     */
     public Map<String, Object> getMapValues() {
         return mapValues;
     }
 
-    public void setMapValues(Map<String, Object> mapValues) {
+    /**
+     * setMapValues.
+     * @param mapValues mapValues
+     */
+    public void setMapValues(final Map<String, Object> mapValues) {
         this.mapValues = mapValues;
     }
 
-
-
-    public void addRenders(AbstractHTTPResponseRenderer ins) {
+    /**
+     * addRenders.
+     * @param ins  AbstractHTTPResponseRenderer
+     */
+    public void addRenders(final AbstractHTTPResponseRenderer ins) {
         rendererList.add(ins);
     }
 
+    /**
+     * getRendererList.
+     * @return rendererList
+     */
     public List<AbstractHTTPResponseRenderer> getRendererList() {
         return rendererList;
     }

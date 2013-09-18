@@ -1,4 +1,20 @@
+/*
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.b3log.latke.servlet.handler;
+
 
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
@@ -10,20 +26,25 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 /**
- * User: steveny
- * Date: 13-9-18
- * Time: 上午10:12
+ * PrepareAndExecuteHandler: prepare the method args data and then execute the result.
+ *
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @version 1.0.0.1, Sep 18, 2013
  */
 public class PrepareAndExecuteHandler implements Ihandler {
 
+    /**
+     * the method args data.
+     */
     public static final String PREPARE_ARGS = "PREPARE_ARGS";
 
     @Override
-    public void handle(HTTPRequestContext context, HttpControl httpControl) throws Exception {
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
 
-        MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
-        Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
+        final MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
+        final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
 
         final Map<String, Object> args = new LinkedHashMap<String, Object>();
 
@@ -36,25 +57,42 @@ public class PrepareAndExecuteHandler implements Ihandler {
 
         httpControl.data(PREPARE_ARGS, args);
 
-        //do advice and real method invoke
+        // do advice and real method invoke
         httpControl.nextHandler();
 
-        //do result return
+        // do result return
         httpControl.nextHandler();
     }
 
-    private void doParamter(Map<String, Object> args, Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) {
+    /**
+     * do args convert.
+     *
+     * @param args          the method args
+     * @param parameterType parameterType
+     * @param parameterType parameterType
+     * @param context       HTTPRequestContext
+     * @param result        MatchResult
+     * @param sequence      the sequence of the param in methon
+     */
+    private void doParamter(final Map<String, Object> args, final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) {
 
-        Object ret = Converters.doConvert(parameterType, paramterName, context, result, sequence);
+        final Object ret = Converters.doConvert(parameterType, paramterName, context, result, sequence);
 
         args.put(paramterName, ret);
     }
 
-    private String[] getParamterNames(Method invokeMethond) {
-        String[] methodParamNames = ReflectHelper.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
+    /**
+     * using PathVariable or reflection to get the getParamterNames in method.
+     *
+     * @param invokeMethond invokeMethond
+     * @return the names of the params.
+     */
+    private String[] getParamterNames(final Method invokeMethond) {
+        final String[] methodParamNames = ReflectHelper.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
                 invokeMethond.getParameterTypes());
         int i = 0;
 
+        // PathVariable will conver
         for (java.lang.annotation.Annotation[] annotations : invokeMethond.getParameterAnnotations()) {
             for (java.lang.annotation.Annotation annotation : annotations) {
                 if (annotation instanceof PathVariable) {
