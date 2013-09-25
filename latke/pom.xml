@@ -15,7 +15,7 @@
     <url>https://github.com/b3log/b3log-latke</url>
     <description>Yet another simple web framework based on Java servlet technology.</description>
     <inceptionYear>2009</inceptionYear>
-    
+
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
@@ -32,7 +32,7 @@
         <commons-lang.version>2.5</commons-lang.version>
         <javassist.version>3.12.1.GA</javassist.version>
         <slf4j.version>1.7.5</slf4j.version>
-        
+
         <!-- JBoss VFS -->
         <jboss-vfs.version>3.1.0.Final</jboss-vfs.version>
         <!-- Maven Plugin -->
@@ -79,7 +79,7 @@
             <organizationUrl>http://www.b3log.org</organizationUrl>
             <timezone>+8</timezone>
         </developer>
-        
+
         <developer>
             <id>wmainlove@gmail.com</id>
             <name>Liceng Yao</name>
@@ -93,7 +93,7 @@
             <timezone>+8</timezone>
         </developer>
     </developers>
-    
+
     <scm>
         <connection>scm:git:git@github.com:b3log/b3log-latke.git</connection>
         <developerConnection>scm:git:git@github.com:b3log/b3log-latke.git</developerConnection>
@@ -131,26 +131,26 @@
                 <version>${servlet.version}</version>
                 <scope>provided</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
                 <version>${cdi.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
                 <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>javax.el</groupId>
                 <artifactId>el-api</artifactId>
@@ -181,50 +181,50 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.jolbox</groupId>
                 <artifactId>bonecp</artifactId>
                 <version>${bonecp.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>c3p0</groupId>
                 <artifactId>c3p0</artifactId>
                 <version>${c3p0.version}</version>
             </dependency>
-            
-            <dependency>         
+
+            <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${h2.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.jboss</groupId>
                 <artifactId>jboss-vfs</artifactId>
                 <version>${jboss-vfs.version}</version>
             </dependency>
-            
+
         </dependencies>
     </dependencyManagement>
 
@@ -234,32 +234,32 @@
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.el</groupId>
             <artifactId>el-api</artifactId>
         </dependency>
-            
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -274,12 +274,12 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>javassist</groupId>
             <artifactId>javassist</artifactId>
@@ -289,19 +289,19 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>com.jolbox</groupId>
             <artifactId>bonecp</artifactId>
             <scope>compile</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
         </dependency>
-        
-        <dependency>         
+
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
@@ -319,6 +319,13 @@
             <systemPath>${project.basedir}/src/main/resources/lib/wo-furi-0.8.4.jar</systemPath>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.2</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -362,7 +369,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -509,7 +516,7 @@
                     <updateReleaseInfo>true</updateReleaseInfo>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
