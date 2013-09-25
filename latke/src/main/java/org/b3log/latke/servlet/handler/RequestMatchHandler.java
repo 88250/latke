@@ -27,8 +27,8 @@ import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
-import org.b3log.latke.util.AntPathMatcher;
-import org.b3log.latke.util.RegexMatcher;
+import org.b3log.latke.util.DefaultMatcher;
+import org.b3log.latke.util.RegexPathMatcher;
 import org.b3log.latke.util.Strings;
 import org.weborganic.furi.URIResolveResult;
 
@@ -110,7 +110,7 @@ public class RequestMatchHandler implements Ihandler {
         for (ProcessorInfo processorInfo : processorInfos) {
 
             for (HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
-                if (method.equals(httpRequestMethod)) {
+                if (method.equals(httpRequestMethod.toString())) {
 
                     final String[] uriPatterns = processorInfo.getPattern();
 
@@ -144,16 +144,16 @@ public class RequestMatchHandler implements Ihandler {
 
         switch (processorInfo.getUriPatternMode()) {
 
-        case ANT_PATH:
-            final boolean ret = AntPathMatcher.match(uriPattern, requestURI);
+        case REGEX:
+            final boolean ret = RegexPathMatcher.match(uriPattern, requestURI);
 
             if (ret) {
                 return new MatchResult(processorInfo, requestURI, method, uriPattern);
             }
             break;
 
-        case REGEX:
-            final URIResolveResult rett = RegexMatcher.match(uriPattern, requestURI);
+        case ANT_PATH:
+            final URIResolveResult rett = DefaultMatcher.match(uriPattern, requestURI);
 
             if (rett.getStatus().equals(URIResolveResult.Status.RESOLVED)) {
                 final MatchResult result = new MatchResult(processorInfo, requestURI, method, uriPattern);
@@ -249,8 +249,9 @@ public class RequestMatchHandler implements Ihandler {
         processorInfo.setUriPatternMode(requestProcessingMethodAnn.uriPatternsMode());
         processorInfo.setHttpMethod(requestProcessingMethodAnn.method());
         processorInfo.setConvertClass(requestProcessingMethodAnn.convertClass());
-
         processorInfo.setInvokeHolder(mthd);
+        
+        processorInfos.add(processorInfo);
 
     }
 

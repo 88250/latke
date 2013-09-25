@@ -28,7 +28,7 @@ import org.weborganic.furi.URIResolver;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 18, 2013
  */
-public final class RegexMatcher {
+public final class DefaultMatcher {
 
     /**
      * do match.
@@ -49,5 +49,5 @@ public final class RegexMatcher {
     /**
      * Private constructor.
      */
-    private RegexMatcher() {}
+    private DefaultMatcher() {}
 }
