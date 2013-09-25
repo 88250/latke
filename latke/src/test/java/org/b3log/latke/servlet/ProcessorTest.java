@@ -18,12 +18,19 @@ package org.b3log.latke.servlet;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.config.Discoverer;
 import org.b3log.latke.mock.MockHttpServletRequest;
+import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
+import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 import org.b3log.latke.servlet.handler.AdviceHandler;
 import org.b3log.latke.servlet.handler.Ihandler;
 import org.b3log.latke.servlet.handler.MethodInvokeHandler;
 import org.b3log.latke.servlet.handler.PrepareAndExecuteHandler;
 import org.b3log.latke.servlet.handler.RequestMatchHandler;
+import org.b3log.latke.servlet.mock.TestBeforeAdvice;
 import org.b3log.latke.servlet.mock.TestService;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.servlet.renderer.DoNothingRenderer;
+import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.hamcrest.core.IsInstanceOf;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -31,7 +38,9 @@ import org.testng.annotations.Test;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -50,6 +59,7 @@ public class ProcessorTest {
 		System.out.println("Request Processors Test");
 		final List<Class<?>> classes = new ArrayList<Class<?>>();
 		classes.add(TestService.class);
+		classes.add(TestBeforeAdvice.class);
 
 		Lifecycle.startApplication(classes);
 
@@ -77,21 +87,143 @@ public class ProcessorTest {
 		Assert.assertEquals("string", control.data(MethodInvokeHandler.INVOKE_RESULT));
 
 	}
+
 	@Test
 	public void testBaseInvoke2() {
-		
+
 		HttpServletRequest request = mock(HttpServletRequest.class);
-		when(request.getRequestURI()).thenReturn("/string/a/b");
+		when(request.getRequestURI()).thenReturn("/string/aa/bb");
 		when(request.getMethod()).thenReturn("GET");
-		
+
 		HttpControl control = doFlow(request);
 		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
-		Assert.assertEquals("ab", control.data(MethodInvokeHandler.INVOKE_RESULT));
-		
+
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Assert.assertEquals("aa", args.get("id"));
+		Assert.assertEquals("bb", args.get("name"));
+		Assert.assertEquals("aabb", control.data(MethodInvokeHandler.INVOKE_RESULT));
+
 	}
-	
-	
-	
+
+	@Test
+	public void testBaseInvoke3() {
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/string/aapbb");
+		when(request.getMethod()).thenReturn("GET");
+
+		HttpControl control = doFlow(request);
+		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Assert.assertEquals("aa", args.get("id"));
+		Assert.assertEquals("bb", args.get("name"));
+		Assert.assertEquals("aabb", control.data(MethodInvokeHandler.INVOKE_RESULT));
+
+	}
+
+	@Test
+	public void testBaseInvoke4() {
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/string/3*4");
+		when(request.getMethod()).thenReturn("GET");
+
+		HttpControl control = doFlow(request);
+		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Assert.assertEquals(3, args.get("a"));
+		Assert.assertEquals(4, args.get("b"));
+		Assert.assertEquals(12, control.data(MethodInvokeHandler.INVOKE_RESULT));
+
+	}
+
+	@Test
+	public void testBaseInvoke5() {
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/string/a+b");
+		when(request.getMethod()).thenReturn("GET");
+
+		HttpControl control = doFlow(request);
+		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Assert.assertEquals("a", args.get("name"));
+		Assert.assertEquals("b", args.get("password"));
+		Assert.assertEquals("ba", control.data(MethodInvokeHandler.INVOKE_RESULT));
+
+	}
+
+	@Test
+	public void testBaseInvoke6() {
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/date/1/20120306");
+		when(request.getMethod()).thenReturn("GET");
+
+		HttpControl control = doFlow(request);
+		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Assert.assertEquals(1, args.get("id"));
+		Assert.assertTrue(args.get("date") instanceof Date);
+		Assert.assertEquals("11330963200000", control.data(MethodInvokeHandler.INVOKE_RESULT));
+
+	}
+
+	@Test
+	public void testBaseInvoke7() {
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/before/1");
+		when(request.getMethod()).thenReturn("GET");
+
+		HttpControl control = doFlow(request);
+		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Assert.assertEquals(2, args.get("id"));
+		Assert.assertEquals(2, control.data(MethodInvokeHandler.INVOKE_RESULT));
+
+	}
+
+	@Test
+	public void testBaseInvoke8() {
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/do/render");
+		when(request.getMethod()).thenReturn("GET");
+
+		HttpControl control = doFlow(request);
+		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+
+		Assert.assertTrue(control.data(MethodInvokeHandler.INVOKE_RESULT) instanceof DoNothingRenderer);
+
+	}
+
+	@Test
+	public void testBaseInvoke9() {
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/do/render1");
+		when(request.getMethod()).thenReturn("GET");
+
+		HttpControl control = doFlow(request);
+		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+
+		List<AbstractHTTPResponseRenderer> list = (List<AbstractHTTPResponseRenderer>) control
+				.data(MethodInvokeHandler.INVOKE_RESULT);
+
+		final int totalMatched = 3;
+		Assert.assertEquals(list.size(), totalMatched);
+		Assert.assertTrue(list.get(0) instanceof JSONRenderer);
+		Assert.assertTrue(list.get(1) instanceof DoNothingRenderer);
+		Assert.assertTrue(list.get(2) instanceof JSONRenderer);
+		Assert.assertFalse(list.get(0) == list.get(2));
+
+	}
 
 	public HttpControl doFlow(HttpServletRequest req) {
 		HTTPRequestContext httpRequestContext = new HTTPRequestContext();
