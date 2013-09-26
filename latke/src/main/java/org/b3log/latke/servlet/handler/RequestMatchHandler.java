@@ -90,10 +90,7 @@ public class RequestMatchHandler implements Ihandler {
             // do logger
             httpControl.data(MATCH_RESULT, result);
             httpControl.nextHandler();
-        } else {
-            // TODO
-            httpControl.notify();
-        }
+        } 
     }
 
     /**
