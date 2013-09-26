@@ -58,7 +58,7 @@ public class AdviceHandler implements Ihandler {
 
         // the data which pre-handler provided.
         final MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
-        final Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+        final Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareHandler.PREPARE_ARGS);
 
         final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
         final Class<?> processorClass = invokeHolder.getDeclaringClass();

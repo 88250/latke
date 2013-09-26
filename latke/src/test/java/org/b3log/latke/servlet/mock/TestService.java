@@ -72,7 +72,7 @@ public class TestService {
 
 	@Before(adviceClass = TestBeforeAdvice.class)
 	@After
-	@RequestProcessing(value = "/before/{id}")
+	@RequestProcessing(value = "/dobefore/{id}")
 	public Integer getString3(final Integer id) {
 		return id;
 	}

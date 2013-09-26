@@ -48,7 +48,7 @@ public class MethodInvokeHandler implements Ihandler {
     public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
 
         final MatchResult result = (MatchResult) httpControl.data(RequestMatchHandler.MATCH_RESULT);
-        final Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+        final Map<String, Object> args = (Map<String, Object>) httpControl.data(PrepareHandler.PREPARE_ARGS);
 
         // get class instance
         final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();

@@ -23,7 +23,7 @@ import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 import org.b3log.latke.servlet.handler.AdviceHandler;
 import org.b3log.latke.servlet.handler.Ihandler;
 import org.b3log.latke.servlet.handler.MethodInvokeHandler;
-import org.b3log.latke.servlet.handler.PrepareAndExecuteHandler;
+import org.b3log.latke.servlet.handler.PrepareHandler;
 import org.b3log.latke.servlet.handler.RequestMatchHandler;
 import org.b3log.latke.servlet.mock.TestBeforeAdvice;
 import org.b3log.latke.servlet.mock.TestService;
@@ -67,7 +67,7 @@ public class ProcessorTest {
 		Lifecycle.startApplication(classes);
 
 		handlerList.add(new RequestMatchHandler());
-		handlerList.add(new PrepareAndExecuteHandler());
+		handlerList.add(new PrepareHandler());
 		handlerList.add(new AdviceHandler());
 		handlerList.add(new MethodInvokeHandler());
 	}
@@ -101,7 +101,7 @@ public class ProcessorTest {
 		HttpControl control = doFlow(request);
 		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
 
-		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
 		Assert.assertEquals("aa", args.get("id"));
 		Assert.assertEquals("bb", args.get("name"));
 		Assert.assertEquals("aabb", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -118,7 +118,7 @@ public class ProcessorTest {
 		HttpControl control = doFlow(request);
 		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
 
-		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
 		Assert.assertEquals("aa", args.get("id"));
 		Assert.assertEquals("bb", args.get("name"));
 		Assert.assertEquals("aabb", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -135,7 +135,7 @@ public class ProcessorTest {
 		HttpControl control = doFlow(request);
 		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
 
-		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
 		Assert.assertEquals(3, args.get("a"));
 		Assert.assertEquals(4, args.get("b"));
 		Assert.assertEquals(12, control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -152,7 +152,7 @@ public class ProcessorTest {
 		HttpControl control = doFlow(request);
 		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
 
-		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
 		Assert.assertEquals("a", args.get("name"));
 		Assert.assertEquals("b", args.get("password"));
 		Assert.assertEquals("ba", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -169,7 +169,7 @@ public class ProcessorTest {
 		HttpControl control = doFlow(request);
 		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
 
-		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
 		Assert.assertEquals(1, args.get("id"));
 		Assert.assertTrue(args.get("date") instanceof Date);
 		Assert.assertEquals("11330963200000", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -180,13 +180,13 @@ public class ProcessorTest {
 	public void testBaseInvoke7() {
 
 		HttpServletRequest request = mock(HttpServletRequest.class);
-		when(request.getRequestURI()).thenReturn("/before/1");
+		when(request.getRequestURI()).thenReturn("/dobefore/1");
 		when(request.getMethod()).thenReturn("GET");
 
 		HttpControl control = doFlow(request);
 		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
 
-		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
 		Assert.assertEquals(2, args.get("id"));
 		Assert.assertEquals(2, control.data(MethodInvokeHandler.INVOKE_RESULT));
 
@@ -244,7 +244,7 @@ public class ProcessorTest {
 		HttpControl control = doFlow(request);
 		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
 		
-		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
 		JSONObject jsonObject =(JSONObject) args.get("jsonObject");
 		Assert.assertTrue(jsonObject.get("des") instanceof String[]);
 		Assert.assertEquals("n", control.data(MethodInvokeHandler.INVOKE_RESULT));

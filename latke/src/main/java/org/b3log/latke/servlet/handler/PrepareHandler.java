@@ -28,12 +28,12 @@ import java.util.Map;
 
 
 /**
- * PrepareAndExecuteHandler: prepare the method args data and then execute the result.
+ * PrepareHandler: prepare the method args.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 18, 2013
+ * @version 1.0.0.2, Sep 26, 2013
  */
-public class PrepareAndExecuteHandler implements Ihandler {
+public class PrepareHandler implements Ihandler {
 
     /**
      * the method args data.
@@ -59,9 +59,7 @@ public class PrepareAndExecuteHandler implements Ihandler {
 
         // do advice and real method invoke
         httpControl.nextHandler();
-
-        // do result return
-        httpControl.nextHandler();
+        
     }
 
     /**

@@ -15,23 +15,29 @@
  */
 package org.b3log.latke.servlet;
 
-import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.handler.AdviceHandler;
-import org.b3log.latke.servlet.handler.CacheHandler;
-import org.b3log.latke.servlet.handler.Ihandler;
-import org.b3log.latke.servlet.handler.MethodInvokeHandler;
-import org.b3log.latke.servlet.handler.PrepareAndExecuteHandler;
-import org.b3log.latke.servlet.handler.RequestMatchHandler;
-import org.b3log.latke.servlet.handler.ResultRenderHandler;
-import org.b3log.latke.servlet.handler.StaticResourceHandler;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.b3log.latke.logging.Logger;
+import org.b3log.latke.servlet.handler.AdviceHandler;
+import org.b3log.latke.servlet.handler.CacheHandler;
+import org.b3log.latke.servlet.handler.Ihandler;
+import org.b3log.latke.servlet.handler.MethodInvokeHandler;
+import org.b3log.latke.servlet.handler.PrepareHandler;
+import org.b3log.latke.servlet.handler.RequestMatchHandler;
+import org.b3log.latke.servlet.handler.StaticResourceHandler;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.servlet.renderer.HTTP404Renderer;
+import org.b3log.latke.servlet.renderer.HTTP505Renderer;
+
 
 /**
  * NEW core dispatch-controller for HTTP request dispatching .
@@ -41,50 +47,76 @@ import java.util.List;
  */
 public final class DispatcherServlet extends HttpServlet {
 
-	/**
-	 * Default serial version uid.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * Default serial version uid.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Logger.
-	 */
-	private static final Logger LOGGER = Logger.getLogger(HTTPRequestDispatcher.class.getName());
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(HTTPRequestDispatcher.class.getName());
 
-	/**
-	 * the holder of all the sys-handler.
-	 */
-	private static final List<Ihandler> SYS_HANDLER = new ArrayList<Ihandler>();
+    /**
+     * the holder of all the sys-handler.
+     */
+    private static final List<Ihandler> SYS_HANDLER = new ArrayList<Ihandler>();
 
-	@Override
-	public void init() throws ServletException {
+    @Override
+    public void init() throws ServletException {
 
-		// before StaticResourceHandler ?
-		SYS_HANDLER.add(new CacheHandler());
-		SYS_HANDLER.add(new StaticResourceHandler(getServletContext()));
-		SYS_HANDLER.add(new RequestMatchHandler());
-		SYS_HANDLER.add(new PrepareAndExecuteHandler());
-		SYS_HANDLER.add(new AdviceHandler());
-		SYS_HANDLER.add(new MethodInvokeHandler());
-		SYS_HANDLER.add(new ResultRenderHandler());
-	}
+        // before StaticResourceHandler ?
+        SYS_HANDLER.add(new CacheHandler());
+        SYS_HANDLER.add(new StaticResourceHandler(getServletContext()));
+        SYS_HANDLER.add(new RequestMatchHandler());
+        SYS_HANDLER.add(new PrepareHandler());
+        SYS_HANDLER.add(new AdviceHandler());
+        SYS_HANDLER.add(new MethodInvokeHandler());
+    }
 
-	@Override
-	protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
-			IOException {
+    @Override
+    protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
+            IOException {
 
-		final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
+        final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
 
-		httpRequestContext.setRequest(req);
-		httpRequestContext.setResponse(resp);
-		final HttpControl httpControl = new HttpControl(SYS_HANDLER.iterator(), httpRequestContext);
+        httpRequestContext.setRequest(req);
+        httpRequestContext.setResponse(resp);
+        final HttpControl httpControl = new HttpControl(SYS_HANDLER.iterator(), httpRequestContext);
 
-		try {
-			httpControl.nextHandler();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try {
+            httpControl.nextHandler();
+        } catch (final Exception e) {
+            httpRequestContext.setRenderer(new HTTP505Renderer(e));
+        }
 
-	}
+        result(httpRequestContext);
+    }
+
+    /**
+     * to http repsonse .
+     * 
+     * @param context
+     *            {@link HTTPRequestContext}
+     * @throws IOException
+     *             IOException
+     */
+    private void result(final HTTPRequestContext context) throws IOException {
+        final HttpServletResponse response = context.getResponse();
+
+        if (response.isCommitted()) { // Sends rdirect or send error
+            final PrintWriter writer = response.getWriter();
+
+            writer.flush();
+            writer.close();
+            return;
+        }
+
+        AbstractHTTPResponseRenderer renderer = context.getRenderer();
+
+        if (null == renderer) {
+            renderer = new HTTP404Renderer();
+        }
+        renderer.render(context);
+    }
 }

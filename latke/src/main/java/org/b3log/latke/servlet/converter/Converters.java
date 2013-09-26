@@ -50,7 +50,8 @@ public final class Converters {
     private Converters() {}
 
     static {
-        // first for special-class-convert(mainly for context) then name-matched-convert
+        // first for special-class-convert(mainly for context) then
+        // name-matched-convert
         registerConverters(new ContextConvert());
         registerConverters(new RequestConvert());
         registerConverters(new ResponseConvert());
@@ -79,14 +80,17 @@ public final class Converters {
      * @param sequence      sequence
      * @return ret
      */
-    public static Object doConvert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) {
+    public static Object doConvert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+        final MatchResult result, final int sequence) {
 
         for (IConverters iConverters : CONVERTERS_LIST) {
             if (iConverters.isMatched(parameterType, paramterName)) {
                 try {
                     return iConverters.convert(parameterType, paramterName, context, result, sequence);
                 } catch (final Exception e) {
-                    e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace(); // To change body of catch statement
+                    // use File | Settings | File
+                    // Templates.
                 }
             }
         }
@@ -124,7 +128,8 @@ interface IConverters {
      * @return ret
      * @throws Exception the convert-Exception
      */
-    Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence) throws Exception;
+    Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence)
+        throws Exception;
 
 }
 
@@ -145,7 +150,8 @@ class ContextConvert implements IConverters {
     }
 
     @Override
-    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+        final MatchResult result, final int sequence) throws Exception {
         return context;
     }
 }
@@ -167,7 +173,8 @@ class RequestConvert implements IConverters {
     }
 
     @Override
-    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+        final MatchResult result, final int sequence) throws Exception {
         return context.getRequest();
     }
 }
@@ -189,7 +196,8 @@ class ResponseConvert implements IConverters {
     }
 
     @Override
-    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+        final MatchResult result, final int sequence) throws Exception {
         return context.getResponse();
     }
 }
@@ -211,7 +219,8 @@ class RendererConvert implements IConverters {
     }
 
     @Override
-    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+        final MatchResult result, final int sequence) throws Exception {
 
         final AbstractHTTPResponseRenderer ins = (AbstractHTTPResponseRenderer) parameterType.newInstance();
         final String rid = getRendererId(result.getProcessorInfo().getInvokeHolder().getDeclaringClass(),
@@ -283,7 +292,8 @@ class PathVariableConvert implements IConverters {
     }
 
     @Override
-    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+        final MatchResult result, final int sequence) throws Exception {
 
         Object ret = result.getMapValues().get(paramterName);
 
@@ -337,14 +347,15 @@ class JSONObjectConvert implements IConverters {
     }
 
     @Override
-    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) throws Exception {
+    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+        final MatchResult result, final int sequence) throws Exception {
 
         final JSONObject ret = new JSONObject();
 
         final HttpServletRequest request = context.getRequest();
 
         for (Object o : request.getParameterMap().keySet()) {
-        	
+
             ret.put(String.valueOf(o), request.getParameterMap().get(o));
         }
         // mapValue will cover
@@ -354,4 +365,3 @@ class JSONObjectConvert implements IConverters {
         return ret;
     }
 }
-
