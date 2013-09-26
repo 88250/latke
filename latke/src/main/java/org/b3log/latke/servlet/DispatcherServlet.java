@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet;
 
-
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.handler.AdviceHandler;
 import org.b3log.latke.servlet.handler.CacheHandler;
@@ -34,52 +33,58 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * NEW core dispatch-controller for HTTP request dispatching .
- *
+ * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.1.0, Sep 12, 2013
  */
 public final class DispatcherServlet extends HttpServlet {
 
-    /**
-     * Default serial version uid.
-     */
-    private static final long serialVersionUID = 1L;
+	/**
+	 * Default serial version uid.
+	 */
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(HTTPRequestDispatcher.class.getName());
+	/**
+	 * Logger.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(HTTPRequestDispatcher.class.getName());
 
-    /**
-     * the holder of all the sys-handler.
-     */
-    private static final List<Ihandler> SYS_HANDLER = new ArrayList<Ihandler>();
+	/**
+	 * the holder of all the sys-handler.
+	 */
+	private static final List<Ihandler> SYS_HANDLER = new ArrayList<Ihandler>();
 
-    @Override
-    public void init() throws ServletException {
+	@Override
+	public void init() throws ServletException {
 
-        // before StaticResourceHandler ?
-        SYS_HANDLER.add(new CacheHandler());
-        SYS_HANDLER.add(new StaticResourceHandler(getServletContext()));
-        SYS_HANDLER.add(new RequestMatchHandler());
-        SYS_HANDLER.add(new PrepareAndExecuteHandler());
-        SYS_HANDLER.add(new AdviceHandler());
-        SYS_HANDLER.add(new MethodInvokeHandler());
-        SYS_HANDLER.add(new ResultRenderHandler());
-    }
+		// before StaticResourceHandler ?
+		SYS_HANDLER.add(new CacheHandler());
+		SYS_HANDLER.add(new StaticResourceHandler(getServletContext()));
+		SYS_HANDLER.add(new RequestMatchHandler());
+		SYS_HANDLER.add(new PrepareAndExecuteHandler());
+		SYS_HANDLER.add(new AdviceHandler());
+		SYS_HANDLER.add(new MethodInvokeHandler());
+		SYS_HANDLER.add(new ResultRenderHandler());
+	}
 
-    @Override
-    protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+	@Override
+	protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
+			IOException {
 
-        final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
+		final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
 
-        httpRequestContext.setRequest(req);
-        httpRequestContext.setResponse(resp);
-        final HttpControl httpControl = new HttpControl(SYS_HANDLER.iterator(), httpRequestContext);
+		httpRequestContext.setRequest(req);
+		httpRequestContext.setResponse(resp);
+		final HttpControl httpControl = new HttpControl(SYS_HANDLER.iterator(), httpRequestContext);
 
-        httpControl.nextHandler();
-    }
+		try {
+			httpControl.nextHandler();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }
