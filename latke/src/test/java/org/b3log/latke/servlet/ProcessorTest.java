@@ -31,6 +31,8 @@ import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.DoNothingRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.hamcrest.core.IsInstanceOf;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -39,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -222,6 +225,29 @@ public class ProcessorTest {
 		Assert.assertTrue(list.get(1) instanceof DoNothingRenderer);
 		Assert.assertTrue(list.get(2) instanceof JSONRenderer);
 		Assert.assertFalse(list.get(0) == list.get(2));
+
+	}
+
+	@Test
+	public void testBaseInvoke10() throws JSONException {
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURI()).thenReturn("/json/n");
+		when(request.getMethod()).thenReturn("GET");
+		when(request.getParameterMap()).thenReturn(new HashMap<String, String[]>() {
+			{
+				put("id", new String[] { "1" });
+				put("des", new String[] { "aa", "bbb" });
+			}
+		});
+
+		HttpControl control = doFlow(request);
+		Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+		
+		Map<String, Object> args = (Map<String, Object>) control.data(PrepareAndExecuteHandler.PREPARE_ARGS);
+		JSONObject jsonObject =(JSONObject) args.get("jsonObject");
+		Assert.assertTrue(jsonObject.get("des") instanceof String[]);
+		Assert.assertEquals("n", control.data(MethodInvokeHandler.INVOKE_RESULT));
 
 	}
 
