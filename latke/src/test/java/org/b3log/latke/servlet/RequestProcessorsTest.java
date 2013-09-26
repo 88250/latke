@@ -93,7 +93,7 @@ public class RequestProcessorsTest {
      */
     @Test
     public void testInvokePattern11() {
-        final String requestURI = "/string/11ptom";
+        final String requestURI = "/sstring/11ptom";
         final String ret = (String) RequestProcessors.invoke(requestURI, "/", "GET", new HTTPRequestContext());
         Assert.assertEquals(ret, "11tom");
     }

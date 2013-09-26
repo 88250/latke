@@ -62,7 +62,7 @@ public class MockService {
      * @param name name
      * @return a String
      */
-    @RequestProcessing(value = "/string/{id}p{name}")
+    @RequestProcessing(value = "/sstring/{id}p{name}")
     public String getString11(final Integer id, final String name) {
         return id + name;
     }
