@@ -19,8 +19,8 @@ import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.servlet.handler.AdviceHandler;
 import org.b3log.latke.servlet.handler.Ihandler;
 import org.b3log.latke.servlet.handler.MethodInvokeHandler;
-import org.b3log.latke.servlet.handler.PrepareHandler;
-import org.b3log.latke.servlet.handler.RequestMatchHandler;
+import org.b3log.latke.servlet.handler.ArgsHandler;
+import org.b3log.latke.servlet.handler.RequestDispatchHandler;
 import org.b3log.latke.servlet.mock.TestBeforeAdvice;
 import org.b3log.latke.servlet.mock.TestRequestProcessor;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
@@ -64,8 +64,8 @@ public class RequestDispachTestCase {
 
         Lifecycle.startApplication(classes);
 
-        handlerList.add(new RequestMatchHandler());
-        handlerList.add(new PrepareHandler());
+        handlerList.add(new RequestDispatchHandler());
+        handlerList.add(new ArgsHandler());
         handlerList.add(new AdviceHandler());
         handlerList.add(new MethodInvokeHandler());
     }
@@ -84,7 +84,7 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
         Assert.assertEquals("string", control.data(MethodInvokeHandler.INVOKE_RESULT));
 
     }
@@ -97,9 +97,9 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
-        Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
+        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         Assert.assertEquals("aa", args.get("id"));
         Assert.assertEquals("bb", args.get("name"));
         Assert.assertEquals("aabb", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -114,9 +114,9 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
-        Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
+        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         Assert.assertEquals("aa", args.get("id"));
         Assert.assertEquals("bb", args.get("name"));
         Assert.assertEquals("aabb", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -131,9 +131,9 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
-        Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
+        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         Assert.assertEquals(3, args.get("a"));
         Assert.assertEquals(4, args.get("b"));
         Assert.assertEquals(12, control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -148,9 +148,9 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
-        Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
+        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         Assert.assertEquals("a", args.get("name"));
         Assert.assertEquals("b", args.get("password"));
         Assert.assertEquals("ba", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -165,9 +165,9 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
-        Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
+        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         Assert.assertEquals(1, args.get("id"));
         Assert.assertTrue(args.get("date") instanceof Date);
         Assert.assertEquals("11330963200000", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -182,9 +182,9 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
-        Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
+        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         Assert.assertEquals(2, args.get("id"));
         Assert.assertEquals(2, control.data(MethodInvokeHandler.INVOKE_RESULT));
 
@@ -198,7 +198,7 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
         Assert.assertTrue(control.data(MethodInvokeHandler.INVOKE_RESULT) instanceof DoNothingRenderer);
 
@@ -212,7 +212,7 @@ public class RequestDispachTestCase {
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
         List<AbstractHTTPResponseRenderer> list = (List<AbstractHTTPResponseRenderer>) control
                 .data(MethodInvokeHandler.INVOKE_RESULT);
@@ -240,9 +240,9 @@ public class RequestDispachTestCase {
         });
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
 
-        Map<String, Object> args = (Map<String, Object>) control.data(PrepareHandler.PREPARE_ARGS);
+        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         JSONObject jsonObject = (JSONObject) args.get("jsonObject");
         Assert.assertTrue(jsonObject.get("des") instanceof String[]);
         Assert.assertEquals("n", control.data(MethodInvokeHandler.INVOKE_RESULT));
@@ -257,7 +257,7 @@ public class RequestDispachTestCase {
 
         final HttpControl control = doFlow(request);
 
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
         Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
     }
 
@@ -269,7 +269,7 @@ public class RequestDispachTestCase {
 
         final HttpControl control = doFlow(request);
 
-        Assert.assertNotNull(control.data(RequestMatchHandler.MATCH_RESULT));
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
         Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
     }
 

@@ -25,14 +25,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.handler.AdviceHandler;
-import org.b3log.latke.servlet.handler.CacheHandler;
 import org.b3log.latke.servlet.handler.Ihandler;
 import org.b3log.latke.servlet.handler.MethodInvokeHandler;
-import org.b3log.latke.servlet.handler.PrepareHandler;
-import org.b3log.latke.servlet.handler.RequestMatchHandler;
+import org.b3log.latke.servlet.handler.ArgsHandler;
+import org.b3log.latke.servlet.handler.RequestDispatchHandler;
+import org.b3log.latke.servlet.handler.RequestPrepareHandler;
 import org.b3log.latke.servlet.handler.StaticResourceHandler;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
@@ -64,12 +63,11 @@ public final class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
-        // before StaticResourceHandler ?
-        SYS_HANDLER.add(new CacheHandler());
         SYS_HANDLER.add(new StaticResourceHandler(getServletContext()));
-        SYS_HANDLER.add(new RequestMatchHandler());
-        SYS_HANDLER.add(new PrepareHandler());
+
+        SYS_HANDLER.add(new RequestPrepareHandler());
+        SYS_HANDLER.add(new RequestDispatchHandler());
+        SYS_HANDLER.add(new ArgsHandler());
         SYS_HANDLER.add(new AdviceHandler());
         SYS_HANDLER.add(new MethodInvokeHandler());
     }

@@ -47,12 +47,12 @@ import org.b3log.latke.util.AntPathMatcher;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 18, 2013
  */
-public class RequestMatchHandler implements Ihandler {
+public class RequestDispatchHandler implements Ihandler {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(RequestMatchHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RequestDispatchHandler.class.getName());
 
     /**
      * the shared-matched-result-data name.
@@ -67,7 +67,7 @@ public class RequestMatchHandler implements Ihandler {
     /**
      * constructor.
      */
-    public RequestMatchHandler() {
+    public RequestDispatchHandler() {
 
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
