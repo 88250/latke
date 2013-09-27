@@ -101,6 +101,7 @@ public class RequestMatchHandler implements Ihandler {
      * @param method     http-method
      * @return MatchResult
      */
+    // XXX: Performance Issue 
     private MatchResult doMatch(final String requestURI, final String method) {
         MatchResult ret = null;
 
