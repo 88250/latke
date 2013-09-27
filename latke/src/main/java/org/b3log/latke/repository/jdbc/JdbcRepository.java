@@ -60,7 +60,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.5, Sep 2, 2013
+ * @version 1.0.2.6, Sep 27, 2013
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -657,9 +657,6 @@ public final class JdbcRepository implements Repository {
         int pageCnt = pageCount;
         int recordCnt = 0;
 
-        ret.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
-        ret.put(Pagination.PAGINATION_RECORD_COUNT, recordCnt);
-
         final StringBuilder selectSql = new StringBuilder();
         final StringBuilder filterSql = new StringBuilder();
         final StringBuilder orderBySql = new StringBuilder();
@@ -678,6 +675,9 @@ public final class JdbcRepository implements Repository {
             recordCnt = (int) count(countSql, paramList);
 
             if (0 == recordCnt) {
+                ret.put(Pagination.PAGINATION_PAGE_COUNT, 0);
+                ret.put(Pagination.PAGINATION_RECORD_COUNT, 0);
+
                 return ret;
             }
 
