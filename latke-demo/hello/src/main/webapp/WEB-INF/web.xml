@@ -18,7 +18,7 @@
 -->
 <!--
     Description: Web deployment descriptor template.
-    Version: 1.0.0.2, Oct 4, 2011
+    Version: 1.0.0.3, Sep 27, 2013
     Author: Liang Ding
 -->
 <web-app version="2.5" 
@@ -28,13 +28,13 @@
     <listener>
         <listener-class>org.b3log.latke.servlet.DefaultServletListener</listener-class>
     </listener>
+
     <servlet>
-        <servlet-name>HTTPRequestDispatcher</servlet-name>
-        <servlet-class>org.b3log.latke.servlet.HTTPRequestDispatcher</servlet-class>
-        <load-on-startup>1</load-on-startup>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <servlet-class>org.b3log.latke.servlet.DispatcherServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>HTTPRequestDispatcher</servlet-name>
+        <servlet-name>DispatcherServlet</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 </web-app>
