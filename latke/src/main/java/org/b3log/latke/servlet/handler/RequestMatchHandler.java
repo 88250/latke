@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import org.b3log.latke.util.AntPathMatcher;
 
 
 /**
@@ -90,7 +91,7 @@ public class RequestMatchHandler implements Ihandler {
             // do logger
             httpControl.data(MATCH_RESULT, result);
             httpControl.nextHandler();
-        } 
+        }
     }
 
     /**
@@ -101,14 +102,11 @@ public class RequestMatchHandler implements Ihandler {
      * @return MatchResult
      */
     private MatchResult doMatch(final String requestURI, final String method) {
-
         MatchResult ret = null;
 
         for (ProcessorInfo processorInfo : processorInfos) {
-
             for (HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
                 if (method.equals(httpRequestMethod.toString())) {
-
                     final String[] uriPatterns = processorInfo.getPattern();
 
                     for (String uriPattern : uriPatterns) {
@@ -120,7 +118,7 @@ public class RequestMatchHandler implements Ihandler {
                 }
             }
         }
-        
+
         return ret;
     }
 
@@ -140,35 +138,41 @@ public class RequestMatchHandler implements Ihandler {
         }
 
         switch (processorInfo.getUriPatternMode()) {
-
         case REGEX:
-            final boolean ret = RegexPathMatcher.match(uriPattern, requestURI);
-
-            if (ret) {
+            if (RegexPathMatcher.match(uriPattern, requestURI)) {
                 return new MatchResult(processorInfo, requestURI, method, uriPattern);
             }
+
             break;
 
         case ANT_PATH:
-            final URIResolveResult rett = DefaultMatcher.match(uriPattern, requestURI);
+            if (AntPathMatcher.match(uriPattern, requestURI)) {
+                return new MatchResult(processorInfo, requestURI, method, uriPattern);
+            }
 
-            if (rett.getStatus().equals(URIResolveResult.Status.RESOLVED)) {
-                final MatchResult result = new MatchResult(processorInfo, requestURI, method, uriPattern);
+            final URIResolveResult result = DefaultMatcher.match(uriPattern, requestURI);
+
+            if (URIResolveResult.Status.RESOLVED == result.getStatus()) {
+                final MatchResult ret = new MatchResult(processorInfo, requestURI, method, uriPattern);
 
                 final HashMap<String, Object> map = new HashMap<String, Object>();
 
-                for (String s : rett.names()) {
-                    map.put(s, rett.get(s));
+                for (String s : result.names()) {
+                    map.put(s, result.get(s));
                 }
-                result.setMapValues(map);
-                return result;
+
+                ret.setMapValues(map);
+
+                return ret;
             }
+
             break;
 
         default:
             throw new IllegalStateException(
                 "Can not process URI pattern[uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
         }
+
         return null;
     }
 
@@ -179,12 +183,13 @@ public class RequestMatchHandler implements Ihandler {
      * @return http-method
      */
     private String getMethod(final HttpServletRequest request) {
-        String method = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
+        String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
 
-        if (Strings.isEmptyOrNull(method)) {
-            method = request.getMethod();
+        if (Strings.isEmptyOrNull(ret)) {
+            ret = request.getMethod();
         }
-        return method;
+        
+        return ret;
     }
 
     /**
@@ -194,12 +199,13 @@ public class RequestMatchHandler implements Ihandler {
      * @return requestURI
      */
     private String getRequestURI(final HttpServletRequest request) {
-        String requestURI = (String) request.getAttribute(Keys.HttpRequest.REQUEST_URI);
+        String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_URI);
 
-        if (Strings.isEmptyOrNull(requestURI)) {
-            requestURI = request.getRequestURI();
+        if (Strings.isEmptyOrNull(ret)) {
+            ret = request.getRequestURI();
         }
-        return requestURI;
+
+        return ret;
     }
 
     /**
@@ -247,10 +253,8 @@ public class RequestMatchHandler implements Ihandler {
         processorInfo.setHttpMethod(requestProcessingMethodAnn.method());
         processorInfo.setConvertClass(requestProcessingMethodAnn.convertClass());
         processorInfo.setInvokeHolder(mthd);
-        
+
         processorInfos.add(processorInfo);
 
     }
-
 }
-
