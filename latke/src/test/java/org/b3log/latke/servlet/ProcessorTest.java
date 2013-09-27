@@ -16,10 +16,6 @@
 package org.b3log.latke.servlet;
 
 import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.config.Discoverer;
-import org.b3log.latke.mock.MockHttpServletRequest;
-import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 import org.b3log.latke.servlet.handler.AdviceHandler;
 import org.b3log.latke.servlet.handler.Ihandler;
 import org.b3log.latke.servlet.handler.MethodInvokeHandler;
@@ -30,7 +26,6 @@ import org.b3log.latke.servlet.mock.TestService;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.DoNothingRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
-import org.hamcrest.core.IsInstanceOf;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.annotations.AfterTest;
@@ -39,7 +34,6 @@ import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
