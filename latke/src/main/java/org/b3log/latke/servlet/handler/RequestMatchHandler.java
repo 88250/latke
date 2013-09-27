@@ -81,11 +81,11 @@ public class RequestMatchHandler implements Ihandler {
         final HttpServletRequest request = context.getRequest();
 
         final String requestURI = getRequestURI(request);
-        final String method = getMethod(request);
+        final String httpMethod = getHTTPMethod(request);
 
-        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[] {requestURI, method});
+        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[] {requestURI, httpMethod});
 
-        final MatchResult result = doMatch(requestURI, method);
+        final MatchResult result = doMatch(requestURI, httpMethod);
 
         if (result != null) {
             // do logger
@@ -98,20 +98,20 @@ public class RequestMatchHandler implements Ihandler {
      * doMatch.
      *
      * @param requestURI requestURI
-     * @param method     http-method
+     * @param httpMethod     http-method
      * @return MatchResult
      */
     // XXX: Performance Issue 
-    private MatchResult doMatch(final String requestURI, final String method) {
+    private MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret = null;
 
         for (ProcessorInfo processorInfo : processorInfos) {
             for (HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
-                if (method.equals(httpRequestMethod.toString())) {
+                if (httpMethod.equals(httpRequestMethod.toString())) {
                     final String[] uriPatterns = processorInfo.getPattern();
 
                     for (String uriPattern : uriPatterns) {
-                        ret = getResult(uriPattern, processorInfo, requestURI, method);
+                        ret = getResult(uriPattern, processorInfo, requestURI, httpMethod);
                         if (ret != null) {
                             return ret;
                         }
@@ -183,7 +183,7 @@ public class RequestMatchHandler implements Ihandler {
      * @param request request
      * @return http-method
      */
-    private String getMethod(final HttpServletRequest request) {
+    private String getHTTPMethod(final HttpServletRequest request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
 
         if (Strings.isEmptyOrNull(ret)) {
