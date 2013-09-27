@@ -55,5 +55,7 @@ public class RequestPrepareHandler implements Ihandler {
                 request.setAttribute(Keys.PAGE_CACHE_KEY, pageCacheKey);
             }
         }
+        
+        httpControl.nextHandler();
     }
 }

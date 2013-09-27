@@ -21,6 +21,8 @@ import org.b3log.latke.servlet.handler.Ihandler;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
@@ -30,6 +32,11 @@ import java.util.Map;
  * @version 1.0.0.1, Sep 18, 2013
  */
 public class HttpControl {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(HttpControl.class);
 
     /**
      * the constructor.
@@ -86,7 +93,7 @@ public class HttpControl {
             try {
                 ihandlerIterable.next().handle(httpRequestContext, this);
             } catch (final Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.ERROR, "Request processing failed", e);
             }
         }
     }

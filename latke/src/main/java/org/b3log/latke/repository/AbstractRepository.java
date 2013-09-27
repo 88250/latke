@@ -169,7 +169,8 @@ public abstract class AbstractRepository implements Repository {
         try {
             return repository.get(query);
         } catch (final JDBCRepositoryException e) {
-            LOGGER.log(Level.WARN, "SQL exception[msg={0}]", e.getMessage());
+            LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, query={2}]", e.getMessage(), repository.getName(),
+                query.toString());
 
             // XXX: Results.defaultPagination?
             final JSONObject ret = new JSONObject();

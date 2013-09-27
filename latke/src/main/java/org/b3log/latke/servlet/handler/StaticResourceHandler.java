@@ -19,7 +19,6 @@ package org.b3log.latke.servlet.handler;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -111,18 +110,18 @@ public class StaticResourceHandler implements Ihandler {
     public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
 
         final HttpServletRequest request = context.getRequest();
-        final HttpServletResponse response = context.getResponse();
 
         if (StaticResources.isStatic(request)) {
             if (null == requestDispatcher) {
                 throw new IllegalStateException(
                     "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
             }
-            
+
             context.setRenderer(new StaticFileRenderer(requestDispatcher));
-           
-        } else {
-            httpControl.nextHandler();
+
+            return;
         }
+        
+        httpControl.nextHandler();
     }
 }

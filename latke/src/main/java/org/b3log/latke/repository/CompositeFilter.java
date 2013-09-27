@@ -24,7 +24,7 @@ import java.util.List;
  * Composite filter that combines serval sub filters using a {@link CompositeFilterOperator}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jun 27, 2012
+ * @version 1.0.0.1, Sep 27, 2013
  * @see CompositeFilterOperator
  */
 public final class CompositeFilter implements Filter {
@@ -105,5 +105,26 @@ public final class CompositeFilter implements Filter {
         ret = BASE * ret + (this.subFilters != null ? this.subFilters.hashCode() : 0);
 
         return ret;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder("operator=");
+        
+        stringBuilder.append(operator).append(", filters=[");
+
+        for (int i = 0; i < subFilters.size(); i++) {
+            final Filter filter = subFilters.get(i);
+
+            stringBuilder.append("filter=[").append(filter.toString()).append("]");
+            
+            if (i < subFilters.size() - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+
+        stringBuilder.append("]");
+
+        return stringBuilder.toString();
     }
 }
