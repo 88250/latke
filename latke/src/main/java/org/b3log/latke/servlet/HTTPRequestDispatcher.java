@@ -43,6 +43,7 @@ import java.io.PrintWriter;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.0, Aug 10, 2012
+ * @deprecated Use {@link DispatcherServlet} instead
  */
 public final class HTTPRequestDispatcher extends HttpServlet {
 

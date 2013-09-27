@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jun 19, 2013
+ * @version 1.0.0.1, Sep 27, 2013
  * @see Level
  */
 public final class Logger {
@@ -61,6 +61,16 @@ public final class Logger {
      */
     public static Logger getLogger(final String className) {
         return new Logger(className);
+    }
+
+    /**
+     * Gets a logger with the specified class.
+     * 
+     * @param clazz the specified class
+     * @return logger
+     */
+    public static Logger getLogger(final Class<?> clazz) {
+        return new Logger(clazz.getName());
     }
 
     /**

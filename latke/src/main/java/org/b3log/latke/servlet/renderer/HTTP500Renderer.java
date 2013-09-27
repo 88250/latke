@@ -31,12 +31,12 @@ import org.b3log.latke.servlet.HTTPRequestContext;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Sep 26, 2013
  */
-public final class HTTP505Renderer extends AbstractHTTPResponseRenderer {
+public final class HTTP500Renderer extends AbstractHTTPResponseRenderer {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(HTTP505Renderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(HTTP500Renderer.class.getName());
 
     /**
      * the internal exception.
@@ -49,7 +49,7 @@ public final class HTTP505Renderer extends AbstractHTTPResponseRenderer {
      * @param e internal exception
      *            
      */
-    public HTTP505Renderer(final Exception e) {
+    public HTTP500Renderer(final Exception e) {
         this.e = e;
     }
 

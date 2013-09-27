@@ -36,11 +36,11 @@ import org.b3log.latke.servlet.handler.RequestMatchHandler;
 import org.b3log.latke.servlet.handler.StaticResourceHandler;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
-import org.b3log.latke.servlet.renderer.HTTP505Renderer;
+import org.b3log.latke.servlet.renderer.HTTP500Renderer;
 
 
 /**
- * NEW core dispatch-controller for HTTP request dispatching .
+ * NEW core dispatch-controller for HTTP request dispatching.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.1.0, Sep 12, 2013
@@ -55,7 +55,7 @@ public final class DispatcherServlet extends HttpServlet {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(HTTPRequestDispatcher.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DispatcherServlet.class);
 
     /**
      * the holder of all the sys-handler.
@@ -75,9 +75,7 @@ public final class DispatcherServlet extends HttpServlet {
     }
 
     @Override
-    protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException,
-            IOException {
-
+    protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
 
         httpRequestContext.setRequest(req);
@@ -87,19 +85,17 @@ public final class DispatcherServlet extends HttpServlet {
         try {
             httpControl.nextHandler();
         } catch (final Exception e) {
-            httpRequestContext.setRenderer(new HTTP505Renderer(e));
+            httpRequestContext.setRenderer(new HTTP500Renderer(e));
         }
 
         result(httpRequestContext);
     }
 
     /**
-     * to http repsonse .
+     * To http repsonse.
      * 
-     * @param context
-     *            {@link HTTPRequestContext}
-     * @throws IOException
-     *             IOException
+     * @param context {@link HTTPRequestContext}
+     * @throws IOException IOException
      */
     private void result(final HTTPRequestContext context) throws IOException {
         final HttpServletResponse response = context.getResponse();
@@ -117,6 +113,7 @@ public final class DispatcherServlet extends HttpServlet {
         if (null == renderer) {
             renderer = new HTTP404Renderer();
         }
+
         renderer.render(context);
     }
 }
