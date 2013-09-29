@@ -28,6 +28,10 @@ import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.inject.Inject;
+import org.b3log.latke.intercept.annotation.AfterMethod;
+import org.b3log.latke.intercept.annotation.BeforeMethod;
+import org.b3log.latke.ioc.bean.Interceptor;
+import org.b3log.latke.ioc.bean.InterceptorHolder;
 import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.ioc.util.Reflections;
 import org.b3log.latke.util.CollectionUtils;
@@ -38,7 +42,7 @@ import org.b3log.latke.util.CollectionUtils;
  *
  * @param <T> the declaring type
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.5, Mar 30, 2010
+ * @version 1.0.1.6, Sep 29, 2013
  */
 public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
 
@@ -196,6 +200,8 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
                 method.setAccessible(true);
                 annotatedMethods.add(annotatedMethod);
             }
+
+            initInterceptor(method);
         }
 
         for (final Method method : inheritedMethods) {
@@ -207,6 +213,8 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
                 method.setAccessible(true);
                 annotatedMethods.add(annotatedMethod);
             }
+
+            initInterceptor(method);
         }
 
         for (final Method method : ownMethods) {
@@ -218,11 +226,33 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
                 method.setAccessible(true);
                 annotatedMethods.add(annotatedMethod);
             }
+
+            initInterceptor(method);
         }
     }
 
     @Override
     public Set<Type> getTypeClosure() {
         return Beans.getBeanTypes(beanClass);
+    }
+
+    /**
+     * Initializes an interceptor with the specified method.
+     * 
+     * @param method the specified method
+     * @see InterceptorHolder
+     */
+    private void initInterceptor(final Method method) {
+        final BeforeMethod beforeMethod = method.getAnnotation(BeforeMethod.class);
+
+        if (null != beforeMethod) {
+            InterceptorHolder.addInterceptor(new Interceptor(method, beforeMethod), BeforeMethod.class);
+        }
+
+        final AfterMethod afterMethod = method.getAnnotation(AfterMethod.class);
+
+        if (null != afterMethod) {
+            InterceptorHolder.addInterceptor(new Interceptor(method, afterMethod), AfterMethod.class);
+        }
     }
 }

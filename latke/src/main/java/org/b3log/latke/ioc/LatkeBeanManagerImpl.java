@@ -51,6 +51,7 @@ import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.ioc.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.repository.impl.UserRepository;
 import org.b3log.latke.service.LangPropsServiceImpl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
@@ -64,7 +65,7 @@ import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
  */
 @Named("beanManager")
 @Singleton
-public final class LatkeBeanManagerImpl implements LatkeBeanManager {
+public class LatkeBeanManagerImpl implements LatkeBeanManager {
 
     /**
      * Logger.
@@ -95,7 +96,7 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
      * Built-in bean classes.
      */
     private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsServiceImpl.class, BeforeRequestProcessAdvice.class,
-        AfterRequestProcessAdvice.class);
+        AfterRequestProcessAdvice.class, UserRepository.class);
 
     @Override
     public ELResolver getELResolver() {
@@ -197,7 +198,7 @@ public final class LatkeBeanManagerImpl implements LatkeBeanManager {
             }
         }
 
-        throw new RuntimeException();
+        throw new RuntimeException("Can not get bean with class [" + beanClass.getName() + ']');
     }
 
     @Override

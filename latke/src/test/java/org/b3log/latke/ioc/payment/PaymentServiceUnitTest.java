@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
@@ -56,9 +57,10 @@ final public class PaymentServiceUnitTest {
     public void beforeTest() throws Exception {
         System.out.println("before PaymentServiceUnitTest");
 
-        beanManager = LatkeBeanManagerImpl.getInstance();
-
+        Latkes.initRuntimeEnv();
         Lifecycle.startApplication(paymentPackageClasses);
+        
+        beanManager = LatkeBeanManagerImpl.getInstance();
 
         final Set<Annotation> paymentServiceQualifiers = new HashSet<Annotation>();
         paymentServiceQualifiers.add(new PayLiteral());

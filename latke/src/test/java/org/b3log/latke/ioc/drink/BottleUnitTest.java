@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import javax.inject.Singleton;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.drink.juice.Juice;
 import org.b3log.latke.ioc.drink.juice.JuiceBottle;
 import org.b3log.latke.ioc.drink.mix.Mix;
@@ -79,11 +80,12 @@ final public class BottleUnitTest {
     @SuppressWarnings("unchecked")
     public void beforeTest() throws Exception {
         System.out.println("before BottleUnitTest");
-
-        beanManager = LatkeBeanManagerImpl.getInstance();
-
+        
+        Latkes.initRuntimeEnv();
         Lifecycle.startApplication(drinkPackageClasses);
 
+        beanManager = LatkeBeanManagerImpl.getInstance();
+        
         // Creates bean by APIs
         final Configurator configurator = beanManager.getConfigurator();
         configurator.createBean(Mix.class).named("spiritMix").

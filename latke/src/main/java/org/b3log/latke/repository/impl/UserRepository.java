@@ -16,6 +16,7 @@
 package org.b3log.latke.repository.impl;
 
 
+import javax.inject.Named;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -26,6 +27,7 @@ import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.RepositoryException;
+import org.b3log.latke.repository.annotation.Repository;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,12 +39,21 @@ import org.json.JSONObject;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Jun 27, 2012
  */
-public final class UserRepositoryImpl extends AbstractRepository {
+@Named("LakteBuiltInUserRepository")
+@Repository
+public class UserRepository extends AbstractRepository {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(UserRepositoryImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserRepository.class.getName());
+
+    /**
+     * Public constructor.
+     */
+    public UserRepository() {
+        super("LakteBuiltInUserRepository");
+    }
 
     /**
      * Gets user by the specified email.
@@ -118,42 +129,5 @@ public final class UserRepositoryImpl extends AbstractRepository {
 
             throw new RepositoryException(e);
         }
-    }
-
-    /**
-     * Gets the {@link UserRepositoryImpl} singleton.
-     *
-     * @return the singleton
-     */
-    public static UserRepositoryImpl getInstance() {
-        return SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private constructor.
-     * 
-     * @param name the specified name
-     */
-    private UserRepositoryImpl(final String name) {
-        super(name);
-    }
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.0, Jan 12, 2011
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final UserRepositoryImpl SINGLETON = new UserRepositoryImpl(User.USER);
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {}
     }
 }

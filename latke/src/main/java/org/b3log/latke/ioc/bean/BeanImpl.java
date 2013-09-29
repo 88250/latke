@@ -22,7 +22,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +42,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import org.apache.commons.lang.ClassUtils;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.annotated.AnnotatedTypeImpl;
 import org.b3log.latke.ioc.config.Configurator;
@@ -62,7 +60,7 @@ import org.b3log.latke.logging.Logger;
  *
  * @param <T> the declaring type
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.7, Mar 30, 2010
+ * @version 1.0.0.8, Sep 29, 2013
  */
 public class BeanImpl<T> implements LatkeBean<T> {
 
@@ -107,19 +105,9 @@ public class BeanImpl<T> implements LatkeBean<T> {
     private Class<T> proxyClass;
 
     /**
-     * Determines whether is using JDK proxy.
-     */
-    private boolean usingJDKProxy;
-
-    /**
      * Javassist method handler.
      */
     private JavassistMethodHandler javassistMethodHandler;
-
-    /**
-     * JDK invocation handler.
-     */
-    private JDKInvocationHandler jdkInvocationHandler;
 
     /**
      * Bean types.
@@ -195,19 +183,12 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
         this.configurator = beanManager.getConfigurator();
 
-        usingJDKProxy = !ClassUtils.getAllInterfaces(beanClass).isEmpty();
+        javassistMethodHandler = new JavassistMethodHandler(beanManager);
+        final ProxyFactory proxyFactory = new ProxyFactory();
 
-        if (usingJDKProxy) {
-            jdkInvocationHandler = new JDKInvocationHandler();
-        } else {
-            javassistMethodHandler = new JavassistMethodHandler();
-
-            final ProxyFactory proxyFactory = new ProxyFactory();
-
-            proxyFactory.setSuperclass(beanClass);
-            proxyFactory.setFilter(javassistMethodHandler.getMethodFilter());
-            proxyClass = proxyFactory.createClass();
-        }
+        proxyFactory.setSuperclass(beanClass);
+        proxyFactory.setFilter(javassistMethodHandler.getMethodFilter());
+        proxyClass = proxyFactory.createClass();
 
         annotatedType = new AnnotatedTypeImpl<T>(beanClass);
 
@@ -272,34 +253,15 @@ public class BeanImpl<T> implements LatkeBean<T> {
             }
 
             final Constructor<T> oriBeanConstructor = annotatedConstructor.getJavaMember();
+            final Constructor<T> constructor = proxyClass.getConstructor(oriBeanConstructor.getParameterTypes());
 
-            if (usingJDKProxy) {
-                ret = annotatedConstructor.getJavaMember().newInstance(args);
-            } else {
-                final Constructor<T> constructor = proxyClass.getConstructor(oriBeanConstructor.getParameterTypes());
-
-                ret = constructor.newInstance(args);
-            }
+            ret = constructor.newInstance(args);
         } else {
-            if (usingJDKProxy) {
-                ret = beanClass.newInstance();
-            } else {
-                ret = proxyClass.newInstance();
-            }
+            ret = proxyClass.newInstance();
         }
 
-        if (usingJDKProxy) {
-            final List<Class<?>> allInterfaces = ClassUtils.getAllInterfaces(beanClass);
-            final Class<?>[] interfaces = allInterfaces.<Class<?>>toArray(new Class<?>[0]);
-
-            Proxy.newProxyInstance(interfaces[0].getClassLoader(), interfaces, jdkInvocationHandler);
-
-            LOGGER.log(Level.TRACE, "Uses JDK invocation handler for bean[class={0}]", beanClass.getName());
-        } else {
-            ((ProxyObject) ret).setHandler(javassistMethodHandler);
-
-            LOGGER.log(Level.TRACE, "Uses Javassist method handler for bean[class={0}]", beanClass.getName());
-        }
+        ((ProxyObject) ret).setHandler(javassistMethodHandler);
+        LOGGER.log(Level.TRACE, "Uses Javassist method handler for bean[class={0}]", beanClass.getName());
 
         return ret;
     }
@@ -562,8 +524,8 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     @Override
     public String toString() {
-        return "[name=" + name + ", scope=" + scope + ", qualifiers=" + qualifiers + ", class=" + beanClass.getName() + ", types=" + types
-            + "]";
+        return "[name=" + name + ", scope=" + scope.getName() + ", qualifiers=" + qualifiers + ", class=" + beanClass.getName() + ", types="
+            + types + "]";
     }
 
     /**

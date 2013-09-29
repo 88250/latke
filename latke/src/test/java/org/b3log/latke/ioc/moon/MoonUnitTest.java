@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
@@ -61,6 +62,8 @@ final public class MoonUnitTest {
     public void beforeTest() throws Exception {
         System.out.println("before MoonUnitTest");
 
+        Latkes.initRuntimeEnv();
+        
         beanManager = LatkeBeanManagerImpl.getInstance();
 
         Lifecycle.startApplication(moonPackageClasses);

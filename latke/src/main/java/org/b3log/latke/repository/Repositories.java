@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.repository.impl.UserRepositoryImpl;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
@@ -135,9 +134,6 @@ public final class Repositories {
     }
 
     static {
-        // Initializes the Latke built-in user repository.
-        addRepository(UserRepositoryImpl.getInstance());
-
         loadRepositoryDescription();
     }
 

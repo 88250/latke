@@ -16,21 +16,26 @@
 package org.b3log.latke.ioc.bean;
 
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Set;
 import javassist.util.proxy.MethodFilter;
 import javassist.util.proxy.MethodHandler;
+import org.b3log.latke.intercept.annotation.AfterMethod;
+import org.b3log.latke.intercept.annotation.BeforeMethod;
+import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.annotation.Transactional;
-import org.b3log.latke.repository.impl.UserRepositoryImpl;
+import org.b3log.latke.repository.impl.UserRepository;
 
 
 /**
  * Javassist method handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Sep 2, 2013
+ * @version 1.0.1.1, Sep 29, 2013
  */
 public final class JavassistMethodHandler implements MethodHandler {
 
@@ -40,27 +45,53 @@ public final class JavassistMethodHandler implements MethodHandler {
     private static final Logger LOGGER = Logger.getLogger(JavassistMethodHandler.class.getName());
 
     /**
+     * Bean manager.
+     */
+    private LatkeBeanManager beanManager;
+
+    /**
      * Method filter.
      */
     private MethodFilter methodFilter = new MethodFilter() {
         @Override
         public boolean isHandled(final Method method) {
-            return method.isAnnotationPresent(Transactional.class);
+            final String name = method.getName();
+            
+            return !"beginTransaction".equals(name) && !"hasTransactionBegun".equals(name);
         }
     };
+
+    /**
+     * Constructs a method handler with the specified bean manager.
+     * 
+     * @param beanManager the specified bean manager
+     */
+    public JavassistMethodHandler(final LatkeBeanManager beanManager) {
+        this.beanManager = beanManager;
+    }
 
     @Override
     public Object invoke(final Object proxy, final Method method, final Method proceed, final Object[] params) {
         LOGGER.trace("Processing invocation: " + method.toString());
 
-        final boolean withTransaction = method.isAnnotationPresent(Transactional.class);
-        final boolean alreadyInTransaction = UserRepositoryImpl.getInstance().hasTransactionBegun();
+        final Class<?> declaringClass = method.getDeclaringClass();
+        final String invokingMehtodName = declaringClass.getName() + '#' + method.getName();
 
-        Transaction transaction = null;
+        // 1. @BeforeMethod handle
+        handleInterceptor(invokingMehtodName, params, BeforeMethod.class);
         
+        // 2. Invocation with transaction handle
+        final UserRepository userRepository = beanManager.getReference(UserRepository.class);
+
+        final boolean withTransactionalAnno = method.isAnnotationPresent(Transactional.class);
+        final boolean alreadyInTransaction = userRepository.hasTransactionBegun();
+        final boolean needHandleTrans = withTransactionalAnno && !alreadyInTransaction;
+
         // Transaction Propagation: REQUIRED (Support a current transaction, create a new one if none exists)
-        if (withTransaction && !alreadyInTransaction) {
-            transaction = UserRepositoryImpl.getInstance().beginTransaction();
+        Transaction transaction = null;
+
+        if (needHandleTrans) {
+            transaction = userRepository.beginTransaction();
         }
 
         Object ret = null;
@@ -68,20 +99,57 @@ public final class JavassistMethodHandler implements MethodHandler {
         try {
             ret = proceed.invoke(proxy, params);
 
-            if (withTransaction && !alreadyInTransaction) {
+            if (needHandleTrans) {
                 transaction.commit();
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Invoke [" + method.toString() + "] failed", e);
+            final String errMsg = "Invoke [" + method.toString() + "] failed";
 
-            if (withTransaction && !alreadyInTransaction) {
+            LOGGER.log(Level.ERROR, errMsg, e);
+
+            if (needHandleTrans) {
                 if (null != transaction && transaction.isActive()) {
                     transaction.rollback();
                 }
             }
+
+            throw new RuntimeException(errMsg);
         }
 
+        // 3. @AfterMethod handle
+        handleInterceptor(invokingMehtodName, params, AfterMethod.class);
+
         return ret;
+    }
+
+    /**
+     * Interceptor handle with the specified invoking method name, invoking method parameters and intercept annotation 
+     * class.
+     * 
+     * @param invokingMehtodName the specified invoking method name
+     * @param params the specified invoking method parameters
+     * @param interceptAnnClass the specified intercept annotation class
+     */
+    private void handleInterceptor(final String invokingMehtodName, final Object[] params,
+        final Class<? extends Annotation> interceptAnnClass) {
+        final Set<Interceptor> interceptors = InterceptorHolder.getInterceptors(invokingMehtodName, interceptAnnClass);
+
+        for (final Interceptor interceptor : interceptors) {
+            final Method interceptMethod = interceptor.getInterceptMethod();
+            final Class<?> interceptMethodClass = interceptMethod.getDeclaringClass();
+
+            try {
+                final Object reference = beanManager.getReference(interceptMethodClass);
+
+                interceptMethod.invoke(reference, params);
+            } catch (final Exception e) {
+                final String errMsg = "Interception[" + interceptor.toString() + "] execute failed";
+
+                LOGGER.log(Level.ERROR, errMsg, e);
+
+                throw new RuntimeException(errMsg);
+            }
+        }
     }
 
     /**

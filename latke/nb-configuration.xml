@@ -16,6 +16,7 @@
         <word>datastore</word>
         <word>enum</word>
         <word>inline</word>
+        <word>interceptors</word>
         <word>Javassist</word>
         <word>json</word>
         <word>Latke</word>
