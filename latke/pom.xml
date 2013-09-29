@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
     Description: Latke web framework project. 
-    Version: 1.0.8.2, Sep 27 18, 2013 
+    Version: 1.0.8.3, Sep 29, 2013 
     Author: Liang Ding
     Author: Liceng Yao
 -->
@@ -310,16 +310,6 @@
         <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jboss-vfs</artifactId>
-        </dependency>
-
-		
-
-
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>3.2</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
