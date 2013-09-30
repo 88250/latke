@@ -20,13 +20,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.literal.NamedLiteral;
-import org.b3log.latke.ioc.mock.MockServletContext;
 import org.b3log.latke.ioc.speaker.annotation.HelloLiteral;
 import org.b3log.latke.ioc.speaker.annotation.MidnightLiteral;
 import org.b3log.latke.ioc.speaker.annotation.MorningLiteral;
@@ -63,12 +63,13 @@ final public class SpeakerUnitTest {
     public void beforeTest() throws Exception {
         System.out.println("before SpeakerUnitTest");
 
+        Latkes.initRuntimeEnv();
         beanManager = LatkeBeanManagerImpl.getInstance();
 
         Lifecycle.startApplication(speakerPackageClasses);
 
         final Configurator configurator = beanManager.getConfigurator();
-        
+
         // Create beans by APIs approach
         configurator.createBean(HelloSpeaker.class).qualified(new HelloLiteral());
         configurator.createBean(NightSpeaker.class).qualified(new NightLiteral());

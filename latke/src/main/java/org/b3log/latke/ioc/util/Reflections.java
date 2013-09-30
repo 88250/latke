@@ -22,7 +22,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.commons.lang.ClassUtils;
 import org.b3log.latke.util.CollectionUtils;
 
 
@@ -275,15 +274,11 @@ final public class Reflections {
             return false;
         }
 
-        if (subclassField.equals(superclassField)) {
-            final Package subclassPackage = superclassField.getDeclaringClass().getPackage();
-            final Package superclassPackage = superclassField.getDeclaringClass().getPackage();
-            final int superFieldModifiers = superclassField.getModifiers();
+        final Package subclassPackage = superclassField.getDeclaringClass().getPackage();
+        final Package superclassPackage = superclassField.getDeclaringClass().getPackage();
+        final int superFieldModifiers = superclassField.getModifiers();
 
-            return isAccessable(subclassPackage, superclassPackage, superFieldModifiers);
-        } else {
-            return false;
-        }
+        return isAccessable(subclassPackage, superclassPackage, superFieldModifiers);
     }
 
     public static boolean matchInheritance(final Method subclassMethod, final Method superclassMethod) {
@@ -363,8 +358,7 @@ final public class Reflections {
         return superclassField;
     }
 
-    public static Method getOverrideMethod(final Method superclassMethod,
-        final Class<?> subclass) {
+    public static Method getOverrideMethod(final Method superclassMethod, final Class<?> subclass) {
         final Class<?> superclass = superclassMethod.getDeclaringClass();
         Class<?> currentClass = subclass;
 

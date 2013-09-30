@@ -18,11 +18,11 @@ package org.b3log.latke.ioc.payment;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.mock.MockServletContext;
 import org.b3log.latke.ioc.payment.annotation.ConsoleLiteral;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -48,6 +48,7 @@ final public class PrinterUnitTest {
     public void beforeTest() throws Exception {
         System.out.println("before PrinterUnitTest");
 
+        Latkes.initRuntimeEnv();
         beanManager = LatkeBeanManagerImpl.getInstance();
 
         Lifecycle.startApplication(PaymentServiceUnitTest.paymentPackageClasses);

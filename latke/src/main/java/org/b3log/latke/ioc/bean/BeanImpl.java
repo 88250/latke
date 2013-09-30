@@ -120,11 +120,6 @@ public class BeanImpl<T> implements LatkeBean<T> {
     private AnnotatedType<T> annotatedType;
 
     /**
-     * Dependency resolver.
-     */
-    private Resolver resolver;
-
-    /**
      * Field injection points.
      */
     private Set<FieldInjectionPoint> fieldInjectionPoints;
@@ -192,7 +187,6 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
         annotatedType = new AnnotatedTypeImpl<T>(beanClass);
 
-        resolver = new ResolverImpl();
         constructorParameterInjectionPoints = new HashMap<AnnotatedConstructor<T>, List<ParameterInjectionPoint>>();
         constructorParameterProviders = new ArrayList<ParameterProvider<?>>();
         methodParameterInjectionPoints = new HashMap<AnnotatedMethod<?>, List<ParameterInjectionPoint>>();
@@ -212,7 +206,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * @throws Exception exception
      */
     private void resolveDependencies(final Object reference) throws Exception {
-        final Class<?> superclass = reference.getClass().getSuperclass();
+        final Class<?> superclass = reference.getClass().getSuperclass().getSuperclass(); // Proxy -> Orig -> Super
 
         resolveSuperclassFieldDependencies(reference, superclass);
         resolveSuperclassMethodDependencies(reference, superclass);
@@ -227,7 +221,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * @throws Exception exception
      */
     private T instantiateReference() throws Exception {
-        T ret = null;
+        T ret;
 
         if (constructorParameterInjectionPoints.size() == 1) {
             // only one constructor allow to be annotated with @Inject
@@ -284,7 +278,25 @@ public class BeanImpl<T> implements LatkeBean<T> {
                 }
             }
 
-            resolver.resolveField(injectionPoint.getAnnotated(), reference, injection);
+            final Field field = injectionPoint.getAnnotated().getJavaMember();
+
+            try {
+                final Field declaredField = proxyClass.getDeclaredField(field.getName());
+
+                if (declaredField.isAnnotationPresent(Inject.class)) {
+                    try {
+                        declaredField.set(reference, injection);
+                    } catch (final Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            } catch (final NoSuchFieldException ex) {
+                try {
+                    field.set(reference, injection);
+                } catch (final Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
@@ -316,8 +328,25 @@ public class BeanImpl<T> implements LatkeBean<T> {
             }
 
             final AnnotatedMethod<?> annotatedMethod = methodParameterInjectionPoint.getKey();
+            final Method method = annotatedMethod.getJavaMember();
 
-            resolver.resolveMethod(annotatedMethod, reference, args);
+            try {
+                final Method declaredMethod = proxyClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+
+                try {
+                    declaredMethod.setAccessible(true);
+                    declaredMethod.invoke(reference, args);
+                } catch (final Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } catch (final NoSuchMethodException ex) {
+                try {
+                    method.setAccessible(true);
+                    method.invoke(reference, args);
+                } catch (final Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
@@ -328,8 +357,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * @param clazz the super class of the specified reference
      * @throws Exception exception
      */
-    private void resolveSuperclassFieldDependencies(final Object reference, final Class<?> clazz)
-        throws Exception {
+    private void resolveSuperclassFieldDependencies(final Object reference, final Class<?> clazz) throws Exception {
         if (clazz.equals(Object.class)) {
             return;
         }
@@ -357,7 +385,22 @@ public class BeanImpl<T> implements LatkeBean<T> {
                 }
             }
 
-            resolver.resolveField(injectionPoint.getAnnotated(), reference, injection);
+            final Field field = injectionPoint.getAnnotated().getJavaMember();
+
+            try {
+                final Field declaredField = proxyClass.getDeclaredField(field.getName());
+
+                if (!Reflections.matchInheritance(declaredField, field)) { // Hide
+                    try {
+                        field.set(reference, injection);
+                    } catch (final Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            } catch (final NoSuchFieldException ex) {
+                throw new RuntimeException(ex);
+
+            }
         }
     }
 
@@ -407,10 +450,16 @@ public class BeanImpl<T> implements LatkeBean<T> {
             final AnnotatedMethod<?> superAnnotatedMethod = methodParameterInjectionPoint.getKey();
 
             final Method superMethod = superAnnotatedMethod.getJavaMember();
-            final Method overrideMethod = Reflections.getOverrideMethod(superMethod, beanClass);
+            final Method overrideMethod = Reflections.getOverrideMethod(superMethod, proxyClass);
 
-            if (overrideMethod.isAnnotationPresent(Inject.class)) {
-                resolver.resolveMethod(superAnnotatedMethod, reference, args);
+            if (superMethod.equals(overrideMethod)) {
+                try {
+                    superMethod.invoke(reference, args);
+                } catch (final Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                return;
             }
         }
     }

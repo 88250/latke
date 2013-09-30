@@ -17,6 +17,7 @@ package org.b3log.latke.ioc.setup;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
@@ -45,6 +46,8 @@ final public class SetupUnitTest {
     @SuppressWarnings("unchecked")
     public void beforeTest() throws Exception {
         System.out.println("before SetupUnitTest");
+
+        Latkes.initRuntimeEnv();
 
         beanManager = LatkeBeanManagerImpl.getInstance();
 
