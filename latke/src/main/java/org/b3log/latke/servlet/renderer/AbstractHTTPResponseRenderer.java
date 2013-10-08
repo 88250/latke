@@ -24,6 +24,7 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.b3log.latke.ioc.Lifecycle;
 
 
 /**
@@ -53,16 +54,16 @@ public abstract class AbstractHTTPResponseRenderer implements HTTPResponseRender
 
     @Override
     public void preRender(final HTTPRequestContext context, final Map<String, Object> args) {
-
         if (StringUtils.isBlank(rendererId)) {
             return;
         }
-        final Set<AbstractPlugin> pSet = PluginManager.getInstance().getPlugins(rendererId);
+
+        final Set<AbstractPlugin> pSet = Lifecycle.getBeanManager().getReference(PluginManager.class).getPlugins(rendererId);
 
         for (AbstractPlugin plugin : pSet) {
             plugin.prePlug(context, args);
         }
-        
+
     }
 
     @Override
@@ -72,13 +73,13 @@ public abstract class AbstractHTTPResponseRenderer implements HTTPResponseRender
             return;
         }
 
-        final Set<AbstractPlugin> pSet = PluginManager.getInstance().getPlugins(rendererId);
+        final Set<AbstractPlugin> pSet = Lifecycle.getBeanManager().getReference(PluginManager.class).getPlugins(rendererId);
 
         for (AbstractPlugin plugin : pSet) {
             plugin.plug(getRenderDataModel(), context, ret);
         }
     }
-    
+
     /**
      * getRenderDataModel.
      * @return map
@@ -86,5 +87,4 @@ public abstract class AbstractHTTPResponseRenderer implements HTTPResponseRender
     public Map<String, Object> getRenderDataModel() {
         return new HashMap<String, Object>();
     }
-
 }

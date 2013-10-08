@@ -26,6 +26,7 @@ import org.b3log.latke.util.Strings;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
+import org.b3log.latke.ioc.Lifecycle;
 
 
 /**
@@ -86,7 +87,7 @@ public class CacheFreeMarkerRenderer extends AbstractFreeMarkerRenderer {
                 cachedValue.put(PageCaches.CACHED_PWD, request.getAttribute(PageCaches.CACHED_PWD));
             }
 
-            PageCaches.put(cachedPageKey, cachedValue, request);
+            Lifecycle.getBeanManager().getReference(PageCaches.class).put(cachedPageKey, cachedValue, request);
             LOGGER.log(Level.TRACE, "Cached page[cachedPageKey={0}]", cachedPageKey);
         }
     }

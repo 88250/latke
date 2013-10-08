@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
@@ -57,7 +60,9 @@ import org.json.JSONObject;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.0, Dec 3, 2011
  */
-public final class PluginManager {
+@Named("LatkeBuiltInPluginManager")
+@Singleton
+public class PluginManager {
 
     /**
      * Logger.
@@ -95,6 +100,24 @@ public final class PluginManager {
      * Plugin class loaders.
      */
     private Set<ClassLoader> classLoaders = new HashSet<ClassLoader>();
+
+    /**
+     * Event manager.
+     */
+    @Inject
+    private EventManager eventManager;
+
+    /**
+     * Public constructor.
+     */
+    @SuppressWarnings("unchecked")
+    public PluginManager() {
+        if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) {
+            pluginCache = new LruMemoryCache<String, HashMap<String, HashSet<AbstractPlugin>>>();
+        } else {
+            pluginCache = (Cache<String, HashMap<String, HashSet<AbstractPlugin>>>) CacheFactory.getCache(PLUGIN_CACHE_NAME);
+        }
+    }
 
     /**
      * Updates the specified plugin.
@@ -221,13 +244,13 @@ public final class PluginManager {
             }
         }
 
+        pluginCache.put(PLUGIN_CACHE_NAME, holder);
+
         try {
-            EventManager.getInstance().fireEventSynchronously(new Event<List<AbstractPlugin>>(PLUGIN_LOADED_EVENT, plugins));
+            eventManager.fireEventSynchronously(new Event<List<AbstractPlugin>>(PLUGIN_LOADED_EVENT, plugins));
         } catch (final EventException e) {
             throw new RuntimeException("Plugin load error", e);
         }
-
-        pluginCache.put(PLUGIN_CACHE_NAME, holder);
 
         Stopwatchs.end();
     }
@@ -375,10 +398,8 @@ public final class PluginManager {
      * loader and plugin.
      *
      * <p>
-     *   <b>Note</b>: If the specified plugin has some event listeners, each
-     *   of these listener MUST implement a static method named 
-     *   {@code getInstance} to obtain an instance of this listener. See 
-     *   <a href="http://en.wikipedia.org/wiki/Singleton_pattern">
+     *   <b>Note</b>: If the specified plugin has some event listeners, each of these listener MUST implement a static method named 
+     *   {@code getInstance} to obtain an instance of this listener. See <a href="http://en.wikipedia.org/wiki/Singleton_pattern">
      *   Singleton Pattern</a> for more details.
      * </p>
      * 
@@ -387,9 +408,7 @@ public final class PluginManager {
      * @param plugin the specified plugin
      * @throws Exception exception
      */
-    private static void registerEventListeners(final Properties props,
-        final URLClassLoader classLoader,
-        final AbstractPlugin plugin)
+    private void registerEventListeners(final Properties props, final URLClassLoader classLoader, final AbstractPlugin plugin)
         throws Exception {
         final String eventListenerClasses = props.getProperty(Plugin.PLUGIN_EVENT_LISTENER_CLASSES);
         final String[] eventListenerClassArray = eventListenerClasses.split(",");
@@ -408,8 +427,6 @@ public final class PluginManager {
             final Method getInstance = eventListenerClass.getMethod("getInstance");
             final AbstractEventListener<?> eventListener = (AbstractEventListener) getInstance.invoke(eventListenerClass);
 
-            final EventManager eventManager = EventManager.getInstance();
-
             eventManager.registerListener(eventListener);
             LOGGER.log(Level.DEBUG, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",
                 new Object[] {eventListener.getClass(), eventListener.getEventType(), plugin.getName()});
@@ -423,45 +440,5 @@ public final class PluginManager {
      */
     public Set<ClassLoader> getClassLoaders() {
         return Collections.unmodifiableSet(classLoaders);
-    }
-
-    /**
-     * Gets the {@link PluginManager} singleton.
-     * 
-     * @return a plugin manager singleton
-     */
-    public static PluginManager getInstance() {
-        return PluginManagerSingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Plugin manager singleton holder.
-     *
-     * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.0, Jul 23, 2011
-     */
-    private static final class PluginManagerSingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final PluginManager SINGLETON = new PluginManager();
-
-        /**
-         * Private default constructor.
-         */
-        private PluginManagerSingletonHolder() {}
-    }
-
-    /**
-     * Private default constructor.
-     */
-    @SuppressWarnings("unchecked")
-    private PluginManager() {
-        if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) {
-            pluginCache = new LruMemoryCache<String, HashMap<String, HashSet<AbstractPlugin>>>();
-        } else {
-            pluginCache = (Cache<String, HashMap<String, HashSet<AbstractPlugin>>>) CacheFactory.getCache(PLUGIN_CACHE_NAME);
-        }
     }
 }

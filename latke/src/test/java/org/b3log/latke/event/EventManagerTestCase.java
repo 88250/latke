@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
  * {@link EventManager} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Sep 26, 2010
+ * @version 1.0.0.5, Oct 8, 2013
  */
 public final class EventManagerTestCase {
 
@@ -32,7 +32,7 @@ public final class EventManagerTestCase {
      */
     @Test
     public void test() throws Exception {
-        final EventManager eventManager = EventManager.getInstance();
+        final EventManager eventManager = new EventManager();
         final TestEventListener1 testEventListener1 = new TestEventListener1();
         eventManager.registerListener(testEventListener1);
         final TestEventListener2 testEventListener2 = new TestEventListener2();

@@ -22,6 +22,7 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -49,8 +50,9 @@ public final class ViewLoadEventHandler extends AbstractEventListener<ViewLoadEv
         final ViewLoadEventData data = event.getData();
         final String viewName = data.getViewName();
         final Map<String, Object> dataModel = data.getDataModel();
-
-        final Set<AbstractPlugin> plugins = PluginManager.getInstance().getPlugins(viewName);
+        
+        final PluginManager pluginManager = Lifecycle.getBeanManager().getReference(PluginManager.class);
+        final Set<AbstractPlugin> plugins = pluginManager.getPlugins(viewName);
 
         LOGGER.log(Level.DEBUG, "Plugin count[{0}] of view[name={1}]", new Object[] {plugins.size(), viewName});
         for (final AbstractPlugin plugin : plugins) {

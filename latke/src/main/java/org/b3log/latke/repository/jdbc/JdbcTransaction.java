@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
 
@@ -81,7 +82,7 @@ public final class JdbcTransaction implements Transaction {
         }
 
         if (clearQueryCache) {
-            PageCaches.removeAll();
+            Lifecycle.getBeanManager().getReference(PageCaches.class).removeAll();
         }
     }
 

@@ -28,7 +28,7 @@ import java.util.Map;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Sep 30, 2012
  */
-@Named
+@Named("LatkeBuiltInBeforeRequestProcessAdvice")
 @Singleton
 public class BeforeRequestProcessAdvice implements RequestProcessAdvice {
 

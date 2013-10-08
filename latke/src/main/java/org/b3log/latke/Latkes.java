@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
@@ -516,7 +515,6 @@ public final class Latkes {
      */
     public static void disablePageCache() {
         pageCacheEnabled = false;
-        PageCaches.removeAll();
         LOGGER.log(Level.TRACE, "Disabled page cache");
     }
 
@@ -546,7 +544,6 @@ public final class Latkes {
      */
     public static void disableDataCache() {
         dataCacheEnabled = false;
-        PageCaches.removeAll();
         LOGGER.log(Level.TRACE, "Disabled data cache");
     }
 

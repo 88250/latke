@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.b3log.latke.ioc.Lifecycle;
 
 
 /**
@@ -206,7 +207,7 @@ public final class HTTPRequestDispatcher extends HttpServlet {
                 "Occured error while processing request[requestURI={0}, method={1}, exceptionTypeName={2}, errorMsg={3}]",
                 new Object[] {requestURI, method, exceptionTypeName, e.getMessage()});
             if ("com.google.apphosting.api.ApiProxy$OverQuotaException".equals(exceptionTypeName)) {
-                PageCaches.removeAll();
+                Lifecycle.getBeanManager().getReference(PageCaches.class).removeAll();
 
                 context.getResponse().sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
                 return;

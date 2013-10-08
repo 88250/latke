@@ -43,6 +43,8 @@ import javax.enterprise.inject.spi.ObserverMethod;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import org.b3log.latke.cache.PageCaches;
+import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.context.impl.CreationalContextImpl;
 import org.b3log.latke.ioc.context.impl.SingletonContext;
 import org.b3log.latke.ioc.config.Configurator;
@@ -51,6 +53,7 @@ import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.ioc.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.plugin.PluginManager;
 import org.b3log.latke.repository.impl.UserRepository;
 import org.b3log.latke.service.LangPropsServiceImpl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
@@ -61,7 +64,7 @@ import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
  * Latke bean manager implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Jun 25, 2013
+ * @version 1.0.0.6, Oct 8, 2013
  */
 @Named("beanManager")
 @Singleton
@@ -96,7 +99,7 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
      * Built-in bean classes.
      */
     private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsServiceImpl.class, BeforeRequestProcessAdvice.class,
-        AfterRequestProcessAdvice.class, UserRepository.class);
+        AfterRequestProcessAdvice.class, UserRepository.class, EventManager.class, PluginManager.class, PageCaches.class);
 
     @Override
     public ELResolver getELResolver() {

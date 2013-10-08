@@ -21,15 +21,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 
 /**
  * Event manager.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Jun 23, 2011
+ * @version 1.0.0.4, Oct 8, 2013
  */
-public final class EventManager {
+@Named("LatkeBuiltInEventManager")
+@Singleton
+public class EventManager {
 
     /**
      * Synchronized event queue.
@@ -58,7 +62,6 @@ public final class EventManager {
         final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         final FutureTask<T> futureTask = new FutureTask<T>(new Callable<T>() {
-
             @Override
             public T call() throws Exception {
                 synchronizedEventQueue.fireEvent(event);
@@ -79,38 +82,5 @@ public final class EventManager {
      */
     public void registerListener(final AbstractEventListener<?> eventListener) {
         synchronizedEventQueue.addListener(eventListener);
-    }
-
-    /**
-     * Gets the {@link EventManager} singleton.
-     * 
-     * @return a event manager singleton
-     */
-    public static EventManager getInstance() {
-        return EventManagerSingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private EventManager() {}
-
-    /**
-     * Event manager singleton holder.
-     *
-     * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.0, Aug 12, 2010
-     */
-    private static final class EventManagerSingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final EventManager SINGLETON = new EventManager();
-
-        /**
-         * Private default constructor.
-         */
-        private EventManagerSingletonHolder() {}
     }
 }

@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Latkes;
@@ -27,6 +29,7 @@ import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Requests;
@@ -61,11 +64,13 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.6, Jul 18, 2013
+ * @version 1.0.3.7, Oct 8, 2013
  * @since 0.3.1
  */
+@Named("LatkeBuildIntPageCaches")
+@Singleton
 @SuppressWarnings("unchecked")
-public final class PageCaches {
+public class PageCaches {
 
     /**
      * Logger.
@@ -79,11 +84,6 @@ public final class PageCaches {
      * </p>
      */
     private static final Cache<String, Serializable> CACHE;
-
-    /**
-     * Event manager.
-     */
-    private static final EventManager EVT_SVC = EventManager.getInstance();
 
     /**
      * Cached page keys.
@@ -150,6 +150,12 @@ public final class PageCaches {
      */
     static {
         CACHE = (Cache<String, Serializable>) CacheFactory.getCache(PAGE_CACHE_NAME);
+    }
+
+    /**
+     * Public constructor.
+     */
+    public PageCaches() {
         final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
 
         if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
@@ -203,7 +209,7 @@ public final class PageCaches {
      * @return cached page keys, returns an empty set if not found
      */
     @SuppressWarnings("unchecked")
-    public static Set<String> getKeys() {
+    public Set<String> getKeys() {
         syncKeys();
 
         return KEYS;
@@ -334,7 +340,7 @@ public final class PageCaches {
      * </pre>
      * @param request the specified request 
      */
-    public static void put(final String pageKey, final JSONObject cachedValue, final HttpServletRequest request) {
+    public void put(final String pageKey, final JSONObject cachedValue, final HttpServletRequest request) {
         check(cachedValue);
 
         try {
@@ -386,9 +392,9 @@ public final class PageCaches {
      *   <b>Note</b>: This method will flush the cache for every namespace (clears all caches).
      * </p>
      */
-    public static void removeAll() {
+    public void removeAll() {
         try {
-            EVT_SVC.fireEventSynchronously(new Event<Void>(REMOVE_CACHE, null));
+            Lifecycle.getBeanManager().getReference(EventManager.class).fireEventSynchronously(new Event<Void>(REMOVE_CACHE, null));
         } catch (final EventException e) {
             LOGGER.log(Level.ERROR, "Remove page cache event execute failed, can not remove all cache", e);
 
@@ -406,7 +412,7 @@ public final class PageCaches {
      * Synchronizes the {@linkplain #KEYS keys} collection and cached page
      * objects.
      */
-    private static void syncKeys() {
+    private void syncKeys() {
         @SuppressWarnings("unchecked")
         final Iterator<String> iterator = KEYS.iterator();
         final Set<String> toRemove = new HashSet<String>();
@@ -431,15 +437,10 @@ public final class PageCaches {
      * 
      * @param cachedPage the specified cached page
      */
-    private static void check(final JSONObject cachedPage) {
+    private void check(final JSONObject cachedPage) {
         if (!cachedPage.has(CACHED_CONTENT) || !cachedPage.has(CACHED_OID) || !cachedPage.has(CACHED_TITLE) || !cachedPage.has(CACHED_TYPE)
             || !cachedPage.has(CACHED_LINK)) {
             throw new IllegalArgumentException("Illegal arguments for caching page, resolve this bug first!");
         }
     }
-
-    /**
-     * Private default constructor.
-     */
-    private PageCaches() {}
 }

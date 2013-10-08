@@ -120,7 +120,12 @@ public final class JdbcRepository implements Repository {
 
     static {
         CACHE = (Cache<String, Serializable>) CacheFactory.getCache(REPOSITORY_CACHE_NAME);
+    }
 
+    /**
+     * Constructs a JDBC repository.
+     */
+    public JdbcRepository() {
         final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
 
         if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
@@ -405,7 +410,7 @@ public final class JdbcRepository implements Repository {
             remove(id, sql);
             JdbcUtil.executeSql(sql.toString(), connection);
         } catch (final SQLException se) {
-            LOGGER.log(Level.ERROR, "update:" + se.getMessage(), se);
+            LOGGER.log(Level.ERROR, "remove:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "remove:" + e.getMessage(), e);
@@ -827,7 +832,7 @@ public final class JdbcRepository implements Repository {
                 jsonObjects.add(jsonArray.getJSONObject(i));
             }
         } catch (final SQLException se) {
-            LOGGER.log(Level.ERROR, "update:" + se.getMessage(), se);
+            LOGGER.log(Level.ERROR, "getRandomly:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "getRandomly:" + e.getMessage(), e);
@@ -900,7 +905,7 @@ public final class JdbcRepository implements Repository {
             jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName());
             count = jsonObject.getLong(jsonObject.keys().next().toString());
         } catch (final SQLException se) {
-            LOGGER.log(Level.ERROR, "update:" + se.getMessage(), se);
+            LOGGER.log(Level.ERROR, "count:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "count :" + e.getMessage(), e);
