@@ -50,7 +50,7 @@ import org.b3log.latke.ioc.point.FieldInjectionPoint;
 import org.b3log.latke.ioc.point.ParameterInjectionPoint;
 import org.b3log.latke.ioc.provider.FieldProvider;
 import org.b3log.latke.ioc.provider.ParameterProvider;
-import org.b3log.latke.ioc.util.Reflections;
+import org.b3log.latke.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 

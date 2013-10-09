@@ -33,7 +33,7 @@ import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.InjectionPointValidator;
 import org.b3log.latke.ioc.util.Beans;
-import org.b3log.latke.ioc.util.Reflections;
+import org.b3log.latke.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 

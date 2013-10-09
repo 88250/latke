@@ -34,7 +34,7 @@ import org.b3log.latke.util.StaticResources;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 18, 2013
  */
-public class StaticResourceHandler implements Ihandler {
+public class StaticResourceHandler implements Handler {
 
     /**
      * Logger.

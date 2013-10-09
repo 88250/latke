@@ -37,7 +37,6 @@ import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.AntPathMatcher;
-import org.b3log.latke.util.ReflectHelper;
 import org.b3log.latke.util.RegexPathMatcher;
 import org.json.JSONObject;
 
@@ -57,6 +56,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.b3log.latke.util.Reflections;
 
 
 /**
@@ -684,7 +684,7 @@ public final class RequestProcessors {
         public void analysis() {
             mappingString = handleMappingString();
 
-            methodParamNames = ReflectHelper.getMethodVariableNames(processorClass, processorMethod.getName(),
+            methodParamNames = Reflections.getMethodVariableNames(processorClass, processorMethod.getName(),
                 processorMethod.getParameterTypes());
             int i = 0;
 

@@ -26,7 +26,7 @@ import javax.enterprise.inject.AmbiguousResolutionException;
 import javax.enterprise.inject.UnsatisfiedResolutionException;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.InjectionPoint;
-import org.b3log.latke.ioc.util.Reflections;
+import org.b3log.latke.util.Reflections;
 
 
 /**

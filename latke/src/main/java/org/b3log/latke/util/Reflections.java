@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.util;
+package org.b3log.latke.util;
 
 
 import java.lang.reflect.Field;
@@ -22,18 +22,110 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import org.b3log.latke.util.CollectionUtils;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
+import javassist.bytecode.CodeAttribute;
+import javassist.bytecode.LocalVariableAttribute;
+import javassist.bytecode.MethodInfo;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 
 /**
  * Reflection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.4, Mar 15, 2010
  */
 final public class Reflections {
 
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(Reflections.class.getName());
+
+    /**
+     * Private constructor.
+     */
     private Reflections() {}
+
+    /**
+     * the maxFindLength to get the 'this' keyword when resolving the vaibleNames.
+     */
+    private static final Integer MAX_FIND_LENGTH = 30;
+
+    /**
+     * getMethodVariableNames in user defined.
+     * @param clazz the specific clazz
+     * @param targetMethodName the targetMethodName
+     * @param types the types of the method parameters
+     * @return the String[] of names
+     */
+    public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, final Class<?>[] types) {
+        CtClass cc;
+        CtMethod cm = null;
+
+        try {
+            final ClassPool pool = ClassPool.getDefault();
+
+            pool.insertClassPath(new ClassClassPath(Reflections.class));
+            pool.insertClassPath(new ClassClassPath(clazz));
+            pool.insertClassPath(new ClassClassPath(Thread.currentThread().getClass()));
+
+            cc = pool.get(clazz.getName());
+            final CtClass[] ptypes = new CtClass[types.length];
+
+            for (int i = 0; i < ptypes.length; i++) {
+                ptypes[i] = pool.get(types[i].getName());
+            }
+            cm = cc.getDeclaredMethod(targetMethodName, ptypes);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Get method variable names failed", e);
+        }
+
+        if (null == cm) {
+            return new String[types.length];
+        }
+
+        final MethodInfo methodInfo = cm.getMethodInfo();
+        final CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
+        final LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag);
+        String[] variableNames = new String[0];
+
+        try {
+            variableNames = new String[cm.getParameterTypes().length];
+        } catch (final NotFoundException e) {
+            LOGGER.log(Level.ERROR, "Get method variable names failed", e);
+        }
+
+        // final int staticIndex = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
+        int j = -1;
+        String variableName = null;
+        Boolean ifkill = false;
+
+        while (!"this".equals(variableName)) {
+            j++;
+            variableName = attr.variableName(j);
+            // to prevent heap error when there being some unknown reasons to resolve the VariableNames
+            if (j > MAX_FIND_LENGTH) {
+                LOGGER.log(Level.WARN,
+                    "Maybe resolve to VariableNames error [class=" + clazz.getName() + ", targetMethodName=" + targetMethodName + ']');
+                ifkill = true;
+                break;
+            }
+        }
+
+        if (!ifkill) {
+            for (int i = 0; i < variableNames.length; i++) {
+                variableNames[i] = attr.variableName(++j);
+            }
+        }
+        return variableNames;
+    }
 
     public static boolean isConcrete(final Type type) {
         return isConcrete((Class<?>) type);

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.handler.AdviceHandler;
-import org.b3log.latke.servlet.handler.Ihandler;
+import org.b3log.latke.servlet.handler.Handler;
 import org.b3log.latke.servlet.handler.MethodInvokeHandler;
 import org.b3log.latke.servlet.handler.ArgsHandler;
 import org.b3log.latke.servlet.handler.RequestDispatchHandler;
@@ -59,7 +59,7 @@ public final class DispatcherServlet extends HttpServlet {
     /**
      * the holder of all the sys-handler.
      */
-    private static final List<Ihandler> SYS_HANDLER = new ArrayList<Ihandler>();
+    private static final List<Handler> SYS_HANDLER = new ArrayList<Handler>();
 
     @Override
     public void init() throws ServletException {

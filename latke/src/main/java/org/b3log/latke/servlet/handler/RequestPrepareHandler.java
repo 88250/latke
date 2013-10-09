@@ -36,7 +36,7 @@ import org.b3log.latke.util.Strings;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Sep 27, 2013
  */
-public class RequestPrepareHandler implements Ihandler {
+public class RequestPrepareHandler implements Handler {
 
     @Override
     public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {

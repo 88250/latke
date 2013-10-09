@@ -20,11 +20,10 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.converter.Converters;
-import org.b3log.latke.util.ReflectHelper;
-
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.b3log.latke.util.Reflections;
 
 
 /**
@@ -33,7 +32,7 @@ import java.util.Map;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.2, Sep 26, 2013
  */
-public class ArgsHandler implements Ihandler {
+public class ArgsHandler implements Handler {
 
     /**
      * the method args data.
@@ -88,7 +87,7 @@ public class ArgsHandler implements Ihandler {
      * @return the names of the params.
      */
     private String[] getParamterNames(final Method invokeMethond) {
-        final String[] methodParamNames = ReflectHelper.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
+        final String[] methodParamNames = Reflections.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
             invokeMethond.getParameterTypes());
         int i = 0;
 

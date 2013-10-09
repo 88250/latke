@@ -46,7 +46,7 @@ import java.util.Map;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 18, 2013
  */
-public class AdviceHandler implements Ihandler {
+public class AdviceHandler implements Handler {
 
     /**
      * Logger.

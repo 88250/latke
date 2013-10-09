@@ -16,7 +16,7 @@
 package org.b3log.latke.servlet;
 
 
-import org.b3log.latke.servlet.handler.Ihandler;
+import org.b3log.latke.servlet.handler.Handler;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,19 +41,19 @@ public class HttpControl {
     /**
      * the constructor.
      *
-     * @param ihandlerIterable   Iterator<Ihandler>
+     * @param handlerIterable   Iterator<Handler>
      * @param httpRequestContext HTTPRequestContext
      */
-    public HttpControl(final Iterator<Ihandler> ihandlerIterable, final HTTPRequestContext httpRequestContext) {
+    public HttpControl(final Iterator<Handler> handlerIterable, final HTTPRequestContext httpRequestContext) {
 
-        this.ihandlerIterable = ihandlerIterable;
+        this.ihandlerIterable = handlerIterable;
         this.httpRequestContext = httpRequestContext;
     }
 
     /**
      * Iterator<Ihandler>.
      */
-    private Iterator<Ihandler> ihandlerIterable;
+    private Iterator<Handler> ihandlerIterable;
 
     /**
      * HTTPRequestContext.

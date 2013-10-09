@@ -17,7 +17,7 @@ package org.b3log.latke.servlet;
 
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.servlet.handler.AdviceHandler;
-import org.b3log.latke.servlet.handler.Ihandler;
+import org.b3log.latke.servlet.handler.Handler;
 import org.b3log.latke.servlet.handler.MethodInvokeHandler;
 import org.b3log.latke.servlet.handler.ArgsHandler;
 import org.b3log.latke.servlet.handler.RequestDispatchHandler;
@@ -52,7 +52,7 @@ import static org.mockito.Mockito.*;
  */
 public class RequestDispachTestCase {
 
-    private final List<Ihandler> handlerList = new ArrayList<Ihandler>();
+    private final List<Handler> handlerList = new ArrayList<Handler>();
 
     @BeforeTest
     @SuppressWarnings("unchecked")

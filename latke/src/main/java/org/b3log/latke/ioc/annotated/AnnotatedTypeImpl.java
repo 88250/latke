@@ -33,7 +33,7 @@ import org.b3log.latke.intercept.annotation.BeforeMethod;
 import org.b3log.latke.ioc.bean.Interceptor;
 import org.b3log.latke.ioc.bean.InterceptorHolder;
 import org.b3log.latke.ioc.util.Beans;
-import org.b3log.latke.ioc.util.Reflections;
+import org.b3log.latke.util.Reflections;
 import org.b3log.latke.util.CollectionUtils;
 
 

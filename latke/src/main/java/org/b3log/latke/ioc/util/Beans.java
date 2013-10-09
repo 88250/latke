@@ -16,6 +16,7 @@
 package org.b3log.latke.ioc.util;
 
 
+import org.b3log.latke.util.Reflections;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

@@ -50,7 +50,7 @@ import org.b3log.latke.ioc.context.impl.SingletonContext;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.impl.ConfiguratorImpl;
 import org.b3log.latke.ioc.util.Beans;
-import org.b3log.latke.ioc.util.Reflections;
+import org.b3log.latke.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
