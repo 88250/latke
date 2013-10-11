@@ -23,10 +23,10 @@ import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
  * User repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 4, 2011
+ * @version 1.0.0.1, Oct 11, 2013
  */
 @Repository
-public final class UserRepository extends AbstractRepository {
+public class UserRepository extends AbstractRepository {
 
     /**
      * Constructs a user repository.
