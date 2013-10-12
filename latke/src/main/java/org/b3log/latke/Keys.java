@@ -85,16 +85,6 @@ public final class Keys {
     public static final DateFormat SIMPLE_DATE_FORMAT1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * Key of page cache key.
-     */
-    public static final String PAGE_CACHE_KEY = "pageCacheKey";
-
-    /**
-     * Key of page type.
-     */
-    public static final String PAGE_TYPE = "pageType";
-
-    /**
      * Key of template directory name.
      */
     public static final String TEMAPLTE_DIR_NAME = "templateDirName";

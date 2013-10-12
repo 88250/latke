@@ -32,7 +32,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  * 
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.4, Jun 25, 2013
+ * @version 1.0.2.5, Oct 12, 2013
  * @see #initRuntimeEnv()
  * @see #shutdown() 
  * @see #getServePath()
@@ -59,24 +59,6 @@ public final class Latkes {
      * Which mode Latke runs in?
      */
     private static RuntimeMode runtimeMode;
-
-    /**
-     * Indicates the page cache is enabled or not.
-     * 
-     * <p>
-     * Default to {@code true}.
-     * </p>
-     */
-    private static boolean pageCacheEnabled = true;
-
-    /**
-     * Indicates the data cache is enabled or not.
-     * 
-     * <p>
-     * Default ot {@code true}
-     * </p>
-     */
-    private static boolean dataCacheEnabled = true;
 
     /**
      * Local properties (local.properties).
@@ -147,7 +129,7 @@ public final class Latkes {
      * Static path.
      */
     private static String staticPath;
-    
+
     /**
      * IoC scan path.
      */
@@ -441,7 +423,7 @@ public final class Latkes {
 
         return staticPath;
     }
-    
+
     /**
      * Gets IoC scan path.
      * 
@@ -451,7 +433,7 @@ public final class Latkes {
         if (null == scanPath) {
             scanPath = LATKE_PROPS.getProperty("scanPath");
         }
-        
+
         return scanPath;
     }
 
@@ -478,90 +460,6 @@ public final class Latkes {
         }
 
         return RuntimeEnv.valueOf(value);
-    }
-
-    /**
-     * Gets max page cache count.
-     * 
-     * <p>
-     * Returns the value of "cache.maxPageCnt" property in latke.properties.
-     * </p>
-     * 
-     * @return max page cache count
-     */
-    public static String getMaxPageCacheCnt() {
-        return LATKE_PROPS.getProperty("cache.maxPageCnt");
-    }
-
-    /**
-     * Gets max data cache count.
-     * 
-     * <p>
-     * Returns the value of "cache.maxDataCnt" property in latke.properties.
-     * </p>
-     * 
-     * @return max page cache count
-     */
-    public static String getMaxDataCacheCnt() {
-        return LATKE_PROPS.getProperty("cache.maxDataCnt");
-    }
-
-    /**
-     * Disables the page cache.
-     * 
-     * <p>
-     * Invokes this method will remove all cached pages and templates.
-     * </p>
-     */
-    public static void disablePageCache() {
-        pageCacheEnabled = false;
-        LOGGER.log(Level.TRACE, "Disabled page cache");
-    }
-
-    /**
-     * Enables the page cache.
-     */
-    public static void enablePageCache() {
-        pageCacheEnabled = true;
-        LOGGER.log(Level.TRACE, "Enabled page cache");
-    }
-
-    /**
-     * Is the page cache enabled?
-     * 
-     * @return {@code true} if it is enabled, returns {@code false} otherwise
-     */
-    public static boolean isPageCacheEnabled() {
-        return pageCacheEnabled;
-    }
-
-    /**
-     * Disables the data cache.
-     * 
-     * <p>
-     * Invokes this method will remove all cached data.
-     * </p>
-     */
-    public static void disableDataCache() {
-        dataCacheEnabled = false;
-        LOGGER.log(Level.TRACE, "Disabled data cache");
-    }
-
-    /**
-     * Enables the page cache.
-     */
-    public static void enableDataCache() {
-        dataCacheEnabled = true;
-        LOGGER.log(Level.TRACE, "Enabled data cache");
-    }
-
-    /**
-     * Is the data cache enabled?
-     * 
-     * @return {@code true} if it is enabled, returns {@code false} otherwise
-     */
-    public static boolean isDataCacheEnabled() {
-        return dataCacheEnabled;
     }
 
     /**

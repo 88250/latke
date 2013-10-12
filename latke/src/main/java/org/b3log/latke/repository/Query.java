@@ -23,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.b3log.latke.util.Strings;
 
 
 /**
@@ -51,16 +50,6 @@ public final class Query {
      * Page size.
      */
     private int pageSize = Integer.MAX_VALUE;
-
-    /**
-     * Cache key.
-     * 
-     * <p>
-     * If the repository executes this query {@link Repository#isCacheEnabled() enabled} results caching, this field will be used as the 
-     * key of the cached results.
-     * </p>
-     */
-    private String cacheKey;
 
     /**
      * Sorts.
@@ -231,35 +220,6 @@ public final class Query {
      */
     public Map<String, SortDirection> getSorts() {
         return Collections.unmodifiableMap(sorts);
-    }
-
-    /**
-     * Sets the cache key with the specified cache key.
-     * 
-     * @param cacheKey the specified cache key
-     * @return the current query object 
-     */
-    public Query setCacheKey(final String cacheKey) {
-        this.cacheKey = cacheKey;
-
-        return this;
-    }
-
-    /**
-     * Gets the cache key.
-     * 
-     * <p>
-     * If no application specified cache key, uses {@link #hashCode() the hash code} of this query.
-     * </p>
-     * 
-     * @return cache key
-     */
-    public String getCacheKey() {
-        if (Strings.isEmptyOrNull(cacheKey)) {
-            setCacheKey(String.valueOf(hashCode()));
-        }
-
-        return cacheKey;
     }
 
     /**

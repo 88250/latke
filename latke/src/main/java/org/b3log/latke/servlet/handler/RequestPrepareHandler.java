@@ -18,11 +18,8 @@ package org.b3log.latke.servlet.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import org.b3log.latke.Keys;
-import org.b3log.latke.Latkes;
-import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
-import org.b3log.latke.util.Strings;
 
 
 /**
@@ -30,7 +27,6 @@ import org.b3log.latke.util.Strings;
  * 
  * <ul>
  *   <li>startTimeMillis</li>Current time millisecond.
- *   <li>pageCacheKey</li>Generated page cache key if {@link Latkes#isPageCacheEnabled() page cache nabled}.
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
@@ -46,16 +42,6 @@ public class RequestPrepareHandler implements Handler {
 
         request.setAttribute(Keys.HttpRequest.START_TIME_MILLIS, startTimeMillis);
 
-        if (Latkes.isPageCacheEnabled()) {
-            final String queryString = request.getQueryString();
-            String pageCacheKey = (String) request.getAttribute(Keys.PAGE_CACHE_KEY);
-
-            if (Strings.isEmptyOrNull(pageCacheKey)) {
-                pageCacheKey = PageCaches.getPageCacheKey(request.getRequestURI(), queryString);
-                request.setAttribute(Keys.PAGE_CACHE_KEY, pageCacheKey);
-            }
-        }
-        
         httpControl.nextHandler();
     }
 }

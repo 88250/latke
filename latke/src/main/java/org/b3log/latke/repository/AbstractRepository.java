@@ -16,7 +16,6 @@
 package org.b3log.latke.repository;
 
 
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,6 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.RuntimeEnv;
-import org.b3log.latke.cache.Cache;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -101,12 +99,6 @@ public abstract class AbstractRepository implements Repository {
             repository = constructor.newInstance(name);
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize repository!", e);
-        }
-
-        repository.setCacheEnabled(Latkes.isDataCacheEnabled());
-
-        if (RuntimeEnv.BAE == runtimeEnv) {
-            repository.setCacheEnabled(false); // BAE memcached client is poor, https://github.com/b3log/b3log-solo/issues/73
         }
 
         Repositories.addRepository(repository);
@@ -207,23 +199,8 @@ public abstract class AbstractRepository implements Repository {
     }
 
     @Override
-    public final boolean isCacheEnabled() {
-        return repository.isCacheEnabled();
-    }
-
-    @Override
-    public final void setCacheEnabled(final boolean isCacheEnabled) {
-        repository.setCacheEnabled(isCacheEnabled);
-    }
-
-    @Override
     public String getName() {
         return repository.getName();
-    }
-
-    @Override
-    public Cache<String, Serializable> getCache() {
-        return repository.getCache();
     }
 
     @Override

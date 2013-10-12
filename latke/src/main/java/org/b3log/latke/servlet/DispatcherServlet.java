@@ -59,7 +59,7 @@ public final class DispatcherServlet extends HttpServlet {
     /**
      * the holder of all the sys-handler.
      */
-    private static final List<Handler> SYS_HANDLER = new ArrayList<Handler>();
+    public static final List<Handler> SYS_HANDLER = new ArrayList<Handler>();
 
     @Override
     public void init() throws ServletException {
@@ -95,7 +95,7 @@ public final class DispatcherServlet extends HttpServlet {
      * @param context {@link HTTPRequestContext}
      * @throws IOException IOException
      */
-    private void result(final HTTPRequestContext context) throws IOException {
+    public static void result(final HTTPRequestContext context) throws IOException {
         final HttpServletResponse response = context.getResponse();
 
         if (response.isCommitted()) { // Sends rdirect or send error
@@ -103,6 +103,7 @@ public final class DispatcherServlet extends HttpServlet {
 
             writer.flush();
             writer.close();
+            
             return;
         }
 

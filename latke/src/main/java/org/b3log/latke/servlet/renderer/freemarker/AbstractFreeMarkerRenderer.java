@@ -19,7 +19,6 @@ package org.b3log.latke.servlet.renderer.freemarker;
 import freemarker.template.Template;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
-import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -166,11 +165,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
         pageContentBuilder.append(msg);
 
-        final String ret = pageContentBuilder.toString();
-
-        request.setAttribute(PageCaches.CACHED_CONTENT, ret);
-
-        return ret;
+        return pageContentBuilder.toString();
     }
 
     /**

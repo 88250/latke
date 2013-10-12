@@ -19,8 +19,6 @@ package org.b3log.latke.repository.jdbc;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.b3log.latke.cache.PageCaches;
-import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
 
@@ -44,11 +42,6 @@ public final class JdbcTransaction implements Transaction {
      * Is active.
      */
     private boolean isActive;
-
-    /**
-     * Flag of clear query cache.
-     */
-    private boolean clearQueryCache = true;
 
     /**
      * Public constructor.
@@ -80,10 +73,6 @@ public final class JdbcTransaction implements Transaction {
         if (ifSuccess) {
             dispose();
         }
-
-        if (clearQueryCache) {
-            Lifecycle.getBeanManager().getReference(PageCaches.class).removeAll();
-        }
     }
 
     @Override
@@ -108,11 +97,6 @@ public final class JdbcTransaction implements Transaction {
     @Override
     public boolean isActive() {
         return isActive;
-    }
-
-    @Override
-    public void clearQueryCache(final boolean flag) {
-        this.clearQueryCache = flag;
     }
 
     /**

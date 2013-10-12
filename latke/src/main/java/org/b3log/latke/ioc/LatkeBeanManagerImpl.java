@@ -43,7 +43,6 @@ import javax.enterprise.inject.spi.ObserverMethod;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import org.b3log.latke.cache.PageCaches;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.context.impl.CreationalContextImpl;
 import org.b3log.latke.ioc.context.impl.SingletonContext;
@@ -99,7 +98,7 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
      * Built-in bean classes.
      */
     private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsServiceImpl.class, BeforeRequestProcessAdvice.class,
-        AfterRequestProcessAdvice.class, UserRepository.class, EventManager.class, PluginManager.class, PageCaches.class);
+        AfterRequestProcessAdvice.class, UserRepository.class, EventManager.class, PluginManager.class);
 
     @Override
     public ELResolver getELResolver() {

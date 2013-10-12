@@ -16,7 +16,6 @@
 package org.b3log.latke.repository.jdbc;
 
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,9 +28,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeEnv;
-import org.b3log.latke.cache.Cache;
-import org.b3log.latke.cache.CacheFactory;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -60,7 +56,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.6, Sep 27, 2013
+ * @version 1.0.2.7, Oct 12, 2013
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -76,32 +72,9 @@ public final class JdbcRepository implements Repository {
     private String name;
 
     /**
-     * Is cache enabled?
-     */
-    private boolean cacheEnabled = true;
-
-    /**
      * Writable?
      */
     private boolean writable = true;
-
-    /**
-     * Cache key prefix.
-     */
-    public static final String CACHE_KEY_PREFIX = "repository";
-
-    /**
-     * Repository cache count.
-     */
-    private static final String REPOSITORY_CACHE_COUNT = "#count";
-
-    /**
-     * Repository cache.
-     * <p>
-     * &lt;oId, JSONObject&gt;
-     * </p>
-     */
-    public static final Cache<String, Serializable> CACHE;
 
     /**
      * Repository cache name.
@@ -117,34 +90,6 @@ public final class JdbcRepository implements Repository {
      * The current JDBC connection.
      */
     public static final ThreadLocal<Connection> CONN = new ThreadLocal<Connection>();
-
-    static {
-        CACHE = (Cache<String, Serializable>) CacheFactory.getCache(REPOSITORY_CACHE_NAME);
-    }
-
-    /**
-     * Constructs a JDBC repository.
-     */
-    public JdbcRepository() {
-        final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
-
-        if (RuntimeEnv.LOCAL == runtimeEnv || RuntimeEnv.BAE == runtimeEnv) {
-            int maxCnt = Integer.MAX_VALUE;
-
-            final String maxDataCntStr = Latkes.getMaxDataCacheCnt();
-
-            if (!Strings.isEmptyOrNull(maxDataCntStr)) {
-                maxCnt = Integer.parseInt(maxDataCntStr);
-            }
-
-            if (0 >= maxCnt) {
-                Latkes.disableDataCache();
-            } else {
-                CACHE.setMaxCount(maxCnt);
-                LOGGER.log(Level.INFO, "Initialized data object cache[maxCount={0}]", maxCnt);
-            }
-        }
-    }
 
     @Override
     public String add(final JSONObject jsonObject) throws RepositoryException {
@@ -432,16 +377,6 @@ public final class JdbcRepository implements Repository {
     public JSONObject get(final String id) throws RepositoryException {
         JSONObject ret = null;
 
-        if (cacheEnabled) {
-            final String cacheKey = CACHE_KEY_PREFIX + id;
-
-            ret = (JSONObject) CACHE.get(cacheKey);
-            if (null != ret) {
-                LOGGER.log(Level.DEBUG, "Got an object [cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
-                return ret;
-            }
-        }
-
         final StringBuilder sql = new StringBuilder();
         final Connection connection = getConnection();
 
@@ -451,14 +386,6 @@ public final class JdbcRepository implements Repository {
 
             paramList.add(id);
             ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName());
-
-            if (cacheEnabled) {
-                final String cacheKey = CACHE_KEY_PREFIX + id;
-
-                CACHE.putAsync(cacheKey, ret);
-                LOGGER.log(Level.DEBUG, "Added an object [cacheKey={0}] in repository cache [{1}]", new Object[] {cacheKey, getName()});
-            }
-
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
@@ -507,20 +434,7 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public JSONObject get(final Query query) throws RepositoryException {
-        JSONObject ret = new JSONObject();
-
-        final String cacheKey = CACHE_KEY_PREFIX + query.getCacheKey() + "_" + getName();
-
-        if (cacheEnabled) {
-            ret = (JSONObject) CACHE.get(cacheKey);
-            if (null != ret) {
-                LOGGER.log(Level.DEBUG, "Got query result [cacheKey={0}] from repository cache[name={1}]",
-                    new Object[] {cacheKey, getName()});
-                return ret;
-            }
-
-            ret = new JSONObject(); // Re-instantiates it if cache miss
-        }
+        final JSONObject ret = new JSONObject();
 
         final int currentPageNum = query.getCurrentPageNum();
         final int pageSize = query.getPageSize();
@@ -559,17 +473,6 @@ public final class JdbcRepository implements Repository {
             final JSONArray jsonResults = JdbcUtil.queryJsonArray(sql.toString(), paramList, connection, getName());
 
             ret.put(Keys.RESULTS, jsonResults);
-
-            if (cacheEnabled) {
-                CACHE.putAsync(cacheKey, ret);
-                LOGGER.log(Level.DEBUG, "Added query result [cacheKey={0}] in repository cache[{1}]", new Object[] {cacheKey, getName()});
-                try {
-                    cacheQueryResults(ret.optJSONArray(Keys.RESULTS), query);
-                } catch (final JSONException e) {
-                    LOGGER.log(Level.WARN, "Caches query results failed", e);
-                }
-            }
-
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
@@ -578,67 +481,6 @@ public final class JdbcRepository implements Repository {
         }
 
         return ret;
-    }
-
-    /**
-     * Caches the specified query results with the specified query.
-     * 
-     * @param results
-     *            the specified query results
-     * @param query
-     *            the specified query
-     * @throws JSONException
-     *             json exception
-     */
-    private void cacheQueryResults(final JSONArray results,
-        final org.b3log.latke.repository.Query query) throws JSONException {
-        String cacheKey;
-
-        for (int i = 0; i < results.length(); i++) {
-            final JSONObject jsonObject = results.optJSONObject(i);
-
-            // 1. Caching for get by id.
-            cacheKey = CACHE_KEY_PREFIX + jsonObject.optString(Keys.OBJECT_ID);
-            CACHE.putAsync(cacheKey, jsonObject);
-            LOGGER.log(Level.DEBUG, "Added an object [cacheKey={0}] in repository cache[{1}] for default index[oId]",
-                new Object[] {cacheKey, getName()});
-
-            // 2. Caching for get by query with filters (EQUAL operator) only
-            final Set<String[]> indexes = query.getIndexes();
-            final StringBuilder logMsgBuilder = new StringBuilder();
-
-            for (final String[] index : indexes) {
-                final org.b3log.latke.repository.Query futureQuery = new org.b3log.latke.repository.Query().setPageCount(1);
-
-                for (int j = 0; j < index.length; j++) {
-                    final String propertyName = index[j];
-
-                    futureQuery.setFilter(new PropertyFilter(propertyName, FilterOperator.EQUAL, jsonObject.opt(propertyName)));
-                    logMsgBuilder.append(propertyName).append(",");
-                }
-
-                if (logMsgBuilder.length() > 0) {
-                    logMsgBuilder.deleteCharAt(logMsgBuilder.length() - 1);
-                }
-
-                cacheKey = CACHE_KEY_PREFIX + futureQuery.getCacheKey() + "_" + getName();
-
-                final JSONObject futureQueryRet = new JSONObject();
-                final JSONObject pagination = new JSONObject();
-
-                futureQueryRet.put(Pagination.PAGINATION, pagination);
-                pagination.put(Pagination.PAGINATION_PAGE_COUNT, 1);
-
-                final JSONArray futureQueryResults = new JSONArray();
-
-                futureQueryRet.put(Keys.RESULTS, futureQueryResults);
-                futureQueryResults.put(jsonObject);
-
-                CACHE.putAsync(cacheKey, futureQueryRet);
-                LOGGER.log(Level.DEBUG, "Added an object [cacheKey={0}] in repository cache[{1}] for index[{2}] for future query[{3}]",
-                    new Object[] {cacheKey, getName(), logMsgBuilder, futureQuery.toString()});
-            }
-        }
     }
 
     /**
@@ -856,32 +698,9 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public long count() throws RepositoryException {
-        final String cacheKey = CACHE_KEY_PREFIX + getName() + REPOSITORY_CACHE_COUNT;
-
-        if (cacheEnabled) {
-            final Object o = CACHE.get(cacheKey);
-
-            if (null != o) {
-                LOGGER.log(Level.DEBUG, "Got an object [cacheKey={0}] from repository cache[name={1}]", new Object[] {cacheKey, getName()});
-                try {
-                    return (Long) o;
-                } catch (final Exception e) {
-                    LOGGER.log(Level.ERROR, e.getMessage(), e);
-
-                    return -1;
-                }
-            }
-        }
-
         final StringBuilder sql = new StringBuilder("select count(" + JdbcRepositories.OID + ") from ").append(getName());
-        final long ret = count(sql, new ArrayList<Object>());
 
-        if (cacheEnabled) {
-            CACHE.putAsync(cacheKey, ret);
-            LOGGER.log(Level.DEBUG, "Added an object [cacheKey={0}] in repository cache[name={1}]", new Object[] {cacheKey, getName()});
-        }
-
-        return ret;
+        return count(sql, new ArrayList<Object>());
     }
 
     /**
@@ -963,16 +782,6 @@ public final class JdbcRepository implements Repository {
     }
 
     @Override
-    public boolean isCacheEnabled() {
-        return cacheEnabled;
-    }
-
-    @Override
-    public void setCacheEnabled(final boolean isCacheEnabled) {
-        cacheEnabled = isCacheEnabled;
-    }
-
-    @Override
     public boolean isWritable() {
         return writable;
     }
@@ -980,12 +789,6 @@ public final class JdbcRepository implements Repository {
     @Override
     public void setWritable(final boolean writable) {
         this.writable = writable;
-    }
-
-    @Override
-    public Cache<String, Serializable> getCache() {
-        // TODO Auto-generated method stub
-        return CACHE;
     }
 
     /**

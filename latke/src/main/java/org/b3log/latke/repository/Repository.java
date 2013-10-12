@@ -16,10 +16,8 @@
 package org.b3log.latke.repository;
 
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import org.b3log.latke.cache.Cache;
 import org.json.JSONObject;
 
 
@@ -27,7 +25,7 @@ import org.json.JSONObject;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.3, Sep 2, 2013
+ * @version 1.0.2.4, Oct 12, 2013
  */
 public interface Repository {
 
@@ -96,13 +94,6 @@ public interface Repository {
      * not be calculated by this interface, otherwise, the returned value pagination.paginationPageCount and 
      * pagination.paginationRecordCount will be calculated with query condition.
      * 
-     * <h4>Caching</h4>
-     * Each object in the result list (specified by {@value org.b3log.latke.Keys#RESULTS} 
-     * in returned value) will be cached for future queries if the specified 
-     * query {@link Query#index(java.lang.String[]) with indices}. Property "oId"
-     * will be treated as an index and cached for interface 
-     * {@link #get(java.lang.String) get by id} as default.
-     *
      * <p>
      *   <b>Note</b>: The order of elements of the returned result list is
      *   decided by datastore implementation, excepts 
@@ -187,21 +178,6 @@ public interface Repository {
     boolean hasTransactionBegun();
 
     /**
-     * Is the cache enabled?
-     *
-     * @return {@code true} for enabled, {@code false} otherwise
-     */
-    boolean isCacheEnabled();
-
-    /**
-     * Sets the cache enabled with the specified switch.
-     *
-     * @param isCacheEnabled the specified switch, {@code true} for enable
-     * cache, {@code false} otherwise
-     */
-    void setCacheEnabled(final boolean isCacheEnabled);
-    
-    /**
      * Whether the repository is writable.
      * 
      * @return {@code true} if it is writable, returns {@code false} otherwise
@@ -214,17 +190,4 @@ public interface Repository {
      * @param writable the specified flat, {@code true} for writable, {@code false} otherwise
      */
     void setWritable(final boolean writable);
-
-    /**
-     * Gets the query cache.
-     * 
-     * <p>
-     * The cached object corresponding key is constructed by the underlying 
-     * repository implementation, so if the caller of this method want to put 
-     * object into this query cache, please take care about the cache key.
-     * </p>
-     * 
-     * @return query cache
-     */
-    Cache<String, Serializable> getCache();
 }

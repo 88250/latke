@@ -262,10 +262,6 @@ public class RepositoryAccessor {
             return;
         }
 
-        final boolean cacheEnabled = repository.isCacheEnabled();
-
-        repository.setCacheEnabled(false);
-
         final Query query = new Query().setCurrentPageNum(Integer.valueOf(request.getParameter("pageNum"))).setPageSize(
             Integer.valueOf(request.getParameter("pageSize")));
 
@@ -281,8 +277,6 @@ public class RepositoryAccessor {
 
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             jsonObject.put(Keys.MSG, "Gets data failed[errorMsg=" + e.getMessage() + "]");
-        } finally {
-            repository.setCacheEnabled(cacheEnabled);
         }
     }
 
@@ -344,8 +338,6 @@ public class RepositoryAccessor {
             repository = new AbstractRepository(withoutTablePrefix) {};
         }
 
-        repository.setCacheEnabled(false);
-
         final Transaction transaction = repository.beginTransaction();
 
         try {
@@ -387,8 +379,6 @@ public class RepositoryAccessor {
 
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             jsonObject.put(Keys.MSG, "Puts data failed[errorMsg=" + e.getMessage() + "]");
-        } finally {
-            repository.setCacheEnabled(true);
         }
     }
 

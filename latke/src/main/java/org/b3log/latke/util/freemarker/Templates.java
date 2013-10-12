@@ -20,10 +20,7 @@ import freemarker.core.TemplateElement;
 import java.util.Enumeration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -51,20 +48,6 @@ public final class Templates {
      * Mobile template {@link Configuration configuration}.
      */
     public static final Configuration MOBILE_CFG = new Configuration();
-
-    /**
-     * Template cache.
-     * 
-     * <p>
-     * &lt;templateDirName/templateName, template&gt;
-     * </p>
-     */
-    public static final Map<String, Template> CACHE = new HashMap<String, Template>();
-
-    /**
-     * Enables the {@linkplain #CACHE cache}? Default to {@code true}.
-     */
-    private static boolean cacheEnabled = true;
 
     static {
         MAIN_CFG.setDefaultEncoding("UTF-8");
@@ -127,15 +110,6 @@ public final class Templates {
     }
 
     /**
-     * Enables or disables the template cache.
-     *
-     * @param enabled {@code true} to enable, disable otherwise
-     */
-    public static void enableCache(final boolean enabled) {
-        cacheEnabled = enabled;
-    }
-
-    /**
      * Gets a FreeMarker {@linkplain Template template} with the specified
      * template directory name and template name.
      *
@@ -144,8 +118,6 @@ public final class Templates {
      * @return a template, returns {@code null} if not found
      */
     public static Template getTemplate(final String templateDirName, final String templateName) {
-        Template ret = null;
-
         try {
             try {
                 if ("mobile".equals(templateDirName)) {
@@ -157,25 +129,10 @@ public final class Templates {
                 return null;
             }
 
-            if (cacheEnabled) {
-                ret = CACHE.get(templateDirName + File.separator + templateName);
-            }
-
-            if (null != ret) {
-                LOGGER.log(Level.TRACE, "Got template[templateName={0}] from cache", templateName);
-                return ret;
-            }
-
-            ret = MAIN_CFG.getTemplate(templateName);
-
-            if (cacheEnabled) {
-                CACHE.put(templateDirName + File.separator + templateName, ret);
-                LOGGER.log(Level.TRACE, "Got template[templateName={0}], then put it into template cache", templateName);
-            }
-
-            return ret;
+            return MAIN_CFG.getTemplate(templateName);
         } catch (final IOException e) {
             LOGGER.log(Level.WARN, "Gets template[name={0}] failed: [{1}]", new Object[] {templateName, e.getMessage()});
+
             return null;
         }
     }
