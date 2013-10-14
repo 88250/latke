@@ -20,7 +20,7 @@ import org.testng.annotations.Test;
 import org.weborganic.furi.URIResolveResult;
 
 /**
- * {@link AntPathMatcher} test case.
+ * {@link DefaultMatcher} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Sep 27, 2012
