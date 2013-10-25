@@ -16,11 +16,9 @@
 package org.b3log.latke.logging;
 
 
-import static org.b3log.latke.logging.Level.ALL;
 import static org.b3log.latke.logging.Level.DEBUG;
 import static org.b3log.latke.logging.Level.ERROR;
 import static org.b3log.latke.logging.Level.INFO;
-import static org.b3log.latke.logging.Level.OFF;
 import static org.b3log.latke.logging.Level.TRACE;
 import static org.b3log.latke.logging.Level.WARN;
 import org.slf4j.LoggerFactory;
@@ -71,6 +69,34 @@ public final class Logger {
      */
     public static Logger getLogger(final Class<?> clazz) {
         return new Logger(clazz.getName());
+    }
+
+    /**
+     * Checks if a message of the given level would actually be logged by this logger.
+     *
+     * @param level the given level
+     * @return {@code true} if it could, returns {@code false} if it couldn't
+     */
+    public boolean isLoggable(final Level level) {
+        switch (level) {
+        case TRACE:
+            return proxy.isTraceEnabled();
+
+        case DEBUG:
+            return proxy.isDebugEnabled();
+
+        case INFO:
+            return proxy.isInfoEnabled();
+
+        case WARN:
+            return proxy.isWarnEnabled();
+
+        case ERROR:
+            proxy.isErrorEnabled();
+
+        default:
+            throw new IllegalStateException("Logging level [" + level + "] is invalid");
+        }
     }
 
     /**
@@ -137,12 +163,6 @@ public final class Logger {
      */
     public void log(final Level level, final String msg, final Throwable throwable) {
         switch (level) {
-        case ALL:
-        case OFF:
-            proxy.warn("Logging level [" + level + "] is invalid");
-
-            break;
-
         case ERROR:
             if (proxy.isErrorEnabled()) {
                 proxy.error(msg, throwable);
@@ -203,12 +223,6 @@ public final class Logger {
         }
 
         switch (level) {
-        case ALL:
-        case OFF:
-            proxy.warn("Logging level [" + level + "] is invalid");
-
-            break;
-
         case ERROR:
             if (proxy.isErrorEnabled()) {
                 proxy.error(message);

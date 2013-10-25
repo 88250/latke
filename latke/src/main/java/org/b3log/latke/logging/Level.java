@@ -30,14 +30,10 @@ package org.b3log.latke.logging;
  * messages.
  * 
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jun 19, 2013
+ * @version 1.0.0.1, Oct 24, 2013
  */
 public enum Level {
 
-    /**
-     * ALL.
-     */
-    ALL,
     /**
      * ERROR.
      */
@@ -58,8 +54,4 @@ public enum Level {
      * TRACE.
      */
     TRACE,
-    /**
-     * OFF.
-     */
-    OFF;
 }
