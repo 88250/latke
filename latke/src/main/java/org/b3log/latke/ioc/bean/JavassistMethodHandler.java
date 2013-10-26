@@ -17,6 +17,7 @@ package org.b3log.latke.ioc.bean;
 
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 import javassist.util.proxy.MethodFilter;
@@ -35,7 +36,7 @@ import org.b3log.latke.repository.impl.UserRepository;
  * Javassist method handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Sep 29, 2013
+ * @version 1.0.1.2, Oct 26, 2013
  */
 public final class JavassistMethodHandler implements MethodHandler {
 
@@ -71,7 +72,7 @@ public final class JavassistMethodHandler implements MethodHandler {
     }
 
     @Override
-    public Object invoke(final Object proxy, final Method method, final Method proceed, final Object[] params) {
+    public Object invoke(final Object proxy, final Method method, final Method proceed, final Object[] params) throws Throwable {
         LOGGER.trace("Processing invocation: " + method.toString());
 
         final Class<?> declaringClass = method.getDeclaringClass();
@@ -102,18 +103,18 @@ public final class JavassistMethodHandler implements MethodHandler {
             if (needHandleTrans) {
                 transaction.commit();
             }
-        } catch (final Exception e) {
+        } catch (final InvocationTargetException e) {
             final String errMsg = "Invoke [" + method.toString() + "] failed";
 
-            LOGGER.log(Level.ERROR, errMsg, e);
+            LOGGER.log(Level.WARN, errMsg);
 
             if (needHandleTrans) {
                 if (null != transaction && transaction.isActive()) {
                     transaction.rollback();
                 }
             }
-
-            throw new RuntimeException(errMsg);
+            
+            throw e.getTargetException();
         }
 
         // 3. @AfterMethod handle
