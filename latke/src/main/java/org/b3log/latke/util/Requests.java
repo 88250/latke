@@ -19,6 +19,7 @@ package org.b3log.latke.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -93,6 +94,74 @@ public final class Requests {
      * Cookie expiry of "visited".
      */
     private static final int COOKIE_EXPIRY = 60 * 60 * 24; // 24 hours
+
+    /**
+     * Logs the specified request with the specified level and logger.
+     *
+     * Logging information of the specified request includes:
+     * 
+     * <ul>
+     *   <li>method</li>
+     *   <li>URL</li>
+     *   <li>content type</li>
+     *   <li>character encoding</li>
+     *   <li>local (address, port, name)</li>
+     *   <li>remote (address, port, host)</li>
+     *   <li>headers</li>
+     * </ul>
+     * 
+     * @param httpServletRequest the specified HTTP servlet request
+     * @param level the specified logging level
+     * @param logger the specified logger
+     */
+    public static void log(final HttpServletRequest httpServletRequest, final Level level, final Logger logger) {
+        if (!logger.isLoggable(level)) {
+            return;
+        }
+
+        final String indents = "    ";
+        final StringBuilder logBuilder = new StringBuilder("Request [").append(Strings.LINE_SEPARATOR);
+
+        logBuilder.append(indents).append("method=").append(httpServletRequest.getMethod()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("URL=").append(httpServletRequest.getRequestURL()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("contentType=").append(httpServletRequest.getContentType()).append(",").append(
+            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("characterEncoding=").append(httpServletRequest.getCharacterEncoding()).append(",").append(
+            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("local=[").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("addr=").append(httpServletRequest.getLocalAddr()).append(",").append(
+            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getLocalPort()).append(",").append(
+            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("name=").append(httpServletRequest.getLocalName()).append("],").append(
+            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("remote=[").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("addr=").append(httpServletRequest.getRemoteAddr()).append(",").append(
+            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getRemotePort()).append(",").append(
+            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("host=").append(httpServletRequest.getRemoteHost()).append("],").append(
+            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("headers=[").append(Strings.LINE_SEPARATOR);
+
+        final StringBuilder headerLogBuilder = new StringBuilder();
+        @SuppressWarnings("unchecked")
+        final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+
+        while (headerNames.hasMoreElements()) {
+            final String name = headerNames.nextElement();
+            final String value = httpServletRequest.getHeader(name);
+
+            headerLogBuilder.append(indents).append(indents).append(name).append("=").append(value);
+
+            headerLogBuilder.append(Strings.LINE_SEPARATOR);
+        }
+        headerLogBuilder.append(indents).append("]");
+
+        logBuilder.append(headerLogBuilder.toString()).append(Strings.LINE_SEPARATOR).append("]");
+
+        logger.log(level, logBuilder.toString());
+    }
 
     /**
      * Gets the Internet Protocol (IP) address of the end-client that sent the specified request.
@@ -390,7 +459,7 @@ public final class Requests {
         response.setContentType("application/json");
 
         final StringBuilder sb = new StringBuilder();
-        BufferedReader reader = null;
+        BufferedReader reader;
 
         final String errMsg = "Can not parse request[requestURI=" + request.getRequestURI() + ", method=" + request.getMethod()
             + "], returns an empty json object";
