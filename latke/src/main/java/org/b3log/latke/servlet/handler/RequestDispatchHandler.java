@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.util.AntPathMatcher;
 
 
@@ -45,7 +46,8 @@ import org.b3log.latke.util.AntPathMatcher;
  * to match one method of processor to do the reqest handler.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 18, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.2, Nov 1, 2013
  */
 public class RequestDispatchHandler implements Handler {
 
@@ -98,12 +100,14 @@ public class RequestDispatchHandler implements Handler {
      * doMatch.
      *
      * @param requestURI requestURI
-     * @param httpMethod     http-method
+     * @param httpMethod http-method
      * @return MatchResult
      */
     // XXX: Performance Issue 
     private MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret = null;
+
+        final String contextPath = Latkes.getContextPath();
 
         for (ProcessorInfo processorInfo : processorInfos) {
             for (HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
@@ -111,8 +115,9 @@ public class RequestDispatchHandler implements Handler {
                     final String[] uriPatterns = processorInfo.getPattern();
 
                     for (String uriPattern : uriPatterns) {
-                        ret = getResult(uriPattern, processorInfo, requestURI, httpMethod);
-                        if (ret != null) {
+                        ret = getResult(contextPath + uriPattern, processorInfo, requestURI, httpMethod);
+
+                        if (null != ret) {
                             return ret;
                         }
                     }
@@ -126,10 +131,10 @@ public class RequestDispatchHandler implements Handler {
     /**
      * get MatchResult.
      *
-     * @param uriPattern    uriPattern
+     * @param uriPattern uriPattern
      * @param processorInfo processorInfo
-     * @param requestURI    requestURI
-     * @param method        http method
+     * @param requestURI requestURI
+     * @param method http method
      * @return MatchResult
      */
     private MatchResult getResult(final String uriPattern, final ProcessorInfo processorInfo, final String requestURI, final String method) {
@@ -189,7 +194,7 @@ public class RequestDispatchHandler implements Handler {
         if (Strings.isEmptyOrNull(ret)) {
             ret = request.getMethod();
         }
-        
+
         return ret;
     }
 
@@ -241,12 +246,11 @@ public class RequestDispatchHandler implements Handler {
      * addProcessorInfo.
      *
      * @param requestProcessingMethodAnn requestProcessingMethodAnn
-     * @param mthd                       the invoke method
+     * @param mthd the invoke method
      */
     private void addProcessorInfo(final RequestProcessing requestProcessingMethodAnn, final Method mthd) {
 
         // anotation to bean
-
         final ProcessorInfo processorInfo = new ProcessorInfo();
 
         processorInfo.setPattern(requestProcessingMethodAnn.value());
