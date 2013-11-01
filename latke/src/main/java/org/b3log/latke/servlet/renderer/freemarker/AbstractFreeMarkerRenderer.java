@@ -129,7 +129,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
             afterRender(context);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "FreeMarker renders error");
+            LOGGER.log(Level.ERROR, "FreeMarker renders error", e);
 
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
