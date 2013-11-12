@@ -18,14 +18,11 @@ package org.b3log.latke.servlet;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cron.CronService;
-import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.config.Discoverer;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
-import org.b3log.latke.servlet.annotation.RequestProcessor;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -39,14 +36,13 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Set;
 
 
 /**
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.1, Aug 29, 2012
+ * @version 1.0.3.2, Nov 12, 2013
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -96,13 +92,6 @@ public abstract class AbstractServletListener implements ServletContextListener,
             final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
 
             Lifecycle.startApplication(beanClasses); // Starts Latke IoC container
-
-            final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
-
-            // Build processors
-            final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
-
-            RequestProcessors.buildProcessorMethods(processBeans);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Initializes request processors failed", e);
 
