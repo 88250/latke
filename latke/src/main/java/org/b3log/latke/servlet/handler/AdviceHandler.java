@@ -38,13 +38,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * the handler to do the advice work in configs.
+ * The handler to do the advice work in configs.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 18, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.2, Nov 12, 2013
  */
 public class AdviceHandler implements Handler {
 
@@ -55,9 +57,9 @@ public class AdviceHandler implements Handler {
 
     @Override
     public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
-
         // the data which pre-handler provided.
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
+        @SuppressWarnings("unchecked")
         final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
 
         final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
@@ -79,12 +81,23 @@ public class AdviceHandler implements Handler {
             return;
         } catch (final RequestProcessAdviceException e) {
             final JSONObject exception = e.getJsonObject();
+            final String msg = exception.optString(Keys.MSG);
 
-            LOGGER.log(Level.WARN, "Occurs an exception before request processing [errMsg={0}]", exception.optString(Keys.MSG));
-            final JSONRenderer ret = new JSONRenderer();
+            LOGGER.log(Level.WARN, "Occurs an exception before request processing [errMsg={0}]", msg);
 
-            ret.setJSONObject(exception);
-            context.setRenderer(ret);
+            final int statusCode = exception.optInt(Keys.STATUS_CODE, -1);
+
+            if (-1 != statusCode && HttpServletResponse.SC_OK != statusCode) {
+                final HttpServletResponse response = context.getResponse();
+
+                response.sendError(statusCode, msg);
+            } else {
+                final JSONRenderer ret = new JSONRenderer();
+
+                ret.setJSONObject(exception);
+                context.setRenderer(ret);
+            }
+
             return;
         }
 
@@ -110,7 +123,7 @@ public class AdviceHandler implements Handler {
     /**
      * get BeforeRequestProcessAdvice from annotation.
      *
-     * @param invokeHolder   the real invoked method
+     * @param invokeHolder the real invoked method
      * @param processorClass the class of the invoked methond
      * @return the list of BeforeRequestProcessAdvice
      */
@@ -135,7 +148,7 @@ public class AdviceHandler implements Handler {
     /**
      * get AfterRequestProcessAdvice from annotation.
      *
-     * @param invokeHolder   the real invoked method
+     * @param invokeHolder the real invoked method
      * @param processorClass the class of the invoked methond
      * @return the list of AfterRequestProcessAdvice
      */
@@ -158,4 +171,3 @@ public class AdviceHandler implements Handler {
         return afterAdviceClassList;
     }
 }
-
