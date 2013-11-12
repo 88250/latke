@@ -35,11 +35,10 @@ import java.util.Map;
 
 
 /**
- * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response 
- * renderer.
+ * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.7, Dec 3, 2011
+ * @version 1.0.0.8, Nov 12, 2013
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {
 
@@ -59,21 +58,20 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     private Map<String, Object> dataModel = new HashMap<String, Object>();
 
     /**
-     * Gets a template with the specified template directory name and template 
+     * Gets a template with the specified template directory name and template
      * name.
-     * 
+     *
      * @param templateDirName the specified template directory name
      * @param templateName the specified template name
      * @return template
-     * @throws IOException io exception
      */
-    protected Template getTemplate(final String templateDirName, final String templateName) throws IOException {
+    protected Template getTemplate(final String templateDirName, final String templateName) {
         return Templates.getTemplate(templateDirName, templateName);
     }
 
     /**
      * Invoked before render.
-     * 
+     *
      * @param context the specified context
      * @throws Exception exception
      */
@@ -81,9 +79,9 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
     /**
      * Invoked after render.
-     * 
+     *
      * @param context the specified context
-     * @throws Exception exception 
+     * @throws Exception exception
      */
     protected abstract void afterRender(final HTTPRequestContext context) throws Exception;
 
@@ -114,10 +112,22 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
             return;
         }
 
-        try {
-            final HttpServletRequest request = context.getRequest();
-            final Template template = getTemplate((String) request.getAttribute(Keys.TEMAPLTE_DIR_NAME), templateName);
+        final HttpServletRequest request = context.getRequest();
+        final Template template = getTemplate((String) request.getAttribute(Keys.TEMAPLTE_DIR_NAME), templateName);
 
+        if (null == template) {
+            LOGGER.log(Level.ERROR, "Not found template[{0}]", templateName);
+
+            try {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } catch (final IOException ex) {
+                LOGGER.log(Level.ERROR, "Can not send error 404!", ex);
+            }
+            
+            return;
+        }
+
+        try {
             dataModel.put(Keys.REQUEST, request);
             Keys.fillServer(dataModel);
 
@@ -140,14 +150,14 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     }
 
     /**
-     * Processes the specified FreeMarker template with the specified request, 
-     * data model. 
-     * 
+     * Processes the specified FreeMarker template with the specified request,
+     * data model.
+     *
      * @param request the specified request
      * @param dataModel the specified data model
      * @param template the specified FreeMarker template
      * @return generated HTML
-     * @throws Exception exception 
+     * @throws Exception exception
      */
     protected String genHTML(final HttpServletRequest request, final Map<String, Object> dataModel, final Template template)
         throws Exception {
@@ -169,17 +179,17 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     }
 
     /**
-     * Processes the specified FreeMarker template with the specified request, 
-     * data model and response. 
-     * 
+     * Processes the specified FreeMarker template with the specified request,
+     * data model and response.
+     *
      * <p>
-     * Puts the page response contents into cache with the key getting from 
+     * Puts the page response contents into cache with the key getting from
      * request attribute specified by <i>page cache key</i>.
      * </p>
-     * 
+     *
      * <p>
-     *   <b>Note</b>: This method will write page content to the writer of the
-     *   specified response without flush/close it.
+     * <b>Note</b>: This method will write page content to the writer of the
+     * specified response without flush/close it.
      * </p>
      *
      * @param html the specified HTML content
@@ -212,7 +222,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
     /**
      * Gets the data model.
-     * 
+     *
      * @return data model
      */
     public Map<String, Object> getDataModel() {
@@ -221,7 +231,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
     /**
      * Gets the template name.
-     * 
+     *
      * @return template name
      */
     public String getTemplateName() {
@@ -230,7 +240,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
     /**
      * Sets the template name with the specified template name.
-     * 
+     *
      * @param templateName the specified template name
      */
     public void setTemplateName(final String templateName) {
