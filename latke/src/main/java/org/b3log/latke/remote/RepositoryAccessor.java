@@ -52,7 +52,7 @@ import org.json.JSONObject;
  * Accesses repository via HTTP protocol.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.4, Jan 19, 2013
+ * @version 1.0.1.5, Nov 28, 2013
  */
 @RequestProcessor
 public class RepositoryAccessor {
@@ -64,15 +64,15 @@ public class RepositoryAccessor {
 
     /**
      * Gets whether repositories is writable.
-     * 
+     *
      * <p>
      * Query parameters:
      * /latke/remote/repositories/writable?<em>userName=xxx&password=xxx</em><br/>
      * All parameters are required.
      * </p>
-     * 
+     *
      * <p>
-     * Renders response like the following: 
+     * Renders response like the following:
      * <pre>
      * {
      *     "sc":200,
@@ -81,10 +81,10 @@ public class RepositoryAccessor {
      * }
      * </pre>
      * </p>
-     * 
+     *
      * @param context the specified HTTP request context
      * @param request the specified HTTP servlet request
-     * @param response the specified HTTP servlet response 
+     * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.GET)
     public void getRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
@@ -110,15 +110,15 @@ public class RepositoryAccessor {
 
     /**
      * Sets whether repositories is writable.
-     * 
+     *
      * <p>
      * Query parameters:
      * /latke/remote/repositories/writable?<em>userName=xxx&password=xxx&writable=true</em><br/>
      * All parameters are required.
      * </p>
-     * 
+     *
      * <p>
-     * Renders response like the following: 
+     * Renders response like the following:
      * <pre>
      * {
      *     "sc":200,
@@ -126,10 +126,10 @@ public class RepositoryAccessor {
      * }
      * </pre>
      * </p>
-     * 
+     *
      * @param context the specified HTTP request context
      * @param request the specified HTTP servlet request
-     * @param response the specified HTTP servlet response 
+     * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.PUT)
     public void setRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
@@ -163,29 +163,29 @@ public class RepositoryAccessor {
 
     /**
      * Gets repository names.
-     * 
+     *
      * <p>
      * Query parameters:
      * /latke/remote/repository/names?<em>userName=xxx&password=xxx</em><br/>
      * All parameters are required.
      * </p>
-     * 
+     *
      * <p>
-     * Renders response like the following: 
+     * Renders response like the following:
      * <pre>
      * {
      *     "sc":200,
      *     "msg":"Got data",
      *     "repositoryNames" : [
      *         "repository1", "repository2", ....
-     *     ] 
+     *     ]
      * }
      * </pre>
      * </p>
-     * 
+     *
      * @param context the specified HTTP request context
      * @param request the specified HTTP servlet request
-     * @param response the specified HTTP servlet response 
+     * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repository/names", method = HTTPRequestMethod.GET)
     public void getRepositoryNames(final HTTPRequestContext context, final HttpServletRequest request,
@@ -210,13 +210,13 @@ public class RepositoryAccessor {
 
     /**
      * Gets repository data.
-     * 
+     *
      * <p>
      * Query parameters:
      * /latke/remote/repository/data?<em>userName=xxx&password=xxx&repositoryName=xxx&pageNum=xxx&pageSize=xxx</em><br/>
      * All parameters are required.
      * </p>
-     * 
+     *
      * <p>
      * Renders response like the following:
      * <pre>
@@ -230,10 +230,10 @@ public class RepositoryAccessor {
      * }
      * </pre>
      * </p>
-     * 
+     *
      * @param context the specified HTTP request context
      * @param request the specified HTTP servlet request
-     * @param response the specified HTTP servlet response 
+     * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repository/data", method = HTTPRequestMethod.GET)
     public void getData(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
@@ -282,17 +282,17 @@ public class RepositoryAccessor {
 
     /**
      * Puts data to repository.
-     * 
+     *
      * <p>
      * Query parameters:
      * /latke/remote/repository/data?<em>userName=xxx&password=xxx&repositoryName=xxx</em><br/>
      * All parameters are required.
      * </p>
-     * 
+     *
      * <p>
      * The post body, for example, "data": {....} or [] // JSON object or JSON array, content of the backup file
      * </p>
-     * 
+     *
      * <p>
      * Renders response like the following:
      * <pre>
@@ -302,10 +302,10 @@ public class RepositoryAccessor {
      * }
      * </pre>
      * </p>
-     * 
+     *
      * @param context the specified HTTP request context
      * @param request the specified HTTP servlet request
-     * @param response the specified HTTP servlet response 
+     * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repository/data", method = HTTPRequestMethod.POST)
     public void putData(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
@@ -364,6 +364,15 @@ public class RepositoryAccessor {
                             new String[] {"EEE MMM dd HH:mm:ss z yyyy", "EEE MMM d HH:mm:ss z yyyy", "yyyy-MM-dd HH:mm:ss.SSS"}));
                         Locale.setDefault(defaultLocale);
                     }
+
+                    if ("String".equals(type)) {
+                        final int length = keyDescription.optInt("length");
+                        final String value = record.optString(key);
+
+                        if (value.length() > length) {
+                            record.put(key, value.substring(0, length));
+                        }
+                    }
                 }
 
                 repository.add(record);
@@ -384,15 +393,15 @@ public class RepositoryAccessor {
 
     /**
      * Creates tables.
-     * 
+     *
      * <p>
      * Query parameters:
      * /latke/remote/repository/tables?<em>userName=xxx&password=xxx&repositoryName=xxx</em><br/>
      * All parameters are required.
      * </p>
-     * 
+     *
      * <p>
-     * Renders response like the following: 
+     * Renders response like the following:
      * <pre>
      * {
      *     "sc":200,
@@ -400,10 +409,10 @@ public class RepositoryAccessor {
      * }
      * </pre>
      * </p>
-     * 
+     *
      * @param context the specified HTTP request context
      * @param request the specified HTTP servlet request
-     * @param response the specified HTTP servlet response 
+     * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repository/tables", method = HTTPRequestMethod.PUT)
     public void createTables(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response) {
@@ -433,12 +442,12 @@ public class RepositoryAccessor {
 
     /**
      * Determines whether the specified request is authenticated.
-     * 
+     *
      * <p>
      * If the specified request is unauthenticated, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg}
      * into the specified json object to render.
      * </p>
-     * 
+     *
      * @param request the specified request
      * @param jsonObject the specified json object
      * @return {@code true} if authenticated, returns {@code false} otherwise
@@ -480,12 +489,12 @@ public class RepositoryAccessor {
 
     /**
      * Determines whether the specified get data request is bad.
-     * 
+     *
      * <p>
      * If the specified request is bad, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg}
      * into the specified json object to render.
      * </p>
-     * 
+     *
      * @param request the specified request
      * @param jsonObject the specified jsonObject
      * @return {@code true} if it is bad, returns {@code false} otherwise
@@ -534,12 +543,12 @@ public class RepositoryAccessor {
 
     /**
      * Determines whether the specified put data request is bad.
-     * 
+     *
      * <p>
      * If the specified request is bad, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg}
      * into the specified json object to render.
      * </p>
-     * 
+     *
      * @param request the specified request
      * @param jsonObject the specified jsonObject
      * @param dataBuilder the specified data builder
