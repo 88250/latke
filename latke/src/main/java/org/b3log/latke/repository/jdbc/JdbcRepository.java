@@ -794,8 +794,7 @@ public final class JdbcRepository implements Repository {
     /**
      * Constructs a JDBC repository with the specified name.
      * 
-     * @param name
-     *            the specified name
+     * @param name the specified name
      */
     public JdbcRepository(final String name) {
         this.name = name;

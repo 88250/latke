@@ -1,0 +1,109 @@
+/*
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.b3log.latke.repository;
+
+
+import java.util.List;
+import java.util.Map;
+import org.json.JSONObject;
+
+
+/**
+ * None repository implementation.
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.0, Dec 2, 2013
+ */
+public final class NoneRepository implements Repository {
+
+    /**
+     * Constructs a none repository with the specified name.
+     * 
+     * @param name the specified name
+     */
+    public NoneRepository(final String name) {}
+
+    @Override
+    public String add(final JSONObject jsonObject) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void update(final String id, final JSONObject jsonObject) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void remove(final String id) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public JSONObject get(final String id) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Map<String, JSONObject> get(final Iterable<String> ids) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean has(final String id) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public JSONObject get(final Query query) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<JSONObject> getRandomly(final int fetchSize) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public long count() throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getName() {
+        return "None Repository";
+    }
+
+    @Override
+    public Transaction beginTransaction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean hasTransactionBegun() {
+        return false;
+    }
+
+    @Override
+    public boolean isWritable() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setWritable(final boolean writable) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+}

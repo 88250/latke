@@ -34,14 +34,14 @@ import org.json.JSONObject;
 
 /**
  * Abstract repository.
- * 
+ *
  * <p>
- * This is a base adapter for wrapped {@link #repository repository}, the underlying repository will be instantiated in the 
+ * This is a base adapter for wrapped {@link #repository repository}, the underlying repository will be instantiated in the
  * {@link #AbstractRepository(java.lang.String) constructor} with {@link Latkes#getRuntimeEnv() the current runtime environment}.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.5, Mar 6, 2013
+ * @version 1.0.1.6, Dec 2, 2013
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -57,7 +57,7 @@ public abstract class AbstractRepository implements Repository {
 
     /**
      * Constructs a repository with the specified name.
-     * 
+     *
      * @param name the specified name
      */
     @SuppressWarnings("unchecked")
@@ -79,6 +79,10 @@ public abstract class AbstractRepository implements Repository {
 
                 case H2:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
+                    break;
+
+                case NONE:
+                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
                     break;
 
                 default:
@@ -192,7 +196,7 @@ public abstract class AbstractRepository implements Repository {
     public Transaction beginTransaction() {
         return repository.beginTransaction();
     }
-    
+
     @Override
     public boolean hasTransactionBegun() {
         return repository.hasTransactionBegun();
@@ -215,7 +219,7 @@ public abstract class AbstractRepository implements Repository {
 
     /**
      * Gets the underlying repository.
-     * 
+     *
      * @return underlying repository
      */
     protected Repository getUnderlyingRepository() {
@@ -224,7 +228,7 @@ public abstract class AbstractRepository implements Repository {
 
     /**
      * Checks the current method is whether invoked as internal call.
-     * 
+     *
      * @return {@code true} if the current method is invoked as internal call, return {@code false} otherwise
      */
     private static boolean isInternalCall() {

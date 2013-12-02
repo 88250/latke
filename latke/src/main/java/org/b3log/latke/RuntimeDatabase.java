@@ -24,10 +24,15 @@ package org.b3log.latke;
  *  
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Dec 27, 2012
+ * @version 1.0.0.4, Dec 2, 2013
  * @see Latkes#getRuntimeDatabase() 
  */
 public enum RuntimeDatabase {
+    
+    /**
+     * None.
+     */
+    NONE,
 
     /**
      * Oracle.
