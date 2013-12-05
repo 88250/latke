@@ -39,7 +39,7 @@ import org.b3log.latke.logging.Logger;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.4, Mar 15, 2010
+ * @version 1.0.0.5, Dec 5, 2013
  */
 final public class Reflections {
 
@@ -59,7 +59,17 @@ final public class Reflections {
     private static final Integer MAX_FIND_LENGTH = 30;
 
     /**
+     * Class pool.
+     */
+    private static final ClassPool CLASS_POOL = ClassPool.getDefault();
+
+    static {
+        CLASS_POOL.insertClassPath(new ClassClassPath(Reflections.class));
+    }
+
+    /**
      * getMethodVariableNames in user defined.
+     *
      * @param clazz the specific clazz
      * @param targetMethodName the targetMethodName
      * @param types the types of the method parameters
@@ -70,20 +80,18 @@ final public class Reflections {
         CtMethod cm = null;
 
         try {
-            final ClassPool pool = ClassPool.getDefault();
+            if (null == CLASS_POOL.find(clazz.getName())) {
+                CLASS_POOL.insertClassPath(new ClassClassPath(clazz));
+            }
 
-            pool.insertClassPath(new ClassClassPath(Reflections.class));
-            pool.insertClassPath(new ClassClassPath(clazz));
-            pool.insertClassPath(new ClassClassPath(Thread.currentThread().getClass()));
-
-            cc = pool.get(clazz.getName());
+            cc = CLASS_POOL.get(clazz.getName());
             final CtClass[] ptypes = new CtClass[types.length];
 
             for (int i = 0; i < ptypes.length; i++) {
-                ptypes[i] = pool.get(types[i].getName());
+                ptypes[i] = CLASS_POOL.get(types[i].getName());
             }
             cm = cc.getDeclaredMethod(targetMethodName, ptypes);
-        } catch (final Exception e) {
+        } catch (final NotFoundException e) {
             LOGGER.log(Level.ERROR, "Get method variable names failed", e);
         }
 
