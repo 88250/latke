@@ -222,10 +222,6 @@ public final class JdbcUtil {
                     } else {
                         final Object v = resultSet.getObject(columnName);
                         
-                        if ("articleCreateDate".equals(columnName)) {
-                            System.out.println(v);
-                        }
-
                         while (true) {
                             if (RuntimeDatabase.H2 != Latkes.getRuntimeDatabase()) {
                                 jsonObject.put(definition.getName(), v);
