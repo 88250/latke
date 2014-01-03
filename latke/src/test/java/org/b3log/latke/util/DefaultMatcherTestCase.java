@@ -45,7 +45,7 @@ public final class DefaultMatcherTestCase {
     @Test
     public void matchLowercaseError() throws Exception {
         final URIResolveResult result = DefaultMatcher.match("/tags/{tagTitle}", "/tags/%e7%94%9f%e6%b4%bb");
-        
+
         System.out.println(URLDecoder.decode("%e7%94%9f%e6%b4%bb", "UTF-8"));
 
         Assert.assertEquals(result.getStatus(), URIResolveResult.Status.ERROR);
@@ -54,9 +54,18 @@ public final class DefaultMatcherTestCase {
     @Test
     public void matchUpercaseOK() throws Exception {
         final URIResolveResult result = DefaultMatcher.match("/tags/{tagTitle}", "/tags/%E7%94%9F%E6%B4%BB");
-        
-         System.out.println(URLDecoder.decode("%E7%94%9F%E6%B4%BB", "UTF-8"));
+
+        System.out.println(URLDecoder.decode("%E7%94%9F%E6%B4%BB", "UTF-8"));
 
         Assert.assertEquals(result.getStatus(), URIResolveResult.Status.RESOLVED);
+    }
+
+    @Test
+    public void matchLowercaseAndUpercaseERROR() throws Exception {
+        final URIResolveResult result = DefaultMatcher.match("/tags/{tagTitle}", "/tags/%e7%94%9f%e6%b4%BB");
+
+        System.out.println(URLDecoder.decode("%e7%94%9f%e6%b4%BB", "UTF-8"));
+
+        Assert.assertEquals(result.getStatus(), URIResolveResult.Status.ERROR);
     }
 }
