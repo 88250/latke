@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+import java.net.URLDecoder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.weborganic.furi.URIResolveResult;
@@ -23,7 +24,7 @@ import org.weborganic.furi.URIResolveResult;
  * {@link DefaultMatcher} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 27, 2012
+ * @version 1.0.0.1, Jan 3, 2014
  */
 public final class DefaultMatcherTestCase {
 
@@ -37,6 +38,24 @@ public final class DefaultMatcherTestCase {
     @Test
     public void match() {
         final URIResolveResult result = DefaultMatcher.match("/{name}.html", "/a.html");
+
+        Assert.assertEquals(result.getStatus(), URIResolveResult.Status.RESOLVED);
+    }
+
+    @Test
+    public void matchLowercaseError() throws Exception {
+        final URIResolveResult result = DefaultMatcher.match("/tags/{tagTitle}", "/tags/%e7%94%9f%e6%b4%bb");
+        
+        System.out.println(URLDecoder.decode("%e7%94%9f%e6%b4%bb", "UTF-8"));
+
+        Assert.assertEquals(result.getStatus(), URIResolveResult.Status.ERROR);
+    }
+
+    @Test
+    public void matchUpercaseOK() throws Exception {
+        final URIResolveResult result = DefaultMatcher.match("/tags/{tagTitle}", "/tags/%E7%94%9F%E6%B4%BB");
+        
+         System.out.println(URLDecoder.decode("%E7%94%9F%E6%B4%BB", "UTF-8"));
 
         Assert.assertEquals(result.getStatus(), URIResolveResult.Status.RESOLVED);
     }
