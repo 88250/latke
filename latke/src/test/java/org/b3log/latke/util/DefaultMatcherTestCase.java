@@ -48,7 +48,7 @@ public final class DefaultMatcherTestCase {
 
         System.out.println(URLDecoder.decode("%e7%94%9f%e6%b4%bb", "UTF-8"));
 
-        Assert.assertEquals(result.getStatus(), URIResolveResult.Status.ERROR);
+        Assert.assertEquals(result.getStatus(), URIResolveResult.Status.RESOLVED);
     }
 
     @Test
@@ -66,6 +66,6 @@ public final class DefaultMatcherTestCase {
 
         System.out.println(URLDecoder.decode("%e7%94%9f%e6%b4%BB", "UTF-8"));
 
-        Assert.assertEquals(result.getStatus(), URIResolveResult.Status.ERROR);
+        Assert.assertEquals(result.getStatus(), URIResolveResult.Status.RESOLVED);
     }
 }

@@ -59,7 +59,7 @@ public class TokenOperatorPS extends TokenBase implements TokenOperator, Matchab
    *      Syntax</a>
    */
   protected static final Pattern PCHAR = Pattern
-      .compile("(?:[\\w-_.~!$&'()*+,;=:@]|(?:%[0-9A-F]{2}))");
+      .compile("(?:[\\w-_.~!$&'()*+,;=:@]|(?:%[0-9a-fA-F]{2}))");
 
   /**
    * The list of operators currently supported.

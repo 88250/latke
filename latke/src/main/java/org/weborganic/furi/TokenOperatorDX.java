@@ -56,7 +56,7 @@ public class TokenOperatorDX extends TokenBase implements TokenOperator, Matchab
    * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">Uniform Resource Identifier (URI): Generic
    *      Syntax</a>
    */
-  protected static final Pattern PCHAR = Pattern.compile("(?:[\\w-_.~!$&'()*+,;=:@]|(?:%[0-9A-F]{2}))");
+  protected static final Pattern PCHAR = Pattern.compile("(?:[\\w-_.~!$&'()*+,;=:@]|(?:%[0-9a-fA-F]{2}))");
 
   /**
    * The list of operators currently supported.
