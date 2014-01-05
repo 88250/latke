@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * Cron jobs service.
- * 
+ *
  * <p>
  * Loads cron jobs configurations from cron.xml and schedules tasks.
  * </p>
@@ -75,7 +75,7 @@ public final class CronService {
                     final Timer timer = new Timer();
 
                     timer.scheduleAtFixedRate(cron, Cron.SIXTY * Cron.THOUSAND, cron.getPeriod());
-                    
+
                     LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getUrl());
                 }
 
@@ -84,9 +84,6 @@ public final class CronService {
                 break;
 
             case GAE:
-                break;
-
-            case BAE:
                 break;
 
             default:

@@ -48,15 +48,16 @@ public final class TaskQueueServiceFactory {
             Class<TaskQueueService> serviceClass = null;
 
             switch (runtimeEnv) {
-            case BAE:
             case LOCAL:
                 serviceClass = (Class<TaskQueueService>) Class.forName("org.b3log.latke.taskqueue.local.LocalTaskQueueService");
                 TASK_QUEUE_SERVICE = serviceClass.newInstance();
+
                 break;
 
             case GAE:
                 serviceClass = (Class<TaskQueueService>) Class.forName("org.b3log.latke.taskqueue.gae.GAETaskQueueService");
                 TASK_QUEUE_SERVICE = serviceClass.newInstance();
+
                 break;
 
             default:
@@ -71,7 +72,7 @@ public final class TaskQueueServiceFactory {
 
     /**
      * Gets task queue service.
-     * 
+     *
      * @return task queue service
      */
     public static TaskQueueService getTaskQueueService() {

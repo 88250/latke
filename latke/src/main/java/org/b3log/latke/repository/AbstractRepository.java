@@ -68,30 +68,34 @@ public abstract class AbstractRepository implements Repository {
             Class<Repository> repositoryClass = null;
 
             switch (runtimeEnv) {
-            case BAE:
             case LOCAL:
                 final RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
 
                 switch (runtimeDatabase) {
                 case MYSQL:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
+
                     break;
 
                 case H2:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
+
                     break;
 
                 case NONE:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
+
                     break;
 
                 default:
                     throw new RuntimeException("The runtime database [" + runtimeDatabase + "] is not support NOW!");
                 }
+
                 break;
 
             case GAE:
                 repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.gae.GAERepository");
+
                 break;
 
             default:

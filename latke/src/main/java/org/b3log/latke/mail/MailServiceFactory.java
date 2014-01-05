@@ -49,19 +49,16 @@ public final class MailServiceFactory {
             Class<MailService> mailServiceClass;
 
             switch (runtimeEnv) {
-            case BAE:
-                mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.bae.BAEMailService");
-                MAIL_SERVICE = mailServiceClass.newInstance();
-                break;
-
             case LOCAL:
                 mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.local.LocalMailService");
                 MAIL_SERVICE = mailServiceClass.newInstance();
+                    
                 break;
 
             case GAE:
                 mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.gae.GAEMailService");
                 MAIL_SERVICE = mailServiceClass.newInstance();
+                    
                 break;
 
             default:
@@ -76,7 +73,7 @@ public final class MailServiceFactory {
 
     /**
      * Gets mail service.
-     * 
+     *
      * @return mail service
      */
     public static MailService getMailService() {

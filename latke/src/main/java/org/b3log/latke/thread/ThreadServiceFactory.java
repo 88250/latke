@@ -48,19 +48,16 @@ public final class ThreadServiceFactory {
             Class<ThreadService> serviceClass = null;
 
             switch (runtimeEnv) {
-            case BAE:
-                serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.bae.BAEThreadService");
-                THREAD_SERVICE = serviceClass.newInstance();
-                break;
-
             case LOCAL:
                 serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.local.LocalThreadService");
                 THREAD_SERVICE = serviceClass.newInstance();
+
                 break;
 
             case GAE:
                 serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.gae.GAEThreadService");
                 THREAD_SERVICE = serviceClass.newInstance();
+
                 break;
 
             default:

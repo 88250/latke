@@ -19,7 +19,7 @@ package org.b3log.latke;
  * Latke runtime environment.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Aug 27, 2011
+ * @version 1.0.0.3, Jan 5, 2014
  * @see Latkes#getRuntimeEnv() 
  */
 public enum RuntimeEnv {
@@ -33,8 +33,4 @@ public enum RuntimeEnv {
      * Google App Engine</a>.
      */
     GAE,
-    /**
-     * Indicates Latke runs on <a href="http://developer.baidu.com/bae">Baidu App Engine</a>.
-     */
-    BAE,
 }

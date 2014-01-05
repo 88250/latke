@@ -393,7 +393,7 @@ public final class Latkes {
      * @return context path
      */
     public static String getContextPath() {
-        if (RuntimeEnv.GAE == getRuntimeEnv() || RuntimeEnv.BAE == getRuntimeEnv()) {
+        if (RuntimeEnv.GAE == getRuntimeEnv()) {
             return "";
         }
 
@@ -414,7 +414,7 @@ public final class Latkes {
      * @return static path
      */
     public static String getStaticPath() {
-        if (RuntimeEnv.GAE == getRuntimeEnv() || RuntimeEnv.BAE == getRuntimeEnv()) {
+        if (RuntimeEnv.GAE == getRuntimeEnv()) {
             return "";
         }
 
@@ -609,10 +609,10 @@ public final class Latkes {
      * @return runtime database
      */
     public static RuntimeDatabase getRuntimeDatabase() {
-        if (RuntimeEnv.LOCAL != runtimeEnv && RuntimeEnv.BAE != runtimeEnv) {
+        if (RuntimeEnv.LOCAL != runtimeEnv) {
             throw new RuntimeException(
-                "Underlying database can be specified when Latke runs on [LOCAL] / [BAE] environment only, "
-                    + "current runtime enviornment [" + runtimeEnv + ']');
+                "Underlying database can be specified when Latke runs on [LOCAL] environment only, " + "current runtime enviornment ["
+                + runtimeEnv + ']');
         }
 
         final String runtimeDatabase = LOCAL_PROPS.getProperty("runtimeDatabase");
@@ -659,7 +659,7 @@ public final class Latkes {
      * @return {@code true} if Latkes runs with a JDBC database, returns {@code false} otherwise
      */
     public static boolean runsWithJDBCDatabase() {
-        return RuntimeEnv.LOCAL == Latkes.getRuntimeEnv() || RuntimeEnv.BAE == Latkes.getRuntimeEnv();
+        return RuntimeEnv.LOCAL == Latkes.getRuntimeEnv();
     }
 
     /**

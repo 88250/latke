@@ -49,20 +49,16 @@ public final class URLFetchServiceFactory {
             Class<URLFetchService> serviceClass;
 
             switch (runtimeEnv) {
-            case BAE:
-                serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.bae.BAEURLFetchService");
-                // serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
-                URL_FETCH_SERVICE = serviceClass.newInstance();
-                break;
-
             case LOCAL:
                 serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
                 URL_FETCH_SERVICE = serviceClass.newInstance();
+
                 break;
 
             case GAE:
                 serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.gae.GAEURLFetchService");
                 URL_FETCH_SERVICE = serviceClass.newInstance();
+
                 break;
 
             default:
@@ -77,7 +73,7 @@ public final class URLFetchServiceFactory {
 
     /**
      * Gets URL fetch service.
-     * 
+     *
      * @return URL fetch service
      */
     public static URLFetchService getURLFetchService() {

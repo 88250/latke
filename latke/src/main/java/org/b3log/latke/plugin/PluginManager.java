@@ -35,11 +35,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
-import org.b3log.latke.cache.local.memory.LruMemoryCache;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
@@ -56,7 +53,7 @@ import org.json.JSONObject;
 
 /**
  * Plugin loader.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.0, Dec 3, 2011
  */
@@ -81,9 +78,9 @@ public class PluginManager {
 
     /**
      * Plugins cache.
-     * 
+     *
      * <p>
-     * Caches plugins with the key "plugins" and its value is the real holder, 
+     * Caches plugins with the key "plugins" and its value is the real holder,
      * a map:
      * &lt;"hosting view name", plugins&gt;
      * </p>
@@ -112,16 +109,12 @@ public class PluginManager {
      */
     @SuppressWarnings("unchecked")
     public PluginManager() {
-        if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) {
-            pluginCache = new LruMemoryCache<String, HashMap<String, HashSet<AbstractPlugin>>>();
-        } else {
-            pluginCache = (Cache<String, HashMap<String, HashSet<AbstractPlugin>>>) CacheFactory.getCache(PLUGIN_CACHE_NAME);
-        }
+        pluginCache = (Cache<String, HashMap<String, HashSet<AbstractPlugin>>>) CacheFactory.getCache(PLUGIN_CACHE_NAME);
     }
 
     /**
      * Updates the specified plugin.
-     * 
+     *
      * @param plugin the specified plugin
      */
     public void update(final AbstractPlugin plugin) {
@@ -152,7 +145,7 @@ public class PluginManager {
 
     /**
      * Gets all plugins.
-     * 
+     *
      * @return all plugins, returns an empty list if not found
      */
     public List<AbstractPlugin> getPlugins() {
@@ -179,7 +172,7 @@ public class PluginManager {
 
     /**
      * Gets a plugin by the specified view name.
-     * 
+     *
      * @param viewName the specified view name
      * @return a plugin, returns an empty list if not found
      */
@@ -256,9 +249,9 @@ public class PluginManager {
     }
 
     /**
-     * Loads a plugin by the specified plugin directory and put it into the 
+     * Loads a plugin by the specified plugin directory and put it into the
      * specified holder.
-     * 
+     *
      * @param pluginDir the specified plugin directory
      * @param holder the specified holder
      * @return loaded plugin
@@ -315,9 +308,9 @@ public class PluginManager {
 
     /**
      * Registers the specified plugin into the specified holder.
-     * 
+     *
      * @param plugin the specified plugin
-     * @param holder the specified holder 
+     * @param holder the specified holder
      */
     private void register(final AbstractPlugin plugin, final HashMap<String, HashSet<AbstractPlugin>> holder) {
 
@@ -325,7 +318,7 @@ public class PluginManager {
 
         /**
          * the rendererId support multiple,using ';' to split.
-         * and using Map to match the plugin is not flexible, a regular expression match pattern may be needed in futrue. 
+         * and using Map to match the plugin is not flexible, a regular expression match pattern may be needed in futrue.
          */
         final String[] redererIds = rendererId.split(";");
 
@@ -347,7 +340,7 @@ public class PluginManager {
     /**
      * Sets the specified plugin's properties from the specified properties file
      * under the specified plugin directory.
-     * 
+     *
      * @param pluginDir the specified plugin directory
      * @param plugin the specified plugin
      * @param props the specified properties file
@@ -394,15 +387,15 @@ public class PluginManager {
     }
 
     /**
-     * Registers event listeners with the specified plugin properties, class 
+     * Registers event listeners with the specified plugin properties, class
      * loader and plugin.
      *
      * <p>
-     *   <b>Note</b>: If the specified plugin has some event listeners, each of these listener MUST implement a static method named 
-     *   {@code getInstance} to obtain an instance of this listener. See <a href="http://en.wikipedia.org/wiki/Singleton_pattern">
-     *   Singleton Pattern</a> for more details.
+     * <b>Note</b>: If the specified plugin has some event listeners, each of these listener MUST implement a static method named
+     * {@code getInstance} to obtain an instance of this listener. See <a href="http://en.wikipedia.org/wiki/Singleton_pattern">
+     * Singleton Pattern</a> for more details.
      * </p>
-     * 
+     *
      * @param props the specified plugin properties
      * @param classLoader the specified class loader
      * @param plugin the specified plugin
@@ -435,7 +428,7 @@ public class PluginManager {
 
     /**
      * Gets the plugin class loaders.
-     * 
+     *
      * @return plugin class loaders
      */
     public Set<ClassLoader> getClassLoaders() {

@@ -48,15 +48,16 @@ public final class ImageServiceFactory {
             Class<ImageService> serviceClass = null;
 
             switch (runtimeEnv) {
-            case BAE:
             case LOCAL:
                 serviceClass = (Class<ImageService>) Class.forName("org.b3log.latke.image.local.LocalImageService");
                 IMAGE_SERVICE = serviceClass.newInstance();
+                    
                 break;
 
             case GAE:
                 serviceClass = (Class<ImageService>) Class.forName("org.b3log.latke.image.gae.GAEImageService");
                 IMAGE_SERVICE = serviceClass.newInstance();
+                    
                 break;
 
             default:
@@ -71,7 +72,7 @@ public final class ImageServiceFactory {
 
     /**
      * Gets image service.
-     * 
+     *
      * @return image service
      */
     public static ImageService getImageService() {

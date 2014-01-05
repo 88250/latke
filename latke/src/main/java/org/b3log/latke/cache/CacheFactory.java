@@ -68,9 +68,6 @@ public final class CacheFactory {
 
             break;
 
-        case BAE: // No cache
-            break;
-
         case LOCAL:
             // Clears cache one by one
             for (final Map.Entry<String, Cache<String, ?>> entry : CACHES.entrySet()) {
@@ -114,15 +111,6 @@ public final class CacheFactory {
                     final Constructor<Cache<String, ?>> gaeMemcacheConstructor = gaeMemcache.getConstructor(String.class);
 
                     ret = gaeMemcacheConstructor.newInstance(cacheName);
-                    break;
-
-                case BAE:
-                    final Class<Cache<String, ?>> baeMemcache = (Class<Cache<String, ?>>) 
-                        Class.forName("org.b3log.latke.cache.NoCache");
-                    // Class.forName("org.b3log.latke.cache.bae.Memcache");
-                    final Constructor<Cache<String, ?>> baeMemcacheConstructor = baeMemcache.getConstructor(String.class);
-
-                    ret = baeMemcacheConstructor.newInstance(cacheName);
                     break;
 
                 default:

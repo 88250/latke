@@ -24,7 +24,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
-import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Callstacks;
@@ -109,11 +108,7 @@ public final class Connections {
 
                 Class.forName(driver);
 
-                if (RuntimeEnv.BAE == Latkes.getRuntimeEnv()) { // BAE can not use connection pool
-                    poolType = "none";
-                } else {
-                    poolType = Latkes.getLocalProperty("jdbc.pool");
-                }
+                poolType = Latkes.getLocalProperty("jdbc.pool");
 
                 url = Latkes.getLocalProperty("jdbc.URL");
                 userName = Latkes.getLocalProperty("jdbc.username");
