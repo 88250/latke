@@ -24,7 +24,7 @@ import org.weborganic.furi.URIResolveResult;
  * {@link DefaultMatcher} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Jan 3, 2014
+ * @version 1.0.0.2, Jan 5, 2014
  */
 public final class DefaultMatcherTestCase {
 
@@ -43,7 +43,7 @@ public final class DefaultMatcherTestCase {
     }
 
     @Test
-    public void matchLowercaseError() throws Exception {
+    public void matchLowercaseOK() throws Exception {
         final URIResolveResult result = DefaultMatcher.match("/tags/{tagTitle}", "/tags/%e7%94%9f%e6%b4%bb");
 
         System.out.println(URLDecoder.decode("%e7%94%9f%e6%b4%bb", "UTF-8"));
@@ -61,7 +61,7 @@ public final class DefaultMatcherTestCase {
     }
 
     @Test
-    public void matchLowercaseAndUpercaseERROR() throws Exception {
+    public void matchLowercaseAndUpercaseOK() throws Exception {
         final URIResolveResult result = DefaultMatcher.match("/tags/{tagTitle}", "/tags/%e7%94%9f%e6%b4%BB");
 
         System.out.println(URLDecoder.decode("%e7%94%9f%e6%b4%BB", "UTF-8"));
