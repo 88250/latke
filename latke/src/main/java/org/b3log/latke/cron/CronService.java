@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.cron;
 
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.b3log.latke.servlet.AbstractServletListener;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 
 /**
  * Cron jobs service.
@@ -64,26 +66,28 @@ public final class CronService {
 
         try {
             switch (runtimeEnv) {
-                case LOCAL:
-                    loadCronXML();
+            case LOCAL:
+                loadCronXML();
 
-                    for (final Cron cron : CRONS) {
-                        cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getUrl());
+                for (final Cron cron : CRONS) {
+                    cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getUrl());
 
-                        final Timer timer = new Timer();
+                    final Timer timer = new Timer();
 
-                        timer.scheduleAtFixedRate(cron, Cron.SIXTY * Cron.THOUSAND, cron.getPeriod());
+                    timer.scheduleAtFixedRate(cron, Cron.SIXTY * Cron.THOUSAND, cron.getPeriod());
 
-                        LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getUrl());
-                    }
+                    LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getUrl());
+                }
 
-                    LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
+                LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
 
-                    break;
-                case GAE:
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                break;
+
+            case GAE:
+                break;
+
+            default:
+                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Cron Service!", e);
@@ -136,6 +140,5 @@ public final class CronService {
     /**
      * Private default constructor.
      */
-    private CronService() {
-    }
+    private CronService() {}
 }

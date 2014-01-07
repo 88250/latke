@@ -27,36 +27,37 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
+import javax.mail.internet.MimeUtility;
 import org.b3log.latke.mail.MailService.Message;
 import org.b3log.latke.util.Strings;
 
 
 /**
  * Email sender.
- * 
+ *
  * @author <a href="mailto:jiangzezhou1989@gmail.com">zezhou jiang</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Jan 4, 2013
+ * @version 1.0.0.4, Jan 7, 2014
  */
 final class MailSender {
 
     /**
      * Mail configurations.
-     * 
+     *
      * <ul>
-     *   <li>mail.user</li>
-     *   <li>mail.password</li>
-     *   <li>mail.smtp.host</li>
-     *   <li>mail.smtp.port</li>
-     *   <li>mail.smtp.auth</li>
-     *   <li>mail.debug</li>
+     * <li>mail.user</li>
+     * <li>mail.password</li>
+     * <li>mail.smtp.host</li>
+     * <li>mail.smtp.port</li>
+     * <li>mail.smtp.auth</li>
+     * <li>mail.debug</li>
      * </ul>
      */
     private final ResourceBundle mailProperties = ResourceBundle.getBundle("mail");
 
     /**
      * Create session based on the mail properties.
-     * 
+     *
      * @return session session from mail properties
      */
     private Session getSession() {
@@ -75,15 +76,14 @@ final class MailSender {
     }
 
     /**
-     * Converts the specified message into a {@link javax.mail.Message 
+     * Converts the specified message into a {@link javax.mail.Message
      * javax.mail.Message}.
-     * 
+     *
      * @param message the specified message
      * @return a {@link javax.mail.internet.MimeMessage}
-     * @throws MessagingException if converts error 
+     * @throws Exception if converts error
      */
-    public javax.mail.Message convert2JavaMailMsg(final Message message)
-        throws MessagingException {
+    public javax.mail.Message convert2JavaMailMsg(final Message message) throws Exception {
         if (message == null) {
             return null;
         }
@@ -101,7 +101,7 @@ final class MailSender {
         ret.setFrom(new InternetAddress(message.getFrom()));
         final String subject = message.getSubject();
 
-        ret.setSubject(subject != null ? subject : "");
+        ret.setSubject(MimeUtility.encodeText(subject != null ? subject : "", "UTF-8", "B"));
         final String htmlBody = message.getHtmlBody();
 
         ret.setContent(htmlBody != null ? htmlBody : "", "text/html;charset=UTF-8");
@@ -112,9 +112,9 @@ final class MailSender {
 
     /**
      * Transport recipients to InternetAddress array.
-     * 
+     *
      * @param recipients the set of all recipients
-     * @return  InternetAddress array of all recipients internetAddress
+     * @return InternetAddress array of all recipients internetAddress
      * @throws MessagingException messagingException from javax.mail
      */
     private InternetAddress[] transformRecipients(final Set<String> recipients) throws MessagingException {
@@ -135,11 +135,11 @@ final class MailSender {
 
     /**
      * Sends email.
-     * 
-     * @param message  the specified message
-     * @throws MessagingException message exception
+     *
+     * @param message the specified message
+     * @throws Exception message exception
      */
-    void sendMail(final Message message) throws MessagingException {
+    void sendMail(final Message message) throws Exception {
         final javax.mail.Message msg = convert2JavaMailMsg(message);
 
         Transport.send(msg);

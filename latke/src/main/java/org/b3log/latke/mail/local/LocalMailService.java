@@ -17,7 +17,6 @@ package org.b3log.latke.mail.local;
 
 
 import java.io.IOException;
-import javax.mail.MessagingException;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.mail.MailService;
@@ -41,7 +40,7 @@ public final class LocalMailService implements MailService {
             public void run() {
                 try {
                     new MailSender().sendMail(message);
-                } catch (final MessagingException e) {
+                } catch (final Exception e) {
                     Logger.getLogger(LocalMailService.class.getName()).log(Level.ERROR, "Sends mail failed", e);
                 }
             }
