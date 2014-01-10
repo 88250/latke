@@ -19,6 +19,7 @@ package org.b3log.latke.thread.local;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -56,8 +57,12 @@ public final class LocalThreadService implements ThreadService {
             ret.get(millseconds, TimeUnit.MILLISECONDS);
             
             return ret;
+        } catch (final RejectedExecutionException  e) {
+            LOGGER.log(Level.ERROR, "Task executes failed", e);
+            
+            return null;
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Task executes timeout", e);
+            LOGGER.log(Level.WARN, "Task executes timeout", e);
             
             return null;
         }
