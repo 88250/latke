@@ -16,7 +16,12 @@
 package org.b3log.latke.thread.local;
 
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.thread.ThreadService;
 
 
@@ -24,12 +29,37 @@ import org.b3log.latke.thread.ThreadService;
  * Local thread service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 20, 2012
+ * @version 1.0.0.1, Jan 10, 2014
  */
 public final class LocalThreadService implements ThreadService {
+    
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(LocalThreadService.class);
+
+    /**
+     * Executor service.
+     */
+    private final ExecutorService executorService = Executors.newFixedThreadPool(50);
 
     @Override
     public Thread createThreadForCurrentRequest(final Runnable runnable) {
         return Executors.defaultThreadFactory().newThread(runnable);
+    }
+
+    @Override
+    public Future<?> submit(final Runnable runnable, final long millseconds) {
+        try {
+            final Future<?> ret = executorService.submit(runnable);
+            
+            ret.get(millseconds, TimeUnit.MILLISECONDS);
+            
+            return ret;
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Task executes timeout", e);
+            
+            return null;
+        }
     }
 }

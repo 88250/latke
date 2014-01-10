@@ -16,11 +16,14 @@
 package org.b3log.latke.thread;
 
 
+import java.util.concurrent.Future;
+
+
 /**
  * Thread service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 20, 2012
+ * @version 1.0.0.1, Jan 10, 2014
  */
 public interface ThreadService {
 
@@ -31,4 +34,14 @@ public interface ThreadService {
      * @return a new thread
      */
     Thread createThreadForCurrentRequest(final Runnable runnable);
+    
+    /**
+     * Submits the specified {@code Runnable} task for execution and returns a {@code Future} representing that task within
+     * the specified millseconds.
+     * 
+     * @param runnable the specified runnable task
+     * @param millseconds the specified millseconds timeout
+     * @return a {@code Future} representing pending completion of the task, returns {@code null} if the task executes failed
+     */
+    Future<?> submit(final Runnable runnable, final long millseconds);
 }

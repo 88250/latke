@@ -17,6 +17,7 @@ package org.b3log.latke.thread.gae;
 
 
 import com.google.appengine.api.ThreadManager;
+import java.util.concurrent.Future;
 import org.b3log.latke.thread.ThreadService;
 
 
@@ -24,12 +25,17 @@ import org.b3log.latke.thread.ThreadService;
  * Google App Engine thread service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 20, 2012
+ * @version 1.0.0.1, Jan 10, 2014
  */
 public final class GAEThreadService implements ThreadService {
 
     @Override
     public Thread createThreadForCurrentRequest(final Runnable runnable) {
         return ThreadManager.createThreadForCurrentRequest(runnable);
+    }
+
+    @Override
+    public Future<?> submit(final Runnable runnable, final long millseconds) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
