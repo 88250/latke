@@ -40,7 +40,7 @@ import org.w3c.dom.NodeList;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Aug 27, 2012
+ * @version 1.0.0.3, Jan 15, 2014
  */
 public final class CronService {
 
@@ -55,12 +55,17 @@ public final class CronService {
     private static final List<Cron> CRONS = new ArrayList<Cron>();
 
     /**
+     * Timers.
+     */
+    private static final List<Timer> TIMERS = new ArrayList<Timer>();
+
+    /**
      * Constructs cron jobs and schedules them.
      */
     public static void start() {
         LOGGER.info("Constructing Cron Service....");
 
-        CRONS.clear();
+        shutdown();
 
         final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
 
@@ -73,6 +78,8 @@ public final class CronService {
                     cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getUrl());
 
                     final Timer timer = new Timer();
+
+                    TIMERS.add(timer);
 
                     timer.scheduleAtFixedRate(cron, Cron.SIXTY * Cron.THOUSAND, cron.getPeriod());
 
@@ -94,6 +101,19 @@ public final class CronService {
         }
 
         LOGGER.info("Constructed Cron Service");
+    }
+
+    /**
+     * Stops all cron jobs and clears cron job list.
+     */
+    public static void shutdown() {
+        CRONS.clear();
+
+        for (final Timer timer : TIMERS) {
+            timer.cancel();
+        }
+
+        TIMERS.clear();
     }
 
     /**

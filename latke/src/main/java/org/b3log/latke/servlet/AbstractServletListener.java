@@ -42,7 +42,7 @@ import java.util.Locale;
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.2, Nov 12, 2013
+ * @version 1.0.3.3, Jan 15, 2014
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -110,7 +110,6 @@ public abstract class AbstractServletListener implements ServletContextListener,
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
         LOGGER.info("Destroying the context....");
         Latkes.shutdown();
-        // TODO: Stop cron jobs
     }
 
     @Override

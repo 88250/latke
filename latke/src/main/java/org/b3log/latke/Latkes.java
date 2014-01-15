@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -33,7 +34,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  * 
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.6, Oct 14, 2013
+ * @version 1.0.2.7, Jan 15, 2014
  * @see #initRuntimeEnv()
  * @see #shutdown() 
  * @see #getServePath()
@@ -717,8 +718,10 @@ public final class Latkes {
                 break;
 
             default:
-
+                
             }
+            
+            CronService.shutdown();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
         }

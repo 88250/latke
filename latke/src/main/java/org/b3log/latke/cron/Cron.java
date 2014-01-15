@@ -31,7 +31,7 @@ import org.b3log.latke.urlfetch.URLFetchServiceFactory;
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  * 
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Apr 5, 2012
+ * @version 1.0.1.0, Jan 15, 2014
  */
 public final class Cron extends TimerTask {
 
@@ -64,10 +64,11 @@ public final class Cron extends TimerTask {
      * Schedule of this cron job.
      * 
      * <p>
-     * Available format: <em>every N (hours|minutes)</em>, for examples:
+     * Available format: <em>every N (hours|minutes|seconds)</em>, for examples:
      * <ul>
      *   <li>every 12 hours</li>
      *   <li>every 10 minutes</li>
+     *   <li>every 30 seconds</li>
      * </ul>
      * </p>
      */
@@ -129,6 +130,8 @@ public final class Cron extends TimerTask {
             period = num * SIXTY * SIXTY * THOUSAND;
         } else if ("minutes".equals(timeUnit)) {
             period = num * SIXTY * THOUSAND;
+        } else if ("seconds".equals(timeUnit)) {
+            period = num * THOUSAND;
         }
     }
 
