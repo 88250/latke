@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
     Description: Latke web framework project. 
-    Version: 1.0.8.4, Nov 13, 2013 
+    Version: 1.0.8.5, Jan 15, 2014
     Author: Liang Ding
     Author: Liceng Yao
 -->
@@ -432,7 +432,8 @@
                         org/b3log/latke/util/AntPathMatcher.java,
                         javax/**/*.java,
                         org/b3log/latke/ioc/util/Beans.java,
-                        org/b3log/latke/util/Reflections.java
+                        org/b3log/latke/util/Reflections.java,
+                        org/b3log/latke/util/Execs.java
                     </excludes>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>
