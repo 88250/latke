@@ -57,6 +57,11 @@ public final class Connections {
     private static String poolType;
 
     /**
+     * Get connection timeout.
+     */
+    private static final long CONN_TIMEOUT = 5000;
+
+    /**
      * Connection pool - BoneCP.
      */
     private static BoneCP boneCP;
@@ -145,6 +150,7 @@ public final class Connections {
                     config.setMaxConnectionsPerPartition(maxConnCnt);
                     config.setPartitionCount(1);
                     config.setDisableJMX(true);
+                    config.setConnectionTimeoutInMs(CONN_TIMEOUT);
 
                     boneCP = new BoneCP(config);
                 } else if ("c3p0".equals(poolType)) {
@@ -164,7 +170,9 @@ public final class Connections {
                     c3p0.setMaxPoolSize(maxConnCnt);
                     c3p0.setMaxStatementsPerConnection(maxConnCnt);
                     c3p0.setTestConnectionOnCheckin(true);
+                    c3p0.setCheckoutTimeout(maxConnCnt);
                     c3p0.setIdleConnectionTestPeriod(C3P0_CHECKTIME);
+                    c3p0.setCheckoutTimeout((int) CONN_TIMEOUT);
                 } else if ("h2".equals(poolType)) {
                     LOGGER.log(Level.DEBUG, "Initialing database connection pool [h2]");
 
