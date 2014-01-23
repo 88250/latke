@@ -116,20 +116,4 @@
            			
         </plugins>
     </build>
-    
-    <profiles>
-        <profile>
-            <id>package</id>
-            <activation>
-                <os>
-                    <name>Linux</name>
-                    <family>linux</family>
-                </os>
-            </activation>
-            <modules>
-                <module>packager</module>
-            </modules>
-        </profile>
-    </profiles>
-    
 </project>
