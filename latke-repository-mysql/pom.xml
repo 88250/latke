@@ -18,9 +18,9 @@
     <inceptionYear>2011</inceptionYear>
     
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <groupId>org.b3log</groupId>
+        <artifactId>latke-parent</artifactId>
+        <version>0.5.0-SNAPSHOT</version>
     </parent>
     
     <!-- Version -->
@@ -34,18 +34,6 @@
         <!-- -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <organization>
-        <name>B3log</name>
-        <url>http://www.b3log.org</url>
-    </organization>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-        </license>
-    </licenses>
 
     <developers>
         <developer>
@@ -74,25 +62,6 @@
             <timezone>+8</timezone>
         </developer>
     </developers>
-
-    <scm>
-        <connection>scm:git:git@github.com:b3log/b3log-latke.git</connection>
-        <developerConnection>scm:git:git@github.com:b3log/b3log-latke.git</developerConnection>
-        <url>git@github.com:b3log/b3log-latke.git</url>
-    </scm>
-    
-    <issueManagement>
-        <system>Google Code Issues</system>
-        <url>http://code.google.com/p/latke/issues/list</url>
-    </issueManagement>
-
-    <mailingLists>
-        <mailingList>
-            <name>b3log-latke-dev</name>
-            <archive>https://groups.google.com/group/b3log-latke-dev</archive>
-            <post>b3log-latke-dev@googlegroups.com</post>
-        </mailingList>
-    </mailingLists>
 
     <reporting>
         <plugins>

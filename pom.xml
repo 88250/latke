@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Description: Latke parent POM.
+    Version: 1.0.0.0, Jan 23, 2014
+    Author: Liang Ding
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.b3log</groupId>
+    <artifactId>latke-parent</artifactId>
+    <version>0.5.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>B3log Latke Parent</name>
+    <url>https://github.com/b3log/b3log-latke</url>
+    <description>Yet another simple web framework based on Java servlet technology.</description>
+    <inceptionYear>2009</inceptionYear>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <modules>
+        <module>latke</module>
+        <module>latke-gae</module>
+        <module>latke-repository-h2</module>
+        <module>latke-repository-mysql</module>
+    </modules>
+    
+    <organization>
+        <name>B3log</name>
+        <url>http://b3log.org</url>
+    </organization>
+    
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    
+    <properties>
+        <servlet.version>2.5</servlet.version>
+        <el-api.version>1.0</el-api.version>
+        <freemarker.version>2.3.20</freemarker.version>
+        <javax.mail.version>1.4</javax.mail.version>
+        <commons-io.version>1.4</commons-io.version>
+        <commons-lang.version>2.5</commons-lang.version>
+        <javassist.version>3.12.1.GA</javassist.version>
+        <slf4j.version>1.7.5</slf4j.version>
+
+        <!-- JBoss VFS -->
+        <jboss-vfs.version>3.1.0.Final</jboss-vfs.version>
+        <!-- Maven Plugin -->
+        <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
+        <maven-checkstyle-plugin.version>2.6</maven-checkstyle-plugin.version>
+        <maven-javadoc-plugin.version>2.7</maven-javadoc-plugin.version>
+        <maven-cobertura-plugin.version>2.5.1</maven-cobertura-plugin.version>
+        <!-- Unit Test -->
+        <testng.version>6.1.1</testng.version>
+        <!-- JDBC Drivers -->
+        <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
+        <!-- JDBC Connection Pool -->
+        <bonecp.version>0.7.1.RELEASE</bonecp.version>
+        <c3p0.version>0.9.1.2</c3p0.version>
+        <h2.version>1.3.170</h2.version>
+        <!-- CDI -->
+        <cdi.version>1.0</cdi.version>
+        <!-- -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <scm>
+        <connection>scm:git:git@github.com:b3log/b3log-latke.git</connection>
+        <developerConnection>scm:git:git@github.com:b3log/b3log-latke.git</developerConnection>
+        <url>git@github.com:b3log/b3log-latke.git</url>
+    </scm>
+
+    <issueManagement>
+        <system>Github Issues</system>
+        <url>https://github.com/b3log/b3log-latke/issues</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>b3log-latke-dev</name>
+            <archive>https://groups.google.com/group/b3log-latke-dev</archive>
+            <post>b3log-latke-dev@googlegroups.com</post>
+        </mailingList>
+    </mailingLists>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${JDK.version}</source>
+                    <target>${JDK.version}</target>
+                    <encoding>${encoding}</encoding>
+                </configuration>
+            </plugin>
+           			
+        </plugins>
+    </build>
+    
+    <profiles>
+        <profile>
+            <id>package</id>
+            <activation>
+                <os>
+                    <name>Linux</name>
+                    <family>linux</family>
+                </os>
+            </activation>
+            <modules>
+                <module>packager</module>
+            </modules>
+        </profile>
+    </profiles>
+    
+</project>
