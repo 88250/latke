@@ -40,12 +40,13 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
+import org.b3log.latke.Latkes;
 
 import static org.mockito.Mockito.*;
 
 /**
  * Processor test.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Sep 25, 2013
@@ -53,6 +54,10 @@ import static org.mockito.Mockito.*;
 public class RequestDispachTestCase {
 
     private final List<Handler> handlerList = new ArrayList<Handler>();
+
+    static {
+        Latkes.initRuntimeEnv();
+    }
 
     @BeforeTest
     @SuppressWarnings("unchecked")

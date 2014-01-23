@@ -12,7 +12,7 @@
     <artifactId>latke</artifactId>
     <packaging>jar</packaging>
     <version>0.5.0-SNAPSHOT</version>
-    <name>B3log Latke</name>
+    <name>Latke Core</name>
     <url>https://github.com/b3log/b3log-latke</url>
     <description>Yet another simple web framework based on Java servlet technology.</description>
     <inceptionYear>2009</inceptionYear>
