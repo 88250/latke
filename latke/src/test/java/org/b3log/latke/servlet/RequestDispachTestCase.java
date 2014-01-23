@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet;
 
+import java.text.SimpleDateFormat;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.servlet.handler.AdviceHandler;
 import org.b3log.latke.servlet.handler.Handler;
@@ -49,7 +50,7 @@ import static org.mockito.Mockito.*;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Sep 25, 2013
+ * @version 1.0.0.2, Jan 23, 2014
  */
 public class RequestDispachTestCase {
 
@@ -163,10 +164,16 @@ public class RequestDispachTestCase {
     }
 
     @Test
-    public void testBaseInvoke6() {
+    public void testBaseInvoke6() throws Exception {
+        final String id = "1";
+
+        final Date date = new Date();
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        final String dateStr = dateFormat.format(date);
 
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/date/1/20120306");
+        when(request.getRequestURI()).thenReturn("/date/" + id + "/" + dateStr);
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
@@ -175,8 +182,10 @@ public class RequestDispachTestCase {
         Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         Assert.assertEquals(1, args.get("id"));
         Assert.assertTrue(args.get("date") instanceof Date);
-        Assert.assertEquals("11330963200000", control.data(MethodInvokeHandler.INVOKE_RESULT));
 
+        final Date date2 = dateFormat.parse(dateStr);
+
+        Assert.assertEquals(id + date2.getTime(), control.data(MethodInvokeHandler.INVOKE_RESULT));
     }
 
     @Test
