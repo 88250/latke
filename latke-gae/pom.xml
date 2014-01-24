@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke implementation for GAE.
-    Version: 1.0.3.1, Sep 20, 2012
+    Version: 2.0.3.1, Jan 24, 2014
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -11,31 +11,20 @@
     <groupId>org.b3log</groupId>
     <artifactId>latke-gae</artifactId>
     <packaging>jar</packaging>
-    <version>0.5.0-SNAPSHOT</version>
     <name>Latke GAE</name>
-    <url>https://github.com/b3log/b3log-latke</url>
+
     <description>Latke implementation for GAE.</description>
     <inceptionYear>2010</inceptionYear>
     
     <parent>
         <groupId>org.b3log</groupId>
         <artifactId>latke-parent</artifactId>
-        <version>0.5.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <!-- Version -->
     <properties>
-        <servlet.version>2.5</servlet.version>
-        <org.b3log.latke.version>0.5.0-SNAPSHOT</org.b3log.latke.version>
         <gae.version>1.7.2</gae.version>
-        <!-- Maven Plugin -->
-        <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
-        <maven-checkstyle-plugin.version>2.5</maven-checkstyle-plugin.version>
-        <maven-javadoc-plugin.version>2.7</maven-javadoc-plugin.version>
-        <!-- Unit Test -->
-        <testng.version>6.1.1</testng.version>
-        <!-- -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <developers>

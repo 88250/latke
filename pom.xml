@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.0.0.0, Jan 23, 2014
+    Version: 1.0.0.1, Jan 24, 2014
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -9,9 +9,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke-parent</artifactId>
-    <version>0.5.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>B3log Latke Parent</name>
+    <name>Latke Parent</name>
     <url>https://github.com/b3log/b3log-latke</url>
     <description>Yet another simple web framework based on Java servlet technology.</description>
     <inceptionYear>2009</inceptionYear>
@@ -42,6 +42,8 @@
     </licenses>
     
     <properties>
+        <org.b3log.latke.version>1.0.0</org.b3log.latke.version>
+            
         <servlet.version>2.5</servlet.version>
         <el-api.version>1.0</el-api.version>
         <freemarker.version>2.3.20</freemarker.version>
@@ -71,7 +73,6 @@
         <!-- -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
 
     <scm>
         <connection>scm:git:git@github.com:b3log/b3log-latke.git</connection>
