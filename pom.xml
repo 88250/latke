@@ -4,8 +4,7 @@
     Version: 1.0.0.1, Jan 24, 2014
     Author: Liang Ding
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke-parent</artifactId>
@@ -42,8 +41,6 @@
     </licenses>
     
     <properties>
-        <org.b3log.latke.version>1.0.0</org.b3log.latke.version>
-            
         <servlet.version>2.5</servlet.version>
         <el-api.version>1.0</el-api.version>
         <freemarker.version>2.3.20</freemarker.version>

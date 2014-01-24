@@ -6,3 +6,7 @@
 /latke-bae/target/
 /maven-min-plugin/target/
 /latke-demo/hello/target/
+/target/
+pom.xml.*
+/*/pom.xml.*
+release.properties

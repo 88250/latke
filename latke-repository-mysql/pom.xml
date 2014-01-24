@@ -4,9 +4,7 @@
     Version: 2.0.0.3, Jan 24, 2014
     Author: Liang Ding
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke-repository-mysql</artifactId>
@@ -66,7 +64,7 @@
             <dependency>
                 <groupId>org.b3log</groupId>
                 <artifactId>latke</artifactId>
-                <version>${org.b3log.latke.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
 
             <dependency>
