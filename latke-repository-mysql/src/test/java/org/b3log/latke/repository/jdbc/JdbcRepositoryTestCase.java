@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.Filter;
 import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
@@ -48,10 +49,10 @@ import org.testng.annotations.Test;
 
 /**
  * JdbcRepositoryTestCase,now using mysql5.5.9 for test.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Jun 27, 2012
+ * @version 1.0.1.1, Feb 7, 2014
  */
 public class JdbcRepositoryTestCase {
 
@@ -59,6 +60,7 @@ public class JdbcRepositoryTestCase {
      * jdbcRepository.
      */
     private JdbcRepository jdbcRepository = new JdbcRepository("basetable");
+
     /**
      * if the database environment is wrong,do not run all the other test.
      */
@@ -70,7 +72,7 @@ public class JdbcRepositoryTestCase {
 
     /**
      * test JsonData.
-     * 
+     *
      * @return Object[][] {{JsonObject},{jsonObject}}.
      */
     @DataProvider(name = "jsonData")
@@ -155,7 +157,7 @@ public class JdbcRepositoryTestCase {
 
     /**
      * add test.
-     * 
+     *
      * @param jsonObject jsonObject
      * @throws Exception Exception
      */
@@ -175,7 +177,7 @@ public class JdbcRepositoryTestCase {
 
     /**
      * update test.
-     * 
+     *
      * @param jsonObject jsonObject
      */
     @Test(groups = {"jdbc"}, dataProvider = "createJsonData")
@@ -201,7 +203,7 @@ public class JdbcRepositoryTestCase {
 
     /**
      * remove test.
-     * 
+     *
      * @param jsonObject jsonObject
      * @throws Exception Exception
      */
@@ -224,7 +226,7 @@ public class JdbcRepositoryTestCase {
 
     /**
      * hasAndCount test.
-     * 
+     *
      * @param jsonObject jsonObject
      * @throws Exception Exception
      */
@@ -237,10 +239,10 @@ public class JdbcRepositoryTestCase {
         final long oCount = jdbcRepository.count();
 
         final Transaction transaction = jdbcRepository.beginTransaction();
-        jdbcRepository.add(jsonObject);
+        final String id = jdbcRepository.add(jsonObject);
         transaction.commit();
 
-        assertTrue(jdbcRepository.has(jsonObject.getString(JdbcRepositories.OID)));
+        assertTrue(jdbcRepository.has(id));
 
         final long nCount = jdbcRepository.count();
         assertTrue(nCount > oCount);
@@ -249,6 +251,7 @@ public class JdbcRepositoryTestCase {
 
     /**
      * base query test.
+     *
      * @throws Exception Exception
      */
     @Test(groups = {"jdbc"})
@@ -282,12 +285,36 @@ public class JdbcRepositoryTestCase {
 
     /**
      * page query test.
-     * 
+     *
      * @param jsonObject jsonObject
      * @throws Exception Exception
      */
     @Test(groups = {"jdbc"}, dataProvider = "createJsonData")
     public void queryPageTest(final JSONObject jsonObject) throws Exception {
+        if (!ifRun) {
+            return;
+        }
+
+        final Transaction transaction = jdbcRepository.beginTransaction();
+        jdbcRepository.add(jsonObject);
+        transaction.commit();
+
+        final Query query = new Query();
+        query.setFilter(new PropertyFilter("col2", FilterOperator.LIKE, "%中文%"));
+
+        final JSONObject ret = jdbcRepository.get(query);
+        
+        assertTrue(ret.optJSONObject(Pagination.PAGINATION).optInt(Pagination.PAGINATION_RECORD_COUNT) > 0);
+    }
+
+    /**
+     * Like query test.
+     *
+     * @param jsonObject jsonObject
+     * @throws Exception Exception
+     */
+    @Test(groups = "jdbc", dataProvider = "createJsonData")
+    public void likeQueryTest(final JSONObject jsonObject) throws Exception {
         if (!ifRun) {
             return;
         }

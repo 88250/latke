@@ -19,7 +19,7 @@ package org.b3log.latke.repository;
  * Filter operator.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 18, 2011
+ * @version 1.0.1.1, Feb 7, 2014
  * @see Filter
  */
 public enum FilterOperator {
@@ -52,4 +52,12 @@ public enum FilterOperator {
      * In.
      */
     IN,
+    /**
+     * Like.
+     * 
+     * <p>
+     * <b>Note</b>: This operation just support JDBC repository.
+     * </p>
+     */
+    LIKE,
 }

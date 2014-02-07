@@ -44,7 +44,7 @@ import org.json.JSONObject;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Dec 27, 2012
+ * @version 1.0.0.3, Feb 7, 2014
  */
 public final class JdbcUtil {
 
@@ -162,7 +162,9 @@ public final class JdbcUtil {
 
         final JSONObject jsonObject = resultSetToJsonObject(resultSet, ifOnlyOne, tableName);
 
+        resultSet.close();
         preparedStatement.close();
+        
         return jsonObject;
 
     }

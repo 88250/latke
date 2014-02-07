@@ -894,6 +894,10 @@ public final class JdbcRepository implements Repository {
         case IN:
             filterOperator = "in";
             break;
+            
+        case LIKE:
+            filterOperator = " like ";
+            break;
 
         default:
             throw new RepositoryException("Unsupported filter operator [" + propertyFilter.getOperator() + "]");
