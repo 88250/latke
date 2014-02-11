@@ -16,27 +16,34 @@
 package org.b3log.latke;
 
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.TimeZone;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
+import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.util.Strings;
+import org.b3log.latke.util.freemarker.Templates;
 import org.h2.tools.Server;
 
 
 /**
  * Latke framework configuration utility facade.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.7, Jan 15, 2014
+ * @version 1.0.3.7, Feb 11, 2014
  * @see #initRuntimeEnv()
- * @see #shutdown() 
+ * @see #shutdown()
  * @see #getServePath()
  * @see #getStaticServePath()
  */
@@ -149,7 +156,7 @@ public final class Latkes {
 
     /**
      * H2 database TCP server.
-     * 
+     *
      * <p>
      * If Latke is running on {@link RuntimeEnv#LOCAL LOCAL} environment and using {@link RuntimeDatabase#H2 H2} database and specified
      * newTCPServer=true in local.properties, creates a H2 TCP server and starts it.
@@ -200,11 +207,11 @@ public final class Latkes {
 
     /**
      * Gets static resource (JS, CSS files) version.
-     * 
+     *
      * <p>
      * Returns the value of "staticResourceVersion" property in local.properties.
      * </p>
-     * 
+     *
      * @return static resource version
      */
     public static String getStaticResourceVersion() {
@@ -217,11 +224,11 @@ public final class Latkes {
 
     /**
      * Gets server scheme.
-     * 
+     *
      * <p>
      * Returns the value of "serverScheme" property in latke.properties.
      * </p>
-     * 
+     *
      * @return server scheme
      */
     public static String getServerScheme() {
@@ -234,11 +241,11 @@ public final class Latkes {
 
     /**
      * Gets server host.
-     * 
+     *
      * <p>
      * Returns the value of "serverHost" property in latke.properties.
      * </p>
-     * 
+     *
      * @return server host
      */
     public static String getServerHost() {
@@ -251,11 +258,11 @@ public final class Latkes {
 
     /**
      * Gets server port.
-     * 
+     *
      * <p>
      * Returns the value of "serverPort" property in latke.properties.
      * </p>
-     * 
+     *
      * @return server port
      */
     public static String getServerPort() {
@@ -268,7 +275,7 @@ public final class Latkes {
 
     /**
      * Gets server.
-     * 
+     *
      * @return server, ${serverScheme}://${serverHost}:${serverPort}
      */
     public static String getServer() {
@@ -288,7 +295,7 @@ public final class Latkes {
 
     /**
      * Gets serve path.
-     * 
+     *
      * @return serve path, ${server}${contextPath}
      */
     public static String getServePath() {
@@ -301,11 +308,11 @@ public final class Latkes {
 
     /**
      * Gets static server scheme.
-     * 
+     *
      * <p>
      * Returns the value of "staticServerScheme" property in latke.properties.
      * </p>
-     * 
+     *
      * @return static server scheme
      */
     public static String getStaticServerScheme() {
@@ -318,11 +325,11 @@ public final class Latkes {
 
     /**
      * Gets static server host.
-     * 
+     *
      * <p>
      * Returns the value of "staticServerHost" property in latke.properties.
      * </p>
-     * 
+     *
      * @return static server host
      */
     public static String getStaticServerHost() {
@@ -335,11 +342,11 @@ public final class Latkes {
 
     /**
      * Gets static server port.
-     * 
+     *
      * <p>
      * Returns the value of "staticServerPort" property in latke.properties.
      * </p>
-     * 
+     *
      * @return static server port
      */
     public static String getStaticServerPort() {
@@ -352,7 +359,7 @@ public final class Latkes {
 
     /**
      * Gets static server.
-     * 
+     *
      * @return static server, ${staticServerScheme}://${staticServerHost}:${staticServerPort}
      */
     public static String getStaticServer() {
@@ -373,7 +380,7 @@ public final class Latkes {
 
     /**
      * Gets static serve path.
-     * 
+     *
      * @return static serve path, ${staticServer}${staticPath}
      */
     public static String getStaticServePath() {
@@ -386,11 +393,11 @@ public final class Latkes {
 
     /**
      * Gets context path.
-     * 
+     *
      * <p>
      * If Latke runs on xAE, returns "" always, returns the value of "contextPath" property in latke.properties otherwise.
      * </p>
-     * 
+     *
      * @return context path
      */
     public static String getContextPath() {
@@ -407,11 +414,11 @@ public final class Latkes {
 
     /**
      * Gets static path.
-     * 
+     *
      * <p>
      * If Latke runs on xAE, returns "" always, returns the value of "staticPath" property in latke.properties otherwise.
      * </p>
-     * 
+     *
      * @return static path
      */
     public static String getStaticPath() {
@@ -428,7 +435,7 @@ public final class Latkes {
 
     /**
      * Gets IoC scan path.
-     * 
+     *
      * @return scan path
      */
     public static String getScanPath() {
@@ -441,11 +448,11 @@ public final class Latkes {
 
     /**
      * Gets runtime configuration of a service specified by the given service name.
-     * 
+     *
      * <p>
      * If current runtime environment is local, returns local in any case.
      * </p>
-     * 
+     *
      * @param serviceName the given service name
      * @return runtime configuration, returns {@code null} if not found
      */
@@ -466,29 +473,29 @@ public final class Latkes {
 
     /**
      * Initializes {@linkplain RuntimeEnv runtime environment}.
-     * 
+     *
      * <ol>
-     *   <li>
-     *   If the "latke.properties" has a valid runtime environment configuration (for example, 
-     *   runtimeEnv=GAE or runtimeEnv=LOCAL), initializes the runtime environment as its specified
-     *   </li>
-     *   <li>
-     *   If the GAERepository class (org.b3log.latke.repository.gae.GAERepository)
-     *   is on the classpath, considered Latke is running on <a href="http://code.google.com/appengine">Google App Engine</a>, 
-     *   otherwise, considered Latke is running on standard Servlet container.
-     *   </li>
+     * <li>
+     * If the "latke.properties" has a valid runtime environment configuration (for example,
+     * runtimeEnv=GAE or runtimeEnv=LOCAL), initializes the runtime environment as its specified
+     * </li>
+     * <li>
+     * If the GAERepository class (org.b3log.latke.repository.gae.GAERepository)
+     * is on the classpath, considered Latke is running on <a href="http://code.google.com/appengine">Google App Engine</a>,
+     * otherwise, considered Latke is running on standard Servlet container.
+     * </li>
      * </ol>
-     * 
+     *
      * <p>
      * If the Latke runs on the standard Servlet container (local environment),
      * Latke will read database configurations from file "local.properties".
      * </p>
-     * 
+     *
      * <p>
      * Sets the current {@link RuntimeMode runtime mode} to
      * {@link RuntimeMode#DEVELOPMENT development mode}.
      * </p>
-     * 
+     *
      * @see RuntimeEnv
      */
     public static void initRuntimeEnv() {
@@ -570,7 +577,7 @@ public final class Latkes {
 
     /**
      * Gets the runtime environment.
-     * 
+     *
      * @return runtime environment
      */
     public static RuntimeEnv getRuntimeEnv() {
@@ -583,9 +590,9 @@ public final class Latkes {
 
     /**
      * Sets the runtime mode with the specified mode.
-     * 
+     *
      * @param runtimeMode
-     *            the specified mode
+     * the specified mode
      */
     public static void setRuntimeMode(final RuntimeMode runtimeMode) {
         Latkes.runtimeMode = runtimeMode;
@@ -593,7 +600,7 @@ public final class Latkes {
 
     /**
      * Gets the runtime mode.
-     * 
+     *
      * @return runtime mode
      */
     public static RuntimeMode getRuntimeMode() {
@@ -606,7 +613,7 @@ public final class Latkes {
 
     /**
      * Gets the runtime database.
-     * 
+     *
      * @return runtime database
      */
     public static RuntimeDatabase getRuntimeDatabase() {
@@ -633,7 +640,7 @@ public final class Latkes {
 
     /**
      * Sets the locale with the specified locale.
-     * 
+     *
      * @param locale the specified locale
      */
     public static void setLocale(final Locale locale) {
@@ -643,7 +650,7 @@ public final class Latkes {
     /**
      * Gets the locale. If the {@link #locale} has not been initialized,
      * invoking this method will throw {@link RuntimeException}.
-     * 
+     *
      * @return the locale
      */
     public static Locale getLocale() {
@@ -656,7 +663,7 @@ public final class Latkes {
 
     /**
      * Determines whether Latkes runs with a JDBC database.
-     * 
+     *
      * @return {@code true} if Latkes runs with a JDBC database, returns {@code false} otherwise
      */
     public static boolean runsWithJDBCDatabase() {
@@ -665,7 +672,7 @@ public final class Latkes {
 
     /**
      * Gets a property specified by the given key from file "local.properties".
-     * 
+     *
      * @param key the given key
      * @return the value, returns {@code null} if not found
      */
@@ -675,7 +682,7 @@ public final class Latkes {
 
     /**
      * Checks whether the remote interfaces are enabled.
-     * 
+     *
      * @return {@code true} if the remote interfaces enabled, returns {@code false} otherwise
      */
     public static boolean isRemoteEnabled() {
@@ -684,7 +691,7 @@ public final class Latkes {
 
     /**
      * Gets a property specified by the given key from file "remote.properties".
-     * 
+     *
      * @param key the given key
      * @return the value, returns {@code null} if not found
      */
@@ -718,15 +725,98 @@ public final class Latkes {
                 break;
 
             default:
-                
+
             }
-            
+
             CronService.shutdown();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
         }
-        
+
         Lifecycle.endApplication();
+    }
+
+    /**
+     * Sets time zone by the specified time zone id.
+     *
+     * @param timeZoneId the specified time zone id
+     */
+    public static void setTimeZone(final String timeZoneId) {
+        final TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
+
+        Templates.MAIN_CFG.setTimeZone(timeZone);
+        Templates.MOBILE_CFG.setTimeZone(timeZone);
+    }
+    
+    /**
+     * Loads skin with the specified directory name.
+     * 
+     * @param skinDirName the specified directory name
+     */
+    public static void loadSkin(final String skinDirName) {
+        LOGGER.debug("Loading skin [dirName=" + skinDirName + ']');
+
+        final String skinName = getSkinName(skinDirName);
+
+        LOGGER.log(Level.INFO, "Current skin[name={0}]", skinName);
+
+        try {
+            final String webRootPath = AbstractServletListener.getWebRoot();
+            final String skinPath = webRootPath + "skins/" + skinDirName;
+
+            Templates.MAIN_CFG.setDirectoryForTemplateLoading(new File(skinPath));
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Latkes.setTimeZone("Asia/Shanghai");
+        
+        LOGGER.info("Loaded skins....");
+    }
+
+    /**
+     * Gets the skin name for the specified skin directory name. The skin name
+     * was configured in skin.properties file({@code name} as the key) under
+     * skin directory specified by the given skin directory name.
+     *
+     * @param skinDirName the given skin directory name
+     * @return skin name, returns {@code null} if not found or error occurs
+     * @see #getSkinDirNames()
+     */
+    private static String getSkinName(final String skinDirName) {
+        final String webRootPath = AbstractServletListener.getWebRoot();
+        final File skins = new File(webRootPath + "skins/");
+        final File[] skinDirs = skins.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(final File pathname) {
+                return pathname.isDirectory() && pathname.getName().equals(skinDirName);
+            }
+        });
+
+        if (null == skinDirs) {
+            LOGGER.error("Skin directory is null");
+
+            return null;
+        }
+
+        if (1 != skinDirs.length) {
+            LOGGER.log(Level.ERROR, "Skin directory count[{0}]", skinDirs.length);
+
+            return null;
+        }
+
+        try {
+            final Properties ret = new Properties();
+            final String skinPropsPath = skinDirs[0].getPath() + "/" + "skin.properties";
+
+            ret.load(new FileReader(skinPropsPath));
+
+            return ret.getProperty("name");
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Read skin configuration error[msg={0}]", e.getMessage());
+
+            return null;
+        }
     }
 
     /**

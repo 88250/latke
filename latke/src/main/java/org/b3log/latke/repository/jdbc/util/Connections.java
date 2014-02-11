@@ -16,6 +16,7 @@
 package org.b3log.latke.repository.jdbc.util;
 
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -42,7 +43,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.0.1.2, Feb 7, 2014
+ * @version 1.0.2.2, Feb 11, 2014
  */
 public final class Connections {
 
@@ -80,6 +81,11 @@ public final class Connections {
      * Connection pool - H2.
      */
     private static JdbcConnectionPool h2;
+
+    /**
+     * Connection pool - Druid.
+     */
+    private static DruidDataSource druid;
 
     /**
      * Transaction isolation.
@@ -178,6 +184,18 @@ public final class Connections {
 
                     h2 = JdbcConnectionPool.create(url, userName, password);
                     h2.setMaxConnections(maxConnCnt);
+                } else if ("druid".equals(poolType)) {
+                    LOGGER.log(Level.DEBUG, "Initialing database connection pool [Druid]");
+
+                    druid = new DruidDataSource();
+                    druid.setUsername(userName);
+                    druid.setPassword(password);
+                    druid.setUrl(url);
+                    druid.setDriverClassName(driver);
+                    druid.setInitialSize(minConnCnt);
+                    druid.setMinIdle(minConnCnt);
+                    druid.setMaxActive(maxConnCnt);
+                    druid.setTestOnReturn(true);
                 } else if ("none".equals(poolType)) {
                     LOGGER.info("Do not use database connection pool");
                 }
@@ -222,6 +240,15 @@ public final class Connections {
             ret.setAutoCommit(false);
 
             return ret;
+        } else if ("druid".equals(poolType)) {
+            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={1}]", new Object[] {druid.getActiveConnections()});
+
+            final Connection ret = druid.getConnection();
+
+            ret.setTransactionIsolation(transactionIsolationInt);
+            ret.setAutoCommit(false);
+
+            return ret;
         } else if ("none".equals(poolType)) {
             final Connection ret = DriverManager.getConnection(url, userName, password);
 
@@ -253,6 +280,11 @@ public final class Connections {
         if (null != c3p0) {
             c3p0.close();
             LOGGER.info("Closed [c3p0] database connection pool");
+        }
+
+        if (null != druid) {
+            druid.close();
+            LOGGER.info("Closed [Druid] database connection pool");
         }
     }
 
