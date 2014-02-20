@@ -41,7 +41,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.7, Feb 11, 2014
+ * @version 1.0.3.8, Feb 20, 2014
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -234,6 +234,10 @@ public final class Latkes {
     public static String getServerScheme() {
         if (null == serverScheme) {
             serverScheme = LATKE_PROPS.getProperty("serverScheme");
+
+            if (null == serverScheme) {
+                throw new IllegalStateException("latke.properties [serverScheme] is empty");
+            }
         }
 
         return serverScheme;
@@ -251,6 +255,10 @@ public final class Latkes {
     public static String getServerHost() {
         if (null == serverHost) {
             serverHost = LATKE_PROPS.getProperty("serverHost");
+
+            if (null == serverHost) {
+                throw new IllegalStateException("latke.properties [serverHost] is empty");
+            }
         }
 
         return serverHost;
@@ -318,6 +326,10 @@ public final class Latkes {
     public static String getStaticServerScheme() {
         if (null == staticServerScheme) {
             staticServerScheme = LATKE_PROPS.getProperty("staticServerScheme");
+
+            if (null == staticServerScheme) {
+                throw new IllegalStateException("latke.properties [staticServerScheme] is empty");
+            }
         }
 
         return staticServerScheme;
@@ -335,6 +347,10 @@ public final class Latkes {
     public static String getStaticServerHost() {
         if (null == staticServerHost) {
             staticServerHost = LATKE_PROPS.getProperty("staticServerHost");
+
+            if (null == staticServerHost) {
+                throw new IllegalStateException("latke.properties [staticServerHost] is empty");
+            }
         }
 
         return staticServerHost;
@@ -747,10 +763,10 @@ public final class Latkes {
         Templates.MAIN_CFG.setTimeZone(timeZone);
         Templates.MOBILE_CFG.setTimeZone(timeZone);
     }
-    
+
     /**
      * Loads skin with the specified directory name.
-     * 
+     *
      * @param skinDirName the specified directory name
      */
     public static void loadSkin(final String skinDirName) {
@@ -770,7 +786,7 @@ public final class Latkes {
         }
 
         Latkes.setTimeZone("Asia/Shanghai");
-        
+
         LOGGER.info("Loaded skins....");
     }
 
