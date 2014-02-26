@@ -36,7 +36,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
  *
  * <p>
  * Uses <a href="http://jolbox.com/">BoneCP</a>,
- * <a href="http://sourceforge.net/projects/c3p0/">c3p0</a> or
+ * <a href="http://sourceforge.net/projects/c3p0/">c3p0</a>, <a href="https://github.com/alibaba/druid">Druid</a> or
  * <a href="http://www.h2database.com">H2</a> as the underlying connection pool.
  * </p>
  *
