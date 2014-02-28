@@ -22,7 +22,7 @@ import static org.testng.Assert.*;
  * {@link Strings} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 11, 2011
+ * @version 1.0.0.1, Feb 28, 2014
  */
 public class StringsTestCase {
 
@@ -33,9 +33,11 @@ public class StringsTestCase {
     public void isEmail()  {
         assertTrue(Strings.isEmail("DL88250@gmail.com"));
         assertTrue(Strings.isEmail("test@a.com"));
+        assertTrue(Strings.isEmail("xxx@e-xxx.com"));
         
         assertFalse(Strings.isEmail(null));
         assertFalse(Strings.isEmail(""));
+        assertFalse(Strings.isEmail("  "));
         assertFalse(Strings.isEmail("test@a.b"));
     }
 }

@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.3, Aug 29, 2013
+ * @version 1.0.2.4, Feb 28, 2014
  */
 public final class Strings {
 
@@ -59,8 +59,8 @@ public final class Strings {
      * Email pattern.
      */
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-        "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-
+        "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+    
     /**
      * Private default constructor.
      */
