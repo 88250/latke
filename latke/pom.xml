@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.b3log</groupId>
         <artifactId>latke-parent</artifactId>
-        <version>1.0.7</version>
+        <version>1.0.8-SNAPSHOT</version>
     </parent>
 
     <developers>
