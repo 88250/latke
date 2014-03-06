@@ -32,7 +32,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
  * JDBC Factory.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Dec 20, 2011
+ * @version 1.0.0.1, Mar 6, 2014
  */
 public final class JdbcFactory implements JdbcDatabase {
 
@@ -59,6 +59,7 @@ public final class JdbcFactory implements JdbcDatabase {
         {
             put(RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
             put(RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
+            put(RuntimeDatabase.MSSQL, "org.b3log.latke.repository.sqlserver.SQLServerJdbcDatabaseSolution");
         }
     };
 

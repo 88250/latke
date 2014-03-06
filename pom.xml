@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.0.0.2, Feb 11, 2014
+    Version: 1.0.0.3, Mar 6, 2014
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -26,6 +26,7 @@
         <module>latke-gae</module>
         <module>latke-repository-h2</module>
         <module>latke-repository-mysql</module>
+		<module>latke-repository-sqlserver</module>
     </modules>
     
     <organization>

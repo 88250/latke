@@ -82,6 +82,9 @@ public abstract class AbstractRepository implements Repository {
 
                     break;
 
+                case MSSQL:
+                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
+                    
                 case NONE:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
 

@@ -25,12 +25,12 @@
             <id>dl88250@gmail.com</id>
             <name>Liang Ding</name>
             <email>DL88250@gmail.com</email>
-            <url>http://blog.csdn.net/DL88250</url>
+            <url>http://88250.b3log.org</url>
             <roles>
                 <role>Initial Committer</role>
             </roles>
             <organization>B3log</organization>
-            <organizationUrl>http://www.b3log.org</organizationUrl>
+            <organizationUrl>http://b3log.org</organizationUrl>
             <timezone>+8</timezone>
         </developer>
         
@@ -43,7 +43,7 @@
                 <role>Committer</role>
             </roles>
             <organization>B3log</organization>
-            <organizationUrl>http://www.b3log.org</organizationUrl>
+            <organizationUrl>http://b3log.org</organizationUrl>
             <timezone>+8</timezone>
         </developer>
     </developers>
