@@ -12,7 +12,7 @@
     
     <properties>
         <servlet.version>2.5</servlet.version>
-        <latke.version>0.5.0-SNAPSHOT</latke.version>
+        <latke.version>1.0.7</latke.version>
         <org.b3log.latke-repository-h2.version>0.5.0-SNAPSHOT</org.b3log.latke-repository-h2.version>
         
         <freemarker-gae.version>2.3.18</freemarker-gae.version>
