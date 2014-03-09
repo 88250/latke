@@ -177,7 +177,7 @@ public class JdbcRepositoryTestCase {
         jdbcRepository.add(jsonObject);
         transaction.commit();
 
-        final JSONObject jsonObjectDb = jdbcRepository.get(jsonObject.getString(JdbcRepositories.OID));
+        final JSONObject jsonObjectDb = jdbcRepository.get(jsonObject.getString(JdbcRepositories.getDefaultKeyName()));
         assertNotNull(jsonObjectDb);
     }
 
@@ -200,7 +200,7 @@ public class JdbcRepositoryTestCase {
             jsonObject.put("col2", "=================bbbb========================");
             jsonObject.put("col4", true);
 
-            jdbcRepository.update(jsonObject.getString(JdbcRepositories.OID), jsonObject);
+            jdbcRepository.update(jsonObject.getString(JdbcRepositories.getDefaultKeyName()), jsonObject);
             transaction.commit();
         } catch (final Exception e) {
             e.printStackTrace();
@@ -221,10 +221,10 @@ public class JdbcRepositoryTestCase {
 
         final Transaction transaction = jdbcRepository.beginTransaction();
         jdbcRepository.add(jsonObject);
-        jdbcRepository.remove(jsonObject.getString(JdbcRepositories.OID));
+        jdbcRepository.remove(jsonObject.getString(JdbcRepositories.getDefaultKeyName()));
         transaction.commit();
 
-        final JSONObject jsonObjectDB = jdbcRepository.get(jsonObject.getString(JdbcRepositories.OID));
+        final JSONObject jsonObjectDB = jdbcRepository.get(jsonObject.getString(JdbcRepositories.getDefaultKeyName()));
 
         assertNull(jsonObjectDB);
 
@@ -329,7 +329,7 @@ public class JdbcRepositoryTestCase {
         final int im = 10;
         for (int i = 0; i < im; i++) {
             jdbcRepository.add(jsonObject);
-            jsonObject.remove(JdbcRepositories.OID);
+            jsonObject.remove(JdbcRepositories.getDefaultKeyName());
         }
         transaction.commit();
 

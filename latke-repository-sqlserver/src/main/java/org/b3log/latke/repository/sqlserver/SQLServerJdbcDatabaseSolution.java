@@ -29,6 +29,7 @@ import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.mapping.NumberMapping;
 import org.b3log.latke.repository.jdbc.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.util.Strings;
 
 
@@ -66,7 +67,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          ) a 
          where rownum>10000 and rownum<10501
          */
-        final String over = Strings.isEmptyOrNull(orderBySql) ? "order by oId desc" : orderBySql;
+        final String over = Strings.isEmptyOrNull(orderBySql) ? "order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
 
         sql.append(selectSql).append(" from (select top 100 percent ROW_NUMBER() over(").append(over).append(") rownum, * from ").append(
             tableName);

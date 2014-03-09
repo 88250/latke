@@ -53,7 +53,7 @@ import org.json.JSONObject;
 
 /**
  * JDBC repository implementation.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.7, Oct 12, 2013
@@ -120,7 +120,7 @@ public final class JdbcRepository implements Repository {
 
     /**
      * buildAddSql.
-     * 
+     *
      * @param jsonObject jsonObject
      * @param paramlist paramlist
      * @param sql sql
@@ -145,15 +145,15 @@ public final class JdbcRepository implements Repository {
 
     /**
      * setProperties.
-     * 
+     *
      * @param jsonObject
-     *            jsonObject
+     * jsonObject
      * @param paramlist
-     *            paramlist
+     * paramlist
      * @param sql
-     *            sql
+     * sql
      * @throws Exception
-     *             exception
+     * exception
      */
     private void setProperties(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql)
         throws Exception {
@@ -229,21 +229,21 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * 
+     *
      * update.
-     * 
+     *
      * @param id
-     *            id
+     * id
      * @param oldJsonObject
-     *            oldJsonObject
+     * oldJsonObject
      * @param jsonObject
-     *            newJsonObject
+     * newJsonObject
      * @param paramList
-     *            paramList
+     * paramList
      * @param sql
-     *            sql
+     * sql
      * @throws JSONException
-     *             JSONException
+     * JSONException
      */
     private void update(final String id, final JSONObject oldJsonObject,
         final JSONObject jsonObject, final List<Object> paramList,
@@ -260,17 +260,17 @@ public final class JdbcRepository implements Repository {
 
     /**
      * setUpdateProperties.
-     * 
+     *
      * @param id
-     *            id
+     * id
      * @param needUpdateJsonObject
-     *            needUpdateJsonObject
+     * needUpdateJsonObject
      * @param paramList
-     *            paramList
+     * paramList
      * @param sql
-     *            sql
+     * sql
      * @throws JSONException
-     *             JSONException
+     * JSONException
      */
     private void setUpdateProperties(final String id,
         final JSONObject needUpdateJsonObject,
@@ -295,21 +295,22 @@ public final class JdbcRepository implements Repository {
             paramList.add(needUpdateJsonObject.get(key));
         }
 
-        sql.append("update ").append(getName()).append(wildcardString).append(" where ").append(JdbcRepositories.OID).append("=").append("?");
+        sql.append("update ").append(getName()).append(wildcardString).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("=").append(
+            "?");
         paramList.add(id);
     }
 
     /**
-     * 
+     *
      * getNeedUpdateJsonObject.
-     * 
+     *
      * @param oldJsonObject
-     *            oldJsonObject
+     * oldJsonObject
      * @param jsonObject
-     *            newJsonObject
+     * newJsonObject
      * @return JSONObject
      * @throws JSONException
-     *             jsonObject
+     * jsonObject
      */
     private JSONObject getNeedUpdateJsonObject(final JSONObject oldJsonObject, final JSONObject jsonObject) throws JSONException {
         if (null == oldJsonObject) {
@@ -365,12 +366,13 @@ public final class JdbcRepository implements Repository {
 
     /**
      * Removes an record.
-     * 
+     *
      * @param id id
      * @param sql sql
      */
     private void remove(final String id, final StringBuilder sql) {
-        sql.append("delete from ").append(getName()).append(" where ").append(JdbcRepositories.OID).append("='").append(id).append("'");
+        sql.append("delete from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("='").append(id).append(
+            "'");
     }
 
     @Override
@@ -398,11 +400,11 @@ public final class JdbcRepository implements Repository {
 
     /**
      * get.
-     * 
+     *
      * @param sql sql
      */
     private void get(final StringBuilder sql) {
-        sql.append("select * from ").append(getName()).append(" where ").append(JdbcRepositories.OID).append("=").append("?");
+        sql.append("select * from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("=").append("?");
     }
 
     @Override
@@ -412,7 +414,7 @@ public final class JdbcRepository implements Repository {
 
         for (final String id : ids) {
             jsonObject = get(id);
-            map.put(jsonObject.optString(JdbcRepositories.OID), jsonObject);
+            map.put(jsonObject.optString(JdbcRepositories.getDefaultKeyName()), jsonObject);
         }
 
         return map;
@@ -428,7 +430,6 @@ public final class JdbcRepository implements Repository {
         // return count(sql, new ArrayList<Object>()) > 0;
 
         // using get() method to get result.
-
         return null != get(id);
     }
 
@@ -485,16 +486,16 @@ public final class JdbcRepository implements Repository {
 
     /**
      * getQuery sql.
-     * 
+     *
      * @param currentPageNum currentPageNum
      * @param pageSize pageSize
-     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise, 
+     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise,
      * the returned pageCnt will be this pageCount, and recordCnt will be {@code 0}, means these values will not be calculated
      * @param query query
      * @param sql sql
      * @param paramList paramList
      * @return &lt;pageCnt, Integer&gt;,<br/>
-     *          &lt;recordCnt, Integer&gt;<br/>
+     * &lt;recordCnt, Integer&gt;<br/>
      * @throws RepositoryException RepositoryException
      */
     private Map<String, Object> get(final int currentPageNum, final int pageSize, final int pageCount,
@@ -513,7 +514,8 @@ public final class JdbcRepository implements Repository {
         getOrderBySql(orderBySql, query.getSorts());
 
         if (-1 == pageCount) {
-            final StringBuilder countSql = new StringBuilder("select count(" + JdbcRepositories.OID + ") from ").append(getName());
+            final StringBuilder countSql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(
+                getName());
 
             if (StringUtils.isNotBlank(filterSql.toString())) {
                 countSql.append(" where ").append(filterSql);
@@ -545,11 +547,11 @@ public final class JdbcRepository implements Repository {
 
     /**
      * get select sql. if projections size = 0 ,return select count(*).
-     * 
+     *
      * @param selectSql
-     *            selectSql
+     * selectSql
      * @param projections
-     *            projections
+     * projections
      */
     private void getSelectSql(final StringBuilder selectSql,
         final Set<Projection> projections) {
@@ -573,19 +575,19 @@ public final class JdbcRepository implements Repository {
 
     /**
      * getQuerySql.
-     * 
+     *
      * @param currentPageNum
-     *            currentPageNum
+     * currentPageNum
      * @param pageSize
-     *            pageSize
+     * pageSize
      * @param selectSql
-     *            selectSql
+     * selectSql
      * @param filterSql
-     *            filterSql
+     * filterSql
      * @param orderBySql
-     *            orderBySql
+     * orderBySql
      * @param sql
-     *            sql
+     * sql
      */
     private void getQuerySql(final int currentPageNum, final int pageSize,
         final StringBuilder selectSql, final StringBuilder filterSql,
@@ -599,17 +601,17 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * 
+     *
      * get filterSql and paramList.
-     * 
+     *
      * @param filterSql
-     *            filterSql
+     * filterSql
      * @param paramList
-     *            paramList
+     * paramList
      * @param filter
-     *            filter
+     * filter
      * @throws RepositoryException
-     *             RepositoryException
+     * RepositoryException
      */
     private void getFilterSql(final StringBuilder filterSql,
         final List<Object> paramList, final Filter filter)
@@ -626,13 +628,13 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * 
+     *
      * getOrderBySql.
-     * 
+     *
      * @param orderBySql
-     *            orderBySql
+     * orderBySql
      * @param sorts
-     *            sorts
+     * sorts
      */
     private void getOrderBySql(final StringBuilder orderBySql, final Map<String, SortDirection> sorts) {
         boolean isFirst = true;
@@ -686,11 +688,11 @@ public final class JdbcRepository implements Repository {
 
     /**
      * getRandomly.
-     * 
+     *
      * @param fetchSize
-     *            fetchSize
+     * fetchSize
      * @param sql
-     *            sql
+     * sql
      */
     private void getRandomly(final int fetchSize, final StringBuilder sql) {
         sql.append(JdbcFactory.createJdbcFactory().getRandomlySql(getName(), fetchSize));
@@ -698,21 +700,21 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public long count() throws RepositoryException {
-        final StringBuilder sql = new StringBuilder("select count(" + JdbcRepositories.OID + ") from ").append(getName());
+        final StringBuilder sql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
 
         return count(sql, new ArrayList<Object>());
     }
 
     /**
      * count.
-     * 
+     *
      * @param sql
-     *            sql
+     * sql
      * @param paramList
-     *            paramList
+     * paramList
      * @return count
      * @throws RepositoryException
-     *             RepositoryException
+     * RepositoryException
      */
     private long count(final StringBuilder sql, final List<Object> paramList) throws RepositoryException {
         final Connection connection = getConnection();
@@ -736,7 +738,7 @@ public final class JdbcRepository implements Repository {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * <p>
      * <b>Note</b>: The returned name maybe with table name prefix.
      * </p>
@@ -793,7 +795,7 @@ public final class JdbcRepository implements Repository {
 
     /**
      * Constructs a JDBC repository with the specified name.
-     * 
+     *
      * @param name the specified name
      */
     public JdbcRepository(final String name) {
@@ -826,7 +828,7 @@ public final class JdbcRepository implements Repository {
     /**
      * getConnection. default using current JdbcTransaction's connection,if null
      * get a new one.
-     * 
+     *
      * @return {@link Connection}
      */
     private Connection getConnection() {
@@ -855,7 +857,7 @@ public final class JdbcRepository implements Repository {
 
     /**
      * Processes property filter.
-     * 
+     *
      * @param filterSql the specified filter SQL to build
      * @param paramList the specified parameter list
      * @param propertyFilter the specified property filter
@@ -894,7 +896,7 @@ public final class JdbcRepository implements Repository {
         case IN:
             filterOperator = "in";
             break;
-            
+
         case LIKE:
             filterOperator = " like ";
             break;
@@ -938,7 +940,7 @@ public final class JdbcRepository implements Repository {
 
     /**
      * Processes composite filter.
-     * 
+     *
      * @param filterSql the specified filter SQL to build
      * @param paramList the specified parameter list
      * @param compositeFilter the specified composite filter

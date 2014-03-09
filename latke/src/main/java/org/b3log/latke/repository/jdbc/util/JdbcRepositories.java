@@ -35,7 +35,7 @@ import org.json.JSONObject;
  * JdbcRepositories utilities.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 19, 2012
+ * @version 1.0.0.2, Mar 7, 2014
  */
 public final class JdbcRepositories {
 
@@ -96,9 +96,9 @@ public final class JdbcRepositories {
     private static final String ISKEY = "iskey";
 
     /**
-     * the default keyname.
+     * the default key name.
      */
-    public static final String OID = "oId";
+    private static String defaultKeyName = "oId";
 
     /**
      * Stores all repository filed definition in a Map.
@@ -108,6 +108,24 @@ public final class JdbcRepositories {
      * </p>
      */
     private static Map<String, List<FieldDefinition>> repositoriesMap = null;
+    
+    /**
+     * Sets the default key name.
+     * 
+     * @param keyName the specified key name
+     */
+    public static void setDefaultKeyName(final String keyName) {
+        defaultKeyName = keyName;
+    }
+    
+    /**
+     * Gets the default key name.
+     * 
+     * @return default key name
+     */
+    public static String getDefaultKeyName() {
+        return defaultKeyName;
+    }
 
     /**
      * get the RepositoriesMap ,lazy load.
@@ -210,7 +228,7 @@ public final class JdbcRepositories {
         /**
          * the default key name is 'old'.
          */
-        if (OID.equals(fieldDefinition.getName())) {
+        if (defaultKeyName.equals(fieldDefinition.getName())) {
             fieldDefinition.setIsKey(true);
         }
 
