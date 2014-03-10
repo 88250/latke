@@ -22,14 +22,15 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
-import org.b3log.latke.repository.jdbc.mapping.DateMapping;
 import org.b3log.latke.repository.jdbc.mapping.IntMapping;
 import org.b3log.latke.repository.jdbc.mapping.LongMapping;
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
-import org.b3log.latke.repository.jdbc.mapping.NumberMapping;
 import org.b3log.latke.repository.jdbc.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
+import org.b3log.latke.repository.sqlserver.mapping.DateMapping;
+import org.b3log.latke.repository.sqlserver.mapping.DatetimeMapping;
+import org.b3log.latke.repository.sqlserver.mapping.DecimalMapping;
 import org.b3log.latke.util.Strings;
 
 
@@ -37,7 +38,7 @@ import org.b3log.latke.util.Strings;
  * Microsoft SQL Server database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Mar 6, 2014
+ * @version 1.0.0.1, Mar 10, 2014
  * @since 1.0.8
  */
 public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
@@ -49,9 +50,10 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
         registerType("int", new IntMapping());
         registerType("boolean", new BooleanMapping());
         registerType("long", new LongMapping());
-        registerType("double", new NumberMapping());
+        registerType("decimal", new DecimalMapping());
         registerType("String", new StringMapping());
         registerType("Date", new DateMapping());
+        registerType("Datetime", new DatetimeMapping());
     }
 
     @Override

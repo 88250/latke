@@ -20,7 +20,8 @@ package org.b3log.latke.repository.jdbc.util;
  * FieldDefinition of each Filed in *.json.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Dec 20, 2011
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Mar 10, 2014
  */
 public class FieldDefinition {
 
@@ -38,6 +39,11 @@ public class FieldDefinition {
      * the length of the type.
      */
     private Integer length;
+    
+    /**
+     * Precision.
+     */
+    private Integer precision;
 
     /**
      * if isKey.
@@ -101,6 +107,24 @@ public class FieldDefinition {
      */
     public void setLength(final Integer length) {
         this.length = length;
+    }
+    
+    /**
+     * Gets the precision.
+     * 
+     * @return precision
+     */
+    public Integer getPresision() {
+        return precision;
+    }
+    
+    /**
+     * Sets the precision with the specified precision.
+     * 
+     * @param presision the specified precision
+     */
+    public void setPresision(final Integer presision) {
+        this.precision = presision;
     }
 
     /**
