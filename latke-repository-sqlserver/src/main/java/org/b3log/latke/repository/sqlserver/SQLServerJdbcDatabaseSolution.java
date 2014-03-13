@@ -25,12 +25,12 @@ import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
 import org.b3log.latke.repository.jdbc.mapping.IntMapping;
 import org.b3log.latke.repository.jdbc.mapping.LongMapping;
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
-import org.b3log.latke.repository.jdbc.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.sqlserver.mapping.DateMapping;
 import org.b3log.latke.repository.sqlserver.mapping.DatetimeMapping;
 import org.b3log.latke.repository.sqlserver.mapping.DecimalMapping;
+import org.b3log.latke.repository.sqlserver.mapping.StringMapping;
 import org.b3log.latke.util.Strings;
 
 
@@ -38,7 +38,7 @@ import org.b3log.latke.util.Strings;
  * Microsoft SQL Server database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Mar 10, 2014
+ * @version 1.1.0.1, Mar 13, 2014
  * @since 1.0.8
  */
 public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
