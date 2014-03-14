@@ -38,7 +38,7 @@ import org.b3log.latke.util.Strings;
  * Microsoft SQL Server database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.1, Mar 13, 2014
+ * @version 1.1.1.1, Mar 14, 2014
  * @since 1.0.8
  */
 public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
@@ -50,7 +50,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
         registerType("int", new IntMapping());
         registerType("boolean", new BooleanMapping());
         registerType("long", new LongMapping());
-        registerType("decimal", new DecimalMapping());
+        registerType("Decimal", new DecimalMapping());
         registerType("String", new StringMapping());
         registerType("Date", new DateMapping());
         registerType("Datetime", new DatetimeMapping());
