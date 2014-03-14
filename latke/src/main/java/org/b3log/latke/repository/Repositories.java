@@ -138,26 +138,22 @@ public final class Repositories {
     }
 
     /**
-     * Determines whether the specified json object can not be 
-     * persisted (add or update) into an repository which specified by 
-     * the given repository name.
+     * Determines whether the specified json object can not be persisted (add or update) into an repository which specified 
+     * by the given repository name.
      * 
      * <p>
-     * A valid json object to persist must match keys definitions 
-     * (including type and length if had) in the repository 
-     * description (repository.json) with the json object names itself.
+     * A valid json object to persist must match keys definitions (including type and length if had) in the repository description 
+     * (repository.json) with the json object names itself.
      * </p>
      * 
      * <p>
-     * The specified keys to ignore will be bypassed, regardless of matching
-     * keys definitions.
+     * The specified keys to ignore will be bypassed, regardless of matching keys definitions.
      * </p>
      * 
      * @param repositoryName the given repository name (maybe with table name prefix)
      * @param jsonObject the specified json object
      * @param ignoredKeys the specified keys to ignore
-     * @throws RepositoryException if the specified json object can not be 
-     * persisted
+     * @throws RepositoryException if the specified json object can not be persisted
      * @see Repository#add(org.json.JSONObject) 
      * @see Repository#update(java.lang.String, org.json.JSONObject) 
      */
@@ -190,7 +186,7 @@ public final class Repositories {
 
             keySet.add(key);
 
-            if (needIgnoreKeys && Strings.contains(key, ignoredKeys)) {
+            if (needIgnoreKeys && Strings.containsIgnoreCase(key, ignoredKeys)) {
                 continue;
             }
 

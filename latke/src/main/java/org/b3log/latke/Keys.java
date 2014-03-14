@@ -19,13 +19,14 @@ package org.b3log.latke;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 
 
 /**
  * This class defines framework (non-functional) keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.7, Sep 6, 2012
+ * @version 1.0.2.8, Mar 14, 2014
  */
 public final class Keys {
 
@@ -62,7 +63,7 @@ public final class Keys {
     /**
      * Key of id of an entity json object.
      */
-    public static final String OBJECT_ID = "oId";
+    public static final String OBJECT_ID = JdbcRepositories.getDefaultKeyName();
 
     /**
      * Key of ids.

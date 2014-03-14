@@ -16,6 +16,7 @@
 package org.b3log.latke.repository.jdbc;
 
 
+import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,19 +33,21 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.CompositeFilter;
+import org.b3log.latke.repository.DBKeyGenerator;
 import org.b3log.latke.repository.Filter;
 import org.b3log.latke.repository.FilterOperator;
+import org.b3log.latke.repository.KeyGenerator;
 import org.b3log.latke.repository.Projection;
 import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.Repository;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.SortDirection;
+import org.b3log.latke.repository.TimeMillisKeyGenerator;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.jdbc.util.JdbcUtil;
-import org.b3log.latke.util.Ids;
 import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,6 +94,31 @@ public final class JdbcRepository implements Repository {
      */
     public static final ThreadLocal<Connection> CONN = new ThreadLocal<Connection>();
 
+    /**
+     * Key generator.
+     */
+    private static final KeyGenerator<?> KEY_GEN;
+
+    static {
+        final String value = Latkes.getLocalProperty("keyGen");
+
+        if (Strings.isEmptyOrNull(value) || "org.b3log.latke.repository.TimeMillisKeyGenerator".equals(value)) {
+            KEY_GEN = new TimeMillisKeyGenerator();
+        } else if ("DB".equals(value)) {
+            KEY_GEN = new DBKeyGenerator();
+        } else { // User customized key generator
+            try {
+                final Class<?> keyGenClass = Class.forName(value);
+                final Constructor<?> constructor = keyGenClass.getConstructor();
+
+                KEY_GEN = (KeyGenerator) constructor.newInstance();
+
+            } catch (final Exception e) {
+                throw new IllegalArgumentException("Can not load key generator with the specified class name [" + value + ']', e);
+            }
+        }
+    }
+
     @Override
     public String add(final JSONObject jsonObject) throws RepositoryException {
         final JdbcTransaction currentTransaction = TX.get();
@@ -127,13 +155,14 @@ public final class JdbcRepository implements Repository {
      * @return id
      * @throws Exception exception
      */
-    private String buildAddSql(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql)
-        throws Exception {
-        String ret;
+    private String buildAddSql(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) throws Exception {
+        String ret = null;
 
         if (!jsonObject.has(Keys.OBJECT_ID)) {
-            ret = Ids.genTimeMillisId();
-            jsonObject.put(Keys.OBJECT_ID, ret);
+            if (!(KEY_GEN instanceof DBKeyGenerator)) {
+                ret = (String) KEY_GEN.gen(); // XXX: key type
+                jsonObject.put(Keys.OBJECT_ID, ret);
+            }
         } else {
             ret = jsonObject.getString(Keys.OBJECT_ID);
         }

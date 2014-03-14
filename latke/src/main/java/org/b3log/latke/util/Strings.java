@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.4, Feb 28, 2014
+ * @version 1.1.2.4, Mar 14, 2014
  */
 public final class Strings {
 
@@ -187,6 +187,36 @@ public final class Strings {
 
         return ret;
     }
+    
+    /**
+     * Determines whether the specified strings contains the specified string, ignoring case considerations.
+     * 
+     * @param string the specified string
+     * @param strings the specified strings
+     * @return {@code true} if the specified strings contains the specified string, ignoring case considerations, returns {@code false} 
+     * otherwise
+     */
+    public static boolean containsIgnoreCase(final String string, final String[] strings) {
+        if (null == strings) {
+            return false;
+        }
+        
+        for (final String str : strings) {
+            if (null == str && null == string) {
+                return true;
+            }
+
+            if (null == string || null == str) {
+                continue;
+            }
+
+            if (string.equalsIgnoreCase(str)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Determines whether the specified strings contains the specified string.
@@ -199,10 +229,8 @@ public final class Strings {
         if (null == strings) {
             return false;
         }
-
-        for (int i = 0; i < strings.length; i++) {
-            final String str = strings[i];
-
+        
+        for (final String str : strings) {
             if (null == str && null == string) {
                 return true;
             }
