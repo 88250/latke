@@ -43,7 +43,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.0.2.2, Feb 11, 2014
+ * @version 1.1.2.2, Mar 14, 2014
  */
 public final class Connections {
 
@@ -196,6 +196,7 @@ public final class Connections {
                     druid.setMinIdle(minConnCnt);
                     druid.setMaxActive(maxConnCnt);
                     druid.setTestOnReturn(true);
+                    druid.setValidationQuery("SELECT 1");
                 } else if ("none".equals(poolType)) {
                     LOGGER.info("Do not use database connection pool");
                 }
