@@ -41,10 +41,10 @@ import org.json.JSONObject;
 
 /**
  * JDBC utilities.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Feb 7, 2014
+ * @version 1.1.0.3, Mar 18, 2014
  */
 public final class JdbcUtil {
 
@@ -55,7 +55,7 @@ public final class JdbcUtil {
 
     /**
      * executeSql.
-     * 
+     *
      * @param sql sql
      * @param connection connection
      * @return ifsuccess
@@ -73,7 +73,7 @@ public final class JdbcUtil {
 
     /**
      * executeSql.
-     * 
+     *
      * @param sql sql
      * @param paramList paramList
      * @param connection connection
@@ -97,12 +97,12 @@ public final class JdbcUtil {
 
     /**
      * queryJsonObject.
-     * 
+     *
      * @param sql sql
      * @param paramList paramList
      * @param connection connection
      * @param tableName tableName
-     * 
+     *
      * @return JSONObject only one record.
      * @throws SQLException SQLException
      * @throws JSONException JSONException
@@ -117,12 +117,12 @@ public final class JdbcUtil {
 
     /**
      * queryJsonArray.
-     * 
+     *
      * @param sql sql
      * @param paramList paramList
      * @param connection connection
      * @param tableName tableName
-     * 
+     *
      * @return JSONArray
      * @throws SQLException SQLException
      * @throws JSONException JSONException
@@ -142,7 +142,7 @@ public final class JdbcUtil {
      * @param connection connection
      * @param ifOnlyOne ifOnlyOne to determine return object or array.
      * @param tableName tableName
-     * 
+     *
      * @return JSONObject
      * @throws SQLException SQLException
      * @throws JSONException JSONException
@@ -164,18 +164,18 @@ public final class JdbcUtil {
 
         resultSet.close();
         preparedStatement.close();
-        
+
         return jsonObject;
 
     }
 
     /**
      * resultSetToJsonObject.
-     * 
+     *
      * @param resultSet resultSet
      * @param ifOnlyOne ifOnlyOne
      * @param tableName tableName
-     * 
+     *
      * @return JSONObject
      * @throws SQLException SQLException
      * @throws JSONException JSONException
@@ -223,38 +223,28 @@ public final class JdbcUtil {
                         jsonObject.put(definition.getName(), resultSet.getBoolean(columnName));
                     } else {
                         final Object v = resultSet.getObject(columnName);
-                        
-                        while (true) {
-                            if (RuntimeDatabase.H2 != Latkes.getRuntimeDatabase()) {
-                                jsonObject.put(definition.getName(), v);
 
-                                break;
-                            }
+                        if ("String".equals(definition.getType()) && v instanceof Clob) { // H2 CLOB
+                            final Clob clob = (Clob) v;
 
-                            // H2
-                            if ("String".equals(definition.getType()) && v instanceof Clob) { // H2 CLOB
-                                final Clob clob = (Clob) v;
+                            String str = null;
 
-                                String str = null;
-
+                            try {
+                                str = IOUtils.toString(clob.getCharacterStream());
+                            } catch (final IOException e) {
+                                LOGGER.log(Level.ERROR,
+                                    "Cant not read column[name=" + columnName + "] in table[name=" + tableName + "] on H2", e);
+                            } finally {
                                 try {
-                                    str = IOUtils.toString(clob.getCharacterStream());
-                                } catch (final IOException e) {
-                                    LOGGER.log(Level.ERROR,
-                                        "Cant not read column[name=" + columnName + "] in table[name=" + tableName + "] on H2", e);
-                                } finally {
                                     clob.free();
+                                } catch (final Throwable e) { // Some drivers dose not implement free(), for example, jtds
+                                    e.setStackTrace(null);
                                 }
-
-                                jsonObject.put(definition.getName(), str);
-
-                                break;
                             }
 
-                            // H2 other types
+                            jsonObject.put(definition.getName(), str);
+                        } else {
                             jsonObject.put(definition.getName(), v);
-
-                            break;
                         }
                     }
                 }
@@ -273,6 +263,7 @@ public final class JdbcUtil {
         }
 
         jsonObject = new JSONObject();
+
         jsonObject.put(Keys.RESULTS, jsonArray);
 
         return jsonObject;

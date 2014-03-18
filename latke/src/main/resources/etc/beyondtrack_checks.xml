@@ -37,7 +37,7 @@
     Most Checks are configurable, be sure to consult the documentation.
     To completely disable a check, just comment it out or delete it from the file.
     Finally, it is worth reading the documentation.
-    Version: 1.0.1.9, Oct 26, 2013
+    Version: 1.1.1.9, Mar 18, 2014
     Author: Liang Ding
 -->
 <!DOCTYPE module PUBLIC
@@ -163,9 +163,11 @@
         <module name="HiddenField">
             <property name="tokens" value="VARIABLE_DEF"/>
         </module>
+        <!--
         <module name="IllegalCatch">
             <property name="illegalClassNames" value="java.lang.Throwable, java.lang.RuntimeException" />
         </module>
+        -->
         <module name="IllegalInstantiation"/>
         <!--<module name="IllegalThrows"/>-->
         <module name="InnerAssignment"/>
