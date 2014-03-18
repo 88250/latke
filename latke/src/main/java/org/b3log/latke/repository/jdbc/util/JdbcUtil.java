@@ -237,8 +237,8 @@ public final class JdbcUtil {
                             } finally {
                                 try {
                                     clob.free();
-                                } catch (final Throwable e) { // Some drivers dose not implement free(), for example, jtds
-                                    e.setStackTrace(null);
+                                } catch (final Throwable e) {// Some drivers dose not implement free(), for example, jtds
+                                    ; // Do nonthing
                                 }
                             }
 
