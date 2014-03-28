@@ -41,7 +41,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.7, Mar 9, 2014
+ * @version 1.1.1.7, Mar 28, 2014
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -84,7 +84,7 @@ public abstract class AbstractRepository implements Repository {
 
                 case MSSQL:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
-                    
+
                     break;
 
                 case NONE:
@@ -199,6 +199,11 @@ public abstract class AbstractRepository implements Repository {
     @Override
     public long count() throws RepositoryException {
         return repository.count();
+    }
+
+    @Override
+    public long count(final Query query) throws RepositoryException {
+        return repository.count(query);
     }
 
     @Override

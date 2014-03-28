@@ -67,20 +67,19 @@ import org.json.JSONObject;
  * Google App Engine repository implementation, wraps
  * <a href="http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/package-summary.html">
  * The Datastore Java API(Low-level API)</a> of GAE.
- * 
+ *
  * <h3>Transaction</h3>
  * The invocation of {@link #add(org.json.JSONObject) add}, {@link #update(java.lang.String, org.json.JSONObject) update} and
- * {@link #remove(java.lang.String) remove} MUST in a transaction. Invocation of method {@link #get(java.lang.String) get} (by id) in a 
- * transaction will try to get object from transaction snapshot; if the invocation made is not in a transaction, retrieve object from 
+ * {@link #remove(java.lang.String) remove} MUST in a transaction. Invocation of method {@link #get(java.lang.String) get} (by id) in a
+ * transaction will try to get object from transaction snapshot; if the invocation made is not in a transaction, retrieve object from
  * datastore directly. See <a href="http://88250.b3log.org/transaction_isolation.html">GAE 事务隔离</a> for more details.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.7.2, Oct 14, 2013
+ * @version 1.1.7.2, Mar 28, 2014
  * @see Query
  * @see GAETransaction
  */
 @SuppressWarnings("unchecked")
-// TODO: 88250, adds async support
 public final class GAERepository implements Repository {
 
     /**
@@ -126,7 +125,7 @@ public final class GAERepository implements Repository {
 
     /**
      * Constructs a GAE repository with the specified name.
-     * 
+     *
      * @param name the specified name
      */
     public GAERepository(final String name) {
@@ -154,7 +153,7 @@ public final class GAERepository implements Repository {
 
     /**
      * Adds.
-     * 
+     *
      * @param jsonObject the specified json object
      * @param parentKeyKind the specified parent key kind
      * @param parentKeyName the specified parent key name
@@ -198,22 +197,22 @@ public final class GAERepository implements Repository {
      * </p>
      *
      * <p>
-     * Invokes this method for an non-existent entity will create a new entity in database, as the same effect of method 
+     * Invokes this method for an non-existent entity will create a new entity in database, as the same effect of method
      * {@linkplain #add(org.json.JSONObject)}.
      * </p>
      *
      * <p>
      * Update algorithm steps:
-     *   <ol>
-     *     <li>Sets the specified id into the specified new json object</li>
-     *     <li>Creates a new entity with the specified id</li>
-     *     <li>Puts the entity into database</li>
-     *   </ol>
+     * <ol>
+     * <li>Sets the specified id into the specified new json object</li>
+     * <li>Creates a new entity with the specified id</li>
+     * <li>Puts the entity into database</li>
+     * </ol>
      * </p>
      *
      * <p>
-     *   <b>Note</b>: the specified id is NOT the key of a database record, but
-     *   the value of "oId" stored in database value entry of a record.
+     * <b>Note</b>: the specified id is NOT the key of a database record, but
+     * the value of "oId" stored in database value entry of a record.
      * </p>
      *
      * @param id the specified id
@@ -238,7 +237,7 @@ public final class GAERepository implements Repository {
 
     /**
      * Updates.
-     * 
+     *
      * @param id the specified id
      * @param jsonObject the specified json object
      * @param parentKeyKind the specified parent key kind
@@ -287,7 +286,7 @@ public final class GAERepository implements Repository {
 
     /**
      * Removes.
-     * 
+     *
      * @param id the specified id
      * @param parentKeyKind the specified parent key kind
      * @param parentKeyName the specified parent key name
@@ -350,7 +349,7 @@ public final class GAERepository implements Repository {
 
     /**
      * Gets a json object with the specified parent key and id.
-     * 
+     *
      * @param parentKey the specified parent key
      * @param id the specified id
      * @return a json object, returns {@code null} if not found
@@ -405,7 +404,7 @@ public final class GAERepository implements Repository {
      *
      * @param currentPageNum the specified current page number
      * @param pageSize the specified page size
-     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise, 
+     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise,
      * the returned pageCnt will be this pageCount, and recordCnt will be {@code 0}, means these values will not be calculated
      * @param projections the specified projections
      * @param sorts the specified sorts
@@ -456,7 +455,7 @@ public final class GAERepository implements Repository {
 
     /**
      * Converts the specified composite filter to a GAE composite filter.
-     * 
+     *
      * @param compositeFilter the specified composite filter
      * @return GAE composite filter
      * @throws RepositoryException repository exception
@@ -497,7 +496,7 @@ public final class GAERepository implements Repository {
 
     /**
      * Converts the specified property filter to a GAE filter predicate.
-     * 
+     *
      * @param propertyFilter the specified property filter
      * @return GAE filter predicate
      * @throws RepositoryException repository exception
@@ -614,6 +613,30 @@ public final class GAERepository implements Repository {
         return preparedQuery.countEntities(FetchOptions.Builder.withDefaults());
     }
 
+    @Override
+    public long count(final org.b3log.latke.repository.Query query) throws RepositoryException {
+        final Filter filter = query.getFilter();
+
+        final Query q = new Query(getName());
+
+        if (null != filter) {
+            if (filter instanceof PropertyFilter) {
+                final FilterPredicate filterPredicate = processPropertyFiler((PropertyFilter) filter);
+
+                q.setFilter(filterPredicate);
+            } else { // CompositeFiler
+                final CompositeFilter compositeFilter = (CompositeFilter) filter;
+                final Query.CompositeFilter queryCompositeFilter = processCompositeFilter(compositeFilter);
+
+                q.setFilter(queryCompositeFilter);
+            }
+        }
+
+        final PreparedQuery preparedQuery = datastoreService.prepare(q);
+
+        return preparedQuery.countEntities(FetchOptions.Builder.withDefaults());
+    }
+
     /**
      * Converts the specified {@link Entity entity} to a {@link JSONObject
      * json object}.
@@ -686,22 +709,22 @@ public final class GAERepository implements Repository {
 
     /**
      * Gets result json object by the specified query, current page number, page size, page count.
-     * 
+     *
      * <p>
-     * If the specified page count equals to {@code -1}, this method will calculate the page count.  
+     * If the specified page count equals to {@code -1}, this method will calculate the page count.
      * </p>
      *
      * @param query the specified query
      * @param currentPageNum the specified current page number
      * @param pageSize the specified page size
-     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise, 
+     * @param pageCount if the pageCount specified with {@code -1}, the returned (pageCnt, recordCnt) value will be calculated, otherwise,
      * the returned pageCnt will be this pageCount, and recordCnt will be {@code 0}, means these values will not be calculated
      * @return for example,
      * <pre>
      * {
      *     "pagination": {
      *       "paginationPageCount": 10, // May be specified by the specified query.pageCount
-     *       "paginationRecordCount": "100" // If query.pageCount has been specified with not {@code -1} or {@code null}, this value will 
+     *       "paginationRecordCount": "100" // If query.pageCount has been specified with not {@code -1} or {@code null}, this value will
      *                                         be {@code 0} also
      *     },
      *     "rslts": [{
@@ -709,6 +732,7 @@ public final class GAERepository implements Repository {
      *     }, ....]
      * }
      * </pre>
+     *
      * @throws RepositoryException repository exception
      */
     private JSONObject get(final Query query, final int currentPageNum, final int pageSize, final int pageCount)
@@ -823,10 +847,10 @@ public final class GAERepository implements Repository {
     }
 
     /**
-     * Gets the end cursor of the specified current page number, page size and 
+     * Gets the end cursor of the specified current page number, page size and
      * the prepared query.
-     * 
-     * @param currentPageNum the specified current page number, MUST larger 
+     *
+     * @param currentPageNum the specified current page number, MUST larger
      * then 1
      * @param pageSize the specified page size
      * @param preparedQuery the specified prepared query

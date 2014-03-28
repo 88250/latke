@@ -59,7 +59,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.7, Oct 12, 2013
+ * @version 1.1.2.7, Mar 28, 2014
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -582,8 +582,7 @@ public final class JdbcRepository implements Repository {
      * @param projections
      * projections
      */
-    private void getSelectSql(final StringBuilder selectSql,
-        final Set<Projection> projections) {
+    private void getSelectSql(final StringBuilder selectSql, final Set<Projection> projections) {
         if (projections == null || projections.isEmpty()) {
             selectSql.append(" select * ");
             return;
@@ -642,8 +641,7 @@ public final class JdbcRepository implements Repository {
      * @throws RepositoryException
      * RepositoryException
      */
-    private void getFilterSql(final StringBuilder filterSql,
-        final List<Object> paramList, final Filter filter)
+    private void getFilterSql(final StringBuilder filterSql, final List<Object> paramList, final Filter filter)
         throws RepositoryException {
         if (null == filter) {
             return;
@@ -732,6 +730,23 @@ public final class JdbcRepository implements Repository {
         final StringBuilder sql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
 
         return count(sql, new ArrayList<Object>());
+    }
+
+    @Override
+    public long count(final Query query) throws RepositoryException {
+        final StringBuilder countSql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(
+            getName());
+
+        final List<Object> paramList = new ArrayList<Object>();
+        final StringBuilder filterSql = new StringBuilder();
+
+        getFilterSql(filterSql, paramList, query.getFilter());
+
+        if (StringUtils.isNotBlank(filterSql.toString())) {
+            countSql.append(" where ").append(filterSql);
+        }
+
+        return (int) count(countSql, paramList);
     }
 
     /**

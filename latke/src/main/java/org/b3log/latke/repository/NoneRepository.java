@@ -25,13 +25,13 @@ import org.json.JSONObject;
  * None repository implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Dec 2, 2013
+ * @version 1.1.0.0, Mar 28, 2014
  */
 public final class NoneRepository implements Repository {
 
     /**
      * Constructs a none repository with the specified name.
-     * 
+     *
      * @param name the specified name
      */
     public NoneRepository(final String name) {}
@@ -78,6 +78,11 @@ public final class NoneRepository implements Repository {
 
     @Override
     public long count() throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public long count(final Query query) throws RepositoryException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

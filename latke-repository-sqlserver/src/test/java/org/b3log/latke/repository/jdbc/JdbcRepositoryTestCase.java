@@ -51,7 +51,7 @@ import org.testng.annotations.Test;
  * JdbcRepositoryTestCase, now using M$ SQL Server 2008 for test.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Mar 6, 2014
+ * @version 1.1.0.0, Mar 28, 2014
  */
 public class JdbcRepositoryTestCase {
 
@@ -59,7 +59,7 @@ public class JdbcRepositoryTestCase {
      * jdbcRepository.
      */
     private JdbcRepository jdbcRepository = new JdbcRepository("basetable");
-    
+
     /**
      * Random size.
      */
@@ -282,11 +282,31 @@ public class JdbcRepositoryTestCase {
                 new PropertyFilter("col1", FilterOperator.NOT_EQUAL, new Integer("1")),
                 new PropertyFilter("col1", FilterOperator.IN, inList),
                 new CompositeFilter(
-                CompositeFilterOperator.OR,
-                Arrays.<Filter>asList(new PropertyFilter("col1", FilterOperator.EQUAL, new Integer("1")),
-                                      new PropertyFilter("col1", FilterOperator.LESS_THAN_OR_EQUAL, new Integer("1"))))));
+                        CompositeFilterOperator.OR,
+                        Arrays.<Filter>asList(new PropertyFilter("col1", FilterOperator.EQUAL, new Integer("1")),
+                                              new PropertyFilter("col1", FilterOperator.LESS_THAN_OR_EQUAL, new Integer("1"))))));
 
         jdbcRepository.get(query);
+    }
+
+    /**
+     * Query count test.
+     *
+     * @throws Exception Exception
+     */
+    @Test(groups = {"jdbc"})
+    public void queryCountTest() throws Exception {
+        if (!ifRun) {
+            return;
+        }
+        
+        System.out.println("queryCountTest");
+
+        final Query query = new Query();
+
+        query.setFilter(new PropertyFilter("col2", FilterOperator.EQUAL, "=================bbbb========================"));
+
+        System.out.println(jdbcRepository.count(query));
     }
 
     /**
@@ -357,10 +377,10 @@ public class JdbcRepositoryTestCase {
         if (!ifRun) {
             return;
         }
-        
+
         final List<JSONObject> results = jdbcRepository.getRandomly(RAND_SIZE);
         assertEquals(RAND_SIZE, results.size());
-        
+
         for (final JSONObject result : results) {
             System.out.println(result.toString());
         }
