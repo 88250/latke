@@ -33,9 +33,9 @@ public class TheadServiceTestCase {
     }
 
     @Test
-    public void submit() {
+    public void submit() throws Exception {
         final ThreadService threadService = ThreadServiceFactory.getThreadService();
-        
+
         final Thread thread = new Thread() {
             @Override
             public void run() {
@@ -49,11 +49,15 @@ public class TheadServiceTestCase {
                 System.out.println("end");
             }
         };
+
+        Future<?> future = threadService.submit(thread, 2000);
         
-        Future<?> future = threadService.submit(thread, 1000);
+        Thread.sleep(600);
+        
         Assert.assertTrue(future.isDone());
+
+        future = threadService.submit(thread, 100);
         
-        future = threadService.submit(thread, 10);
-        Assert.assertNull(future);
+        Assert.assertFalse(future.isDone());
     }
 }

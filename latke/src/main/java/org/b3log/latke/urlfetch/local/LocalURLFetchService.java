@@ -22,6 +22,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
+import org.b3log.latke.thread.ThreadService;
+import org.b3log.latke.thread.ThreadServiceFactory;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
@@ -31,7 +33,8 @@ import org.b3log.latke.urlfetch.URLFetchService;
  * Local URL fetch service.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 0.0.0.3, Aug 21, 2011
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.1.3, Apr 4, 2014
  */
 public final class LocalURLFetchService implements URLFetchService {
 
@@ -39,6 +42,16 @@ public final class LocalURLFetchService implements URLFetchService {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(LocalURLFetchService.class.getName());
+    
+    /**
+     * Thread service.
+     */
+    private ThreadService threadService = ThreadServiceFactory.getThreadService();
+     
+    /**
+     * Timeout for async fetch.
+     */
+    private static final long ASYNC_TIME_OUT = 10000;
 
     @Override
     public HTTPResponse fetch(final HTTPRequest request) throws IOException {
@@ -60,8 +73,7 @@ public final class LocalURLFetchService implements URLFetchService {
             }
         });
 
-        // no pool
-        futureTask.run();
+        threadService.submit(futureTask, ASYNC_TIME_OUT);
 
         return futureTask;
     }

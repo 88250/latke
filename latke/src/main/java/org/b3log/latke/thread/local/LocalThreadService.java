@@ -19,7 +19,6 @@ package org.b3log.latke.thread.local;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -33,7 +32,7 @@ import org.b3log.latke.thread.ThreadService;
  * @version 1.0.0.1, Jan 10, 2014
  */
 public final class LocalThreadService implements ThreadService {
-    
+
     /**
      * Logger.
      */
@@ -42,7 +41,7 @@ public final class LocalThreadService implements ThreadService {
     /**
      * Executor service.
      */
-    private final ExecutorService executorService = Executors.newFixedThreadPool(50);
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(50);
 
     @Override
     public Thread createThreadForCurrentRequest(final Runnable runnable) {
@@ -51,20 +50,84 @@ public final class LocalThreadService implements ThreadService {
 
     @Override
     public Future<?> submit(final Runnable runnable, final long millseconds) {
-        try {
-            final Future<?> ret = executorService.submit(runnable);
-            
-            ret.get(millseconds, TimeUnit.MILLISECONDS);
-            
-            return ret;
-        } catch (final RejectedExecutionException  e) {
-            LOGGER.log(Level.ERROR, "Task executes failed", e);
-            
-            return null;
-        } catch (final Exception e) {
-            LOGGER.log(Level.WARN, "Task executes timeout", e);
-            
-            return null;
+        final Object monitor = new Object();
+        final Worker worker = new Worker(runnable, millseconds, monitor);
+
+        synchronized (monitor) {
+            EXECUTOR_SERVICE.execute(worker);
+
+            try {
+                monitor.wait();
+            } catch (final Exception e) {
+                LOGGER.log(Level.ERROR, "Wait failed", e);
+            }
+        }
+
+        return worker.getFuture();
+    }
+
+    /**
+     * Worker.
+     */
+    private static class Worker implements Runnable {
+
+        /**
+         * Future.
+         */
+        private Future<?> future;
+
+        /**
+         * Runnable.
+         */
+        private final Runnable runnable;
+
+        /**
+         * Timeout.
+         */
+        private final long timeout;
+        
+        /**
+         * Object.
+         */
+        private Object monitor;
+
+        /**
+         * Constructs a worker.
+         *
+         * @param runnable the specified runnable
+         * @param timeout the specified timeout
+         * @param monitor the specified monitor
+         */
+        public Worker(final Runnable runnable, final long timeout, final Object monitor) {
+            this.runnable = runnable;
+            this.timeout = timeout;
+            this.monitor = monitor;
+        }
+
+        /**
+         * Get the future.
+         *
+         * @return future
+         */
+        public Future<?> getFuture() {
+            return future;
+        }
+
+        @Override
+        public void run() {
+            try {
+                synchronized (monitor) {
+                    future = EXECUTOR_SERVICE.submit(runnable);
+
+                    monitor.notify();
+                }
+
+                future.get(timeout, TimeUnit.MILLISECONDS);
+            } catch (final Exception e) {
+                LOGGER.log(Level.WARN, "Task executes failed", e);
+
+                future = null;
+            }
         }
     }
 }
