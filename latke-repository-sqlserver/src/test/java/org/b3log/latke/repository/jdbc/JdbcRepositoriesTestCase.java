@@ -15,12 +15,10 @@
  */
 package org.b3log.latke.repository.jdbc;
 
-import java.util.HashSet;
 import static org.testng.AssertJUnit.assertNotNull;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
@@ -63,9 +61,9 @@ public class JdbcRepositoriesTestCase {
     public void initRepositoryJSON() {
         Latkes.initRuntimeEnv();
         
-        final Set<String> tableNames = new HashSet<String>();
-        tableNames.add("T_Users");
-
-        JdbcRepositories.initRepositoryJSON(tableNames, "C:/repository.json");
+//        final Set<String> tableNames = new HashSet<String>();
+//        tableNames.add("T_Users");
+//
+//        JdbcRepositories.initRepositoryJSON(tableNames, "C:/repository.json");
     }
 }
