@@ -342,7 +342,7 @@ public final class JdbcRepositories {
      * @param destPath the specified path of repository.json file to generate
      */
     public static void initRepositoryJSON(final Set<String> tableNames, final String destPath) {
-        Connection connection = null;
+        Connection connection;
         FileWriter writer = null;
 
         try {
@@ -426,9 +426,16 @@ public final class JdbcRepositories {
                         key.put("type", "Bit");
                         break;
 
-                    default:
-                        LOGGER.warn("Unsupported type [" + dataType + ']');
+                    case Types.CLOB:
+                        key.put("type", "Clob");
                         break;
+
+                    case Types.BLOB:
+                        key.put("type", "Blob");
+                        break;
+
+                    default:
+                        throw new IllegalStateException("Unsupported type [" + dataType + ']');
                     }
                     key.put("length", length);
 
