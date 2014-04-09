@@ -417,6 +417,7 @@ public final class JdbcRepositories {
                         break;
 
                     case Types.DECIMAL:
+                    case Types.NUMERIC:
                         key.put("type", "Decimal");
                         key.put("precision", rs.getInt("DECIMAL_DIGITS"));
                         break;
