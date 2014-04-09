@@ -44,7 +44,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.3, Mar 18, 2014
+ * @version 1.1.1.3, Apr 9, 2014
  */
 public final class JdbcUtil {
 
@@ -224,7 +224,7 @@ public final class JdbcUtil {
                     } else {
                         final Object v = resultSet.getObject(columnName);
 
-                        if ("String".equals(definition.getType()) && v instanceof Clob) { // H2 CLOB
+                        if (v instanceof Clob) {
                             final Clob clob = (Clob) v;
 
                             String str = null;
