@@ -37,7 +37,7 @@ import org.b3log.latke.util.Strings;
  *
  * @author <a href="mailto:jiangzezhou1989@gmail.com">zezhou jiang</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Jan 7, 2014
+ * @version 1.0.1.4, Apr 10, 2014
  */
 final class MailSender {
 
@@ -48,9 +48,13 @@ final class MailSender {
      * <li>mail.user</li>
      * <li>mail.password</li>
      * <li>mail.smtp.host</li>
-     * <li>mail.smtp.port</li>
      * <li>mail.smtp.auth</li>
+     * <li>mail.smtp.port</li>
+     * <li>mail.smtp.starttls.enable</li>
      * <li>mail.debug</li>
+     * <li>mail.smtp.socketFactory.class</li>
+     * <li>mail.smtp.socketFactory.fallback</li>
+     * <li>mail.smtp.socketFactory.port</li>
      * </ul>
      */
     private final ResourceBundle mailProperties = ResourceBundle.getBundle("mail");
@@ -64,9 +68,13 @@ final class MailSender {
         final Properties props = new Properties();
 
         props.setProperty("mail.smtp.host", mailProperties.getString("mail.smtp.host"));
-        props.setProperty("mail.smtp.auth", "true");
+        final String auth = mailProperties.getString("mail.smtp.auth");
+
+        props.setProperty("mail.smtp.auth", Strings.isEmptyOrNull(auth) ? "true" : auth);
         props.setProperty("mail.smtp.port", mailProperties.getString("mail.smtp.port"));
-        props.put("mail.smtp.starttls.enable", "true");
+        final String starttls = mailProperties.getString("mail.smtp.starttls.enable");
+
+        props.put("mail.smtp.starttls.enable", Strings.isEmptyOrNull(starttls) ? "true" : starttls);
         props.put("mail.debug", mailProperties.getString("mail.debug"));
         props.put("mail.smtp.socketFactory.class", mailProperties.getString("mail.smtp.socketFactory.class"));
         props.put("mail.smtp.socketFactory.fallback", mailProperties.getString("mail.smtp.socketFactory.fallback"));
