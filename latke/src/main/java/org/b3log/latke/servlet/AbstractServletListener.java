@@ -42,7 +42,7 @@ import java.util.Locale;
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.3, Jan 15, 2014
+ * @version 1.0.4.3, Apr 11, 2014
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -84,7 +84,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
         final ServletContext servletContext = servletContextEvent.getServletContext();
 
-        webRoot = servletContext.getRealPath("") + File.separator;
+        webRoot = servletContext.getRealPath("/") + File.separator;
         LOGGER.log(Level.INFO, "Server [webRoot={0}, contextPath={1}]",
             new Object[] {webRoot, servletContextEvent.getServletContext().getContextPath()});
 
