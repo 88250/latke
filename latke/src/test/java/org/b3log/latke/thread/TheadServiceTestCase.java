@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
  * {@link TheadService} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jan 10, 2014
+ * @version 1.0.1.0, Jan 11, 2014
  */
 public class TheadServiceTestCase {
 
@@ -36,7 +36,7 @@ public class TheadServiceTestCase {
     public void submit() throws Exception {
         final ThreadService threadService = ThreadServiceFactory.getThreadService();
 
-        final Thread thread = new Thread() {
+        final Thread thread1 = new Thread() {
             @Override
             public void run() {
                 System.out.println("start");
@@ -50,14 +50,28 @@ public class TheadServiceTestCase {
             }
         };
 
-        Future<?> future = threadService.submit(thread, 2000);
-        
+        Future<?> future = threadService.submit(thread1, 2000);
+
         Thread.sleep(600);
-        
+
         Assert.assertTrue(future.isDone());
 
-        future = threadService.submit(thread, 100);
-        
+        final Thread thread2 = new Thread() {
+            @Override
+            public void run() {
+                System.out.println("start");
+
+                try {
+                    Thread.sleep(500);
+                } catch (final InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("end");
+            }
+        };
+
+        future = threadService.submit(thread2, 100);
+
         Assert.assertFalse(future.isDone());
     }
 }
