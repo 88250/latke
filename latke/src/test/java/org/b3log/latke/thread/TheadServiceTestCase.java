@@ -42,7 +42,7 @@ public class TheadServiceTestCase {
                 System.out.println("start");
 
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(5);
                 } catch (final InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -52,7 +52,7 @@ public class TheadServiceTestCase {
 
         Future<?> future = threadService.submit(thread1, 2000);
 
-        Thread.sleep(600);
+        Thread.sleep(1000);
 
         Assert.assertTrue(future.isDone());
 

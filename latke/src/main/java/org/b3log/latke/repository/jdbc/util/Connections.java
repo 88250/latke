@@ -185,7 +185,7 @@ public final class Connections {
                     h2 = JdbcConnectionPool.create(url, userName, password);
                     h2.setMaxConnections(maxConnCnt);
                 } else if ("druid".equals(poolType)) {
-                    LOGGER.log(Level.DEBUG, "Initialing database connection pool [Druid]");
+                    LOGGER.log(Level.DEBUG, "Initialing database connection pool [druid]");
 
                     druid = new DruidDataSource();
                     druid.setUsername(userName);
@@ -285,7 +285,7 @@ public final class Connections {
 
         if (null != druid) {
             druid.close();
-            LOGGER.info("Closed [Druid] database connection pool");
+            LOGGER.info("Closed [druid] database connection pool");
         }
     }
 

@@ -31,18 +31,16 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import java.io.File;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Locale;
+import org.b3log.latke.ioc.mock.MockServletContext;
 
 
 /**
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.4.3, Apr 11, 2014
+ * @version 1.0.5.3, Apr 15, 2014
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -52,21 +50,12 @@ public abstract class AbstractServletListener implements ServletContextListener,
     private static final Logger LOGGER = Logger.getLogger(AbstractServletListener.class.getName());
 
     /**
-     * Web root.
+     * Servlet context.
      */
-    private static String webRoot;
+    private static ServletContext servletContext;
 
     static {
-        final URL resource = ClassLoader.class.getResource("/");
-
-        if (null != resource) { // Running unit tests
-            try {
-                webRoot = URLDecoder.decode(resource.getPath(), "UTF-8");
-                LOGGER.log(Level.INFO, "Classpath [{0}]", webRoot);
-            } catch (final Exception e) {
-                throw new RuntimeException("Decodes web root path failed", e);
-            }
-        }
+        servletContext = new MockServletContext();
     }
 
     /**
@@ -76,17 +65,17 @@ public abstract class AbstractServletListener implements ServletContextListener,
      */
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
+        servletContext = servletContextEvent.getServletContext();
+        
         Latkes.initRuntimeEnv();
         LOGGER.info("Initializing the context....");
 
         Latkes.setLocale(Locale.SIMPLIFIED_CHINESE);
         LOGGER.log(Level.INFO, "Default locale [{0}]", Latkes.getLocale());
 
-        final ServletContext servletContext = servletContextEvent.getServletContext();
+        final String realPath = servletContext.getRealPath("/");
 
-        webRoot = servletContext.getRealPath("/") + File.separator;
-        LOGGER.log(Level.INFO, "Server [webRoot={0}, contextPath={1}]",
-            new Object[] {webRoot, servletContextEvent.getServletContext().getContextPath()});
+        LOGGER.log(Level.INFO, "Server [realPath={0}, contextPath={1}]", new Object[] {realPath, servletContext.getContextPath()});
 
         try {
             final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
@@ -129,11 +118,15 @@ public abstract class AbstractServletListener implements ServletContextListener,
     public abstract void sessionDestroyed(final HttpSessionEvent httpSessionEvent);
 
     /**
-     * Gets the absolute file path of web root directory on the server's file system.
+     * Gets the servlet context.
      *
-     * @return the directory file path(tailing with {@link File#separator}).
+     * @return the servlet context
      */
-    public static String getWebRoot() {
-        return webRoot;
+    public static ServletContext getServletContext() {
+        if (null == servletContext) {
+            throw new IllegalStateException("Initializes the servlet context first!");
+        }
+
+        return servletContext;
     }
 }

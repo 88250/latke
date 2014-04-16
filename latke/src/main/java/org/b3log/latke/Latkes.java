@@ -17,14 +17,15 @@ package org.b3log.latke;
 
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
+import javax.servlet.ServletContext;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.Lifecycle;
@@ -41,7 +42,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.8, Feb 20, 2014
+ * @version 1.0.3.9, Apr 15, 2014
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -772,18 +773,9 @@ public final class Latkes {
     public static void loadSkin(final String skinDirName) {
         LOGGER.debug("Loading skin [dirName=" + skinDirName + ']');
 
-        final String skinName = getSkinName(skinDirName);
+        final ServletContext servletContext = AbstractServletListener.getServletContext();
 
-        LOGGER.log(Level.INFO, "Current skin[name={0}]", skinName);
-
-        try {
-            final String webRootPath = AbstractServletListener.getWebRoot();
-            final String skinPath = webRootPath + "skins/" + skinDirName;
-
-            Templates.MAIN_CFG.setDirectoryForTemplateLoading(new File(skinPath));
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+        Templates.MAIN_CFG.setServletContextForTemplateLoading(servletContext, "skins/" + skinDirName);
 
         Latkes.setTimeZone("Asia/Shanghai");
 
@@ -799,37 +791,59 @@ public final class Latkes {
      * @return skin name, returns {@code null} if not found or error occurs
      * @see #getSkinDirNames()
      */
-    private static String getSkinName(final String skinDirName) {
-        final String webRootPath = AbstractServletListener.getWebRoot();
-        final File skins = new File(webRootPath + "skins/");
-        final File[] skinDirs = skins.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(final File pathname) {
-                return pathname.isDirectory() && pathname.getName().equals(skinDirName);
-            }
-        });
-
-        if (null == skinDirs) {
-            LOGGER.error("Skin directory is null");
-
-            return null;
-        }
-
-        if (1 != skinDirs.length) {
-            LOGGER.log(Level.ERROR, "Skin directory count[{0}]", skinDirs.length);
-
-            return null;
-        }
+    public static String getSkinName(final String skinDirName) {
+        final ServletContext servletContext = AbstractServletListener.getServletContext();
 
         try {
             final Properties ret = new Properties();
-            final String skinPropsPath = skinDirs[0].getPath() + "/" + "skin.properties";
 
-            ret.load(new FileReader(skinPropsPath));
+            final File file = getWebFile("/skins/" + skinDirName + "/skin.properties");
+
+            ret.load(new FileInputStream(file));
 
             return ret.getProperty("name");
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Read skin configuration error[msg={0}]", e.getMessage());
+
+            return null;
+        }
+    }
+
+    /**
+     * Gets a file in web application with the specified path.
+     *
+     * @param path the specified path
+     * @return file,
+     * @see javax.servlet.ServletContext#getResource(java.lang.String)
+     * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
+     */
+    public static File getWebFile(final String path) {
+        final ServletContext servletContext = AbstractServletListener.getServletContext();
+
+        File ret;
+
+        try {
+            final URL resource = servletContext.getResource(path);
+
+            if (null == resource) {
+                return null;
+            }
+
+            ret = FileUtils.toFile(resource);
+
+            if (null == ret) {
+                final File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+
+                ret = new File(tempdir.getPath() + path);
+
+                FileUtils.copyURLToFile(resource, ret);
+
+                ret.deleteOnExit();
+            }
+
+            return ret;
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Reads file [path=" + path + "] failed", e);
 
             return null;
         }

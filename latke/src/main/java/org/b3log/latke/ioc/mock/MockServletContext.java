@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Set;
 import javax.servlet.RequestDispatcher;
@@ -35,7 +36,7 @@ import org.b3log.latke.logging.Logger;
  * A mock servlet context for test mainly.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Nov 26, 2009
+ * @version 1.0.0.3, Apr 16, 2014
  */
 public final class MockServletContext implements ServletContext {
 
@@ -85,32 +86,32 @@ public final class MockServletContext implements ServletContext {
 
     @Override
     public String getContextPath() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "";
     }
 
     @Override
     public ServletContext getContext(final String uripath) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getContext]");
     }
 
     @Override
     public int getMajorVersion() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getMajorVersion]");
     }
 
     @Override
     public int getMinorVersion() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getMinorVersion]");
     }
 
     @Override
     public String getMimeType(final String file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getMimeType]");
     }
 
     @Override
     public Set getResourcePaths(final String path) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Collections.emptySet();
     }
 
     @Override
@@ -120,32 +121,32 @@ public final class MockServletContext implements ServletContext {
 
     @Override
     public InputStream getResourceAsStream(final String path) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getClass().getResourceAsStream(path);
     }
 
     @Override
     public RequestDispatcher getRequestDispatcher(final String path) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getRequestDispatcher]");
     }
 
     @Override
     public RequestDispatcher getNamedDispatcher(final String name) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getNamedDispatcher]");
     }
 
     @Override
     public Servlet getServlet(final String name) throws ServletException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getServlet]");
     }
 
     @Override
     public Enumeration getServlets() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getServlets]");
     }
 
     @Override
     public Enumeration getServletNames() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getServletNames]");
     }
 
     @Override
@@ -174,37 +175,37 @@ public final class MockServletContext implements ServletContext {
 
     @Override
     public String getServerInfo() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getServerInfo]");
     }
 
     @Override
     public String getInitParameter(final String name) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getInitParameter]");
     }
 
     @Override
     public Enumeration getInitParameterNames() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getInitParameterNames]");
     }
 
     @Override
     public Object getAttribute(final String name) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getAttribute]");
     }
 
     @Override
     public Enumeration getAttributeNames() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [getAttributeNames]");
     }
 
     @Override
     public void setAttribute(final String name, final Object object) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [setAttribute]");
     }
 
     @Override
     public void removeAttribute(final String name) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet [removeAttribute]");
     }
 
     @Override

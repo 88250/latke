@@ -20,8 +20,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.Collections;
@@ -31,11 +29,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import javax.servlet.ServletContext;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
+import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.util.Strings;
 import org.json.JSONException;
@@ -44,21 +45,21 @@ import org.json.JSONObject;
 
 /**
  * Abstract plugin.
- * 
+ *
  * <p>
- * Id of a plugin is {@linkplain #name name}_{@linkplain #version version}. See {@link PluginManager#setPluginProps} for more details. 
+ * Id of a plugin is {@linkplain #name name}_{@linkplain #version version}. See {@link PluginManager#setPluginProps} for more details.
  * If the id of one plugin {@linkplain #equals(java.lang.Object) equals} to another's, considering they are the same.
  * </p>
- * 
+ *
  * <p>
- *   <b>Note</b>: The subclass extends from this abstract class MUST has a static method named {@code getInstance} to obtain an instance 
- *   of this plugin. See <a href="http://en.wikipedia.org/wiki/Singleton_pattern"> Singleton Pattern</a> for more implementation 
- *   details.
+ * <b>Note</b>: The subclass extends from this abstract class MUST has a static method named {@code getInstance} to obtain an instance
+ * of this plugin. See <a href="http://en.wikipedia.org/wiki/Singleton_pattern"> Singleton Pattern</a> for more implementation
+ * details.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.2.0.1, Apr 24, 2013
+ * @version 1.2.1.1, Apr 16, 2014
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -69,6 +70,11 @@ public abstract class AbstractPlugin implements Serializable {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(AbstractPlugin.class.getName());
+
+    /**
+     * Default serial version id.
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Id of this plugin.
@@ -98,7 +104,7 @@ public abstract class AbstractPlugin implements Serializable {
     /**
      * Directory of this plugin.
      */
-    private File dir;
+    private String dirName;
 
     /**
      * Status of this plugin.
@@ -109,7 +115,7 @@ public abstract class AbstractPlugin implements Serializable {
      * the setting of this plugin.
      */
     private JSONObject setting = new JSONObject();
-    
+
     /**
      * Types of this plugin.
      */
@@ -133,22 +139,21 @@ public abstract class AbstractPlugin implements Serializable {
     }
 
     /**
-     * Gets the directory of this plugin.
-     * 
+     * Gets the directory name of this plugin.
+     *
      * @return directory of this plugin
      */
-    public File getDir() {
-        return dir;
+    public String getDirName() {
+        return dirName;
     }
 
     /**
-     * Sets the directory of this plugin with the specified directory. 
-     * Initializes template engine configuration.
-     * 
-     * @param dir the specified directory
+     * Sets the directory name of this plugin with the specified directory. Initializes template engine configuration.
+     *
+     * @param dirName the specified directory name
      */
-    public void setDir(final File dir) {
-        this.dir = dir;
+    public void setDir(final String dirName) {
+        this.dirName = dirName;
 
         initTemplateEngineCfg();
     }
@@ -159,12 +164,9 @@ public abstract class AbstractPlugin implements Serializable {
     private void initTemplateEngineCfg() {
         configuration = new Configuration();
         configuration.setDefaultEncoding("UTF-8");
-        try {
-            configuration.setDirectoryForTemplateLoading(dir);
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.ERROR, e.getMessage(), e);
-        }
+        final ServletContext servletContext = AbstractServletListener.getServletContext();
 
+        configuration.setServletContextForTemplateLoading(servletContext, "/plugins/" + dirName);
         LOGGER.log(Level.DEBUG, "Initialized template configuration");
     }
 
@@ -172,36 +174,35 @@ public abstract class AbstractPlugin implements Serializable {
      * Reads lang_xx.properties into field {@link #langs langs}.
      */
     public void readLangs() {
-        final File[] langFiles = dir.listFiles(new FilenameFilter() {
+        final ServletContext servletContext = AbstractServletListener.getServletContext();
 
-            @Override
-            public boolean accept(final File dir, final String name) {
-                if (name.startsWith(Keys.LANGUAGE) && name.endsWith(".properties")) {
-                    return true;
+        @SuppressWarnings("unchecked")
+        final Set<String> resourcePaths = servletContext.getResourcePaths("/plugins/" + dirName);
+
+        for (final String resourcePath : resourcePaths) {
+            if (resourcePath.contains("lang_") && resourcePath.endsWith(".properties")) {
+                final String langFileName = StringUtils.substringAfter(resourcePath, "/plugins/" + dirName + "/");
+
+                final String key = langFileName.substring("lang_".length(), langFileName.lastIndexOf("."));
+                final Properties props = new Properties();
+
+                try {
+                    final File file = Latkes.getWebFile(resourcePath);
+
+                    props.load(new FileInputStream(file));
+
+                    langs.put(key, props);
+                } catch (final Exception e) {
+                    Logger.getLogger(getClass().getName()).log(Level.ERROR, "Get plugin[name=" + name + "]'s language configuration failed",
+                        e);
                 }
-
-                return false;
-            }
-        });
-
-        for (int i = 0; i < langFiles.length; i++) {
-            final File lang = langFiles[i];
-            final String langFileName = lang.getName();
-            final String key = langFileName.substring(Keys.LANGUAGE.length() + 1, langFileName.lastIndexOf("."));
-            final Properties props = new Properties();
-
-            try {
-                props.load(new FileInputStream(lang));
-                langs.put(key, props);
-            } catch (final Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.ERROR, "Get plugin[name=" + name + "]'s language configuration failed", e);
             }
         }
     }
 
     /**
      * Gets language label with the specified locale and key.
-     * 
+     *
      * @param locale the specified locale
      * @param key the specified key
      * @return language label
@@ -212,7 +213,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * prePlug after the real method be invoked.
-     * 
+     *
      * @param context context
      * @param args args
      */
@@ -220,7 +221,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * postPlug after the dataModel of the main-view be generated.
-     * 
+     *
      * @param dataModel dataModel
      * @param context context
      * @param ret ret
@@ -239,7 +240,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Plugs with the specified data model.
-     * 
+     *
      * @param dataModel the specified data model
      */
     public void plug(final Map<String, Object> dataModel) {
@@ -248,7 +249,8 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Plugs with the specified data model and the args from request.
-     * @param dataModel dataModel 
+     *
+     * @param dataModel dataModel
      * @param context context
      * @param ret ret
      */
@@ -279,7 +281,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Processes languages. Retrieves language labels with default locale, then sets them into the specified data model.
-     * 
+     *
      * @param dataModel the specified data model
      */
     private void handleLangs(final Map<String, Object> dataModel) {
@@ -299,11 +301,11 @@ public abstract class AbstractPlugin implements Serializable {
 
         final String localKey = keyBuilder.toString();
         final Properties props = langs.get(localKey);
-        
+
         if (null == props) {
             return;
         }
-        
+
         final Set<Object> keySet = props.keySet();
 
         for (final Object key : keySet) {
@@ -313,17 +315,17 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Fills default values into the specified data model.
-     * 
+     *
      * <p>
-     * The default data model variable values includes: 
-     *   <ul>
-     *     <li>{@code Keys.SERVER.*}</li>
-     *     <li>{@code Keys.RUNTIME.*}</li>
-     *   </ul>
+     * The default data model variable values includes:
+     * <ul>
+     * <li>{@code Keys.SERVER.*}</li>
+     * <li>{@code Keys.RUNTIME.*}</li>
+     * </ul>
      * </p>
-     * 
+     *
      * @param dataModel the specified data model
-     * @see Keys#fillServer(java.util.Map) 
+     * @see Keys#fillServer(java.util.Map)
      */
     private void fillDefault(final Map<String, Object> dataModel) {
         Keys.fillServer(dataModel);
@@ -331,9 +333,9 @@ public abstract class AbstractPlugin implements Serializable {
     }
 
     /**
-     * Gets view content of a plugin. The content is processed with the 
+     * Gets view content of a plugin. The content is processed with the
      * specified data model by template engine.
-     * 
+     *
      * @param dataModel the specified data model
      * @return plugin view content
      */
@@ -357,8 +359,8 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Converts this plugin to a json object (plugin description).
-     * 
-     * @return a json object, for example, 
+     *
+     * @return a json object, for example,
      * <pre>
      * {
      *     "oId": "",
@@ -368,7 +370,8 @@ public abstract class AbstractPlugin implements Serializable {
      *     "status": "" // Enumeration name of {@link PluginStatus}
      * }
      * </pre>
-     * @throws JSONException if can not convert 
+     *
+     * @throws JSONException if can not convert
      */
     public JSONObject toJSONObject() throws JSONException {
         final JSONObject ret = new JSONObject();
@@ -385,7 +388,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Gets the id.
-     * 
+     *
      * @return id
      */
     public String getId() {
@@ -394,7 +397,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Sets the id with the specified id.
-     * 
+     *
      * @param id the specified id
      */
     public void setId(final String id) {
@@ -403,7 +406,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Sets the status with the specified status.
-     * 
+     *
      * @param status the specified status
      */
     public void setStatus(final PluginStatus status) {
@@ -412,7 +415,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Gets the status of this plugin.
-     * 
+     *
      * @return status
      */
     public PluginStatus getStatus() {
@@ -421,7 +424,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Gets the author of this plugin.
-     * 
+     *
      * @return author
      */
     public String getAuthor() {
@@ -430,7 +433,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Sets the author of this plugin with the specified author.
-     * 
+     *
      * @param author the specified author
      */
     public void setAuthor(final String author) {
@@ -439,7 +442,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Gets the name of this plugin.
-     * 
+     *
      * @return name
      */
     public String getName() {
@@ -448,7 +451,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Sets the name of this plugin with the specified name.
-     * 
+     *
      * @param name the specified name
      */
     public void setName(final String name) {
@@ -457,7 +460,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Gets the version of this plugin.
-     * 
+     *
      * @return version
      */
     public String getVersion() {
@@ -466,22 +469,25 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Sets the version of this plugin with the specified version.
-     * 
+     *
      * @param version the specified version
      */
     public void setVersion(final String version) {
         this.version = version;
     }
-   
+
     /**
      * getSetting.
+     *
      * @return the setting
      */
     public JSONObject getSetting() {
         return setting;
     }
 
-    /** setSetting.
+    /**
+     * setSetting.
+     *
      * @param setting the setting to set
      */
     public void setSetting(final JSONObject setting) {
@@ -490,7 +496,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Gets the types of this plugin.
-     * 
+     *
      * @return types
      */
     public Set<PluginType> getTypes() {
@@ -499,6 +505,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * getRendererId.
+     *
      * @return the rendererId
      */
     public String getRendererId() {
@@ -507,6 +514,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * setRendererId.
+     *
      * @param rendererId the rendererId to set
      */
     public void setRendererId(final String rendererId) {
@@ -515,7 +523,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     /**
      * Adds the specified type.
-     * 
+     *
      * @param type the specified type
      */
     public void addType(final PluginType type) {
@@ -549,10 +557,10 @@ public abstract class AbstractPlugin implements Serializable {
     /**
      * when the plugin change the status,it should note the pointcut lifecycle to know.
      * <p>
-     *      to enable :start()
-     *      to disable :stop()
+     * to enable :start()
+     * to disable :stop()
      * </p>
-     * 
+     *
      */
     public void changeStatus() {
 

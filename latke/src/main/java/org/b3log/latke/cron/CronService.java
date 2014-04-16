@@ -26,7 +26,6 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.AbstractServletListener;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -40,7 +39,7 @@ import org.w3c.dom.NodeList;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Jan 15, 2014
+ * @version 1.0.0.4, Apr 15, 2014
  */
 public final class CronService {
 
@@ -97,7 +96,9 @@ public final class CronService {
                 throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
-            throw new RuntimeException("Can not initialize Cron Service!", e);
+            LOGGER.log(Level.ERROR, "Can not initialize Cron Service!", e);
+
+            throw new IllegalStateException(e);
         }
 
         LOGGER.info("Constructed Cron Service");
@@ -120,11 +121,11 @@ public final class CronService {
      * Loads cron.xml.
      */
     private static void loadCronXML() {
-        final String webRoot = AbstractServletListener.getWebRoot();
-        final File cronXML = new File(webRoot + File.separator + "WEB-INF" + File.separator + "cron.xml");
+        final File cronXML = Latkes.getWebFile("/WEB-INF/cron.xml");
 
-        if (!cronXML.exists()) {
+        if (null == cronXML || !cronXML.exists()) {
             LOGGER.log(Level.INFO, "Not found cron.xml, no cron jobs need to schedule");
+
             return;
         }
 

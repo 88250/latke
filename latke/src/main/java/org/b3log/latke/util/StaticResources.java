@@ -27,7 +27,6 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.AbstractServletListener;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -37,7 +36,7 @@ import org.w3c.dom.NodeList;
  * Static resource utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Jul 5, 2013
+ * @version 1.0.0.5, Apr 15, 2014
  */
 public final class StaticResources {
 
@@ -48,28 +47,69 @@ public final class StaticResources {
 
     /**
      * Static resource path patterns.
-     * 
+     *
      * <p>
      * Initializes from file static-resources.xml, if not found, initializes it from appengine-web.xml.
      * </p>
      */
     private static final Set<String> STATIC_RESOURCE_PATHS = new TreeSet<String>();
 
-    static {
-        final String webRoot = AbstractServletListener.getWebRoot();
+    /**
+     * Determines whether the static resource path patterns has been initialized.
+     */
+    private static boolean inited;
 
-        LOGGER.trace("Reads static resources definition from [static-resources.xml]");
+    /**
+     * Determines whether the client requests a static resource with the specified request.
+     *
+     * @param request the specified request
+     * @return {@code true} if the client requests a static resource, returns {@code false} otherwise
+     */
+    public static boolean isStatic(final HttpServletRequest request) {
+        final boolean requestStaticResourceChecked = null == request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED)
+            ? false
+            : (Boolean) request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED);
 
-        File staticResources = new File(webRoot + File.separator + "WEB-INF" + File.separator + "static-resources.xml");
-        boolean useStaticResources = true;
-
-        if (!staticResources.exists()) {
-            LOGGER.trace("Not found [static-resources.xml], so reads static resources definition from [appengine-web.xml]");
-            staticResources = new File(webRoot + File.separator + "WEB-INF" + File.separator + "appengine-web.xml");
-            useStaticResources = false;
+        if (requestStaticResourceChecked) {
+            return (Boolean) request.getAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE);
         }
 
-        if (!staticResources.exists()) {
+        if (!inited) {
+            init();
+        }
+
+        request.setAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED, true);
+        request.setAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE, false);
+
+        final String requestURI = request.getRequestURI();
+
+        for (final String pattern : STATIC_RESOURCE_PATHS) {
+            if (AntPathMatcher.match(Latkes.getContextPath() + pattern, requestURI)) {
+                request.setAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE, true);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Initializes the static resource path patterns.
+     */
+    private static synchronized void init() {
+        LOGGER.trace("Reads static resources definition from [static-resources.xml]");
+
+        File staticResources = Latkes.getWebFile("/WEB-INF/static-resources.xml");
+        boolean isGAEStaticResources = true;
+
+        if (null == staticResources || !staticResources.exists()) {
+            LOGGER.trace("Not found [static-resources.xml], so reads static resources definition from [appengine-web.xml]");
+
+            staticResources = Latkes.getWebFile("/WEB-INF/appengine-web.xml");
+            isGAEStaticResources = false;
+        }
+
+        if (null == staticResources || !staticResources.exists()) {
             throw new IllegalStateException("Not found static resources definition from [static-resources.xml] or [appengine-web.xml]");
         }
 
@@ -84,7 +124,7 @@ public final class StaticResources {
 
             Element staticFiles;
 
-            if (useStaticResources) {
+            if (isGAEStaticResources) {
                 staticFiles = root;
             } else {
                 staticFiles = (Element) root.getElementsByTagName("static-files").item(0);
@@ -134,36 +174,8 @@ public final class StaticResources {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(logBuilder.toString());
         }
-    }
 
-    /**
-     * Determines whether the client requests a static resource with the specified request.
-     * 
-     * @param request the specified request
-     * @return {@code true} if the client requests a static resource, returns {@code false} otherwise
-     */
-    public static boolean isStatic(final HttpServletRequest request) {
-        final boolean requestStaticResourceChecked = null == request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED)
-            ? false
-            : (Boolean) request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED);
-
-        if (requestStaticResourceChecked) {
-            return (Boolean) request.getAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE);
-        }
-
-        request.setAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED, true);
-        request.setAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE, false);
-
-        final String requestURI = request.getRequestURI();
-
-        for (final String pattern : STATIC_RESOURCE_PATHS) {
-            if (AntPathMatcher.match(Latkes.getContextPath() + pattern, requestURI)) {
-                request.setAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE, true);
-                return true;
-            }
-        }
-
-        return false;
+        inited = true;
     }
 
     /**

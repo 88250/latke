@@ -21,15 +21,14 @@ import org.b3log.latke.util.freemarker.Templates;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpSessionEvent;
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.ServletContext;
 
 
 /**
  * Default servlet listener.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, May 28, 2013
+ * @version 1.1.0.2, Apr 15, 2014
  */
 public final class DefaultServletListener extends AbstractServletListener {
 
@@ -37,13 +36,13 @@ public final class DefaultServletListener extends AbstractServletListener {
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
         super.contextInitialized(servletContextEvent);
 
-        final String webRootPath = getWebRoot();
-        final String skinPath = webRootPath + "skins/classic";
+        final ServletContext servletContext = servletContextEvent.getServletContext();
 
         try {
-            Templates.MAIN_CFG.setDirectoryForTemplateLoading(new File(skinPath));
-        } catch (final IOException e) {
-            throw new IllegalStateException("Can not load the default template directory [" + skinPath + "]");
+            Templates.MAIN_CFG.setServletContextForTemplateLoading(servletContext, "skins/classic");
+            Templates.MAIN_CFG.setServletContextForTemplateLoading(servletContext, "skins/classic");
+        } catch (final Exception e) {
+            throw new IllegalStateException("Can not load the default template directory [skins/classic]");
         }
     }
 

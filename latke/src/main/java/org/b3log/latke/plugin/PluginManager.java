@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -33,8 +34,10 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
 import org.b3log.latke.event.AbstractEventListener;
@@ -55,7 +58,7 @@ import org.json.JSONObject;
  * Plugin loader.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Dec 3, 2011
+ * @version 1.0.1.1, Apr 15, 2014
  */
 @Named("LatkeBuiltInPluginManager")
 @Singleton
@@ -87,11 +90,6 @@ public class PluginManager {
      */
     @SuppressWarnings("unchecked")
     private final Cache<String, HashMap<String, HashSet<AbstractPlugin>>> pluginCache;
-
-    /**
-     * Plugin root directory.
-     */
-    public static final String PLUGIN_ROOT = AbstractServletListener.getWebRoot() + Plugin.PLUGINS;
 
     /**
      * Plugin class loaders.
@@ -206,7 +204,10 @@ public class PluginManager {
 
         classLoaders.clear();
 
-        final File[] pluginsDirs = new File(PLUGIN_ROOT).listFiles();
+        final ServletContext servletContext = AbstractServletListener.getServletContext();
+        @SuppressWarnings("unchecked")
+        final Set<String> pluginDirPaths = servletContext.getResourcePaths("/plugins");
+
         final List<AbstractPlugin> plugins = new ArrayList<AbstractPlugin>();
         HashMap<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
 
@@ -215,24 +216,18 @@ public class PluginManager {
             holder = new HashMap<String, HashSet<AbstractPlugin>>();
         }
 
-        if (pluginsDirs != null) {
-            for (int i = 0; i < pluginsDirs.length; i++) {
-                final File pluginDir = pluginsDirs[i];
+        if (null != pluginDirPaths) {
+            for (final String pluginDirPath : pluginDirPaths) {
+                try {
+                    LOGGER.log(Level.INFO, "Loading plugin under directory[{0}]", pluginDirPath);
 
-                if (pluginDir.isDirectory() && !pluginDir.isHidden() && !pluginDir.getName().startsWith(".")) {
-                    try {
-                        LOGGER.log(Level.INFO, "Loading plugin under directory[{0}]", pluginDir.getName());
+                    final AbstractPlugin plugin = load(pluginDirPath, holder);
 
-                        final AbstractPlugin plugin = load(pluginDir, holder);
-
-                        if (plugin != null) {
-                            plugins.add(plugin);
-                        }
-                    } catch (final Exception e) {
-                        LOGGER.log(Level.WARN, "Load plugin under directory[" + pluginDir.getName() + "] failed", e);
+                    if (plugin != null) {
+                        plugins.add(plugin);
                     }
-                } else {
-                    LOGGER.log(Level.WARN, "It[{0}] is not a directory under " + "directory plugins, ignored", pluginDir.getName());
+                } catch (final Exception e) {
+                    LOGGER.log(Level.WARN, "Load plugin under directory[" + pluginDirPath + "] failed", e);
                 }
             }
         }
@@ -249,26 +244,34 @@ public class PluginManager {
     }
 
     /**
-     * Loads a plugin by the specified plugin directory and put it into the
-     * specified holder.
+     * Loads a plugin by the specified plugin directory and put it into the specified holder.
      *
-     * @param pluginDir the specified plugin directory
+     * @param pluginDirPath the specified plugin directory
      * @param holder the specified holder
      * @return loaded plugin
      * @throws Exception exception
      */
-    private AbstractPlugin load(final File pluginDir, final HashMap<String, HashSet<AbstractPlugin>> holder) throws Exception {
+    private AbstractPlugin load(final String pluginDirPath, final HashMap<String, HashSet<AbstractPlugin>> holder) throws Exception {
         final Properties props = new Properties();
+        final ServletContext servletContext = AbstractServletListener.getServletContext();
 
-        props.load(new FileInputStream(pluginDir.getPath() + File.separator + "plugin.properties"));
+        String plugin = StringUtils.substringAfter(pluginDirPath, "/plugins");
 
-        final File defaultClassesFileDir = new File(pluginDir.getPath() + File.separator + "classes");
-        final URL defaultClassesFileDirURL = defaultClassesFileDir.toURI().toURL();
+        plugin = plugin.replace("/", "");
 
-        final String webRoot = StringUtils.substringBeforeLast(AbstractServletListener.getWebRoot(), File.separator);
-        final String classesFileDirPath = webRoot + props.getProperty("classesDirPath");
-        final File classesFileDir = new File(classesFileDirPath);
-        final URL classesFileDirURL = classesFileDir.toURI().toURL();
+        final File file = Latkes.getWebFile("/plugins/" + plugin + "/plugin.properties");
+
+        props.load(new FileInputStream(file));
+
+        final URL defaultClassesFileDirURL = servletContext.getResource("/plugins/" + plugin + "classes");
+
+        URL classesFileDirURL = null;
+
+        try {
+            classesFileDirURL = servletContext.getResource(props.getProperty("classesDirPath"));
+        } catch (final MalformedURLException e) {
+            LOGGER.log(Level.ERROR, "Reads [" + props.getProperty("classesDirPath") + "] failed", e);
+        }
 
         final URLClassLoader classLoader = new URLClassLoader(new URL[] {
             defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
@@ -284,7 +287,7 @@ public class PluginManager {
         final String rendererId = props.getProperty(Plugin.PLUGIN_RENDERER_ID);
 
         if (StringUtils.isBlank(rendererId)) {
-            LOGGER.log(Level.WARN, "no renderer defined by this plugin[" + pluginDir.getName() + "]，this plugin will be ignore!");
+            LOGGER.log(Level.WARN, "no renderer defined by this plugin[" + plugin + "]，this plugin will be ignore!");
             return null;
         }
 
@@ -295,7 +298,7 @@ public class PluginManager {
 
         ret.setRendererId(rendererId);
 
-        setPluginProps(pluginDir, ret, props);
+        setPluginProps(plugin, ret, props);
 
         registerEventListeners(props, classLoader, ret);
 
@@ -338,15 +341,14 @@ public class PluginManager {
     }
 
     /**
-     * Sets the specified plugin's properties from the specified properties file
-     * under the specified plugin directory.
+     * Sets the specified plugin's properties from the specified properties file under the specified plugin directory.
      *
-     * @param pluginDir the specified plugin directory
+     * @param pluginDirName the specified plugin directory
      * @param plugin the specified plugin
      * @param props the specified properties file
      * @throws Exception exception
      */
-    private static void setPluginProps(final File pluginDir, final AbstractPlugin plugin, final Properties props) throws Exception {
+    private static void setPluginProps(final String pluginDirName, final AbstractPlugin plugin, final Properties props) throws Exception {
         final String author = props.getProperty(Plugin.PLUGIN_AUTHOR);
         final String name = props.getProperty(Plugin.PLUGIN_NAME);
         final String version = props.getProperty(Plugin.PLUGIN_VERSION);
@@ -358,13 +360,13 @@ public class PluginManager {
         plugin.setName(name);
         plugin.setId(name + "_" + version);
         plugin.setVersion(version);
-        plugin.setDir(pluginDir);
+        plugin.setDir(pluginDirName);
         plugin.readLangs();
 
         // try to find the setting config.json
-        final File settingFile = new File(pluginDir.getPath() + File.separator + "config.json");
+        final File settingFile = Latkes.getWebFile("/plugins/" + pluginDirName + "/config.json");
 
-        if (settingFile.exists()) {
+        if (null != settingFile && settingFile.exists()) {
             try {
                 final String config = FileUtils.readFileToString(settingFile);
                 final JSONObject jsonObject = new JSONObject(config);

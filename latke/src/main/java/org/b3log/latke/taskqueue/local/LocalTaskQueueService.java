@@ -21,9 +21,9 @@ import java.util.Hashtable;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.taskqueue.Queue;
 import org.b3log.latke.taskqueue.TaskQueueService;
 import org.w3c.dom.Document;
@@ -33,9 +33,10 @@ import org.w3c.dom.NodeList;
 
 /**
  * Local task queue service.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Apr 5, 2012
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Apr 15, 2012
  */
 public final class LocalTaskQueueService implements TaskQueueService {
 
@@ -50,14 +51,20 @@ public final class LocalTaskQueueService implements TaskQueueService {
     private static Map<String, Queue> queueMap = new Hashtable<String, Queue>();
 
     /**
-     * reading config.
+     * Determines whether the queue has been initialized.
      */
-    static {
-        final String webRoot = AbstractServletListener.getWebRoot();
-        final File queueXml = new File(webRoot + File.separator + "WEB-INF" + File.separator + "queue.xml");
+    private static boolean inited;
 
-        if (!queueXml.exists()) {
-            LOGGER.log(Level.INFO, "Not found queue, no cron jobs need to schedule");
+    /**
+     * Initializes the queue.
+     */
+    public static void init() {
+        final File queueXml = Latkes.getWebFile("/WEB-INF/queue.xml");
+
+        if (null == queueXml || !queueXml.exists()) {
+            LOGGER.log(Level.INFO, "Not found [queue.xml], assuming queue tasks");
+
+            return;
         }
 
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -86,10 +93,15 @@ public final class LocalTaskQueueService implements TaskQueueService {
             throw new RuntimeException(e);
         }
 
+        inited = true;
     }
 
     @Override
     public Queue getQueue(final String queueName) {
+        if (!inited) {
+            init();
+        }
+
         return queueMap.get(queueName);
     }
 }
