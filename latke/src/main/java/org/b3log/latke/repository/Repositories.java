@@ -38,7 +38,7 @@ import org.json.JSONObject;
  * Repository utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.9, Sep 10, 2013
+ * @version 1.0.1.9, Apr 17, 2014
  */
 public final class Repositories {
 
@@ -323,7 +323,7 @@ public final class Repositories {
     private static void loadRepositoryDescription() {
         LOGGER.log(Level.INFO, "Loading repository description....");
 
-        final InputStream inputStream = AbstractRepository.class.getClassLoader().getResourceAsStream("repository.json");
+        final InputStream inputStream = AbstractRepository.class.getResourceAsStream("/repository.json");
 
         if (null == inputStream) {
             LOGGER.log(Level.INFO, "Not found repository description[repository.json] file under classpath");
