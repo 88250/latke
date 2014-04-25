@@ -42,7 +42,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.9, Apr 15, 2014
+ * @version 1.0.4.9, Apr 25, 2014
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -83,12 +83,12 @@ public final class Latkes {
     /**
      * Server scheme.
      */
-    private static String serverScheme = "http";
+    private static String serverScheme;
 
     /**
      * Static server scheme.
      */
-    private static String staticServerScheme = "http";
+    private static String staticServerScheme;
 
     /**
      * Server host.
