@@ -19,7 +19,6 @@ package org.b3log.latke.ioc.mock;
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -36,7 +35,7 @@ import org.b3log.latke.logging.Logger;
  * A mock servlet context for test mainly.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Apr 16, 2014
+ * @version 1.0.1.3, Apr 27, 2014
  */
 public final class MockServletContext implements ServletContext {
 
@@ -77,10 +76,10 @@ public final class MockServletContext implements ServletContext {
                     LOGGER.trace("Web app root: " + webappRoot.getAbsolutePath());
                 }
             } else {
-                webappRoot = new File(getClass().getResource("/.").toURI());
+                webappRoot = new File(getClass().getResource("/").toURI());
             }
-        } catch (final URISyntaxException e) {
-            LOGGER.log(Level.WARN, "Unable to find web.xml", e);
+        } catch (final Exception e) {
+            LOGGER.log(Level.WARN, "Unable to find web.xml, ignores this exception if you are running with a servlet container", e);
         }
     }
 
