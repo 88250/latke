@@ -37,7 +37,7 @@ import org.json.JSONObject;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 1.0.2.2, Dec 21, 2012
+ * @version 1.0.3.2, May 4, 2014
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -49,15 +49,15 @@ public final class Requests {
 
     /**
      * The pagination path pattern.
-     * 
+     *
      * <p>
-     * The first star represents "the current page number", the second star represents "the page size", and the third star represents 
+     * The first star represents "the current page number", the second star represents "the page size", and the third star represents
      * "the window size". Argument of each of these stars should be a number.
      * </p>
-     * 
+     *
      * <p>
-     * For example, the request URI is "xxx/1/2/3", so the specified path is "1/2/3". The first number represents 
-     * "the current page number", the second number represents "the page size", and the third number represents "the window size", all of 
+     * For example, the request URI is "xxx/1/2/3", so the specified path is "1/2/3". The first number represents
+     * "the current page number", the second number represents "the page size", and the third number represents "the window size", all of
      * these for pagination.
      * </p>
      */
@@ -99,17 +99,17 @@ public final class Requests {
      * Logs the specified request with the specified level and logger.
      *
      * Logging information of the specified request includes:
-     * 
+     *
      * <ul>
-     *   <li>method</li>
-     *   <li>URL</li>
-     *   <li>content type</li>
-     *   <li>character encoding</li>
-     *   <li>local (address, port, name)</li>
-     *   <li>remote (address, port, host)</li>
-     *   <li>headers</li>
+     * <li>method</li>
+     * <li>URL</li>
+     * <li>content type</li>
+     * <li>character encoding</li>
+     * <li>local (address, port, name)</li>
+     * <li>remote (address, port, host)</li>
+     * <li>headers</li>
      * </ul>
-     * 
+     *
      * @param httpServletRequest the specified HTTP servlet request
      * @param level the specified logging level
      * @param logger the specified logger
@@ -165,17 +165,21 @@ public final class Requests {
 
     /**
      * Gets the Internet Protocol (IP) address of the end-client that sent the specified request.
-     * 
+     *
      * <p>
-     * It will try to get HTTP head "X-forwarded-for" from the last proxy to get the request first, if not found, try to get it directly
-     * by {@link HttpServletRequest#getRemoteAddr()}.
+     * It will try to get HTTP head "X-forwarded-for" or "X-Real-IP" from the last proxy to get the request first, if not found, try to get 
+     * it directly by {@link HttpServletRequest#getRemoteAddr()}.
      * </p>
-     * 
+     *
      * @param request the specified request
      * @return the IP address of the end-client sent the specified request
      */
     public static String getRemoteAddr(final HttpServletRequest request) {
-        final String ret = request.getHeader("X-forwarded-for");
+        String ret = request.getHeader("X-forwarded-for");
+
+        if (Strings.isEmptyOrNull(ret)) {
+            ret = request.getHeader("X-Real-IP");
+        }
 
         if (Strings.isEmptyOrNull(ret)) {
             return request.getRemoteAddr();
@@ -186,7 +190,7 @@ public final class Requests {
 
     /**
      * Mobile and normal skin toggle.
-     * 
+     *
      * @param request the specified request
      * @return {@code null} if not set cookie, returns value (mobile | $OTHER) of the cookie named "btouch_switch_toggle"
      */
@@ -215,9 +219,9 @@ public final class Requests {
 
     /**
      * Determines whether the specified request dose come from a search engine bot or not with its header "User-Agent".
-     * 
+     *
      * @param request the specified request
-     * @return {@code true} if the specified request comes from a search 
+     * @return {@code true} if the specified request comes from a search
      * engine bot, returns {@code false} otherwise
      */
     public static boolean searchEngineBotRequest(final HttpServletRequest request) {
@@ -232,20 +236,20 @@ public final class Requests {
 
     /**
      * Determines whether the specified request has been served.
-     * 
+     *
      * <p>
-     * A "served request" is a request a URI as former one. For example, if a client is request "/test", all requests from the client 
+     * A "served request" is a request a URI as former one. For example, if a client is request "/test", all requests from the client
      * subsequent in 24 hours will be treated as served requests, requested URIs save in client cookie (name: "visited").
      * </p>
-     * 
+     *
      * <p>
-     * If the specified request has not been served, appends the request URI in client cookie. 
+     * If the specified request has not been served, appends the request URI in client cookie.
      * </p>
-     * 
+     *
      * <p>
      * Sees this issue (https://github.com/b3log/b3log-solo/issues/44) for more details.
      * </p>
-     * 
+     *
      * @param request the specified request
      * @param response the specified response
      * @return {@code true} if the specified request has been served, returns {@code false} otherwise
@@ -320,7 +324,7 @@ public final class Requests {
 
     /**
      * Determines whether the specified request dose come from mobile device or not with its header "User-Agent".
-     * 
+     *
      * @param request the specified request
      * @return {@code true} if the specified request comes from mobile device,
      * returns {@code false} otherwise
@@ -337,10 +341,10 @@ public final class Requests {
 
     /**
      * Builds pagination request with the specified path.
-     * 
-     * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN} 
+     *
+     * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN}
      * for the details
-     * @return pagination request json object, for example, 
+     * @return pagination request json object, for example,
      * <pre>
      * {
      *     "paginationCurrentPageNum": int,
@@ -348,6 +352,7 @@ public final class Requests {
      *     "paginationWindowSize": int
      * }
      * </pre>
+     *
      * @see #PAGINATION_PATH_PATTERN
      */
     public static JSONObject buildPaginationRequest(final String path) {
@@ -366,7 +371,7 @@ public final class Requests {
 
     /**
      * Gets the request page number from the specified path.
-     * 
+     *
      * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN} for the details
      * @return page number, returns {@code 1} if the specified request URI can not convert to an number
      * @see #PAGINATION_PATH_PATTERN
@@ -389,8 +394,8 @@ public final class Requests {
 
     /**
      * Gets the request page size from the specified path.
-     * 
-     * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN}  for the details
+     *
+     * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN} for the details
      * @return page number, returns {@value #DEFAULT_PAGE_SIZE} if the specified request URI can not convert to an number
      * @see #PAGINATION_PATH_PATTERN
      */
@@ -418,7 +423,7 @@ public final class Requests {
 
     /**
      * Gets the request window size from the specified path.
-     * 
+     *
      * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN} for the details
      * @return page number, returns {@value #DEFAULT_WINDOW_SIZE} if the specified request URI can not convert to an number
      * @see #PAGINATION_PATH_PATTERN
