@@ -58,7 +58,7 @@ import org.json.JSONObject;
  * Plugin loader.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Apr 15, 2014
+ * @version 1.0.1.2, May 30, 2014
  */
 @Named("LatkeBuiltInPluginManager")
 @Singleton
@@ -389,14 +389,7 @@ public class PluginManager {
     }
 
     /**
-     * Registers event listeners with the specified plugin properties, class
-     * loader and plugin.
-     *
-     * <p>
-     * <b>Note</b>: If the specified plugin has some event listeners, each of these listener MUST implement a static method named
-     * {@code getInstance} to obtain an instance of this listener. See <a href="http://en.wikipedia.org/wiki/Singleton_pattern">
-     * Singleton Pattern</a> for more details.
-     * </p>
+     * Registers event listeners with the specified plugin properties, class loader and plugin.
      *
      * @param props the specified plugin properties
      * @param classLoader the specified class loader
@@ -419,8 +412,16 @@ public class PluginManager {
             LOGGER.log(Level.DEBUG, "Loading event listener[className={0}]", eventListenerClassName);
 
             final Class<?> eventListenerClass = classLoader.loadClass(eventListenerClassName);
-            final Method getInstance = eventListenerClass.getMethod("getInstance");
-            final AbstractEventListener<?> eventListener = (AbstractEventListener) getInstance.invoke(eventListenerClass);
+
+            AbstractEventListener<?> eventListener = null;
+
+            try {
+                final Method getInstance = eventListenerClass.getMethod("getInstance");
+
+                eventListener = (AbstractEventListener) getInstance.invoke(eventListenerClass);
+            } catch (final Exception e) { // Forward Compatibility for newer plugins that has not method "getInstance"
+                eventListener = (AbstractEventListener) eventListenerClass.newInstance();
+            }
 
             eventManager.registerListener(eventListener);
             LOGGER.log(Level.DEBUG, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",

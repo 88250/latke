@@ -59,7 +59,7 @@ import org.json.JSONObject;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.2.1.1, Apr 16, 2014
+ * @version 1.2.2.1, May 31, 2014
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -345,15 +345,16 @@ public abstract class AbstractPlugin implements Serializable {
         }
 
         try {
-            final Template template = configuration.getTemplate(Plugin.PLUGIN + ".ftl");
+            final Template template = configuration.getTemplate("plugin.ftl");
             final StringWriter sw = new StringWriter();
 
             template.process(dataModel, sw);
 
             return sw.toString();
         } catch (final Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.ERROR, "Get plugin[name=" + name + "]'s view failed, will return warning", e);
-            return "<div style='color: red;'>Plugin[name=" + name + "] runs failed</div>";
+            // This plugin has no view
+            
+            return "";
         }
     }
 
