@@ -19,7 +19,6 @@ package org.b3log.latke.plugin;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -38,8 +37,6 @@ import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.cache.Cache;
-import org.b3log.latke.cache.CacheFactory;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
@@ -58,7 +55,7 @@ import org.json.JSONObject;
  * Plugin loader.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.2, May 30, 2014
+ * @version 1.0.2.2, May 31, 2014
  */
 @Named("LatkeBuiltInPluginManager")
 @Singleton
@@ -75,21 +72,15 @@ public class PluginManager {
     public static final String PLUGIN_LOADED_EVENT = "pluginLoadedEvt";
 
     /**
-     * Plugin Cache.
-     */
-    private static final String PLUGIN_CACHE_NAME = "pluginCache";
-
-    /**
      * Plugins cache.
      *
      * <p>
      * Caches plugins with the key "plugins" and its value is the real holder,
-     * a map:
-     * &lt;"hosting view name", plugins&gt;
+     * a map: &lt;"hosting view name", plugins&gt;
      * </p>
      */
     @SuppressWarnings("unchecked")
-    private final Cache<String, HashMap<String, HashSet<AbstractPlugin>>> pluginCache;
+    private Map<String, HashSet<AbstractPlugin>> pluginCache = new HashMap<String, HashSet<AbstractPlugin>>();
 
     /**
      * Plugin class loaders.
@@ -103,65 +94,20 @@ public class PluginManager {
     private EventManager eventManager;
 
     /**
-     * Public constructor.
-     */
-    @SuppressWarnings("unchecked")
-    public PluginManager() {
-        pluginCache = (Cache<String, HashMap<String, HashSet<AbstractPlugin>>>) CacheFactory.getCache(PLUGIN_CACHE_NAME);
-    }
-
-    /**
-     * Updates the specified plugin.
-     *
-     * @param plugin the specified plugin
-     */
-    public void update(final AbstractPlugin plugin) {
-        final String rendererId = plugin.getRendererId();
-
-        HashMap<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
-
-        if (null == holder) {
-            LOGGER.info("Plugin cache miss, reload");
-            load();
-            holder = pluginCache.get(PLUGIN_CACHE_NAME);
-
-            if (null == holder) {
-                throw new IllegalStateException("Plugin cache state error!");
-            }
-        }
-
-        final HashSet<AbstractPlugin> set = holder.get(rendererId);
-
-        // Refresh
-        set.remove(plugin);
-        set.add(plugin);
-
-        plugin.changeStatus();
-
-        pluginCache.put(PLUGIN_CACHE_NAME, holder);
-    }
-
-    /**
      * Gets all plugins.
      *
      * @return all plugins, returns an empty list if not found
      */
     public List<AbstractPlugin> getPlugins() {
-        Map<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
-
-        if (null == holder) {
+        if (pluginCache.isEmpty()) {
             LOGGER.info("Plugin cache miss, reload");
-            load();
-            holder = pluginCache.get(PLUGIN_CACHE_NAME);
 
-            if (null == holder) {
-                throw new IllegalStateException("Plugin cache state error!");
-            }
+            load();
         }
 
         final List<AbstractPlugin> ret = new ArrayList<AbstractPlugin>();
 
-        for (final Map.Entry<String, HashSet<AbstractPlugin>> entry : holder.entrySet()) {
+        for (final Map.Entry<String, HashSet<AbstractPlugin>> entry : pluginCache.entrySet()) {
             ret.addAll(entry.getValue());
         }
 
@@ -175,19 +121,13 @@ public class PluginManager {
      * @return a plugin, returns an empty list if not found
      */
     public Set<AbstractPlugin> getPlugins(final String viewName) {
-        Map<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
-
-        if (null == holder) {
+        if (pluginCache.isEmpty()) {
             LOGGER.info("Plugin cache miss, reload");
-            load();
-            holder = pluginCache.get(PLUGIN_CACHE_NAME);
 
-            if (null == holder) {
-                throw new IllegalStateException("Plugin cache state error!");
-            }
+            load();
         }
 
-        final Set<AbstractPlugin> ret = holder.get(viewName);
+        final Set<AbstractPlugin> ret = pluginCache.get(viewName);
 
         if (null == ret) {
             return Collections.emptySet();
@@ -209,19 +149,13 @@ public class PluginManager {
         final Set<String> pluginDirPaths = servletContext.getResourcePaths("/plugins");
 
         final List<AbstractPlugin> plugins = new ArrayList<AbstractPlugin>();
-        HashMap<String, HashSet<AbstractPlugin>> holder = pluginCache.get(PLUGIN_CACHE_NAME);
-
-        if (null == holder) {
-            LOGGER.info("Creates an empty plugin holder");
-            holder = new HashMap<String, HashSet<AbstractPlugin>>();
-        }
 
         if (null != pluginDirPaths) {
             for (final String pluginDirPath : pluginDirPaths) {
                 try {
                     LOGGER.log(Level.INFO, "Loading plugin under directory[{0}]", pluginDirPath);
 
-                    final AbstractPlugin plugin = load(pluginDirPath, holder);
+                    final AbstractPlugin plugin = load(pluginDirPath, pluginCache);
 
                     if (plugin != null) {
                         plugins.add(plugin);
@@ -231,8 +165,6 @@ public class PluginManager {
                 }
             }
         }
-
-        pluginCache.put(PLUGIN_CACHE_NAME, holder);
 
         try {
             eventManager.fireEventSynchronously(new Event<List<AbstractPlugin>>(PLUGIN_LOADED_EVENT, plugins));
@@ -251,7 +183,7 @@ public class PluginManager {
      * @return loaded plugin
      * @throws Exception exception
      */
-    private AbstractPlugin load(final String pluginDirPath, final HashMap<String, HashSet<AbstractPlugin>> holder) throws Exception {
+    private AbstractPlugin load(final String pluginDirPath, final Map<String, HashSet<AbstractPlugin>> holder) throws Exception {
         final Properties props = new Properties();
         final ServletContext servletContext = AbstractServletListener.getServletContext();
 
@@ -315,7 +247,7 @@ public class PluginManager {
      * @param plugin the specified plugin
      * @param holder the specified holder
      */
-    private void register(final AbstractPlugin plugin, final HashMap<String, HashSet<AbstractPlugin>> holder) {
+    private void register(final AbstractPlugin plugin, final Map<String, HashSet<AbstractPlugin>> holder) {
 
         final String rendererId = plugin.getRendererId();
 
@@ -413,17 +345,10 @@ public class PluginManager {
 
             final Class<?> eventListenerClass = classLoader.loadClass(eventListenerClassName);
 
-            AbstractEventListener<?> eventListener = null;
+            final AbstractEventListener<?> eventListener = (AbstractEventListener) eventListenerClass.newInstance();
 
-            try {
-                final Method getInstance = eventListenerClass.getMethod("getInstance");
+            plugin.addEventListener(eventListener);
 
-                eventListener = (AbstractEventListener) getInstance.invoke(eventListenerClass);
-            } catch (final Exception e) { // Forward Compatibility for newer plugins that has not method "getInstance"
-                eventListener = (AbstractEventListener) eventListenerClass.newInstance();
-            }
-
-            eventManager.registerListener(eventListener);
             LOGGER.log(Level.DEBUG, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",
                 new Object[] {eventListener.getClass(), eventListener.getEventType(), plugin.getName()});
         }

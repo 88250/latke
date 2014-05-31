@@ -22,9 +22,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -33,6 +35,9 @@ import javax.servlet.ServletContext;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.event.AbstractEventListener;
+import org.b3log.latke.event.EventManager;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
@@ -59,7 +64,7 @@ import org.json.JSONObject;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.2.2.1, May 31, 2014
+ * @version 1.3.2.1, May 31, 2014
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -132,11 +137,23 @@ public abstract class AbstractPlugin implements Serializable {
     private transient Configuration configuration;
 
     /**
+     * Event listeners.
+     */
+    private List<AbstractEventListener<?>> eventListeners = new ArrayList<AbstractEventListener<?>>();
+
+    /**
+     * Adds the specified event listener.
+     *
+     * @param eventListener the specified event listener
+     */
+    public void addEventListener(final AbstractEventListener<?> eventListener) {
+        eventListeners.add(eventListener);
+    }
+
+    /**
      * Unplugs.
      */
-    public void unplug() {
-        LOGGER.log(Level.INFO, "Plugin[name={0}] unplugged", name);
-    }
+    public void unplug() {}
 
     /**
      * Gets the directory name of this plugin.
@@ -229,14 +246,26 @@ public abstract class AbstractPlugin implements Serializable {
     public abstract void postPlug(Map<String, Object> dataModel, HTTPRequestContext context, Object ret);
 
     /**
-     * the lifecycle pointcut for the plugin to start(enable status).
+     * The lifecycle pointcut for the plugin to start(enable status).
      */
-    protected abstract void start();
+    protected void start() {
+        final EventManager eventManager = Lifecycle.getBeanManager().getReference(EventManager.class);
+
+        for (final AbstractEventListener<?> eventListener : eventListeners) {
+            eventManager.registerListener(eventListener);
+        }
+    }
 
     /**
-     * the lifecycle pointcut for the plugin to close(disable status).
+     * The lifecycle pointcut for the plugin to close(disable status).
      */
-    protected abstract void stop();
+    protected void stop() {
+        final EventManager eventManager = Lifecycle.getBeanManager().getReference(EventManager.class);
+
+        for (final AbstractEventListener<?> eventListener : eventListeners) {
+            eventManager.unregisterListener(eventListener);
+        }
+    }
 
     /**
      * Plugs with the specified data model.
@@ -353,7 +382,7 @@ public abstract class AbstractPlugin implements Serializable {
             return sw.toString();
         } catch (final Exception e) {
             // This plugin has no view
-            
+
             return "";
         }
     }

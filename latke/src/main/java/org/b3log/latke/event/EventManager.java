@@ -29,7 +29,7 @@ import javax.inject.Singleton;
  * Event manager.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Oct 8, 2013
+ * @version 1.1.0.4, May 31, 2014
  */
 @Named("LatkeBuiltInEventManager")
 @Singleton
@@ -82,5 +82,14 @@ public class EventManager {
      */
     public void registerListener(final AbstractEventListener<?> eventListener) {
         synchronizedEventQueue.addListener(eventListener);
+    }
+    
+    /**
+     * Unregisters the specified event listener.
+     * 
+     * @param eventListener the specified event listener
+     */
+    public void unregisterListener(final AbstractEventListener<?> eventListener) {
+        synchronizedEventQueue.deleteListener(eventListener);
     }
 }

@@ -16,6 +16,7 @@
 package org.b3log.latke.event;
 
 
+import java.io.Serializable;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -25,9 +26,14 @@ import org.b3log.latke.logging.Logger;
  *
  * @param <T> the type of event data
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Jun 23, 2011
+ * @version 1.1.0.4, May 31, 2014
  */
-public abstract class AbstractEventListener<T> {
+public abstract class AbstractEventListener<T> implements Serializable {
+
+    /**
+     * Default serial version uid.
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Logger.
@@ -48,7 +54,7 @@ public abstract class AbstractEventListener<T> {
      * @param eventQueue the specified event
      * @param event the specified event
      * @throws EventException event exception
-     * @see #action(org.b3log.latke.event.Event) 
+     * @see #action(org.b3log.latke.event.Event)
      */
     final void performAction(final AbstractEventQueue eventQueue, final Event<?> event) throws EventException {
         @SuppressWarnings("unchecked")

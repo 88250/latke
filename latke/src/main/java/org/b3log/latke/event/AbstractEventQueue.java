@@ -75,8 +75,7 @@ public abstract class AbstractEventQueue {
      *
      * @param listener the specified listener
      */
-    synchronized void deleteListener(
-        final AbstractEventListener<?> listener) {
+    synchronized void deleteListener(final AbstractEventListener<?> listener) {
         final String eventType = listener.getEventType();
 
         if (null == eventType) {
@@ -97,15 +96,15 @@ public abstract class AbstractEventQueue {
      * changed.
      *
      * @throws EventException event exception
-     * @see AbstractEventListener#performAction(org.b3log.latke.event.AbstractEventQueue, org.b3log.latke.event.Event) 
+     * @see AbstractEventListener#performAction(org.b3log.latke.event.AbstractEventQueue, org.b3log.latke.event.Event)
      */
     public void notifyListeners() throws EventException {
         notifyListeners(null);
     }
 
     /**
-     * Notifies all listeners of this event queue to perform action. 
-     * 
+     * Notifies all listeners of this event queue to perform action.
+     *
      * If this event queue object has changed, as indicated by the
      * {@code hasChanged} method, then notify all of its listeners and then
      * call the {@code clearChanged} method to indicate that this object has
@@ -113,7 +112,7 @@ public abstract class AbstractEventQueue {
      *
      * @param event the specified event
      * @throws EventException event exception
-     * @see AbstractEventListener#performAction(org.b3log.latke.event.AbstractEventQueue, org.b3log.latke.event.Event) 
+     * @see AbstractEventListener#performAction(org.b3log.latke.event.AbstractEventQueue, org.b3log.latke.event.Event)
      */
     public void notifyListeners(final Event<?> event) throws EventException {
 
@@ -143,7 +142,7 @@ public abstract class AbstractEventQueue {
 
             final AbstractEventListener<?>[] types = new AbstractEventListener<?>[1];
 
-            if (null != listenerList) {
+            if (null != listenerList && !listenerList.isEmpty()) {
                 arrLocal = listenerList.<AbstractEventListener<?>>toArray(types);
                 clearChanged();
             }
@@ -179,7 +178,7 @@ public abstract class AbstractEventQueue {
      * {@code notifyListeners} methods.
      *
      * @see #notifyListeners()
-     * @see #notifyListeners(org.b3log.latke.event.Event) 
+     * @see #notifyListeners(org.b3log.latke.event.Event)
      */
     protected synchronized void clearChanged() {
         changed = false;
@@ -193,7 +192,7 @@ public abstract class AbstractEventQueue {
      * object; {@code false} otherwise
      *
      * @see #clearChanged()
-     * @see #setChanged() 
+     * @see #setChanged()
      */
     public synchronized boolean hasChanged() {
         return changed;
@@ -202,7 +201,7 @@ public abstract class AbstractEventQueue {
     /**
      * Returns the number of listeners of this {@literal Event queue} object.
      *
-     * @return  the number of listeners of this object.
+     * @return the number of listeners of this object.
      */
     public synchronized int countListeners() {
         return listeners.size();
