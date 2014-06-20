@@ -29,7 +29,7 @@ import org.b3log.latke.thread.ThreadService;
  * Local thread service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Jan 10, 2014
+ * @version 1.0.1.1, Jun 20, 2014
  */
 public final class LocalThreadService implements ThreadService {
 
@@ -85,7 +85,7 @@ public final class LocalThreadService implements ThreadService {
          * Timeout.
          */
         private final long timeout;
-        
+
         /**
          * Object.
          */
@@ -115,18 +115,18 @@ public final class LocalThreadService implements ThreadService {
 
         @Override
         public void run() {
-            try {
-                synchronized (monitor) {
+            synchronized (monitor) {
+                try {
                     future = EXECUTOR_SERVICE.submit(runnable);
 
-                    monitor.notify();
+                    future.get(timeout, TimeUnit.MILLISECONDS);
+                } catch (final Throwable e) {
+                    LOGGER.log(Level.WARN, "Task executes failed", e);
+
+                    future = null;
                 }
-
-                future.get(timeout, TimeUnit.MILLISECONDS);
-            } catch (final Exception e) {
-                LOGGER.log(Level.WARN, "Task executes failed", e);
-
-                future = null;
+                
+                monitor.notify();
             }
         }
     }

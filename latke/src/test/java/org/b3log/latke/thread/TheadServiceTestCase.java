@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
  * {@link TheadService} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Jan 11, 2014
+ * @version 1.0.2.0, Jun 20, 2014
  */
 public class TheadServiceTestCase {
 
@@ -72,6 +72,6 @@ public class TheadServiceTestCase {
 
         future = threadService.submit(thread2, 100);
 
-        Assert.assertFalse(future.isDone());
+        Assert.assertNull(future);
     }
 }
