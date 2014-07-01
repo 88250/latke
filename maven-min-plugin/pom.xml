@@ -9,7 +9,7 @@
 
     <groupId>org.b3log</groupId>
     <artifactId>maven-min-plugin</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>maven-plugin</packaging>
     <name>Latke Min Plugin</name>
     <description>Latke application JavaScript and CSS files compression.</description>
