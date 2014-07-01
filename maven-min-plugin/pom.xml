@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke Min Plugin POM.
-    Version: 1.0.0.1, Jul 2, 2013
+    Version: 1.0.0.2, Jul 1, 2014
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -9,7 +9,7 @@
 
     <groupId>org.b3log</groupId>
     <artifactId>maven-min-plugin</artifactId>
-    <version>0.5.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Latke Min Plugin</name>
     <description>Latke application JavaScript and CSS files compression.</description>
@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <version>9</version>
     </parent>
     
     <!-- Properties -->
