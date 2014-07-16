@@ -789,11 +789,8 @@ public final class Latkes {
      *
      * @param skinDirName the given skin directory name
      * @return skin name, returns {@code null} if not found or error occurs
-     * @see #getSkinDirNames()
      */
     public static String getSkinName(final String skinDirName) {
-        final ServletContext servletContext = AbstractServletListener.getServletContext();
-
         try {
             final Properties ret = new Properties();
 

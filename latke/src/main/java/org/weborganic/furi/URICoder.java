@@ -292,7 +292,7 @@ public class URICoder {
      * Appends the escape sequence for the given byte to the specified string buffer.
      * 
      * @param sb The string buffer.
-     * @param b The byte to escape.
+     * @param c The byte to escape.
      */
     private static void appendEscape(StringBuffer sb, char c) {
         sb.append('%');

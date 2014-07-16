@@ -81,7 +81,7 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
     }
 
     /**
-     * Just put sync, as the same as {@link #put(java.lang.Object, java.lang.Object)}.
+     * Just put sync, as the same as {@link #put(java.io.Serializable, java.io.Serializable)}.
      * 
      * No Async at present.
      * 

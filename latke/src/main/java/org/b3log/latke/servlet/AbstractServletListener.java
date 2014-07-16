@@ -59,7 +59,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
     }
 
     /**
-     * Initializes context, {@linkplain #webRoot web root}, locale and runtime environment.
+     * Initializes context, locale and runtime environment.
      *
      * @param servletContextEvent servlet context event
      */

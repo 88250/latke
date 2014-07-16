@@ -433,8 +433,6 @@ public class TokenOperatorDX extends TokenBase implements TokenOperator, Matchab
      * Returns the pattern for this operator given the specified list of variables.
      * 
      * @param vars The variables for the operator.
-     * 
-     * @param params The parameters to use.
      */
     abstract Pattern pattern(List<Variable> vars);
 
@@ -613,7 +611,6 @@ public class TokenOperatorDX extends TokenBase implements TokenOperator, Matchab
    * Generate the expression corresponding to the specified operator, argument and variables.
    * 
    * @param op The operator.
-   * @param arg the argument.
    * @param vars The variables.
    */
   private static String toExpression(Operator op, List<Variable> vars) {

@@ -37,10 +37,7 @@ public class StaticFileRenderer extends AbstractHTTPResponseRenderer {
     private static final Logger LOGGER = Logger.getLogger(StaticFileRenderer.class.getName());
     
     /**
-     * HTTP {@link HttpServletResponse#SC_INTERNAL_SERVER_ERROR status} renderer.
-     * 
-     * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
-     * @version 1.0.0.0, Sep 26, 2013
+     * Request dispatcher.
      */
     private RequestDispatcher requestDispatcher;
 

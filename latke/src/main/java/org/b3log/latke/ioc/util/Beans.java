@@ -93,10 +93,10 @@ public final class Beans {
     }
 
     /**
-     * Gets 
+     * Gets selectQualifiers.
      * 
      * @param annotations
-     * @return 
+     * @return selectQualifiers
      */
     public static Set<Annotation> selectQualifiers(final Set<Annotation> annotations) {
         final Set<Annotation> ret = getAnnotations(annotations, Qualifier.class);
