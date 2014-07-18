@@ -17,7 +17,6 @@ package org.b3log.latke.servlet;
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +41,8 @@ import org.b3log.latke.servlet.renderer.HTTP500Renderer;
  * NEW core dispatch-controller for HTTP request dispatching.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.1.0, Sep 12, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.2.0, Jul 18, 2014
  */
 public final class DispatcherServlet extends HttpServlet {
 
@@ -98,12 +98,7 @@ public final class DispatcherServlet extends HttpServlet {
     public static void result(final HTTPRequestContext context) throws IOException {
         final HttpServletResponse response = context.getResponse();
 
-        if (response.isCommitted()) { // Sends rdirect or send error
-            final PrintWriter writer = response.getWriter();
-
-            writer.flush();
-            writer.close();
-            
+        if (response.isCommitted()) { // Response sends redirect or error
             return;
         }
 
