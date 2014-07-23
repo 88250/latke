@@ -356,7 +356,6 @@ public final class JdbcRepository implements Repository {
             key = keys.next();
 
             if (jsonObject.get(key) == null && oldJsonObject.get(key) == null) {
-                // ???????????????????????????
                 needUpdateJsonObject.put(key, jsonObject.get(key));
             } else if (!jsonObject.optString(key).equals(oldJsonObject.optString(key))) {
                 needUpdateJsonObject.put(key, jsonObject.get(key));
@@ -451,12 +450,6 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public boolean has(final String id) throws RepositoryException {
-        // final StringBuilder sql = new StringBuilder("select count("
-        // + JdbcRepositories.OID +
-        // ") from ").append(getName()).append(" where ").append(
-        // JdbcRepositories.OID).append("=").append(id);
-        //
-        // return count(sql, new ArrayList<Object>()) > 0;
 
         // using get() method to get result.
         return null != get(id);
