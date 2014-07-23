@@ -73,14 +73,8 @@ public abstract class AbstractRepository implements Repository {
 
                 switch (runtimeDatabase) {
                 case MYSQL:
-                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
-
-                    break;
 
                 case H2:
-                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
-
-                    break;
 
                 case MSSQL:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
