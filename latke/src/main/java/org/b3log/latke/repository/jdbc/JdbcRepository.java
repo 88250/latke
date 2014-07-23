@@ -576,22 +576,36 @@ public final class JdbcRepository implements Repository {
      * projections
      */
     private void getSelectSql(final StringBuilder selectSql, final Set<Projection> projections) {
+        selectSql.append(" select ");
+        
         if (projections == null || projections.isEmpty()) {
-            selectSql.append(" select * ");
+            selectSql.append(" * ");
             return;
         }
+        
+        concatProjections(projections, selectSql);
+    }
 
-        boolean isFisrt = true;
-
-        selectSql.append(" select ");
+    /**
+     * concat specified projections.
+     * 
+     * @param projections specified
+     * @param selectSql select statement
+     */
+    private void concatProjections(final Set<Projection> projections, final StringBuilder selectSql) {
         for (Projection projection : projections) {
-            if (isFisrt) {
-                selectSql.append(projection.getKey());
-                isFisrt = false;
-            } else {
-                selectSql.append(",").append(projection.getKey());
-            }
+            selectSql.append(projection.getKey()).append(",");
         }
+        deleteLastChar(selectSql);
+    }
+
+    /**
+     * delete last char.
+     * 
+     * @param selectSql select statement
+     */
+    private void deleteLastChar(final StringBuilder selectSql) {
+        selectSql.setLength(Math.max(selectSql.length() - 1, 0));
     }
 
     /**
