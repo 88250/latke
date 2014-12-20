@@ -15,13 +15,14 @@
  */
 package org.b3log.latke.util;
 
+import junit.framework.Assert;
 import org.testng.annotations.Test;
 
 /**
  * {@link Stopwatchs} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, May 30, 2012
+ * @version 1.0.1.2, Dec 20, 2014
  */
 public final class StopwatchsTestCase {
 
@@ -29,6 +30,7 @@ public final class StopwatchsTestCase {
      * Test method invocation count.
      */
     private static final int INVOCATION_COUNT = 30;
+
     /**
      * Thread pool size.
      */
@@ -44,6 +46,7 @@ public final class StopwatchsTestCase {
 
     /**
      * Tests method {@link Stopwatchs#getTimingStat()}.
+     *
      * @throws Exception exception
      */
     @Test(threadPoolSize = THREAD_POOL_SIZE, invocationCount = INVOCATION_COUNT)
@@ -55,7 +58,6 @@ public final class StopwatchsTestCase {
         final long task11Time = 50;
         Thread.sleep(task11Time);
         Stopwatchs.end(); // Ends 1.1
-
 
         Stopwatchs.start("task 1.2");
         Stopwatchs.start("task 1.2.1");
@@ -83,11 +85,26 @@ public final class StopwatchsTestCase {
 
         Stopwatchs.end(); // Ends 1
 
-        System.out.println(Stopwatchs.getTimingStat());
+        final String output = Stopwatchs.getTimingStat();
+        System.out.println(output);
+
+        //[100]%, [80]ms [task 1]
+        //  [62.5]%, [50]ms [task 1.1]
+        //  [25]%, [20]ms [task 1.2]
+        //    [0]%, [0]ms [task 1.2.1]
+        //      [0]%, [0]ms [task 1.2.1.1]
+        //        [0]%, [0]ms [task 1.2.1.1.1]
+        //          [0]%, [0]ms [task 1.2.1.1.1.1]
+        //            [0]%, [0]ms [task 1.2.1.1.1.1.1]
+        //    [25]%, [20]ms [task 1.2.2]
+        //  [12.5]%, [10]ms [task 1.3]
+        final String[] lines = output.split(Strings.LINE_SEPARATOR);
+        Assert.assertEquals(10, lines.length);
     }
 
     /**
      * Tests method {@link Stopwatchs#getTimingStat()}.
+     *
      * @throws Exception exception
      */
     @Test(expectedExceptions = RuntimeException.class)
@@ -103,7 +120,6 @@ public final class StopwatchsTestCase {
             Thread.sleep(task11Time);
             Stopwatchs.end(); // Ends 1.1
 
-
             Stopwatchs.start("task 1.2");
             Stopwatchs.start("task 1.2.1");
             Stopwatchs.end(); // Ends 1.2.1
@@ -114,14 +130,22 @@ public final class StopwatchsTestCase {
             Stopwatchs.end(); // Ends 1.2.2
 
             //Stopwatchs.end(); // Ends 1.2, NOTE
-
             Stopwatchs.start("task 1.3");
             final long task13Time = 10;
             Thread.sleep(task13Time);
 
             //Stopwatchs.end(); // Ends 1, NOTE
+            final String output = Stopwatchs.getTimingStat();
+            System.out.println(output);
 
-            System.out.println(Stopwatchs.getTimingStat());
+            //[100]%, [-1419045335270]ms [task 1]
+            //  [0]%, [50]ms [task 1.1]
+            //  [100]%, [-1419045335320]ms [task 1.2]
+            //    [0]%, [0]ms [task 1.2.1]
+            //    [0]%, [20]ms [task 1.2.2]
+            //    [100]%, [-1419045335340]ms [task 1.3]     
+            final String[] lines = output.split(Strings.LINE_SEPARATOR);
+            Assert.assertEquals(6, lines.length);
         }
     }
 }
