@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ * Copyright (c) 2015, b3log.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,13 +137,13 @@ public final class LatkeClient {
      */
     public static void main(String[] args) throws Exception {
         // Backup Test:      
-        // args = new String[] {
-        // "-h", "-backup", "-repository_names", "-verbose", "-s", "localhost:8080", "-u", "xxx", "-p", "xxx", "-backup_dir",
-        // "C:/b3log_backup", "-w", "true"};
+//         args = new String[] {
+//         "-h", "-backup", "-repository_names", "-verbose", "-s", "chevo2xs.appspot.com:80", "-u", "zane", "-p", "xxx", "-backup_dir",
+//         "C:/b3log_backup", "-w", "true"};
 
-//        args = new String[] {
-//            "-h", "-restore", "-create_tables", "-verbose", "-s", "localhost:8080", "-u", "xxx", "-p", "xxx", "-backup_dir",
-//            "C:/b3log_backup"};
+        args = new String[] {
+            "-h", "-restore", "-create_tables", "-verbose", "-s", "localhost:8080", "-u", "zane", "-p", "xxx", "-backup_dir",
+            "C:/b3log_backup_devapi"};
 
         final Options options = getOptions();
 

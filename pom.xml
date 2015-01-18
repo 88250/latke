@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.1.0.4, Dec 5, 2014
+    Version: 1.1.0.5, Jan 18, 2015
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -114,7 +114,204 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>${maven-license-plugin.version}</version>
+                <configuration>
+                    <basedir>${basedir}</basedir>
+                    <header>src/main/resources/etc/header.txt</header>
+                    <quiet>false</quiet>
+                    <failIfMissing>true</failIfMissing>
+                    <aggregate>true</aggregate>
+                    <strictCheck>true</strictCheck>
+                    <includes>
+                        <include>**/src/main/java/**/*.java</include>
+                        <include>**/src/test/java/**/*.java</include>
+                        <include>**/src/main/resources/*.properties</include>
+                        <include>**/src/test/resources/*.properties</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/src/main/java/**/package-info.java</exclude>
+                        <exclude>**/src/main/java/org/json/*.java</exclude>
+                        <exclude>**/src/main/java/org/weborganic/furi/*.java</exclude>
+                        <exclude>**/src/main/java/org/b3log/latke/util/AntPathMatcher.java</exclude>
+                        <exclude>**/src/main/java/javax/**/*.java</exclude>
+                    </excludes>
+
+                    <useDefaultExcludes>true</useDefaultExcludes>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                    </mapping>
+                    <useDefaultMapping>true</useDefaultMapping>
+                    <properties>
+                        <year>2015</year>
+                        <devTeam>b3log.org</devTeam>
+                    </properties>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- For source code style check -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <configuration>
+                    <configLocation>src/main/resources/etc/beyondtrack_checks.xml</configLocation>
+                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                    <excludes>
+                        org/json/*.java,
+                        org/weborganic/furi/*.java,
+                        org/b3log/latke/util/AntPathMatcher.java,
+                        javax/**/*.java,
+                        org/b3log/latke/ioc/util/Beans.java,
+                        org/b3log/latke/util/Reflections.java,
+                        org/b3log/latke/util/Execs.java
+                    </excludes>
+                    <consoleOutput>true</consoleOutput>
+                    <failOnViolation>true</failOnViolation>
+                    <failsOnError>true</failsOnError>
+                    <encoding>UTF-8</encoding>
+                    <!-- Do NOT skip code style check before committing -->
+                    <skip>false</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>com.tiobe.jacobe</groupId>
+                <artifactId>maven-jacobe-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <jacobeExecutable>${jacobeExecutable}</jacobeExecutable>
+                    <rules>
+                        <param>indent=4</param>
+                        <param>continuationindent=2</param>
+                    </rules>
+                    <configurationFile>src/main/resources/etc/jacobe/sun.cfg</configurationFile>
+                    <comparisonThreshold>0.01</comparisonThreshold>
+                    <javadoc>private</javadoc>
+                    <noAssert>true</noAssert>
+                    <noEnum>false</noEnum>
+                    <noBackup>true</noBackup>
+                    <overwrite>true</overwrite>
+                    <outputExtension>formatted</outputExtension>
+                    <input>${basedir}/src/main/java</input>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>jacobe</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.11</version>
+                <configuration>
+                    <skipTests>false</skipTests>
+                    <parallel>methods</parallel>
+                    <threadCount>20</threadCount>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>
+                                jar
+                            </goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <show>private</show>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${maven-cobertura-plugin.version}</version>
+            </plugin>
            			
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>linux</family>
+                </os>
+            </activation>
+            <properties>
+                <jacobeExecutable>
+                    src/main/resources/etc/jacobe/linux/jacobe
+                </jacobeExecutable>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <jacobeExecutable>
+                    src/main/resources/etc/jacobe/win32/jacobe.exe
+                </jacobeExecutable>
+            </properties>
+        </profile>
+    </profiles>
 </project>

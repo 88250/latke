@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ * Copyright (c) 2015, b3log.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.image.local;
 
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -25,7 +24,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import org.b3log.latke.image.Image;
 import org.b3log.latke.image.ImageService;
-
 
 /**
  * Image service.
@@ -81,13 +79,13 @@ public final class LocalImageService implements ImageService {
 
     /**
      * Splices the specified image1 and image2 horizontally.
-     * 
+     *
      * @param image1 the specified image1
      * @param image2 the specified image2
      * @return the spliced image
      */
     private static BufferedImage splice(final java.awt.Image image1, final java.awt.Image image2) {
-        final int[][] size = { {image1.getWidth(null), image1.getHeight(null)}, {image2.getWidth(null), image2.getHeight(null)}};
+        final int[][] size = {{image1.getWidth(null), image1.getHeight(null)}, {image2.getWidth(null), image2.getHeight(null)}};
 
         final int width = size[0][0] + size[1][0];
         final int height = Math.max(size[0][1], size[1][1]);

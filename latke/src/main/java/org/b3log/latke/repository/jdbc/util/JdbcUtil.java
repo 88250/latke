@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ * Copyright (c) 2015, b3log.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -237,8 +237,8 @@ public final class JdbcUtil {
                             } finally {
                                 try {
                                     clob.free();
-                                } catch (final Throwable e) {// Some drivers dose not implement free(), for example, jtds
-                                    ; // Do nonthing
+                                } catch (final Exception e) { // Some drivers dose not implement free(), for example, jtds
+                                    LOGGER.log(Level.ERROR, "clob.free error", e);
                                 }
                             }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ * Copyright (c) 2015, b3log.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ public final class LocalThreadService implements ThreadService {
                     future = EXECUTOR_SERVICE.submit(runnable);
 
                     future.get(timeout, TimeUnit.MILLISECONDS);
-                } catch (final Throwable e) {
+                } catch (final Exception e) {
                     LOGGER.log(Level.WARN, "Task executes failed", e);
 
                     future = null;

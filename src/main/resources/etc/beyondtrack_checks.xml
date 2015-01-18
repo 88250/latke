@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2008, 2009, 2010, 2011 B3log Team
+    Copyright (C) 2008, 2009, 2010 B3log Team
 
 
     The contents of this file are subject to the terms of the Common
@@ -104,18 +104,22 @@
         <!-- Following interprets the header file as regular expressions. -->
         <!-- <module name="RegexpHeader"/>                                -->
 
-        <!-- Checks for imports                               -->
+
+        <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_imports.html -->
         <module name="AvoidStarImport"/>
         <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
+
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
+        <!--
         <module name="LineLength">
             <property name="max" value="140"/>
         </module>
+        -->
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
 
@@ -173,7 +177,7 @@
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!-- <module name="DesignForExtension"/> -->
-        <module name="FinalClass"/>
+<!--        <module name="FinalClass"/>-->
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier"/>
