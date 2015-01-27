@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.renderer.freemarker;
 
-
 import freemarker.template.Template;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
@@ -32,7 +31,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
@@ -123,7 +121,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
             } catch (final IOException ex) {
                 LOGGER.log(Level.ERROR, "Can not send error 404!", ex);
             }
-            
+
             return;
         }
 
@@ -133,7 +131,14 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
             beforeRender(context);
 
-            final String html = genHTML(context.getRequest(), dataModel, template);
+            String html = genHTML(context.getRequest(), dataModel, template);
+
+            final long time = System.currentTimeMillis();
+            final String year = DateFormatUtils.format(time, "yyyy");
+            final String copyright = "<div style=\"display: none;\">Copyright (c) 2009-" + year + ", b3log.org"
+                                     + "<a href=\"http://b3log.org\">http://b3log.org</a></div>";
+
+            html = html.replace("</body>", copyright + "</body>");
 
             doRender(html, context.getRequest(), response);
 
@@ -160,7 +165,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
      * @throws Exception exception
      */
     protected String genHTML(final HttpServletRequest request, final Map<String, Object> dataModel, final Template template)
-        throws Exception {
+            throws Exception {
         final StringWriter stringWriter = new StringWriter();
 
         template.setOutputEncoding("UTF-8");
@@ -199,7 +204,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
      */
     @SuppressWarnings("unchecked")
     protected void doRender(final String html, final HttpServletRequest request, final HttpServletResponse response)
-        throws Exception {
+            throws Exception {
         PrintWriter writer;
 
         try {
