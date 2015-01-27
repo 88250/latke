@@ -135,8 +135,8 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
             final long time = System.currentTimeMillis();
             final String year = DateFormatUtils.format(time, "yyyy");
-            final String copyright = "<div style=\"display: none;\">Copyright (c) 2009-" + year + ", b3log.org"
-                                     + "<a href=\"http://b3log.org\">http://b3log.org</a></div>";
+            final String copyright = "<div style='display: none;'>Copyright (c) 2009-" + year
+                                     + ", <a href='http://b3log.org'>b3log.org</a></div>\n    ";
 
             html = html.replace("</body>", copyright + "</body>");
 
