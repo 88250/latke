@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository.jdbc.util;
 
-
 import com.alibaba.druid.pool.DruidDataSource;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
@@ -29,7 +28,6 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Callstacks;
 import org.h2.jdbcx.JdbcConnectionPool;
-
 
 /**
  * JDBC connection utilities.
@@ -164,7 +162,7 @@ public final class Connections {
 
                     // Disable JMX
                     System.setProperty("com.mchange.v2.c3p0.management.ManagementCoordinator",
-                        "com.mchange.v2.c3p0.management.NullManagementCoordinator");
+                                       "com.mchange.v2.c3p0.management.NullManagementCoordinator");
 
                     c3p0 = new ComboPooledDataSource();
                     c3p0.setUser(userName);
@@ -216,17 +214,17 @@ public final class Connections {
      */
     public static Connection getConnection() throws SQLException {
         if (LOGGER.isTraceEnabled()) {
-            Callstacks.printCallstack(Level.TRACE, new String[] {"org.b3log"}, null);
+            Callstacks.printCallstack(Level.TRACE, new String[]{"org.b3log"}, null);
         }
 
         if ("BoneCP".equals(poolType)) {
             LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                new Object[] {boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
+                       new Object[]{boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
 
             return boneCP.getConnection();
         } else if ("c3p0".equals(poolType)) {
             LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                new Object[] {c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
+                       new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
             final Connection ret = c3p0.getConnection();
 
             ret.setTransactionIsolation(transactionIsolationInt);
@@ -234,7 +232,7 @@ public final class Connections {
 
             return ret;
         } else if ("h2".equals(poolType)) {
-            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[] {h2.getActiveConnections()});
+            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[]{h2.getActiveConnections()});
             final Connection ret = h2.getConnection();
 
             ret.setTransactionIsolation(transactionIsolationInt);
@@ -242,7 +240,7 @@ public final class Connections {
 
             return ret;
         } else if ("druid".equals(poolType)) {
-            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={1}]", new Object[] {druid.getActiveConnections()});
+            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[] {druid.getActiveConnections()});
 
             final Connection ret = druid.getConnection();
 
@@ -292,5 +290,6 @@ public final class Connections {
     /**
      * Private constructor.
      */
-    private Connections() {}
+    private Connections() {
+    }
 }
