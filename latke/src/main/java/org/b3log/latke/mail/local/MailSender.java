@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.mail.local;
 
-
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -31,13 +30,12 @@ import javax.mail.internet.MimeUtility;
 import org.b3log.latke.mail.MailService.Message;
 import org.b3log.latke.util.Strings;
 
-
 /**
  * Email sender.
  *
  * @author <a href="mailto:jiangzezhou1989@gmail.com">zezhou jiang</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.4, Apr 10, 2014
+ * @version 1.0.2.4, Feb 25, 2015
  */
 final class MailSender {
 
@@ -68,13 +66,21 @@ final class MailSender {
         final Properties props = new Properties();
 
         props.setProperty("mail.smtp.host", mailProperties.getString("mail.smtp.host"));
-        final String auth = mailProperties.getString("mail.smtp.auth");
 
-        props.setProperty("mail.smtp.auth", Strings.isEmptyOrNull(auth) ? "true" : auth);
+        String auth = "true";
+        if (mailProperties.containsKey("mail.smtp.auth")) {
+            auth = mailProperties.getString("mail.smtp.auth");
+        }
+        props.setProperty("mail.smtp.auth", auth);
+
         props.setProperty("mail.smtp.port", mailProperties.getString("mail.smtp.port"));
-        final String starttls = mailProperties.getString("mail.smtp.starttls.enable");
 
-        props.put("mail.smtp.starttls.enable", Strings.isEmptyOrNull(starttls) ? "true" : starttls);
+        String starttls = "true";
+        if (mailProperties.containsKey("mail.smtp.starttls.enable")) {
+            starttls = mailProperties.getString("mail.smtp.starttls.enable");
+        }
+        props.put("mail.smtp.starttls.enable", starttls);
+
         props.put("mail.debug", mailProperties.getString("mail.debug"));
         props.put("mail.smtp.socketFactory.class", mailProperties.getString("mail.smtp.socketFactory.class"));
         props.put("mail.smtp.socketFactory.fallback", mailProperties.getString("mail.smtp.socketFactory.fallback"));
