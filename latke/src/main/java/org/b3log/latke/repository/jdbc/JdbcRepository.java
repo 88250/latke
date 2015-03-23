@@ -558,9 +558,9 @@ public final class JdbcRepository implements Repository {
         ret.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
         ret.put(Pagination.PAGINATION_RECORD_COUNT, recordCnt);
 
-        if (currentPageNum > pageCnt) {
-            LOGGER.log(Level.WARN, "Current page num [{0}] > page count [{1}]", new Object[] {currentPageNum, pageCnt});
-        }
+//        if (currentPageNum > pageCnt) {
+//            LOGGER.log(Level.WARN, "Current page num [{0}] > page count [{1}]", new Object[] {currentPageNum, pageCnt});
+//        }
 
         getQuerySql(currentPageNum, pageSize, selectSql, filterSql, orderBySql, sql);
 
