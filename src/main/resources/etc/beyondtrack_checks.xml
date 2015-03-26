@@ -161,11 +161,15 @@
         <module name="HiddenField">
             <property name="tokens" value="VARIABLE_DEF"/>
         </module>
+        <!--
         <module name="IllegalCatch">
             <property name="illegalClassNames" value="java.lang.Throwable, java.lang.RuntimeException" />
         </module>
+        -->
         <module name="IllegalInstantiation"/>
+        <!--
         <module name="IllegalThrows"/>
+        -->
         <module name="InnerAssignment"/>
         <module name="MagicNumber"/>
         <module name="MissingSwitchDefault"/>

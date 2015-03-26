@@ -36,7 +36,7 @@ import org.b3log.latke.repository.impl.UserRepository;
  * Javassist method handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.2, Oct 26, 2013
+ * @version 1.0.1.3, Mar 26, 2015
  */
 public final class JavassistMethodHandler implements MethodHandler {
 
@@ -72,7 +72,7 @@ public final class JavassistMethodHandler implements MethodHandler {
     }
 
     @Override
-    public Object invoke(final Object proxy, final Method method, final Method proceed, final Object[] params) throws Exception {
+    public Object invoke(final Object proxy, final Method method, final Method proceed, final Object[] params) throws Throwable {
         LOGGER.trace("Processing invocation: " + method.toString());
 
         final Class<?> declaringClass = method.getDeclaringClass();
@@ -104,9 +104,9 @@ public final class JavassistMethodHandler implements MethodHandler {
                 transaction.commit();
             }
         } catch (final InvocationTargetException e) {
-            final String errMsg = "Invoke [" + method.toString() + "] failed";
+            //final String errMsg = "Invoke [" + method.toString() + "] failed";
 
-            LOGGER.log(Level.WARN, errMsg);
+            //LOGGER.log(Level.WARN, errMsg);
 
             if (needHandleTrans) {
                 if (null != transaction && transaction.isActive()) {
@@ -114,7 +114,7 @@ public final class JavassistMethodHandler implements MethodHandler {
                 }
             }
             
-            throw new Exception(e.getTargetException());
+            throw e.getTargetException();
         }
 
         // 3. @AfterMethod handle
