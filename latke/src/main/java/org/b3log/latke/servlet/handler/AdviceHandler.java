@@ -83,7 +83,7 @@ public class AdviceHandler implements Handler {
             final JSONObject exception = e.getJsonObject();
             final String msg = exception.optString(Keys.MSG);
 
-            LOGGER.log(Level.WARN, "Occurs an exception before request processing [errMsg={0}]", msg);
+            LOGGER.log(Level.WARN, "Occured an exception before request processing [errMsg={0}]", msg);
 
             final int statusCode = exception.optInt(Keys.STATUS_CODE, -1);
 
