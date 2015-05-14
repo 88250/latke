@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke implementation for GAE.
-    Version: 2.0.3.2, Jan 18, 2015
+    Version: 2.0.3.5, May 14, 2015
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -22,7 +22,7 @@
 
     <!-- Version -->
     <properties>
-        <gae.version>1.7.2</gae.version>
+        <gae.version>1.8.1.1</gae.version>
     </properties>
 
     <developers>
