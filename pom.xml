@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.1.2.5, May 14, 2015
+    Version: 1.2.2.5, May 19, 2015
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -70,7 +70,7 @@
         <cdi.version>1.0</cdi.version>
         <!-- -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <JDK.version>1.8</JDK.version>
+        <JDK.version>1.7</JDK.version>
     </properties>
 
     <scm>
