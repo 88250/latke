@@ -68,7 +68,7 @@
         <c3p0.version>0.9.1.2</c3p0.version>
         <!-- CDI -->
         <cdi.version>1.0</cdi.version>
-        <!-- -->
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <JDK.version>1.7</JDK.version>
     </properties>
