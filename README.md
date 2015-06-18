@@ -1,4 +1,4 @@
-b3log-latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](https://travis-ci.org/b3log/latke)
+Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](https://travis-ci.org/b3log/latke)
 ----
 
 Yet another simple web framework based on Java servlet technology.
