@@ -1,4 +1,4 @@
-Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](https://travis-ci.org/b3log/latke) [![Maven Central](https://img.shields.io/maven-central/v/org.b3log/latke-parent.svg)](http://search.maven.org/#search%7Cga%7C1%7Corg.b3log.latke)
+Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](https://travis-ci.org/b3log/latke) [![Maven Central](https://img.shields.io/maven-central/v/org.b3log/latke-parent.svg)]()
 ----
 
 Yet another simple web framework based on Java servlet technology.
