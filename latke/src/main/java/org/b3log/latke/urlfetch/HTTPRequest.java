@@ -15,19 +15,19 @@
  */
 package org.b3log.latke.urlfetch;
 
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 
-
 /**
- * Encapsulation of a single HTTP request that is made via the {@link URLFetchService}. 
+ * Encapsulation of a single HTTP request that is made via the {@link URLFetchService}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Apr 18, 2013
+ * @version 1.1.1.1, Jul 7, 2015
  */
 public final class HTTPRequest {
 
@@ -37,7 +37,7 @@ public final class HTTPRequest {
     private URL url;
 
     /**
-     * Payload. 
+     * Payload.
      */
     private byte[] payload;
 
@@ -53,7 +53,7 @@ public final class HTTPRequest {
 
     /**
      * Adds the specified HTTP header.
-     * 
+     *
      * @param header the specified HTTP header
      */
     public void addHeader(final HTTPHeader header) {
@@ -62,7 +62,7 @@ public final class HTTPRequest {
 
     /**
      * Gets HTTP headers.
-     * 
+     *
      * @return HTTP headers
      */
     public List<HTTPHeader> getHeaders() {
@@ -71,12 +71,12 @@ public final class HTTPRequest {
 
     /**
      * Gets the payload ({@link HTTPRequestMethod#POST POST} data body).
-     * 
+     *
      * <p>
-     * Certain HTTP methods ({@linkplain HTTPRequestMethod#GET GET}) will 
-     * NOT have any payload, and this method will return {@code null}.
+     * Certain HTTP methods ({@linkplain HTTPRequestMethod#GET GET}) will NOT have any payload, and this method will
+     * return {@code null}.
      * </p>
-     * 
+     *
      * @return payload
      */
     public byte[] getPayload() {
@@ -85,12 +85,11 @@ public final class HTTPRequest {
 
     /**
      * Sets the payload with the specified payload.
-     * 
+     *
      * <p>
-     * This method should NOT be called for certain HTTP methods 
-     * (e.g. {@link HTTPRequestMethod#GET GET}).
+     * This method should NOT be called for certain HTTP methods (e.g. {@link HTTPRequestMethod#GET GET}).
      * </p>
-     * 
+     *
      * @param payload the specified payload
      */
     public void setPayload(final byte[] payload) {
@@ -99,7 +98,7 @@ public final class HTTPRequest {
 
     /**
      * Gets the request method.
-     * 
+     *
      * @return request method
      */
     public HTTPRequestMethod getRequestMethod() {
@@ -108,7 +107,7 @@ public final class HTTPRequest {
 
     /**
      * Sets the request method with the specified request method.
-     * 
+     *
      * @param requestMethod the specified request method
      */
     public void setRequestMethod(final HTTPRequestMethod requestMethod) {
@@ -117,7 +116,7 @@ public final class HTTPRequest {
 
     /**
      * Gets the request URL.
-     * 
+     *
      * @return request URL
      */
     public URL getURL() {
@@ -126,10 +125,15 @@ public final class HTTPRequest {
 
     /**
      * Sets the request URL with the specified URL.
-     * 
+     *
      * @param url the specified URL
      */
     public void setURL(final URL url) {
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

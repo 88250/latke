@@ -15,11 +15,11 @@
  */
 package org.b3log.latke.urlfetch.local;
 
-
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.thread.ThreadService;
@@ -28,13 +28,12 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 
-
 /**
  * Local URL fetch service.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.3, Apr 4, 2014
+ * @version 1.1.1.3, Jul 7, 2015
  */
 public final class LocalURLFetchService implements URLFetchService {
 
@@ -42,12 +41,12 @@ public final class LocalURLFetchService implements URLFetchService {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(LocalURLFetchService.class.getName());
-    
+
     /**
      * Thread service.
      */
     private ThreadService threadService = ThreadServiceFactory.getThreadService();
-     
+
     /**
      * Timeout for async fetch.
      */
@@ -69,6 +68,7 @@ public final class LocalURLFetchService implements URLFetchService {
         final FutureTask<HTTPResponse> futureTask = new FutureTask<HTTPResponse>(new Callable<HTTPResponse>() {
             @Override
             public HTTPResponse call() throws Exception {
+                LOGGER.log(Level.DEBUG, "Fetch async, request=[" + request.toString() + "]");
                 return fetch(request);
             }
         });

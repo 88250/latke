@@ -15,19 +15,18 @@
  */
 package org.b3log.latke.urlfetch;
 
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * Encapsulation of the result of a {@link HTTPRequest HTTP request} made via 
- * the {@link URLFetchService}. 
+ * Encapsulation of the result of a {@link HTTPRequest HTTP request} made via the {@link URLFetchService}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Aug 8, 2011
+ * @version 1.1.0.0, Jul 7, 2015
  */
 public final class HTTPResponse {
 
@@ -53,7 +52,7 @@ public final class HTTPResponse {
 
     /**
      * Adds the specified HTTP header.
-     * 
+     *
      * @param header the specified HTTP header
      */
     public void addHeader(final HTTPHeader header) {
@@ -62,7 +61,7 @@ public final class HTTPResponse {
 
     /**
      * Gets HTTP headers.
-     * 
+     *
      * @return HTTP headers
      */
     public List<HTTPHeader> getHeaders() {
@@ -71,7 +70,7 @@ public final class HTTPResponse {
 
     /**
      * Gets the content.
-     * 
+     *
      * @return content
      */
     public byte[] getContent() {
@@ -80,7 +79,7 @@ public final class HTTPResponse {
 
     /**
      * Sets the content with the specified content.
-     * 
+     *
      * @param content the specified content
      */
     public void setContent(final byte[] content) {
@@ -89,7 +88,7 @@ public final class HTTPResponse {
 
     /**
      * Gets the final URL.
-     * 
+     *
      * @return final URL
      */
     public URL getFinalURL() {
@@ -98,7 +97,7 @@ public final class HTTPResponse {
 
     /**
      * Sets the final URL with the specified final URL.
-     * 
+     *
      * @param finalURL the specified final URL
      */
     public void setFinalURL(final URL finalURL) {
@@ -107,7 +106,7 @@ public final class HTTPResponse {
 
     /**
      * Gets the response code.
-     * 
+     *
      * @return response code
      */
     public int getResponseCode() {
@@ -116,10 +115,15 @@ public final class HTTPResponse {
 
     /**
      * Sets the response code with the specified response code.
-     * 
+     *
      * @param responseCode the specified response code
      */
     public void setResponseCode(final int responseCode) {
         this.responseCode = responseCode;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
