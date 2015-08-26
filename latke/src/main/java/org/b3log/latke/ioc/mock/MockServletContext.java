@@ -22,11 +22,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.EventListener;
+import java.util.Map;
 import java.util.Set;
+import javax.servlet.Filter;
+import javax.servlet.FilterRegistration;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+import javax.servlet.SessionCookieConfig;
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.descriptor.JspConfigDescriptor;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -210,5 +218,140 @@ public final class MockServletContext implements ServletContext {
     @Override
     public String getServletContextName() {
         return "mock servlet cocntext name";
+    }
+
+    @Override
+    public int getEffectiveMajorVersion() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getEffectiveMinorVersion() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean setInitParameter(final String name, final String value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ServletRegistration.Dynamic addServlet(final String servletName, final String className) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ServletRegistration.Dynamic addServlet(final String servletName, final Servlet servlet) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ServletRegistration.Dynamic addServlet(final String servletName, final Class<? extends Servlet> servletClass) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public <T extends Servlet> T createServlet(final Class<T> clazz) throws ServletException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ServletRegistration getServletRegistration(final String servletName) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Map<String, ? extends ServletRegistration> getServletRegistrations() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public FilterRegistration.Dynamic addFilter(final String filterName, final String className) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public FilterRegistration.Dynamic addFilter(final String filterName, final Filter filter) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public FilterRegistration.Dynamic addFilter(final String filterName, final Class<? extends Filter> filterClass) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public <T extends Filter> T createFilter(final Class<T> clazz) throws ServletException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public FilterRegistration getFilterRegistration(final String filterName) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public SessionCookieConfig getSessionCookieConfig() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setSessionTrackingModes(final Set<SessionTrackingMode> sessionTrackingModes) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void addListener(final String className) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public <T extends EventListener> void addListener(final T t) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void addListener(final Class<? extends EventListener> listenerClass) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public <T extends EventListener> T createListener(final Class<T> clazz) throws ServletException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public JspConfigDescriptor getJspConfigDescriptor() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ClassLoader getClassLoader() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void declareRoles(final String... roleNames) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getVirtualServerName() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

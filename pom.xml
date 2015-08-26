@@ -42,7 +42,7 @@
     </licenses>
     
     <properties>
-        <servlet.version>2.5</servlet.version>
+        <servlet.version>3.1.0</servlet.version>
         <el-api.version>1.0</el-api.version>
         <freemarker.version>2.3.20</freemarker.version>
         <javax.mail.version>1.4</javax.mail.version>

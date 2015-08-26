@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.zip.GZIPOutputStream;
+import javax.servlet.WriteListener;
 
 
 /**
@@ -203,6 +204,15 @@ public abstract class AbstractGZIPFilter implements Filter {
                 @Override
                 public void write(final byte[] b, final int off, final int len) throws IOException {
                     gzipStream.write(b, off, len);
+                }
+
+                @Override
+                public boolean isReady() {
+                    return true;
+                }
+
+                @Override
+                public void setWriteListener(final WriteListener writeListener) {
                 }
             };
         }

@@ -42,7 +42,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.4.9, Apr 25, 2014
+ * @version 1.1.4.9, Aug 26, 2015
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -292,7 +292,7 @@ public final class Latkes {
             final StringBuilder serverBuilder = new StringBuilder(getServerScheme()).append("://").append(getServerHost());
             final String port = getServerPort();
 
-            if (!Strings.isEmptyOrNull(port)) {
+            if (!Strings.isEmptyOrNull(port) && !port.equals("80")) {
                 serverBuilder.append(':').append(port);
             }
 

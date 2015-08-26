@@ -30,7 +30,7 @@ import org.json.JSONObject;
  * Session utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Jan 4, 2013
+ * @version 1.0.2.1, Aug 26, 2015
  */
 public final class Sessions {
 
@@ -86,6 +86,7 @@ public final class Sessions {
 
             cookie.setPath("/");
             cookie.setMaxAge(COOKIE_EXPIRY);
+            
             response.addCookie(cookie);
         } catch (final Exception e) {
             LOGGER.log(Level.WARN, "Can not write cookie", e);
