@@ -15,7 +15,6 @@
  */
 package org.b3log.latke;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -37,12 +36,11 @@ import org.b3log.latke.util.Strings;
 import org.b3log.latke.util.freemarker.Templates;
 import org.h2.tools.Server;
 
-
 /**
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.4.9, Aug 26, 2015
+ * @version 1.2.4.9, Oct 1, 2015
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -76,9 +74,9 @@ public final class Latkes {
     private static final Properties LOCAL_PROPS = new Properties();
 
     /**
-     * Static resource version.
+     * Application startup time millisecond.
      */
-    private static String staticResourceVersion;
+    private static String startupTimeMillis = String.valueOf(System.currentTimeMillis());
 
     /**
      * Server scheme.
@@ -159,8 +157,8 @@ public final class Latkes {
      * H2 database TCP server.
      *
      * <p>
-     * If Latke is running on {@link RuntimeEnv#LOCAL LOCAL} environment and using {@link RuntimeDatabase#H2 H2} database and specified
-     * newTCPServer=true in local.properties, creates a H2 TCP server and starts it.
+     * If Latke is running on {@link RuntimeEnv#LOCAL LOCAL} environment and using {@link RuntimeDatabase#H2 H2}
+     * database and specified newTCPServer=true in local.properties, creates a H2 TCP server and starts it.
      * </p>
      */
     private static Server h2;
@@ -210,17 +208,21 @@ public final class Latkes {
      * Gets static resource (JS, CSS files) version.
      *
      * <p>
-     * Returns the value of "staticResourceVersion" property in local.properties.
+     * Returns the value of "staticResourceVersion" property in local.properties. Returns the 
+     * {@link #startupTimeMillis application startup millisecond} if not found the "staticResourceVersion" property in 
+     * local.properties.
      * </p>
      *
      * @return static resource version
      */
     public static String getStaticResourceVersion() {
-        if (null == staticResourceVersion) {
-            staticResourceVersion = LATKE_PROPS.getProperty("staticResourceVersion");
+        final String ret = LATKE_PROPS.getProperty("staticResourceVersion");
+
+        if (null == ret) {
+            return startupTimeMillis;
         }
 
-        return staticResourceVersion;
+        return ret;
     }
 
     /**
@@ -412,7 +414,8 @@ public final class Latkes {
      * Gets context path.
      *
      * <p>
-     * If Latke runs on xAE, returns "" always, returns the value of "contextPath" property in latke.properties otherwise.
+     * If Latke runs on xAE, returns "" always, returns the value of "contextPath" property in latke.properties
+     * otherwise.
      * </p>
      *
      * @return context path
@@ -433,7 +436,8 @@ public final class Latkes {
      * Gets static path.
      *
      * <p>
-     * If Latke runs on xAE, returns "" always, returns the value of "staticPath" property in latke.properties otherwise.
+     * If Latke runs on xAE, returns "" always, returns the value of "staticPath" property in latke.properties
+     * otherwise.
      * </p>
      *
      * @return static path
@@ -493,24 +497,23 @@ public final class Latkes {
      *
      * <ol>
      * <li>
-     * If the "latke.properties" has a valid runtime environment configuration (for example,
-     * runtimeEnv=GAE or runtimeEnv=LOCAL), initializes the runtime environment as its specified
+     * If the "latke.properties" has a valid runtime environment configuration (for example, runtimeEnv=GAE or
+     * runtimeEnv=LOCAL), initializes the runtime environment as its specified
      * </li>
      * <li>
-     * If the GAERepository class (org.b3log.latke.repository.gae.GAERepository)
-     * is on the classpath, considered Latke is running on <a href="http://code.google.com/appengine">Google App Engine</a>,
-     * otherwise, considered Latke is running on standard Servlet container.
+     * If the GAERepository class (org.b3log.latke.repository.gae.GAERepository) is on the classpath, considered Latke
+     * is running on <a href="http://code.google.com/appengine">Google App Engine</a>, otherwise, considered Latke is
+     * running on standard Servlet container.
      * </li>
      * </ol>
      *
      * <p>
-     * If the Latke runs on the standard Servlet container (local environment),
-     * Latke will read database configurations from file "local.properties".
+     * If the Latke runs on the standard Servlet container (local environment), Latke will read database configurations
+     * from file "local.properties".
      * </p>
      *
      * <p>
-     * Sets the current {@link RuntimeMode runtime mode} to
-     * {@link RuntimeMode#DEVELOPMENT development mode}.
+     * Sets the current {@link RuntimeMode runtime mode} to {@link RuntimeMode#DEVELOPMENT development mode}.
      * </p>
      *
      * @see RuntimeEnv
@@ -543,7 +546,7 @@ public final class Latkes {
             runtimeMode = RuntimeMode.DEVELOPMENT;
         }
 
-        LOGGER.log(Level.INFO, "Latke is running on [{0}] with mode [{1}]", new Object[] {Latkes.getRuntimeEnv(), Latkes.getRuntimeMode()});
+        LOGGER.log(Level.INFO, "Latke is running on [{0}] with mode [{1}]", new Object[]{Latkes.getRuntimeEnv(), Latkes.getRuntimeMode()});
 
         if (RuntimeEnv.LOCAL == runtimeEnv) {
             // Read local database configurations
@@ -576,7 +579,7 @@ public final class Latkes {
                     LOGGER.log(Level.TRACE, "H2 TCP port [{0}]", port);
 
                     try {
-                        h2 = Server.createTcpServer(new String[] {"-tcpPort", port, "-tcpAllowOthers"}).start();
+                        h2 = Server.createTcpServer(new String[]{"-tcpPort", port, "-tcpAllowOthers"}).start();
                     } catch (final SQLException e) {
                         final String msg = "H2 TCP server create failed";
 
@@ -608,8 +611,7 @@ public final class Latkes {
     /**
      * Sets the runtime mode with the specified mode.
      *
-     * @param runtimeMode
-     * the specified mode
+     * @param runtimeMode the specified mode
      */
     public static void setRuntimeMode(final RuntimeMode runtimeMode) {
         Latkes.runtimeMode = runtimeMode;
@@ -636,8 +638,8 @@ public final class Latkes {
     public static RuntimeDatabase getRuntimeDatabase() {
         if (RuntimeEnv.LOCAL != runtimeEnv) {
             throw new RuntimeException(
-                "Underlying database can be specified when Latke runs on [LOCAL] environment only, " + "current runtime enviornment ["
-                + runtimeEnv + ']');
+                    "Underlying database can be specified when Latke runs on [LOCAL] environment only, " + "current runtime enviornment ["
+                    + runtimeEnv + ']');
         }
 
         final String runtimeDatabase = LOCAL_PROPS.getProperty("runtimeDatabase");
@@ -665,8 +667,8 @@ public final class Latkes {
     }
 
     /**
-     * Gets the locale. If the {@link #locale} has not been initialized,
-     * invoking this method will throw {@link RuntimeException}.
+     * Gets the locale. If the {@link #locale} has not been initialized, invoking this method will throw
+     * {@link RuntimeException}.
      *
      * @return the locale
      */
@@ -730,18 +732,18 @@ public final class Latkes {
             final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
 
             switch (runtimeDatabase) {
-            case H2:
-                final String newTCPServer = Latkes.getLocalProperty("newTCPServer");
+                case H2:
+                    final String newTCPServer = Latkes.getLocalProperty("newTCPServer");
 
-                if ("true".equals(newTCPServer)) {
-                    h2.stop();
-                    h2.shutdown();
+                    if ("true".equals(newTCPServer)) {
+                        h2.stop();
+                        h2.shutdown();
 
-                    LOGGER.log(Level.INFO, "Closed H2 TCP server");
-                }
-                break;
+                        LOGGER.log(Level.INFO, "Closed H2 TCP server");
+                    }
+                    break;
 
-            default:
+                default:
 
             }
 
@@ -783,9 +785,8 @@ public final class Latkes {
     }
 
     /**
-     * Gets the skin name for the specified skin directory name. The skin name
-     * was configured in skin.properties file({@code name} as the key) under
-     * skin directory specified by the given skin directory name.
+     * Gets the skin name for the specified skin directory name. The skin name was configured in skin.properties
+     * file({@code name} as the key) under skin directory specified by the given skin directory name.
      *
      * @param skinDirName the given skin directory name
      * @return skin name, returns {@code null} if not found or error occurs
@@ -849,5 +850,6 @@ public final class Latkes {
     /**
      * Private constructor.
      */
-    private Latkes() {}
+    private Latkes() {
+    }
 }
