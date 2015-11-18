@@ -36,7 +36,7 @@ import java.util.Map;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.8, Nov 12, 2013
+ * @version 1.0.0.9, Nov 18, 2015
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {
 
@@ -56,8 +56,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     private Map<String, Object> dataModel = new HashMap<String, Object>();
 
     /**
-     * Gets a template with the specified template directory name and template
-     * name.
+     * Gets a template with the specified template directory name and template name.
      *
      * @param templateDirName the specified template directory name
      * @param templateName the specified template name
@@ -135,8 +134,9 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
             final long time = System.currentTimeMillis();
             final String year = DateFormatUtils.format(time, "yyyy");
-            final String copyright = "<div style='display: none;'>Copyright (c) 2009-" + year
-                                     + ", <a href='http://b3log.org'>b3log.org</a></div>\n    ";
+            final String copyright = "<div style=\"display: none;\">Copyright (c) 2009-" + year
+                    + ", <a href=\"http://b3log.org\">b3log.org</a> "
+                    + "& <a href=\"http://hacpai.com\">hacpai.com</a></div>\n";
 
             html = html.replace("</body>", copyright + "</body>");
 
@@ -155,8 +155,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     }
 
     /**
-     * Processes the specified FreeMarker template with the specified request,
-     * data model.
+     * Processes the specified FreeMarker template with the specified request, data model.
      *
      * @param request the specified request
      * @param dataModel the specified data model
@@ -184,17 +183,15 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     }
 
     /**
-     * Processes the specified FreeMarker template with the specified request,
-     * data model and response.
+     * Processes the specified FreeMarker template with the specified request, data model and response.
      *
      * <p>
-     * Puts the page response contents into cache with the key getting from
-     * request attribute specified by <i>page cache key</i>.
+     * Puts the page response contents into cache with the key getting from request attribute specified by <i>page cache
+     * key</i>.
      * </p>
      *
      * <p>
-     * <b>Note</b>: This method will write page content to the writer of the
-     * specified response without flush/close it.
+     * <b>Note</b>: This method will write page content to the writer of the specified response without flush/close it.
      * </p>
      *
      * @param html the specified HTML content
