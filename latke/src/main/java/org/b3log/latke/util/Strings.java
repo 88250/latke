@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.4, Mar 14, 2014
+ * @version 1.1.2.5, Nov 29, 2015
  */
 public final class Strings {
 
@@ -112,11 +112,7 @@ public final class Strings {
         final Pattern pattern = Pattern.compile("[0-9]*");
         final Matcher matcher = pattern.matcher(string);
 
-        if (!matcher.matches()) {
-            return false;
-        }
-
-        return true;
+        return matcher.matches();
     }
 
     /**
