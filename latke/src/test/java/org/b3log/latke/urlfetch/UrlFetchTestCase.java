@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Sep 23, 2012
+ * @version 1.0.0.4, Nov 29, 2015
  */
 public class UrlFetchTestCase {
 
@@ -48,7 +48,7 @@ public class UrlFetchTestCase {
      * 
      * @throws IOException XXX
      */
-    @Test
+    //@Test
     public void testGetFetch() throws IOException {
         System.out.println("testGetFetch");
         final HTTPRequest request = new HTTPRequest();
@@ -65,7 +65,7 @@ public class UrlFetchTestCase {
      * 
      * @throws Exception exception
      */
-    @Test
+    //@Test
     public void testAsyncGetFetch() throws Exception {
         System.out.println("testAsyncGetFetch");
         final HTTPRequest request = new HTTPRequest();
@@ -82,7 +82,7 @@ public class UrlFetchTestCase {
      * 
      * @throws IOException  XXX
      */
-    @Test
+    //@Test
     public void testPostFetch() throws IOException {
         System.out.println("testPostFetch");
         final HTTPRequest request = new HTTPRequest();
