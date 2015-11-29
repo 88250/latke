@@ -40,7 +40,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.4.9, Oct 1, 2015
+ * @version 1.3.4.9, Nov 29, 2015
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -187,7 +187,7 @@ public final class Latkes {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.DEBUG, "Not found local.properties");
-            // Ignores....
+            // Ignored
         }
 
         LOGGER.debug("Loading remote.properties");
@@ -200,7 +200,7 @@ public final class Latkes {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.DEBUG, "Not found Latke remote.properties");
-            // Ignores....
+            // Ignored
         }
     }
 
@@ -208,8 +208,8 @@ public final class Latkes {
      * Gets static resource (JS, CSS files) version.
      *
      * <p>
-     * Returns the value of "staticResourceVersion" property in local.properties. Returns the 
-     * {@link #startupTimeMillis application startup millisecond} if not found the "staticResourceVersion" property in 
+     * Returns the value of "staticResourceVersion" property in local.properties. Returns the
+     * {@link #startupTimeMillis application startup millisecond} if not found the "staticResourceVersion" property in
      * local.properties.
      * </p>
      *
@@ -321,7 +321,8 @@ public final class Latkes {
      * Gets static server scheme.
      *
      * <p>
-     * Returns the value of "staticServerScheme" property in latke.properties.
+     * Returns the value of "staticServerScheme" property in latke.properties, returns the value of "serverScheme" if
+     * not found.
      * </p>
      *
      * @return static server scheme
@@ -331,7 +332,7 @@ public final class Latkes {
             staticServerScheme = LATKE_PROPS.getProperty("staticServerScheme");
 
             if (null == staticServerScheme) {
-                throw new IllegalStateException("latke.properties [staticServerScheme] is empty");
+                staticServerScheme = getServerScheme();
             }
         }
 
@@ -342,7 +343,8 @@ public final class Latkes {
      * Gets static server host.
      *
      * <p>
-     * Returns the value of "staticServerHost" property in latke.properties.
+     * Returns the value of "staticServerHost" property in latke.properties, returns the value of "serverHost" if not
+     * found.
      * </p>
      *
      * @return static server host
@@ -352,7 +354,7 @@ public final class Latkes {
             staticServerHost = LATKE_PROPS.getProperty("staticServerHost");
 
             if (null == staticServerHost) {
-                throw new IllegalStateException("latke.properties [staticServerHost] is empty");
+                staticServerHost = getServerHost();
             }
         }
 
@@ -363,7 +365,8 @@ public final class Latkes {
      * Gets static server port.
      *
      * <p>
-     * Returns the value of "staticServerPort" property in latke.properties.
+     * Returns the value of "staticServerPort" property in latke.properties, returns the value of "serverPort" if not
+     * found.
      * </p>
      *
      * @return static server port
@@ -371,6 +374,10 @@ public final class Latkes {
     public static String getStaticServerPort() {
         if (null == staticServerPort) {
             staticServerPort = LATKE_PROPS.getProperty("staticServerPort");
+
+            if (null == staticServerPort) {
+                staticServerPort = getServerPort();
+            }
         }
 
         return staticServerPort;
@@ -387,7 +394,7 @@ public final class Latkes {
 
             final String port = getStaticServerPort();
 
-            if (!Strings.isEmptyOrNull(port)) {
+            if (!Strings.isEmptyOrNull(port) && !port.equals("80")) {
                 staticServerBuilder.append(':').append(port);
             }
 
