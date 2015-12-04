@@ -40,7 +40,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.5.9, Dec 4, 2015
+ * @version 1.4.5.9, Dec 4, 2015
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -534,6 +534,10 @@ public final class Latkes {
      * @see RuntimeEnv
      */
     public static void initRuntimeEnv() {
+        if (null != runtimeEnv) {
+            return;
+        }
+
         LOGGER.log(Level.TRACE, "Initializes runtime environment from configuration file");
         final String runtimeEnvValue = LATKE_PROPS.getProperty("runtimeEnv");
 
@@ -860,6 +864,78 @@ public final class Latkes {
 
             return null;
         }
+    }
+
+    /**
+     * Sets server scheme with the specified server scheme.
+     *
+     * @param serverScheme the specified server scheme
+     */
+    public static void setServerScheme(final String serverScheme) {
+        Latkes.serverScheme = serverScheme;
+    }
+
+    /**
+     * Sets static server scheme with the specified static server scheme.
+     *
+     * @param staticServerScheme the specified static server scheme
+     */
+    public static void setStaticServerScheme(final String staticServerScheme) {
+        Latkes.staticServerScheme = staticServerScheme;
+    }
+
+    /**
+     * Sets server host with the specified server host.
+     *
+     * @param serverHost the specified server host
+     */
+    public static void setServerHost(final String serverHost) {
+        Latkes.serverHost = serverHost;
+    }
+
+    /**
+     * Sets static server host with the specified static server host.
+     *
+     * @param staticServerHost the specified static server host
+     */
+    public static void setStaticServerHost(final String staticServerHost) {
+        Latkes.staticServerHost = staticServerHost;
+    }
+
+    /**
+     * Sets server port with the specified server port.
+     *
+     * @param serverPort the specified server port
+     */
+    public static void setServerPort(final String serverPort) {
+        Latkes.serverPort = serverPort;
+    }
+
+    /**
+     * Sets static server port with the specified static server port.
+     *
+     * @param staticServerPort the specified static server port
+     */
+    public static void setStaticServerPort(final String staticServerPort) {
+        Latkes.staticServerPort = staticServerPort;
+    }
+
+    /**
+     * Sets context path with the specified context path.
+     *
+     * @param contextPath the specified context path
+     */
+    public static void setContextPath(final String contextPath) {
+        Latkes.contextPath = contextPath;
+    }
+
+    /**
+     * Sets static path with the specified static path.
+     *
+     * @param staticPath the specified static path
+     */
+    public static void setStaticPath(final String staticPath) {
+        Latkes.staticPath = staticPath;
     }
 
     /**
