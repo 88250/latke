@@ -40,7 +40,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.4.5.9, Dec 4, 2015
+ * @version 1.5.5.9, Dec 5, 2015
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -77,6 +77,11 @@ public final class Latkes {
      * Application startup time millisecond.
      */
     private static String startupTimeMillis = String.valueOf(System.currentTimeMillis());
+
+    /**
+     * Static resource version.
+     */
+    private static String staticResourceVersion;
 
     /**
      * Server scheme.
@@ -216,13 +221,15 @@ public final class Latkes {
      * @return static resource version
      */
     public static String getStaticResourceVersion() {
-        final String ret = LATKE_PROPS.getProperty("staticResourceVersion");
+        if (null == staticResourceVersion) {
+            staticResourceVersion = LATKE_PROPS.getProperty("staticResourceVersion");
 
-        if (null == ret) {
-            return startupTimeMillis;
+            if (null == staticResourceVersion) {
+                staticResourceVersion = startupTimeMillis;
+            }
         }
 
-        return ret;
+        return staticResourceVersion;
     }
 
     /**
@@ -936,6 +943,15 @@ public final class Latkes {
      */
     public static void setStaticPath(final String staticPath) {
         Latkes.staticPath = staticPath;
+    }
+
+    /**
+     * Sets static resource version with the specified static resource version.
+     *
+     * @param staticResourceVersion the specified static resource version
+     */
+    public static void setStaticResourceVersion(final String staticResourceVersion) {
+        Latkes.staticResourceVersion = staticResourceVersion;
     }
 
     /**
