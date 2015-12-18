@@ -40,7 +40,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.5.9, Dec 5, 2015
+ * @version 1.5.5.10, Dec 18, 2015
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -563,13 +563,15 @@ public final class Latkes {
             }
         }
 
-        final String runtimeModeValue = LATKE_PROPS.getProperty("runtimeMode");
+        if (null == runtimeMode) {
+            final String runtimeModeValue = LATKE_PROPS.getProperty("runtimeMode");
 
-        if (null != runtimeModeValue) {
-            runtimeMode = RuntimeMode.valueOf(runtimeModeValue);
-        } else {
-            LOGGER.log(Level.TRACE, "Can't parse runtime mode in latke.properties, default to [PRODUCTION]");
-            runtimeMode = RuntimeMode.PRODUCTION;
+            if (null != runtimeModeValue) {
+                runtimeMode = RuntimeMode.valueOf(runtimeModeValue);
+            } else {
+                LOGGER.log(Level.TRACE, "Can't parse runtime mode in latke.properties, default to [PRODUCTION]");
+                runtimeMode = RuntimeMode.PRODUCTION;
+            }
         }
 
         LOGGER.log(Level.INFO, "Latke is running on [{0}] with mode [{1}]", new Object[]{Latkes.getRuntimeEnv(), Latkes.getRuntimeMode()});
