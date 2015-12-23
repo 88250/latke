@@ -40,7 +40,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.5.11, Dec 23, 2015
+ * @version 1.5.5.12, Dec 23, 2015
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -236,7 +236,7 @@ public final class Latkes {
      * Gets server scheme.
      *
      * <p>
-     * Returns the value of "serverScheme" property in latke.properties, returns "" if not found.
+     * Returns the value of "serverScheme" property in latke.properties.
      * </p>
      *
      * @return server scheme
@@ -246,7 +246,7 @@ public final class Latkes {
             serverScheme = LATKE_PROPS.getProperty("serverScheme");
 
             if (null == serverScheme) {
-                serverScheme = "";
+                throw new IllegalStateException("latke.properties [serverScheme] is empty");
             }
         }
 
@@ -267,7 +267,7 @@ public final class Latkes {
             serverHost = LATKE_PROPS.getProperty("serverHost");
 
             if (null == serverHost) {
-                serverHost = "";
+                throw new IllegalStateException("latke.properties [serverHost] is empty");
             }
         }
 
@@ -298,11 +298,6 @@ public final class Latkes {
      */
     public static String getServer() {
         if (null == server) {
-            final String scheme = getServerScheme();
-            if (Strings.isEmptyOrNull(scheme)) {
-                return "";
-            }
-            
             final StringBuilder serverBuilder = new StringBuilder(getServerScheme()).append("://").append(getServerHost());
             final String port = getServerPort();
 
