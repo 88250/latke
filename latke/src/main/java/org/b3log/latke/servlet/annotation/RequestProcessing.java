@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.annotation;
 
-
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
 import org.b3log.latke.servlet.converter.ConvertSupport;
@@ -26,13 +25,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
  * Indicates that an annotated method for HTTP servlet request processing.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.4, May 1, 2012
+ * @version 1.0.0.5, Dec 23, 2015
  * @see RequestProcessor
  */
 @Target(ElementType.METHOD)
@@ -42,12 +40,10 @@ public @interface RequestProcessing {
 
     /**
      * The dispatching URI path patterns of a request.
-     * 
+     *
      * <p>
-     * Semantics of these values adapting to the URL patterns 
-     * (&lt;url-pattern/&gt;) configures in 
-     * web application descriptor (web.xml) of a servlet. Ant-style path 
-     * pattern and regular expression pattern are also supported.
+     * Semantics of these values adapting to the URL patterns (&lt;url-pattern/&gt;) configures in web application
+     * descriptor (web.xml) of a servlet. Ant-style path pattern and regular expression pattern are also supported.
      * </p>
      */
     String[] value() default {};
@@ -60,25 +56,7 @@ public @interface RequestProcessing {
     /**
      * The HTTP request methods the annotated method should process.
      */
-    HTTPRequestMethod[] method() default { HTTPRequestMethod.GET};
-
-    /**
-     * Checks dose whether the URI patterns with context path.
-     * 
-     * <p>
-     * For example, the context path is /blog, and the annotation
-     * <pre>{@code @RequestProcessing(value = "/index")}</pre>
-     * means to serve /blog/index.
-     * </p>
-     * 
-     * <p>
-     * If the annotation 
-     * <pre>{@code @RequestProcessing(value = "/index", isWithContextPath=false)}</pre>
-     * means to serve /index.
-     * </p>
-     */
-    @Deprecated
-    boolean isWithContextPath() default true;
+    HTTPRequestMethod[] method() default {HTTPRequestMethod.GET};
 
     /**
      * User customized data convert class.

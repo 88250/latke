@@ -236,7 +236,7 @@ public final class Latkes {
      * Gets server scheme.
      *
      * <p>
-     * Returns the value of "serverScheme" property in latke.properties.
+     * Returns the value of "serverScheme" property in latke.properties, returns "" if not found.
      * </p>
      *
      * @return server scheme
@@ -246,7 +246,7 @@ public final class Latkes {
             serverScheme = LATKE_PROPS.getProperty("serverScheme");
 
             if (null == serverScheme) {
-                throw new IllegalStateException("latke.properties [serverScheme] is empty");
+                serverScheme = "";
             }
         }
 
@@ -267,7 +267,7 @@ public final class Latkes {
             serverHost = LATKE_PROPS.getProperty("serverHost");
 
             if (null == serverHost) {
-                throw new IllegalStateException("latke.properties [serverHost] is empty");
+                serverHost = "";
             }
         }
 
@@ -298,6 +298,11 @@ public final class Latkes {
      */
     public static String getServer() {
         if (null == server) {
+            final String scheme = getServerScheme();
+            if (Strings.isEmptyOrNull(scheme)) {
+                return "";
+            }
+            
             final StringBuilder serverBuilder = new StringBuilder(getServerScheme()).append("://").append(getServerHost());
             final String port = getServerPort();
 
@@ -455,7 +460,7 @@ public final class Latkes {
      *
      * <p>
      * If Latke runs on xAE, returns "" always, returns the value of "staticPath" property in latke.properties
-     * otherwise.
+     * otherwise, if not found it in latke.properties, returns the value of "contextPath".
      * </p>
      *
      * @return static path
@@ -469,7 +474,7 @@ public final class Latkes {
             staticPath = LATKE_PROPS.getProperty("staticPath");
 
             if (null == staticPath) {
-                staticPath = "";
+                staticPath = getContextPath();
             }
         }
 

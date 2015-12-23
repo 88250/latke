@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.cron;
 
-
 import java.net.URL;
 import java.util.TimerTask;
 import org.apache.commons.lang.StringUtils;
@@ -26,12 +25,11 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.URLFetchService;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
 
-
 /**
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Jan 15, 2014
+ * @version 2.0.1.0, Dec 23, 2015
  */
 public final class Cron extends TimerTask {
 
@@ -39,6 +37,11 @@ public final class Cron extends TimerTask {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Cron.class.getName());
+
+    /**
+     * Time unit constant - 10.
+     */
+    public static final int TEN = 10;
 
     /**
      * Time unit constant - 60.
@@ -62,13 +65,13 @@ public final class Cron extends TimerTask {
 
     /**
      * Schedule of this cron job.
-     * 
+     *
      * <p>
      * Available format: <em>every N (hours|minutes|seconds)</em>, for examples:
      * <ul>
-     *   <li>every 12 hours</li>
-     *   <li>every 10 minutes</li>
-     *   <li>every 30 seconds</li>
+     * <li>every 12 hours</li>
+     * <li>every 10 minutes</li>
+     * <li>every 30 seconds</li>
      * </ul>
      * </p>
      */
@@ -81,7 +84,7 @@ public final class Cron extends TimerTask {
 
     /**
      * Constructs a cron job with the specified URL, description and schedule.
-     * 
+     *
      * @param url the specified URL
      * @param description the specified description
      * @param schedule the specified schedule
@@ -116,15 +119,15 @@ public final class Cron extends TimerTask {
 
     /**
      * Parses the specified schedule into {@link #period execution period}.
-     * 
+     *
      * @param schedule the specified schedule
      */
     private void parse(final String schedule) {
         final int num = Integer.valueOf(StringUtils.substringBetween(schedule, " ", " "));
         final String timeUnit = StringUtils.substringAfterLast(schedule, " ");
 
-        LOGGER.log(Level.TRACE, "Parsed a cron job [schedule={0}]: [num={1}, timeUnit={2}, description={3}], ", 
-            new Object[] {schedule, num, timeUnit, description});
+        LOGGER.log(Level.TRACE, "Parsed a cron job [schedule={0}]: [num={1}, timeUnit={2}, description={3}], ",
+                new Object[]{schedule, num, timeUnit, description});
 
         if ("hours".equals(timeUnit)) {
             period = num * SIXTY * SIXTY * THOUSAND;
@@ -137,7 +140,7 @@ public final class Cron extends TimerTask {
 
     /**
      * Gets the period.
-     * 
+     *
      * @return period
      */
     public long getPeriod() {
@@ -146,7 +149,7 @@ public final class Cron extends TimerTask {
 
     /**
      * Gets the description.
-     * 
+     *
      * @return description
      */
     public String getDescription() {
@@ -155,7 +158,7 @@ public final class Cron extends TimerTask {
 
     /**
      * Gets the schedule.
-     * 
+     *
      * @return schedule
      */
     public String getSchedule() {
@@ -164,16 +167,16 @@ public final class Cron extends TimerTask {
 
     /**
      * Gets the URL.
-     * 
+     *
      * @return URL
      */
-    public String getUrl() {
+    public String getURL() {
         return url;
     }
-    
+
     /**
      * Sets the URL with the specified URL.
-     * 
+     *
      * @param url the specified URL
      */
     public void setURL(final String url) {
