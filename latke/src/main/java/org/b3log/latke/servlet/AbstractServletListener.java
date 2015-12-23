@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet;
 
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.Lifecycle;
@@ -35,12 +34,11 @@ import java.util.Collection;
 import java.util.Locale;
 import org.b3log.latke.ioc.mock.MockServletContext;
 
-
 /**
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.5.3, Apr 15, 2014
+ * @version 1.0.5.4, Dec 23, 2015
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -66,7 +64,10 @@ public abstract class AbstractServletListener implements ServletContextListener,
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
         servletContext = servletContextEvent.getServletContext();
-        
+
+        final String contextPath = servletContext.getContextPath();
+        Latkes.setContextPath(contextPath);
+
         Latkes.initRuntimeEnv();
         LOGGER.info("Initializing the context....");
 
@@ -75,7 +76,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
         final String realPath = servletContext.getRealPath("/");
 
-        LOGGER.log(Level.INFO, "Server [realPath={0}, contextPath={1}]", new Object[] {realPath, servletContext.getContextPath()});
+        LOGGER.log(Level.INFO, "Server [realPath={0}, contextPath={1}]", new Object[]{realPath, servletContext.getContextPath()});
 
         try {
             final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
