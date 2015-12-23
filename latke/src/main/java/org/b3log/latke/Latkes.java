@@ -40,7 +40,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.5.10, Dec 18, 2015
+ * @version 1.5.5.11, Dec 23, 2015
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -487,6 +487,15 @@ public final class Latkes {
         }
 
         return scanPath;
+    }
+
+    /**
+     * Sets IoC scan path with the specified scan path.
+     *
+     * @param scanPath the specified scan path
+     */
+    public static void setScanPath(final String scanPath) {
+        Latkes.scanPath = scanPath;
     }
 
     /**
