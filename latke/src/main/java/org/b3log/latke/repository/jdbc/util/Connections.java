@@ -38,10 +38,10 @@ import org.h2.jdbcx.JdbcConnectionPool;
  * <a href="http://www.h2database.com">H2</a> as the underlying connection pool.
  * </p>
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.1.2.2, Mar 14, 2014
+ * @version 1.1.3.2, Dec 24, 2015
  */
 public final class Connections {
 
@@ -74,6 +74,11 @@ public final class Connections {
      * C3p0 pool check time.
      */
     private static final int C3P0_CHECKTIME = 60;
+
+    /**
+     * C3p0 pool max idle time.
+     */
+    private static final int C3P0_MAX_IDLE_TIME = 600;
 
     /**
      * Connection pool - H2.
@@ -162,7 +167,7 @@ public final class Connections {
 
                     // Disable JMX
                     System.setProperty("com.mchange.v2.c3p0.management.ManagementCoordinator",
-                                       "com.mchange.v2.c3p0.management.NullManagementCoordinator");
+                            "com.mchange.v2.c3p0.management.NullManagementCoordinator");
 
                     c3p0 = new ComboPooledDataSource();
                     c3p0.setUser(userName);
@@ -174,6 +179,9 @@ public final class Connections {
                     c3p0.setMaxPoolSize(maxConnCnt);
                     c3p0.setMaxStatementsPerConnection(maxConnCnt);
                     c3p0.setTestConnectionOnCheckin(true);
+                    c3p0.setTestConnectionOnCheckout(false);
+                    c3p0.setPreferredTestQuery("SELECT 1");
+                    c3p0.setMaxIdleTime(C3P0_MAX_IDLE_TIME);
                     c3p0.setCheckoutTimeout(maxConnCnt);
                     c3p0.setIdleConnectionTestPeriod(C3P0_CHECKTIME);
                     c3p0.setCheckoutTimeout((int) CONN_TIMEOUT);
@@ -194,6 +202,8 @@ public final class Connections {
                     druid.setMinIdle(minConnCnt);
                     druid.setMaxActive(maxConnCnt);
                     druid.setTestOnReturn(true);
+                    druid.setTestOnBorrow(false);
+                    druid.setTestWhileIdle(true);
                     druid.setValidationQuery("SELECT 1");
                 } else if ("none".equals(poolType)) {
                     LOGGER.info("Do not use database connection pool");
@@ -219,12 +229,12 @@ public final class Connections {
 
         if ("BoneCP".equals(poolType)) {
             LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                       new Object[]{boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
+                    new Object[]{boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
 
             return boneCP.getConnection();
         } else if ("c3p0".equals(poolType)) {
             LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                       new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
+                    new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
             final Connection ret = c3p0.getConnection();
 
             ret.setTransactionIsolation(transactionIsolationInt);
@@ -240,7 +250,7 @@ public final class Connections {
 
             return ret;
         } else if ("druid".equals(poolType)) {
-            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[] {druid.getActiveConnections()});
+            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[]{druid.getActiveConnections()});
 
             final Connection ret = druid.getConnection();
 
