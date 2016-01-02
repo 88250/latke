@@ -15,18 +15,19 @@
  */
 package org.b3log.latke.servlet;
 
-
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.b3log.latke.Keys;
+import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.json.JSONObject;
 
 /**
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 16, 2011
+ * @version 1.1.0.0, Jan 2, 2016
  */
 public final class HTTPRequestContext {
 
@@ -47,7 +48,7 @@ public final class HTTPRequestContext {
 
     /**
      * Gets the renderer.
-     * 
+     *
      * @return renderer
      */
     public AbstractHTTPResponseRenderer getRenderer() {
@@ -56,7 +57,7 @@ public final class HTTPRequestContext {
 
     /**
      * Sets the renderer with the specified renderer.
-     * 
+     *
      * @param renderer the specified renderer
      */
     public void setRenderer(final AbstractHTTPResponseRenderer renderer) {
@@ -65,7 +66,7 @@ public final class HTTPRequestContext {
 
     /**
      * Gets the request.
-     * 
+     *
      * @return request
      */
     public HttpServletRequest getRequest() {
@@ -74,7 +75,7 @@ public final class HTTPRequestContext {
 
     /**
      * Sets the request with the specified request.
-     * 
+     *
      * @param request the specified request
      */
     public void setRequest(final HttpServletRequest request) {
@@ -83,7 +84,7 @@ public final class HTTPRequestContext {
 
     /**
      * Gets the response.
-     * 
+     *
      * @return response
      */
     public HttpServletResponse getResponse() {
@@ -92,10 +93,123 @@ public final class HTTPRequestContext {
 
     /**
      * Sets the response with the specified response.
-     * 
+     *
      * @param response the specified response
      */
     public void setResponse(final HttpServletResponse response) {
         this.response = response;
+    }
+
+    /**
+     * Renders using {@link JSONRenderer} with {"sc": false}.
+     *
+     * @return this context
+     */
+    public HTTPRequestContext renderJSON() {
+        final JSONRenderer jsonRenderer = new JSONRenderer();
+        final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, false);
+        jsonRenderer.setJSONObject(ret);
+
+        this.renderer = jsonRenderer;
+
+        return this;
+    }
+
+    /**
+     * Renders with the specified json object.
+     *
+     * @param json the specified json object
+     * @return this context
+     */
+    public HTTPRequestContext renderJSON(final JSONObject json) {
+        final JSONRenderer jsonRenderer = new JSONRenderer();
+        jsonRenderer.setJSONObject(json);
+
+        this.renderer = jsonRenderer;
+
+        return this;
+    }
+
+    /**
+     * Renders using {@link JSONRenderer} with {"sc": sc}.
+     *
+     * @param sc the specified sc
+     * @return this context
+     */
+    public HTTPRequestContext renderJSON(final boolean sc) {
+        final JSONRenderer jsonRenderer = new JSONRenderer();
+        final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, sc);
+        jsonRenderer.setJSONObject(ret);
+
+        this.renderer = jsonRenderer;
+
+        return this;
+    }
+
+    /**
+     * Renders with {"sc": true}.
+     *
+     * @return this context
+     */
+    public HTTPRequestContext renderTrueResult() {
+        if (this.renderer instanceof JSONRenderer) {
+            final JSONRenderer r = (JSONRenderer) this.renderer;
+
+            final JSONObject ret = r.getJSONObject();
+            ret.put(Keys.STATUS_CODE, true);
+        }
+
+        return this;
+    }
+
+    /**
+     * Renders with {"sc": false}.
+     *
+     * @return this context
+     */
+    public HTTPRequestContext renderFalseResult() {
+        if (this.renderer instanceof JSONRenderer) {
+            final JSONRenderer r = (JSONRenderer) this.renderer;
+
+            final JSONObject ret = r.getJSONObject();
+            ret.put(Keys.STATUS_CODE, false);
+        }
+
+        return this;
+    }
+
+    /**
+     * Renders with {"msg": msg}.
+     *
+     * @param msg the specified msg
+     * @return this context
+     */
+    public HTTPRequestContext renderMsg(final String msg) {
+        if (this.renderer instanceof JSONRenderer) {
+            final JSONRenderer r = (JSONRenderer) this.renderer;
+
+            final JSONObject ret = r.getJSONObject();
+            ret.put(Keys.MSG, msg);
+        }
+
+        return this;
+    }
+
+    /**
+     * Renders with {"name", obj}.
+     *
+     * @param name the specified name
+     * @param obj the specified object
+     * @return this context
+     */
+    public HTTPRequestContext renderJSONValue(final String name, final Object obj) {
+        if (this.renderer instanceof JSONRenderer) {
+            final JSONRenderer r = (JSONRenderer) this.renderer;
+
+            final JSONObject ret = r.getJSONObject();
+            ret.put(name, obj);
+        }
+
+        return this;
     }
 }

@@ -30,7 +30,7 @@ import java.io.PrintWriter;
  * <a href="http://json.org">JSON</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Sep 20, 2011
+ * @version 1.1.0.1, Jan 2, 2016
  */
 public final class JSONRenderer extends AbstractHTTPResponseRenderer {
 
@@ -53,6 +53,15 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
      * JSONP callback function name.
      */
     private String callback = "callback";
+    
+    /**
+     * Gets the json object to render.
+     * 
+     * @return the json object
+     */
+    public JSONObject getJSONObject() {
+        return jsonObject;
+    }
 
     /**
      * Sets the json object to render with the specified json object.
