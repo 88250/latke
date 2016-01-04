@@ -17,20 +17,21 @@ package org.b3log.latke.logging;
 
 /**
  * Logging level.
- * 
+ *
  * <ul>
- *   <li>ERROR</li>
- *   <li>WARN</li>
- *   <li>INFO</li>
- *   <li>DEBUG</li>
- *   <li>TRACE</li>
+ * <li>ERROR</li>
+ * <li>WARN</li>
+ * <li>INFO</li>
+ * <li>DEBUG</li>
+ * <li>TRACE</li>
  * </ul>
- * 
- * In addition there is a level OFF that can be used to turn off logging, and a level ALL that can be used to enable logging of all 
- * messages.
- * 
+ *
+ * In addition there is a level OFF that can be used to turn off logging, and a level ALL that can be used to enable
+ * logging of all messages.
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Oct 24, 2013
+ * @see Logger
  */
 public enum Level {
 
