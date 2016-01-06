@@ -183,6 +183,8 @@ public final class Connections {
                         druid.setTestOnBorrow(false);
                         druid.setTestWhileIdle(true);
                         druid.setValidationQuery("SELECT 1");
+                        druid.setMaxWait(5000);
+                        druid.setValidationQueryTimeout(5000);
                     }
 
                     druid.setUsername(userName);
