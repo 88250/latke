@@ -17,7 +17,6 @@ package org.b3log.latke.repository.jdbc.util;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,8 +33,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
  * JDBC connection utilities.
  *
  * <p>
- * Uses <a href="http://jolbox.com/">BoneCP</a>,
- * <a href="http://sourceforge.net/projects/c3p0/">c3p0</a>, <a href="https://github.com/alibaba/druid">Druid</a> or
+ * Uses <a href="https://github.com/alibaba/druid">Druid</a> or
  * <a href="http://www.h2database.com">H2</a> as the underlying connection pool.
  * </p>
  *
@@ -59,22 +57,7 @@ public final class Connections {
     /**
      * Get connection timeout.
      */
-    private static final long CONN_TIMEOUT = 5000;
-
-    /**
-     * Connection pool - c3p0.
-     */
-    private static ComboPooledDataSource c3p0;
-
-    /**
-     * C3p0 pool check time.
-     */
-    private static final int C3P0_CHECKTIME = 60;
-
-    /**
-     * C3p0 pool max idle time.
-     */
-    private static final int C3P0_MAX_IDLE_TIME = 600;
+    private static final int CONN_TIMEOUT = 5000;
 
     /**
      * Connection pool - H2.
@@ -141,30 +124,7 @@ public final class Connections {
                     throw new IllegalStateException("Undefined transaction isolation [" + transactionIsolation + ']');
                 }
 
-                if ("c3p0".equals(poolType)) {
-                    LOGGER.log(Level.DEBUG, "Initializing database connection pool [c3p0]");
-
-                    // Disable JMX
-                    System.setProperty("com.mchange.v2.c3p0.management.ManagementCoordinator",
-                            "com.mchange.v2.c3p0.management.NullManagementCoordinator");
-
-                    c3p0 = new ComboPooledDataSource();
-                    c3p0.setUser(userName);
-                    c3p0.setPassword(password);
-                    c3p0.setJdbcUrl(url);
-                    c3p0.setDriverClass(driver);
-                    c3p0.setInitialPoolSize(minConnCnt);
-                    c3p0.setMinPoolSize(minConnCnt);
-                    c3p0.setMaxPoolSize(maxConnCnt);
-                    c3p0.setMaxStatementsPerConnection(maxConnCnt);
-                    c3p0.setTestConnectionOnCheckin(true);
-                    c3p0.setTestConnectionOnCheckout(false);
-                    c3p0.setPreferredTestQuery("SELECT 1");
-                    c3p0.setMaxIdleTime(C3P0_MAX_IDLE_TIME);
-                    c3p0.setCheckoutTimeout(maxConnCnt);
-                    c3p0.setIdleConnectionTestPeriod(C3P0_CHECKTIME);
-                    c3p0.setCheckoutTimeout((int) CONN_TIMEOUT);
-                } else if ("h2".equals(poolType)) {
+                if ("h2".equals(poolType)) {
                     LOGGER.log(Level.DEBUG, "Initialing database connection pool [h2]");
 
                     h2 = JdbcConnectionPool.create(url, userName, password);
@@ -183,8 +143,8 @@ public final class Connections {
                         druid.setTestOnBorrow(false);
                         druid.setTestWhileIdle(true);
                         druid.setValidationQuery("SELECT 1");
-                        druid.setMaxWait(5000);
-                        druid.setValidationQueryTimeout(5000);
+                        druid.setMaxWait(CONN_TIMEOUT);
+                        druid.setValidationQueryTimeout(CONN_TIMEOUT);
                     }
 
                     druid.setUsername(userName);
@@ -216,16 +176,7 @@ public final class Connections {
             Callstacks.printCallstack(Level.TRACE, new String[]{"org.b3log"}, null);
         }
 
-        if ("c3p0".equals(poolType)) {
-            LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                    new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
-            final Connection ret = c3p0.getConnection();
-
-            ret.setTransactionIsolation(transactionIsolationInt);
-            ret.setAutoCommit(false);
-
-            return ret;
-        } else if ("h2".equals(poolType)) {
+        if ("h2".equals(poolType)) {
             LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[]{h2.getActiveConnections()});
             final Connection ret = h2.getConnection();
 
@@ -263,11 +214,6 @@ public final class Connections {
         if (null != h2) {
             h2.dispose();
             LOGGER.info("Closed [H2] database connection pool");
-        }
-
-        if (null != c3p0) {
-            c3p0.close();
-            LOGGER.info("Closed [c3p0] database connection pool");
         }
 
         if (null != druid) {
