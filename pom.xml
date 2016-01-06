@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.4.2.7, Dec 5, 2015
+    Version: 1.5.2.7, Jan 6, 2016
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -62,9 +62,8 @@
         <!-- JDBC Drivers -->
         <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
         <!-- JDBC Connection Pool -->
-        <bonecp.version>0.8.0.RELEASE</bonecp.version> 
-        <h2.version>1.4.182</h2.version>
-        <druid.version>1.0.11</druid.version> 
+        <h2.version>1.4.190</h2.version>
+        <druid.version>1.0.16</druid.version> 
         <c3p0.version>0.9.1.2</c3p0.version>
         <!-- CDI -->
         <cdi.version>1.0</cdi.version>

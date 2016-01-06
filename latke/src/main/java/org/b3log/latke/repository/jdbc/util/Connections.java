@@ -16,12 +16,13 @@
 package org.b3log.latke.repository.jdbc.util;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
+import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.logging.Level;
@@ -41,7 +42,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.1.3.2, Dec 24, 2015
+ * @version 1.2.3.2, Jan 6, 2016
  */
 public final class Connections {
 
@@ -59,11 +60,6 @@ public final class Connections {
      * Get connection timeout.
      */
     private static final long CONN_TIMEOUT = 5000;
-
-    /**
-     * Connection pool - BoneCP.
-     */
-    private static BoneCP boneCP;
 
     /**
      * Connection pool - c3p0.
@@ -145,24 +141,7 @@ public final class Connections {
                     throw new IllegalStateException("Undefined transaction isolation [" + transactionIsolation + ']');
                 }
 
-                if ("BoneCP".equals(poolType)) {
-                    LOGGER.log(Level.DEBUG, "Initializing database connection pool [BoneCP]");
-
-                    final BoneCPConfig config = new BoneCPConfig();
-
-                    config.setDefaultAutoCommit(false);
-                    config.setDefaultTransactionIsolation(transactionIsolation);
-                    config.setJdbcUrl(url);
-                    config.setUsername(userName);
-                    config.setPassword(password);
-                    config.setMinConnectionsPerPartition(minConnCnt);
-                    config.setMaxConnectionsPerPartition(maxConnCnt);
-                    config.setPartitionCount(1);
-                    config.setDisableJMX(true);
-                    config.setConnectionTimeoutInMs(CONN_TIMEOUT);
-
-                    boneCP = new BoneCP(config);
-                } else if ("c3p0".equals(poolType)) {
+                if ("c3p0".equals(poolType)) {
                     LOGGER.log(Level.DEBUG, "Initializing database connection pool [c3p0]");
 
                     // Disable JMX
@@ -193,7 +172,19 @@ public final class Connections {
                 } else if ("druid".equals(poolType)) {
                     LOGGER.log(Level.DEBUG, "Initialing database connection pool [druid]");
 
-                    druid = new DruidDataSource();
+                    final Properties props = new Properties();
+                    final InputStream is = Connections.class.getResourceAsStream("/druid.properties");
+                    if (null != is) {
+                        props.load(is);
+                        druid = (DruidDataSource) DruidDataSourceFactory.createDataSource(props);
+                    } else {
+                        druid = new DruidDataSource();
+                        druid.setTestOnReturn(true);
+                        druid.setTestOnBorrow(false);
+                        druid.setTestWhileIdle(true);
+                        druid.setValidationQuery("SELECT 1");
+                    }
+
                     druid.setUsername(userName);
                     druid.setPassword(password);
                     druid.setUrl(url);
@@ -201,10 +192,6 @@ public final class Connections {
                     druid.setInitialSize(minConnCnt);
                     druid.setMinIdle(minConnCnt);
                     druid.setMaxActive(maxConnCnt);
-                    druid.setTestOnReturn(true);
-                    druid.setTestOnBorrow(false);
-                    druid.setTestWhileIdle(true);
-                    druid.setValidationQuery("SELECT 1");
                 } else if ("none".equals(poolType)) {
                     LOGGER.info("Do not use database connection pool");
                 }
@@ -227,12 +214,7 @@ public final class Connections {
             Callstacks.printCallstack(Level.TRACE, new String[]{"org.b3log"}, null);
         }
 
-        if ("BoneCP".equals(poolType)) {
-            LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
-                    new Object[]{boneCP.getTotalCreatedConnections(), boneCP.getTotalFree(), boneCP.getTotalLeased()});
-
-            return boneCP.getConnection();
-        } else if ("c3p0".equals(poolType)) {
+        if ("c3p0".equals(poolType)) {
             LOGGER.log(Level.TRACE, "Connection pool[createdConns={0}, freeConns={1}, leasedConns={2}]",
                     new Object[]{c3p0.getNumConnections(), c3p0.getNumIdleConnections(), c3p0.getNumBusyConnections()});
             final Connection ret = c3p0.getConnection();
@@ -276,11 +258,6 @@ public final class Connections {
      * Shutdowns the connection pool.
      */
     public static void shutdownConnectionPool() {
-        if (null != boneCP) {
-            boneCP.shutdown();
-            LOGGER.info("Closed [BoneCP] database connection pool");
-        }
-
         if (null != h2) {
             h2.dispose();
             LOGGER.info("Closed [H2] database connection pool");
