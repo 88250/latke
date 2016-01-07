@@ -38,7 +38,7 @@ import org.b3log.latke.ioc.mock.MockServletContext;
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.5.4, Dec 23, 2015
+ * @version 1.0.6.4, Jan 7, 2016
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -116,7 +116,11 @@ public abstract class AbstractServletListener implements ServletContextListener,
     public abstract void sessionCreated(final HttpSessionEvent httpSessionEvent);
 
     @Override
-    public abstract void sessionDestroyed(final HttpSessionEvent httpSessionEvent);
+    public void sessionDestroyed(final HttpSessionEvent httpSessionEvent) {
+        if (Latkes.runsWithJDBCDatabase()) {
+            JdbcRepository.dispose();
+        }
+    }
 
     /**
      * Gets the servlet context.

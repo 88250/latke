@@ -23,13 +23,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.b3log.latke.repository.jdbc.JdbcRepository;
 
 
 /**
  * Event manager.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.4, May 31, 2014
+ * @version 1.1.1.4, Jan 7, 2016
  */
 @Named("LatkeBuiltInEventManager")
 @Singleton
@@ -65,6 +66,8 @@ public class EventManager {
             @Override
             public T call() throws Exception {
                 synchronizedEventQueue.fireEvent(event);
+                
+                JdbcRepository.dispose(); // close the JDBC connection which might have been used
 
                 return null; // XXX: Our future????
             }
