@@ -15,17 +15,15 @@
  */
 package org.b3log.latke.urlfetch;
 
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Logger;
-
 
 /**
  * URL fetch service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Dec 13, 2012
+ * @version 2.0.0.5, Jan 8, 2016
  */
 @SuppressWarnings("unchecked")
 public final class URLFetchServiceFactory {
@@ -49,20 +47,13 @@ public final class URLFetchServiceFactory {
             Class<URLFetchService> serviceClass;
 
             switch (runtimeEnv) {
-            case LOCAL:
-                serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
-                URL_FETCH_SERVICE = serviceClass.newInstance();
+                case LOCAL:
+                    serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.local.LocalURLFetchService");
+                    URL_FETCH_SERVICE = serviceClass.newInstance();
 
-                break;
-
-            case GAE:
-                serviceClass = (Class<URLFetchService>) Class.forName("org.b3log.latke.urlfetch.gae.GAEURLFetchService");
-                URL_FETCH_SERVICE = serviceClass.newInstance();
-
-                break;
-
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    break;
+                default:
+                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize URL Fetch Service!", e);
@@ -83,5 +74,6 @@ public final class URLFetchServiceFactory {
     /**
      * Private default constructor.
      */
-    private URLFetchServiceFactory() {}
+    private URLFetchServiceFactory() {
+    }
 }

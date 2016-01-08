@@ -232,7 +232,7 @@ public class RequestDispachTestCase {
                 .data(MethodInvokeHandler.INVOKE_RESULT);
 
         final int totalMatched = 3;
-        Assert.assertEquals(list.size(), totalMatched);
+        Assert.assertEquals(totalMatched, list.size());
         Assert.assertTrue(list.get(0) instanceof JSONRenderer);
         Assert.assertTrue(list.get(1) instanceof DoNothingRenderer);
         Assert.assertTrue(list.get(2) instanceof JSONRenderer);

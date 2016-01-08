@@ -15,17 +15,15 @@
  */
 package org.b3log.latke.mail;
 
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Logger;
-
 
 /**
  * Mail service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Dec 13, 2012
+ * @version 2.0.1.1, Jan 8, 2016
  */
 @SuppressWarnings("unchecked")
 public final class MailServiceFactory {
@@ -49,20 +47,13 @@ public final class MailServiceFactory {
             Class<MailService> mailServiceClass;
 
             switch (runtimeEnv) {
-            case LOCAL:
-                mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.local.LocalMailService");
-                MAIL_SERVICE = mailServiceClass.newInstance();
-                    
-                break;
+                case LOCAL:
+                    mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.local.LocalMailService");
+                    MAIL_SERVICE = mailServiceClass.newInstance();
 
-            case GAE:
-                mailServiceClass = (Class<MailService>) Class.forName("org.b3log.latke.mail.gae.GAEMailService");
-                MAIL_SERVICE = mailServiceClass.newInstance();
-                    
-                break;
-
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    break;
+                default:
+                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Mail Service!", e);
@@ -83,5 +74,6 @@ public final class MailServiceFactory {
     /**
      * Private default constructor.
      */
-    private MailServiceFactory() {}
+    private MailServiceFactory() {
+    }
 }

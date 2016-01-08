@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.util;
 
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
@@ -31,12 +30,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
 /**
  * Static resource utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Apr 15, 2014
+ * @version 2.0.0.5, Jan 8, 2016
  */
 public final class StaticResources {
 
@@ -49,7 +47,7 @@ public final class StaticResources {
      * Static resource path patterns.
      *
      * <p>
-     * Initializes from file static-resources.xml, if not found, initializes it from appengine-web.xml.
+     * Initializes from file static-resources.xml.
      * </p>
      */
     private static final Set<String> STATIC_RESOURCE_PATHS = new TreeSet<String>();
@@ -67,8 +65,8 @@ public final class StaticResources {
      */
     public static boolean isStatic(final HttpServletRequest request) {
         final boolean requestStaticResourceChecked = null == request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED)
-            ? false
-            : (Boolean) request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED);
+                ? false
+                : (Boolean) request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED);
 
         if (requestStaticResourceChecked) {
             return (Boolean) request.getAttribute(Keys.HttpRequest.IS_REQUEST_STATIC_RESOURCE);
@@ -99,18 +97,9 @@ public final class StaticResources {
     private static synchronized void init() {
         LOGGER.trace("Reads static resources definition from [static-resources.xml]");
 
-        File staticResources = Latkes.getWebFile("/WEB-INF/static-resources.xml");
-        boolean isGAEStaticResources = true;
-
+        final File staticResources = Latkes.getWebFile("/WEB-INF/static-resources.xml");
         if (null == staticResources || !staticResources.exists()) {
-            LOGGER.trace("Not found [static-resources.xml], so reads static resources definition from [appengine-web.xml]");
-
-            staticResources = Latkes.getWebFile("/WEB-INF/appengine-web.xml");
-            isGAEStaticResources = false;
-        }
-
-        if (null == staticResources || !staticResources.exists()) {
-            throw new IllegalStateException("Not found static resources definition from [static-resources.xml] or [appengine-web.xml]");
+            throw new IllegalStateException("Not found static resources definition from [static-resources.xml]");
         }
 
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -122,15 +111,7 @@ public final class StaticResources {
 
             root.normalize();
 
-            Element staticFiles;
-
-            if (isGAEStaticResources) {
-                staticFiles = root;
-            } else {
-                staticFiles = (Element) root.getElementsByTagName("static-files").item(0);
-            }
-
-            final NodeList includes = staticFiles.getElementsByTagName("include");
+            final NodeList includes = root.getElementsByTagName("include");
 
             final StringBuilder logBuilder = new StringBuilder("Reading static files: [").append(Strings.LINE_SEPARATOR);
 
@@ -181,5 +162,6 @@ public final class StaticResources {
     /**
      * Private constructor.
      */
-    private StaticResources() {}
+    private StaticResources() {
+    }
 }

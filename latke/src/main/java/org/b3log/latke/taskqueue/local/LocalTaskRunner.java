@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.taskqueue.local;
 
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,7 +26,6 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
-
 
 /**
  * run the task in queue, now using httpUrlfetch to handle the request.
@@ -112,13 +110,15 @@ public final class LocalTaskRunner extends Thread {
         try {
             httpResponse = urlFetchService.fetch(httpRequest);
         } catch (final IOException e) {
-            LOGGER.log(Level.INFO, "The task[{0}] throw exception {1}", new Object[] {task.getURL(), e.getMessage()});
+            LOGGER.log(Level.INFO, "The task[{0}] throw exception {1}", new Object[]{task.getURL(), e.getMessage()});
             return false;
         }
 
         /**
-         * <p> Quote GAE:" If a push task request handler returns an HTTP status code within the range 200–299, App Engine considers the
-         * task to have completed successfully. If the task returns a status code outside of this range" </p>
+         * <p>
+         * Quote GAE:" If a push task request handler returns an HTTP status code within the range 200–299, App Engine
+         * considers the task to have completed successfully. If the task returns a status code outside of this range"
+         * </p>
          */
         final Integer beginCode = 200;
         final Integer endCode = 299;
@@ -126,8 +126,9 @@ public final class LocalTaskRunner extends Thread {
         if (httpResponse.getResponseCode() >= beginCode && httpResponse.getResponseCode() <= endCode) {
             return true;
         }
-        LOGGER.log(Level.INFO, "The task[{0}] not success ,the return code is [{1}]",
-            new Object[] {task.getURL(), httpResponse.getResponseCode()});
+
+        LOGGER.log(Level.INFO, "The task[{0}] not success, the return code is [{1}]",
+                new Object[]{task.getURL(), httpResponse.getResponseCode()});
 
         return false;
     }

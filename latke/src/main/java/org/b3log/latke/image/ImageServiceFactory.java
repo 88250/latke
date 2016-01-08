@@ -15,17 +15,15 @@
  */
 package org.b3log.latke.image;
 
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Logger;
-
 
 /**
  * Image service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Aug 27, 2012
+ * @version 2.0.0.1, Jan 8, 2016
  */
 public final class ImageServiceFactory {
 
@@ -48,20 +46,13 @@ public final class ImageServiceFactory {
             Class<ImageService> serviceClass = null;
 
             switch (runtimeEnv) {
-            case LOCAL:
-                serviceClass = (Class<ImageService>) Class.forName("org.b3log.latke.image.local.LocalImageService");
-                IMAGE_SERVICE = serviceClass.newInstance();
-                    
-                break;
+                case LOCAL:
+                    serviceClass = (Class<ImageService>) Class.forName("org.b3log.latke.image.local.LocalImageService");
+                    IMAGE_SERVICE = serviceClass.newInstance();
 
-            case GAE:
-                serviceClass = (Class<ImageService>) Class.forName("org.b3log.latke.image.gae.GAEImageService");
-                IMAGE_SERVICE = serviceClass.newInstance();
-                    
-                break;
-
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    break;
+                default:
+                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Image Service!", e);
@@ -82,5 +73,6 @@ public final class ImageServiceFactory {
     /**
      * Private default constructor.
      */
-    private ImageServiceFactory() {}
+    private ImageServiceFactory() {
+    }
 }

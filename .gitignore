@@ -2,8 +2,6 @@
 /latke-client/target/
 /latke-repository-mysql/target/
 /latke-repository-h2/target/
-/latke-gae/target/
-/latke-bae/target/
 /latke-demo/hello/target/
 /target/
 pom.xml.*

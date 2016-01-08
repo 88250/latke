@@ -12,9 +12,8 @@
     
     <properties>
         <servlet.version>3.1.0</servlet.version>
-        <latke.version>1.0.11</latke.version>
+        <latke.version>2.0.0</latke.version>
         
-        <freemarker-gae.version>2.3.18</freemarker-gae.version>
         <slf4j.version>1.7.5</slf4j.version>
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
         

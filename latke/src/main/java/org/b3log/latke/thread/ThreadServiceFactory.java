@@ -15,17 +15,15 @@
  */
 package org.b3log.latke.thread;
 
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Logger;
-
 
 /**
  * Thread service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 20, 2012
+ * @version 2.0.0.0, Jan 8, 2016
  */
 public final class ThreadServiceFactory {
 
@@ -48,20 +46,13 @@ public final class ThreadServiceFactory {
             Class<ThreadService> serviceClass = null;
 
             switch (runtimeEnv) {
-            case LOCAL:
-                serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.local.LocalThreadService");
-                THREAD_SERVICE = serviceClass.newInstance();
+                case LOCAL:
+                    serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.local.LocalThreadService");
+                    THREAD_SERVICE = serviceClass.newInstance();
 
-                break;
-
-            case GAE:
-                serviceClass = (Class<ThreadService>) Class.forName("org.b3log.latke.thread.gae.GAEThreadService");
-                THREAD_SERVICE = serviceClass.newInstance();
-
-                break;
-
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    break;
+                default:
+                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Thread Service!", e);
@@ -82,5 +73,6 @@ public final class ThreadServiceFactory {
     /**
      * Private default constructor.
      */
-    private ThreadServiceFactory() {}
+    private ThreadServiceFactory() {
+    }
 }

@@ -37,7 +37,7 @@ import org.w3c.dom.NodeList;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Dec 23, 2015
+ * @version 2.0.0.5, Jan 8, 2016
  */
 public final class CronService {
 
@@ -86,10 +86,6 @@ public final class CronService {
                     LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
 
                     break;
-
-                case GAE:
-                    break;
-
                 default:
                     throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }

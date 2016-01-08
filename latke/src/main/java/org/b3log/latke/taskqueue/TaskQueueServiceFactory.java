@@ -15,17 +15,15 @@
  */
 package org.b3log.latke.taskqueue;
 
-
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Logger;
-
 
 /**
  * Task queue service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Aug 27, 2012
+ * @version 2.0.0.1, Jan 8, 2016
  */
 public final class TaskQueueServiceFactory {
 
@@ -48,20 +46,13 @@ public final class TaskQueueServiceFactory {
             Class<TaskQueueService> serviceClass = null;
 
             switch (runtimeEnv) {
-            case LOCAL:
-                serviceClass = (Class<TaskQueueService>) Class.forName("org.b3log.latke.taskqueue.local.LocalTaskQueueService");
-                TASK_QUEUE_SERVICE = serviceClass.newInstance();
+                case LOCAL:
+                    serviceClass = (Class<TaskQueueService>) Class.forName("org.b3log.latke.taskqueue.local.LocalTaskQueueService");
+                    TASK_QUEUE_SERVICE = serviceClass.newInstance();
 
-                break;
-
-            case GAE:
-                serviceClass = (Class<TaskQueueService>) Class.forName("org.b3log.latke.taskqueue.gae.GAETaskQueueService");
-                TASK_QUEUE_SERVICE = serviceClass.newInstance();
-
-                break;
-
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    break;
+                default:
+                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Task Queue Service!", e);
@@ -82,5 +73,6 @@ public final class TaskQueueServiceFactory {
     /**
      * Private default constructor.
      */
-    private TaskQueueServiceFactory() {}
+    private TaskQueueServiceFactory() {
+    }
 }

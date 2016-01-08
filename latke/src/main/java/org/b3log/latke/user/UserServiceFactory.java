@@ -15,16 +15,14 @@
  */
 package org.b3log.latke.user;
 
-
 import freemarker.log.Logger;
 import org.b3log.latke.Latkes;
 
-
 /**
  * User service factory.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Dec 29, 2011
+ * @version 2.0.0.3, Jan 8, 2016
  */
 @SuppressWarnings("unchecked")
 public final class UserServiceFactory {
@@ -46,18 +44,13 @@ public final class UserServiceFactory {
             Class<UserService> serviceClass = null;
 
             switch (Latkes.getRuntime("userService")) {
-            case GAE:
-                serviceClass = (Class<UserService>) Class.forName("org.b3log.latke.user.gae.GAEUserService");
-                USER_SERVICE = serviceClass.newInstance();
-                break;
+                case LOCAL:
+                    serviceClass = (Class<UserService>) Class.forName("org.b3log.latke.user.local.LocalUserService");
+                    USER_SERVICE = serviceClass.newInstance();
+                    break;
 
-            case LOCAL:
-                serviceClass = (Class<UserService>) Class.forName("org.b3log.latke.user.local.LocalUserService");
-                USER_SERVICE = serviceClass.newInstance();
-                break;
-
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                default:
+                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize User Service!", e);
@@ -67,9 +60,8 @@ public final class UserServiceFactory {
     }
 
     /**
-     * Gets user service (always be an instance of 
-     * {@link org.b3log.latke.user.local.LocalUserService}).
-     * 
+     * Gets user service (always be an instance of {@link org.b3log.latke.user.local.LocalUserService}).
+     *
      * @return user service
      */
     public static UserService getUserService() {
@@ -79,5 +71,6 @@ public final class UserServiceFactory {
     /**
      * Private default constructor.
      */
-    private UserServiceFactory() {}
+    private UserServiceFactory() {
+    }
 }

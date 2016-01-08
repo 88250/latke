@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository;
 
-
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
@@ -31,17 +30,17 @@ import org.b3log.latke.util.Callstacks;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 /**
  * Abstract repository.
  *
  * <p>
- * This is a base adapter for wrapped {@link #repository repository}, the underlying repository will be instantiated in the
- * {@link #AbstractRepository(java.lang.String) constructor} with {@link Latkes#getRuntimeEnv() the current runtime environment}.
+ * This is a base adapter for wrapped {@link #repository repository}, the underlying repository will be instantiated in
+ * the {@link #AbstractRepository(java.lang.String) constructor} with
+ * {@link Latkes#getRuntimeEnv() the current runtime environment}.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.7, Mar 28, 2014
+ * @version 2.1.1.7, Jan 8, 2016
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -68,37 +67,31 @@ public abstract class AbstractRepository implements Repository {
             Class<Repository> repositoryClass = null;
 
             switch (runtimeEnv) {
-            case LOCAL:
-                final RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
+                case LOCAL:
+                    final RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
 
-                switch (runtimeDatabase) {
-                case MYSQL:
+                    switch (runtimeDatabase) {
+                        case MYSQL:
 
-                case H2:
+                        case H2:
 
-                case MSSQL:
-                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
+                        case MSSQL:
+                            repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
+
+                            break;
+
+                        case NONE:
+                            repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
+
+                            break;
+
+                        default:
+                            throw new RuntimeException("The runtime database [" + runtimeDatabase + "] is not support NOW!");
+                    }
 
                     break;
-
-                case NONE:
-                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
-
-                    break;
-
                 default:
-                    throw new RuntimeException("The runtime database [" + runtimeDatabase + "] is not support NOW!");
-                }
-
-                break;
-
-            case GAE:
-                repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.gae.GAERepository");
-
-                break;
-
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
             }
 
             final Constructor<Repository> constructor = repositoryClass.getConstructor(String.class);
@@ -169,7 +162,7 @@ public abstract class AbstractRepository implements Repository {
             return repository.get(query);
         } catch (final JDBCRepositoryException e) {
             LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, query={2}]", e.getMessage(), repository.getName(),
-                query.toString());
+                    query.toString());
 
             // XXX: Results.defaultPagination?
             final JSONObject ret = new JSONObject();

@@ -23,7 +23,6 @@
 
     <modules>
         <module>latke</module>
-        <module>latke-gae</module>
         <module>latke-repository-h2</module>
         <module>latke-repository-mysql</module>
         <module>latke-repository-sqlserver</module>

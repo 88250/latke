@@ -40,7 +40,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.5.12, Dec 23, 2015
+ * @version 2.5.5.12, Jan 8, 2016
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -427,18 +427,9 @@ public final class Latkes {
     /**
      * Gets context path.
      *
-     * <p>
-     * If Latke runs on xAE, returns "" always, returns the value of "contextPath" property in latke.properties
-     * otherwise.
-     * </p>
-     *
      * @return context path
      */
     public static String getContextPath() {
-        if (RuntimeEnv.GAE == getRuntimeEnv()) {
-            return "";
-        }
-
         if (null == contextPath) {
             contextPath = LATKE_PROPS.getProperty("contextPath");
 
@@ -453,18 +444,9 @@ public final class Latkes {
     /**
      * Gets static path.
      *
-     * <p>
-     * If Latke runs on xAE, returns "" always, returns the value of "staticPath" property in latke.properties
-     * otherwise, if not found it in latke.properties, returns the value of "contextPath".
-     * </p>
-     *
      * @return static path
      */
     public static String getStaticPath() {
-        if (RuntimeEnv.GAE == getRuntimeEnv()) {
-            return "";
-        }
-
         if (null == staticPath) {
             staticPath = LATKE_PROPS.getProperty("staticPath");
 
@@ -526,23 +508,6 @@ public final class Latkes {
     /**
      * Initializes {@linkplain RuntimeEnv runtime environment}.
      *
-     * <ol>
-     * <li>
-     * If the "latke.properties" has a valid runtime environment configuration (for example, runtimeEnv=GAE or
-     * runtimeEnv=LOCAL), initializes the runtime environment as its specified
-     * </li>
-     * <li>
-     * If the GAERepository class (org.b3log.latke.repository.gae.GAERepository) is on the classpath, considered Latke
-     * is running on <a href="http://code.google.com/appengine">Google App Engine</a>, otherwise, considered Latke is
-     * running on standard Servlet container.
-     * </li>
-     * </ol>
-     *
-     * <p>
-     * If the Latke runs on the standard Servlet container (local environment), Latke will read database configurations
-     * from file "local.properties".
-     * </p>
-     *
      * <p>
      * Sets the current {@link RuntimeMode runtime mode} to {@link RuntimeMode#DEVELOPMENT development mode}.
      * </p>
@@ -561,16 +526,7 @@ public final class Latkes {
             runtimeEnv = RuntimeEnv.valueOf(runtimeEnvValue);
         }
 
-        if (null == runtimeEnv) {
-            LOGGER.log(Level.TRACE, "Initializes runtime environment by class loading");
-
-            try {
-                runtimeEnv = RuntimeEnv.GAE;
-                Class.forName("org.b3log.latke.repository.gae.GAERepository");
-            } catch (final ClassNotFoundException e) {
-                runtimeEnv = RuntimeEnv.LOCAL;
-            }
-        }
+        runtimeEnv = RuntimeEnv.LOCAL;
 
         if (null == runtimeMode) {
             final String runtimeModeValue = LATKE_PROPS.getProperty("runtimeMode");

@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.remote;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -27,7 +26,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -47,12 +45,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 /**
  * Accesses repository via HTTP protocol.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.5, Nov 28, 2013
+ * @version 2.0.1.5, Jan 8, 2016
  */
 @RequestProcessor
 public class RepositoryAccessor {
@@ -66,8 +63,7 @@ public class RepositoryAccessor {
      * Gets whether repositories is writable.
      *
      * <p>
-     * Query parameters:
-     * /latke/remote/repositories/writable?<em>userName=xxx&password=xxx</em><br/>
+     * Query parameters: /latke/remote/repositories/writable?<em>userName=xxx&password=xxx</em><br/>
      * All parameters are required.
      * </p>
      *
@@ -88,7 +84,7 @@ public class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.GET)
     public void getRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
-        final HttpServletResponse response) {
+            final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
 
         context.setRenderer(renderer);
@@ -112,8 +108,7 @@ public class RepositoryAccessor {
      * Sets whether repositories is writable.
      *
      * <p>
-     * Query parameters:
-     * /latke/remote/repositories/writable?<em>userName=xxx&password=xxx&writable=true</em><br/>
+     * Query parameters: /latke/remote/repositories/writable?<em>userName=xxx&password=xxx&writable=true</em><br/>
      * All parameters are required.
      * </p>
      *
@@ -133,7 +128,7 @@ public class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.PUT)
     public void setRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
-        final HttpServletResponse response) {
+            final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
 
         context.setRenderer(renderer);
@@ -165,8 +160,7 @@ public class RepositoryAccessor {
      * Gets repository names.
      *
      * <p>
-     * Query parameters:
-     * /latke/remote/repository/names?<em>userName=xxx&password=xxx</em><br/>
+     * Query parameters: /latke/remote/repository/names?<em>userName=xxx&password=xxx</em><br/>
      * All parameters are required.
      * </p>
      *
@@ -189,7 +183,7 @@ public class RepositoryAccessor {
      */
     @RequestProcessing(value = "/latke/remote/repository/names", method = HTTPRequestMethod.GET)
     public void getRepositoryNames(final HTTPRequestContext context, final HttpServletRequest request,
-        final HttpServletResponse response) {
+            final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
 
         context.setRenderer(renderer);
@@ -263,7 +257,7 @@ public class RepositoryAccessor {
         }
 
         final Query query = new Query().setCurrentPageNum(Integer.valueOf(request.getParameter("pageNum"))).setPageSize(
-            Integer.valueOf(request.getParameter("pageSize")));
+                Integer.valueOf(request.getParameter("pageSize")));
 
         try {
             final JSONObject result = repository.get(query);
@@ -284,8 +278,7 @@ public class RepositoryAccessor {
      * Puts data to repository.
      *
      * <p>
-     * Query parameters:
-     * /latke/remote/repository/data?<em>userName=xxx&password=xxx&repositoryName=xxx</em><br/>
+     * Query parameters: /latke/remote/repository/data?<em>userName=xxx&password=xxx&repositoryName=xxx</em><br/>
      * All parameters are required.
      * </p>
      *
@@ -331,11 +324,12 @@ public class RepositoryAccessor {
 
         if (null == repository) {
             final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
-                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_"
-                : "";
+                    ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_"
+                    : "";
             final String withoutTablePrefix = StringUtils.substringAfter(repositoryName, tableNamePrefix);
 
-            repository = new AbstractRepository(withoutTablePrefix) {};
+            repository = new AbstractRepository(withoutTablePrefix) {
+            };
         }
 
         final Transaction transaction = repository.beginTransaction();
@@ -360,8 +354,8 @@ public class RepositoryAccessor {
 
                         Locale.setDefault(Locale.US);
                         record.put(key,
-                            DateUtils.parseDate(record.optString(key),
-                            new String[] {"EEE MMM dd HH:mm:ss z yyyy", "EEE MMM d HH:mm:ss z yyyy", "yyyy-MM-dd HH:mm:ss.SSS"}));
+                                DateUtils.parseDate(record.optString(key),
+                                        new String[]{"EEE MMM dd HH:mm:ss z yyyy", "EEE MMM d HH:mm:ss z yyyy", "yyyy-MM-dd HH:mm:ss.SSS"}));
                         Locale.setDefault(defaultLocale);
                     }
 
@@ -395,8 +389,7 @@ public class RepositoryAccessor {
      * Creates tables.
      *
      * <p>
-     * Query parameters:
-     * /latke/remote/repository/tables?<em>userName=xxx&password=xxx&repositoryName=xxx</em><br/>
+     * Query parameters: /latke/remote/repository/tables?<em>userName=xxx&password=xxx&repositoryName=xxx</em><br/>
      * All parameters are required.
      * </p>
      *
@@ -431,12 +424,6 @@ public class RepositoryAccessor {
             return;
         }
 
-        if (RuntimeEnv.GAE == Latkes.getRuntimeEnv()) {
-            jsonObject.put(Keys.MSG, "GAE runtime enviorment dose not need to create tables");
-
-            return;
-        }
-
         JdbcRepositories.initAllTables();
     }
 
@@ -444,8 +431,8 @@ public class RepositoryAccessor {
      * Determines whether the specified request is authenticated.
      *
      * <p>
-     * If the specified request is unauthenticated, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg}
-     * into the specified json object to render.
+     * If the specified request is unauthenticated, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg} into the
+     * specified json object to render.
      * </p>
      *
      * @param request the specified request
@@ -491,8 +478,8 @@ public class RepositoryAccessor {
      * Determines whether the specified get data request is bad.
      *
      * <p>
-     * If the specified request is bad, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg}
-     * into the specified json object to render.
+     * If the specified request is bad, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg} into the specified
+     * json object to render.
      * </p>
      *
      * @param request the specified request
@@ -545,8 +532,8 @@ public class RepositoryAccessor {
      * Determines whether the specified put data request is bad.
      *
      * <p>
-     * If the specified request is bad, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg}
-     * into the specified json object to render.
+     * If the specified request is bad, puts {@link Keys#STATUS_CODE sc} and {@link Keys#MSG msg} into the specified
+     * json object to render.
      * </p>
      *
      * @param request the specified request
@@ -555,7 +542,7 @@ public class RepositoryAccessor {
      * @return {@code true} if it is bad, returns {@code false} otherwise
      */
     private boolean badPutDataRequest(final HttpServletRequest request, final JSONObject jsonObject,
-        final StringBuilder dataBuilder) {
+            final StringBuilder dataBuilder) {
         final String repositoryName = request.getParameter("repositoryName");
 
         if (Strings.isEmptyOrNull(repositoryName)) {

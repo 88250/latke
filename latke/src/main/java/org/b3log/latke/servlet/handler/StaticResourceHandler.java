@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.handler;
 
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +26,12 @@ import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.renderer.StaticFileRenderer;
 import org.b3log.latke.util.StaticResources;
 
-
 /**
- * to handler static recources.
+ * Static resource handler.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 18, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 2.0.0.1, Jan 8, 2016
  */
 public class StaticResourceHandler implements Handler {
 
@@ -45,11 +44,6 @@ public class StaticResourceHandler implements Handler {
      * Default Servlet name used by Tomcat, Jetty, JBoss, and GlassFish.
      */
     private static final String COMMON_DEFAULT_SERVLET_NAME = "default";
-
-    /**
-     * Default Servlet name used by Google App Engine.
-     */
-    private static final String GAE_DEFAULT_SERVLET_NAME = "_ah_default";
 
     /**
      * Default Servlet name used by Resin.
@@ -69,8 +63,8 @@ public class StaticResourceHandler implements Handler {
     /**
      * the holder of All option Servlet Name.
      */
-    private static final String[] OPTION_SERVLET_NAME = new String[] {
-        COMMON_DEFAULT_SERVLET_NAME, GAE_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
+    private static final String[] OPTION_SERVLET_NAME = new String[]{
+        COMMON_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
         WEBSPHERE_DEFAULT_SERVLET_NAME};
 
     /**
@@ -99,7 +93,7 @@ public class StaticResourceHandler implements Handler {
         }
         if (requestDispatcher == null) {
             throw new IllegalStateException(
-                "Unable to locate the default servlet for serving static content. "
+                    "Unable to locate the default servlet for serving static content. "
                     + "Please report this bug on https://github.com/b3log/b3log-latke/issues/new");
         }
 
@@ -114,14 +108,14 @@ public class StaticResourceHandler implements Handler {
         if (StaticResources.isStatic(request)) {
             if (null == requestDispatcher) {
                 throw new IllegalStateException(
-                    "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
+                        "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
             }
 
             context.setRenderer(new StaticFileRenderer(requestDispatcher));
 
             return;
         }
-        
+
         httpControl.nextHandler();
     }
 }

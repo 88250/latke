@@ -19,8 +19,8 @@ package org.b3log.latke;
  * Latke runtime environment.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Jan 5, 2014
- * @see Latkes#getRuntimeEnv() 
+ * @version 2.0.0.3, Jan 8, 2016
+ * @see Latkes#getRuntimeEnv()
  */
 public enum RuntimeEnv {
 
@@ -28,9 +28,4 @@ public enum RuntimeEnv {
      * Indicates Latke runs on local (standard Servlet container).
      */
     LOCAL,
-    /**
-     * Indicates Latke runs on <a href="http://code.google.com/appengine">
-     * Google App Engine</a>.
-     */
-    GAE,
 }
