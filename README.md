@@ -1,6 +1,8 @@
 Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](https://travis-ci.org/b3log/latke) [![Maven Central](https://img.shields.io/maven-central/v/org.b3log/latke-parent.svg)]()
 ----
 
+## Overview
+
 Yet another simple web framework based on Java servlet technology.
 
 * [为什么又要造一个叫 Latke 的轮子](http://88250.b3log.org/why-latke-exists)
@@ -14,6 +16,14 @@ Yet another simple web framework based on Java servlet technology.
     <version>RELEASE</version>
 </dependency>
 ```
+
+## Use cases
+
+* [Demos](https://github.com/b3log/latke-demo): Hello World demo for newbies
+* [Solo](https://github.com/b3log/solo): A blogging system written in Java, feel free to create your or your team own blog. 
+* [Symphony](https://github.com/b3log/symphony): A real-time community forum written in Java
+
+
 ----
 **平等，自由，奔放**
 
