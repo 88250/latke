@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
     Description: Latke web framework project. 
-    Version: 2.1.9.8, Jan 6, 2016
+    Version: 2.1.9.9, Feb 17, 2016
     Author: Liang Ding
     Author: Liceng Yao
 -->
@@ -240,5 +240,17 @@
         </dependency>
 
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <header>../src/main/resources/etc/header.txt</header>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     
 </project>

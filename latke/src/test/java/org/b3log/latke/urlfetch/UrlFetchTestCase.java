@@ -28,10 +28,10 @@ import org.testng.annotations.Test;
 
 /**
  * URL fetch test case.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Nov 29, 2015
+ * @version 1.1.0.4, Feb 17, 2016
  */
 public class UrlFetchTestCase {
 
@@ -45,7 +45,23 @@ public class UrlFetchTestCase {
     }
 
     /**
-     * 
+     *
+     * @throws IOException XXX
+     */
+    //@Test
+    public void testHTTPSGetFetch() throws IOException {
+        System.out.println("testHTTPSGetFetch");
+        final HTTPRequest request = new HTTPRequest();
+        request.setRequestMethod(HTTPRequestMethod.GET);
+        request.setURL(new URL("https://hacpai.com"));
+
+        final HTTPResponse httpResponse = fetchService.fetch(request);
+
+        printHttpResponse(httpResponse);
+    }
+
+    /**
+     *
      * @throws IOException XXX
      */
     //@Test
@@ -62,7 +78,7 @@ public class UrlFetchTestCase {
 
     /**
      * Tests async get fetch.
-     * 
+     *
      * @throws Exception exception
      */
     //@Test
@@ -79,8 +95,8 @@ public class UrlFetchTestCase {
     }
 
     /**
-     * 
-     * @throws IOException  XXX
+     *
+     * @throws IOException XXX
      */
     //@Test
     public void testPostFetch() throws IOException {
@@ -102,7 +118,7 @@ public class UrlFetchTestCase {
     }
 
     /**
-     * 
+     *
      * @param httpResponse XXX
      * @throws IOException XXX
      */
@@ -115,9 +131,9 @@ public class UrlFetchTestCase {
             System.out.println(httpHeader.getName() + " == " + httpHeader.getValue());
         }
 
-        final BufferedReader reader =
-                new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
-                httpResponse.getContent())));
+        final BufferedReader reader
+                = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
+                        httpResponse.getContent())));
 
         String lines;
         while ((lines = reader.readLine()) != null) {
