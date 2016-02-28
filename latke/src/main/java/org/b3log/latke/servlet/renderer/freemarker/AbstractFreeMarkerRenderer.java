@@ -36,7 +36,7 @@ import java.util.Map;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.9, Nov 18, 2015
+ * @version 1.0.0.10, Feb 28, 2016
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {
 
@@ -136,7 +136,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
             final String year = DateFormatUtils.format(time, "yyyy");
             final String copyright = "<div style=\"display: none;\">Copyright (c) 2009-" + year
                     + ", <a href=\"http://b3log.org\">b3log.org</a> "
-                    + "& <a href=\"http://hacpai.com\">hacpai.com</a></div>\n";
+                    + "& <a href=\"https://hacpai.com\">hacpai.com</a></div>\n";
 
             html = html.replace("</body>", copyright + "</body>");
 
