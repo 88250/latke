@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.5.2.8, Jan 6, 2016
+    Version: 1.5.2.9, May 17, 2016
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -43,12 +43,12 @@
     <properties>
         <servlet.version>3.1.0</servlet.version>
         <el-api.version>1.0</el-api.version>
-        <freemarker.version>2.3.20</freemarker.version>
+        <freemarker.version>2.3.23</freemarker.version>
         <javax.mail.version>1.4</javax.mail.version>
         <commons-io.version>1.4</commons-io.version>
         <commons-lang.version>2.5</commons-lang.version>
         <javassist.version>3.12.1.GA</javassist.version>
-        <slf4j.version>1.7.5</slf4j.version>
+        <slf4j.version>1.7.7</slf4j.version>
 
         <!-- JBoss VFS -->
         <jboss-vfs.version>3.1.0.Final</jboss-vfs.version>
