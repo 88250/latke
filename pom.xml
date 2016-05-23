@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.5.2.9, May 17, 2016
+    Version: 1.6.2.9, May 23, 2016
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -26,6 +26,7 @@
         <module>latke-repository-h2</module>
         <module>latke-repository-mysql</module>
         <module>latke-repository-sqlserver</module>
+        <module>latke-repository-redis</module>
     </modules>
     
     <organization>
@@ -62,12 +63,14 @@
         <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
         <!-- JDBC Connection Pool -->
         <h2.version>1.4.190</h2.version>
-        <druid.version>1.0.16</druid.version> 
+        <druid.version>1.0.16</druid.version>
         <!-- CDI -->
         <cdi.version>1.0</cdi.version>
+        <!-- Redis -->
+        <jedis.version>2.8.1</jedis.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <JDK.version>1.6</JDK.version>
+        <JDK.version>1.7</JDK.version>
     </properties>
 
     <scm>

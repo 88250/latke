@@ -72,19 +72,19 @@ public abstract class AbstractRepository implements Repository {
 
                     switch (runtimeDatabase) {
                         case MYSQL:
-
                         case H2:
-
                         case MSSQL:
                             repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
 
                             break;
+                        case REDIS:
+                            repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.redis.RedisRepository");
 
+                            break;
                         case NONE:
                             repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
 
                             break;
-
                         default:
                             throw new RuntimeException("The runtime database [" + runtimeDatabase + "] is not support NOW!");
                     }
