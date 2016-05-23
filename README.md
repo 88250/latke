@@ -1,4 +1,4 @@
-Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](https://travis-ci.org/b3log/latke) [![Maven Central](https://img.shields.io/maven-central/v/org.b3log/latke-parent.svg)]()
+Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](https://travis-ci.org/b3log/latke) [![Maven Central](https://img.shields.io/maven-central/v/org.b3log/latke-parent.svg)](http://repo1.maven.org/maven2/org/b3log/latke)
 ----
 
 ## Overview
