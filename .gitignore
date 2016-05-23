@@ -1,4 +1,4 @@
-/latke/target/
+﻿/latke/target/
 /latke-client/target/
 /latke-repository-mysql/target/
 /latke-repository-h2/target/
@@ -8,3 +8,4 @@ pom.xml.*
 release.properties
 /latke-repository-/target/
 /latke-repository-sqlserver/target/
+/latke-repository-redis/target/
