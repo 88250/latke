@@ -19,14 +19,8 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
-
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.model.Pagination;
@@ -38,10 +32,7 @@ import org.b3log.latke.repository.CompositeFilterOperator;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.SortDirection;
 import org.b3log.latke.repository.Transaction;
-import org.b3log.latke.repository.jdbc.util.Connections;
-import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
-import org.b3log.latke.repository.jdbc.util.JdbcUtil;
 import org.json.JSONObject;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.DataProvider;
@@ -58,15 +49,21 @@ public class RedisRepositoryTestCase {
     /**
      * Redis repository.
      */
-    private RedisRepository redisRepository = new RedisRepository("basetable");
+    private final RedisRepository redisRepository = new RedisRepository("basetable");
 
     /**
      * If the database environment is wrong, do not run all the other test.
      */
-    private boolean ifRun = true;
+    private static boolean ifRun = true;
 
     static {
         Latkes.initRuntimeEnv();
+
+        try {
+            RedisRepository.getJedis();
+        } catch (final Exception e) {
+            ifRun = false;
+        }
     }
 
     /**

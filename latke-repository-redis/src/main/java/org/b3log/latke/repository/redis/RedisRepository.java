@@ -204,7 +204,7 @@ public class RedisRepository implements Repository {
      *
      * @return Redis client
      */
-    private Jedis getJedis() {
+    public static Jedis getJedis() {
         final Jedis ret = new Jedis(Latkes.getLocalProperty("redis.URL"));
         final String ping = ret.ping();
         LOGGER.error(ping);
