@@ -16,6 +16,7 @@
 package org.b3log.latke.repository;
 
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.b3log.latke.Keys;
@@ -40,7 +41,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.1.7, Jan 8, 2016
+ * @version 2.2.1.7, Jan 25, 2016
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -164,7 +165,6 @@ public abstract class AbstractRepository implements Repository {
             LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, query={2}]", e.getMessage(), repository.getName(),
                     query.toString());
 
-            // XXX: Results.defaultPagination?
             final JSONObject ret = new JSONObject();
             final JSONObject pagination = new JSONObject();
 
@@ -175,6 +175,18 @@ public abstract class AbstractRepository implements Repository {
             ret.put(Keys.RESULTS, results);
 
             return ret;
+        }
+    }
+
+    @Override
+    public List<JSONObject> select(final String statement) throws RepositoryException {
+        try {
+            return repository.select(statement);
+        } catch (final JDBCRepositoryException e) {
+            LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, statement={2}]", e.getMessage(), repository.getName(),
+                    statement);
+
+            return Collections.emptyList();
         }
     }
 

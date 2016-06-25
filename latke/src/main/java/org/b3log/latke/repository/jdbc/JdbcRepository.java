@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +48,7 @@ import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.jdbc.util.JdbcUtil;
+import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -484,6 +486,22 @@ public final class JdbcRepository implements Repository {
         }
 
         return ret;
+    }
+
+    @Override
+    public List<JSONObject> select(final String statement) throws RepositoryException {
+        final Connection connection = getConnection();
+        try {
+
+            final JSONArray jsonResults = JdbcUtil.queryJsonArray(statement, Collections.emptyList(), connection, getName());
+
+            return CollectionUtils.jsonArrayToList(jsonResults);
+        } catch (final SQLException e) {
+            throw new JDBCRepositoryException(e);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "query: " + e.getMessage(), e);
+            throw new RepositoryException(e);
+        }
     }
 
     /**
