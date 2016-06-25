@@ -914,6 +914,8 @@ public final class JdbcRepository implements Repository {
                 break;
             case NOT_LIKE:
                 filterOperator = " not like ";
+
+                break;
             default:
                 throw new RepositoryException("Unsupported filter operator [" + propertyFilter.getOperator() + "]");
         }
