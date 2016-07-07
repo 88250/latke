@@ -32,6 +32,7 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.servlet.AbstractServletListener;
+import org.b3log.latke.thread.local.LocalThreadService;
 import org.b3log.latke.util.Strings;
 import org.b3log.latke.util.freemarker.Templates;
 import org.h2.tools.Server;
@@ -40,7 +41,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.5.5.12, Jan 8, 2016
+ * @version 2.5.6.12, Jul 7, 2016
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -741,6 +742,7 @@ public final class Latkes {
             }
 
             CronService.shutdown();
+            LocalThreadService.EXECUTOR_SERVICE.shutdown();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
         }
