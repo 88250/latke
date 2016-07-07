@@ -16,6 +16,13 @@
 package org.b3log.latke.servlet.renderer.freemarker;
 
 import freemarker.template.Template;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
@@ -24,19 +31,11 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.util.freemarker.Templates;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.10, Feb 28, 2016
+ * @version 1.0.0.11, Jun 12, 2016
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {
 
@@ -130,16 +129,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
             beforeRender(context);
 
-            String html = genHTML(context.getRequest(), dataModel, template);
-
-            final long time = System.currentTimeMillis();
-            final String year = DateFormatUtils.format(time, "yyyy");
-            final String copyright = "<div style=\"display: none;\">Copyright (c) 2009-" + year
-                    + ", <a href=\"http://b3log.org\">b3log.org</a> "
-                    + "& <a href=\"https://hacpai.com\">hacpai.com</a></div>\n";
-
-            html = html.replace("</body>", copyright + "</body>");
-
+            final String html = genHTML(context.getRequest(), dataModel, template);
             doRender(html, context.getRequest(), response);
 
             afterRender(context);

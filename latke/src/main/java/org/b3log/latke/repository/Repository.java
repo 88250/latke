@@ -15,17 +15,15 @@
  */
 package org.b3log.latke.repository;
 
-
 import java.util.List;
 import java.util.Map;
 import org.json.JSONObject;
-
 
 /**
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.4, Mar 28, 2014
+ * @version 1.2.2.4, Jun 25, 2016
  */
 public interface Repository {
 
@@ -39,15 +37,14 @@ public interface Repository {
     String add(final JSONObject jsonObject) throws RepositoryException;
 
     /**
-     * Updates a certain json object by the specified id and the specified new
-     * json object.
+     * Updates a certain json object by the specified id and the specified new json object.
      *
      * @param id the specified id
      * @param jsonObject the specified new json object
      * @throws RepositoryException repository exception
      */
     void update(final String id, final JSONObject jsonObject)
-        throws RepositoryException;
+            throws RepositoryException;
 
     /**
      * Removes a json object by the specified id.
@@ -76,8 +73,7 @@ public interface Repository {
     Map<String, JSONObject> get(final Iterable<String> ids) throws RepositoryException;
 
     /**
-     * Determines a json object specified by the given id exists in this
-     * repository.
+     * Determines a json object specified by the given id exists in this repository.
      *
      * @param id the given id
      * @return {@code true} if it exists, otherwise {@code false}
@@ -89,21 +85,18 @@ public interface Repository {
      * Gets json objects by the specified query.
      *
      * <h4>Pagination</h4>
-     * If the "paginationPageCount" has been specified (not with {@code -1} or {@code null}) by caller
-     * (as the argument {@link Query#pageCount}), the value will be used in the returned value. In other words, the page count result will
-     * not be calculated by this interface, otherwise, the returned value pagination.paginationPageCount and
+     * If the "paginationPageCount" has been specified (not with {@code -1} or {@code null}) by caller (as the argument
+     * {@link Query#pageCount}), the value will be used in the returned value. In other words, the page count result
+     * will not be calculated by this interface, otherwise, the returned value pagination.paginationPageCount and
      * pagination.paginationRecordCount will be calculated with query condition.
      *
      * <p>
-     * <b>Note</b>: The order of elements of the returned result list is
-     * decided by datastore implementation, excepts
-     * {@link Query#addSort(java.lang.String, org.b3log.latke.repository.SortDirection)}
-     * be invoked.
+     * <b>Note</b>: The order of elements of the returned result list is decided by datastore implementation, excepts
+     * {@link Query#addSort(java.lang.String, org.b3log.latke.repository.SortDirection)} be invoked.
      * </p>
      *
      * @param query the specified query
-     * @return for example,
-     * <pre>
+     * @return for example,      <pre>
      * {
      *     "pagination": {
      *       "paginationPageCount": 10, // May be specified by the specified query.pageCount
@@ -121,11 +114,21 @@ public interface Repository {
     JSONObject get(final Query query) throws RepositoryException;
 
     /**
+     * Gets json objects by the specified query statement.
+     *
+     * @param statement the specified query statement
+     * @return a list of result, returns an empty list if not found
+     *
+     * @throws RepositoryException repository exception
+     */
+    List<JSONObject> select(final String statement) throws RepositoryException;
+
+    /**
      * Gets a list of json objects randomly with the specified fetch size.
      *
      * @param fetchSize the specified fetch size
-     * @return a list of json objects, its size less or equal to the specified
-     * fetch size, returns an empty list if not found
+     * @return a list of json objects, its size less or equal to the specified fetch size, returns an empty list if not
+     * found
      * @throws RepositoryException repository exception
      */
     List<JSONObject> getRandomly(final int fetchSize) throws RepositoryException;
@@ -158,21 +161,17 @@ public interface Repository {
      * Begins a transaction against the repository.
      *
      * <p>
-     * Callers are responsible for explicitly calling {@linkplain Transaction#commit()}
-     * or {@linkplain Transaction#rollback()} when they no longer need the
-     * {@code Transaction}. The {@code Transaction} returned by this call will
-     * be considered <i>the current transaction</i> until one of the
-     * following happens:
+     * Callers are responsible for explicitly calling {@linkplain Transaction#commit()} or
+     * {@linkplain Transaction#rollback()} when they no longer need the {@code Transaction}. The {@code Transaction}
+     * returned by this call will be considered <i>the current transaction</i> until one of the following happens:
      * <ol>
      * <li>{@linkplain #beginTransaction()} is invoked from the same thread</li>
-     * <li>{@linkplain Transaction#commit()} is invoked on the
-     * {@code Transaction} returned by this method</li>
-     * Whether or not the commit returns successfully, the {@code Transaction}
-     * will no longer be <i>the current transaction</i>.
-     * <li>{@linkplain Transaction#rollback()} is invoked on the
-     * {@code Transaction} returned by this method</li>
-     * Whether or not the rollback returns successfully, the {@code Transaction}
-     * will no longer be <i>the current transaction</i>.
+     * <li>{@linkplain Transaction#commit()} is invoked on the {@code Transaction} returned by this method</li>
+     * Whether or not the commit returns successfully, the {@code Transaction} will no longer be <i>the current
+     * transaction</i>.
+     * <li>{@linkplain Transaction#rollback()} is invoked on the {@code Transaction} returned by this method</li>
+     * Whether or not the rollback returns successfully, the {@code Transaction} will no longer be <i>the current
+     * transaction</i>.
      * </ol>
      * </p>
      *

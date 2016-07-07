@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository.jdbc.util;
 
-
 import java.io.IOException;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -37,7 +36,6 @@ import org.b3log.latke.repository.RepositoryException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 /**
  * JDBC utilities.
@@ -109,7 +107,7 @@ public final class JdbcUtil {
      * @throws RepositoryException repositoryException
      */
     public static JSONObject queryJsonObject(final String sql, final List<Object> paramList, final Connection connection,
-        final String tableName) throws SQLException, JSONException, RepositoryException {
+            final String tableName) throws SQLException, JSONException, RepositoryException {
 
         return queryJson(sql, paramList, connection, true, tableName);
 
@@ -129,11 +127,10 @@ public final class JdbcUtil {
      * @throws RepositoryException repositoryException
      */
     public static JSONArray queryJsonArray(final String sql, final List<Object> paramList, final Connection connection,
-        final String tableName) throws SQLException, JSONException, RepositoryException {
+            final String tableName) throws SQLException, JSONException, RepositoryException {
         final JSONObject jsonObject = queryJson(sql, paramList, connection, false, tableName);
 
         return jsonObject.getJSONArray(Keys.RESULTS);
-
     }
 
     /**
@@ -149,7 +146,7 @@ public final class JdbcUtil {
      * @throws RepositoryException respsitoryException
      */
     private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection,
-        final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
+            final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
         LOGGER.log(Level.TRACE, "Query SQL [{0}]", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -166,7 +163,6 @@ public final class JdbcUtil {
         preparedStatement.close();
 
         return jsonObject;
-
     }
 
     /**
@@ -182,7 +178,7 @@ public final class JdbcUtil {
      * @throws RepositoryException RepositoryException
      */
     private static JSONObject resultSetToJsonObject(final ResultSet resultSet, final boolean ifOnlyOne, final String tableName)
-        throws SQLException, JSONException, RepositoryException {
+            throws SQLException, JSONException, RepositoryException {
         final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
         final List<FieldDefinition> definitionList = JdbcRepositories.getRepositoriesMap().get(tableName);
@@ -218,34 +214,32 @@ public final class JdbcUtil {
 
                 if (definition == null) { // COUNT(OID)
                     jsonObject.put(columnName, resultSet.getObject(columnName));
+                } else if ("boolean".equals(definition.getType())) {
+                    jsonObject.put(definition.getName(), resultSet.getBoolean(columnName));
                 } else {
-                    if ("boolean".equals(definition.getType())) {
-                        jsonObject.put(definition.getName(), resultSet.getBoolean(columnName));
-                    } else {
-                        final Object v = resultSet.getObject(columnName);
+                    final Object v = resultSet.getObject(columnName);
 
-                        if (v instanceof Clob) {
-                            final Clob clob = (Clob) v;
+                    if (v instanceof Clob) {
+                        final Clob clob = (Clob) v;
 
-                            String str = null;
+                        String str = null;
 
-                            try {
-                                str = IOUtils.toString(clob.getCharacterStream());
-                            } catch (final IOException e) {
-                                LOGGER.log(Level.ERROR,
+                        try {
+                            str = IOUtils.toString(clob.getCharacterStream());
+                        } catch (final IOException e) {
+                            LOGGER.log(Level.ERROR,
                                     "Cant not read column[name=" + columnName + "] in table[name=" + tableName + "] on H2", e);
-                            } finally {
-                                try {
-                                    clob.free();
-                                } catch (final Exception e) { // Some drivers dose not implement free(), for example, jtds
-                                    LOGGER.log(Level.ERROR, "clob.free error", e);
-                                }
+                        } finally {
+                            try {
+                                clob.free();
+                            } catch (final Exception e) { // Some drivers dose not implement free(), for example, jtds
+                                LOGGER.log(Level.ERROR, "clob.free error", e);
                             }
-
-                            jsonObject.put(definition.getName(), str);
-                        } else {
-                            jsonObject.put(definition.getName(), v);
                         }
+
+                        jsonObject.put(definition.getName(), str);
+                    } else {
+                        jsonObject.put(definition.getName(), v);
                     }
                 }
             }
@@ -273,5 +267,6 @@ public final class JdbcUtil {
     /**
      * Private constructor.
      */
-    private JdbcUtil() {}
+    private JdbcUtil() {
+    }
 }
