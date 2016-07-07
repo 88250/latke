@@ -57,7 +57,7 @@ public class EventManager {
      * @throws EventException event exception
      */
     public <T> Future<T> fireEventAsynchronously(final Event<?> event) throws EventException {
-        final FutureTask<T> futureTask = new FutureTask<>(new Callable<T>() {
+        final FutureTask<T> futureTask = new FutureTask<T>(new Callable<T>() {
             @Override
             public T call() throws Exception {
                 synchronizedEventQueue.fireEvent(event);
