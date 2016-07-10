@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.thread.local;
 
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -24,12 +23,11 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.thread.ThreadService;
 
-
 /**
  * Local thread service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Jun 20, 2014
+ * @version 1.1.1.1, Jul 7, 2016
  */
 public final class LocalThreadService implements ThreadService {
 
@@ -41,7 +39,7 @@ public final class LocalThreadService implements ThreadService {
     /**
      * Executor service.
      */
-    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(50);
+    public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(50);
 
     @Override
     public Thread createThreadForCurrentRequest(final Runnable runnable) {
@@ -125,7 +123,7 @@ public final class LocalThreadService implements ThreadService {
 
                     future = null;
                 }
-                
+
                 monitor.notify();
             }
         }

@@ -15,22 +15,19 @@
  */
 package org.b3log.latke.event;
 
-
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
-
+import org.b3log.latke.thread.local.LocalThreadService;
 
 /**
  * Event manager.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.4, Jan 7, 2016
+ * @version 1.1.2.4, Jul 7, 2016
  */
 @Named("LatkeBuiltInEventManager")
 @Singleton
@@ -60,20 +57,18 @@ public class EventManager {
      * @throws EventException event exception
      */
     public <T> Future<T> fireEventAsynchronously(final Event<?> event) throws EventException {
-        final ExecutorService executorService = Executors.newSingleThreadExecutor();
-
         final FutureTask<T> futureTask = new FutureTask<T>(new Callable<T>() {
             @Override
             public T call() throws Exception {
                 synchronizedEventQueue.fireEvent(event);
-                
+
                 JdbcRepository.dispose(); // close the JDBC connection which might have been used
 
                 return null; // XXX: Our future????
             }
         });
 
-        executorService.execute(futureTask);
+        LocalThreadService.EXECUTOR_SERVICE.execute(futureTask);
 
         return futureTask;
     }
@@ -86,10 +81,10 @@ public class EventManager {
     public void registerListener(final AbstractEventListener<?> eventListener) {
         synchronizedEventQueue.addListener(eventListener);
     }
-    
+
     /**
      * Unregisters the specified event listener.
-     * 
+     *
      * @param eventListener the specified event listener
      */
     public void unregisterListener(final AbstractEventListener<?> eventListener) {
