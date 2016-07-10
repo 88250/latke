@@ -19,7 +19,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -40,7 +43,7 @@ import org.h2.tools.Server;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.5.5.12, Jan 8, 2016
+ * @version 2.5.6.12, Jul 9, 2016
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -746,6 +749,19 @@ public final class Latkes {
         }
 
         Lifecycle.endApplication();
+
+        // This manually deregisters JDBC driver, which prevents Tomcat from complaining about memory leaks
+        final Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            final Driver driver = drivers.nextElement();
+            
+            try {
+                DriverManager.deregisterDriver(driver);
+                LOGGER.log(Level.TRACE, "Deregistered JDBC driver [" + driver + "]");
+            } catch (final SQLException e) {
+                LOGGER.log(Level.ERROR, "Deregister JDBC driver [" + driver + "] failed", e);
+            }
+        }
     }
 
     /**
