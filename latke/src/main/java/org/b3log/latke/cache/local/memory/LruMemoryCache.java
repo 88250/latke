@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.cache.local.memory;
 
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
@@ -24,17 +23,15 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Serializer;
 
-
 /**
- * This is a Least Recently Used (LRU) pure memory cache. This cache use a 
- * thread-safe {@link DoubleLinkedMap} to hold the objects, and 
- * the least recently used objects will be moved to the end of the list and to
- * remove by invoking {@link #collect()} method. 
+ * This is a Least Recently Used (LRU) pure memory cache. This cache use a thread-safe {@link DoubleLinkedMap} to hold
+ * the objects, and the least recently used objects will be moved to the end of the list and to remove by invoking
+ * {@link #collect()} method.
  *
  * @param <K> the type of the key of the object
  * @param <V> the type of the objects
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.9, Dec 3, 2011
+ * @version 1.0.3.9, Jul 11, 2016
  */
 public final class LruMemoryCache<K extends Serializable, V extends Serializable> extends AbstractMemoryCache<K, V> implements Serializable {
 
@@ -62,6 +59,8 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
 
     @Override
     public void put(final K key, final V value) {
+        remove(key);
+
         putCountInc();
 
         synchronized (this) {
@@ -82,9 +81,9 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
 
     /**
      * Just put sync, as the same as {@link #put(java.io.Serializable, java.io.Serializable)}.
-     * 
+     *
      * No Async at present.
-     * 
+     *
      * @param key the key of the specified object
      * @param value the specified object
      */
@@ -137,7 +136,7 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
     }
 
     /**
-     * {@inheritDoc} Removes these useless objects directly. 
+     * {@inheritDoc} Removes these useless objects directly.
      */
     @Override
     public synchronized void collect() {
