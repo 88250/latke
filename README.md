@@ -13,7 +13,7 @@ Yet another simple web framework based on Java servlet technology.
 <dependency>
     <groupId>org.b3log</groupId>
     <artifactId>latke</artifactId>
-    <version>2.0.4</version>
+    <version>2.2.7</version>
 </dependency>
 ```
 
