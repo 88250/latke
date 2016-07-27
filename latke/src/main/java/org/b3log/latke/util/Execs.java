@@ -15,28 +15,27 @@
  */
 package org.b3log.latke.util;
 
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-
 
 /**
  * Command execution utilities.
  *
  * <p>
- * Uses {@link Runtime#exec(java.lang.String)} to execute command, to avoid the execution be blocked, starts a thread to read error stream
- * from th executing sub process.
+ * Uses {@link Runtime#exec(java.lang.String)} to execute command, to avoid the execution be blocked, starts a thread to
+ * read error stream from th executing sub process.
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.4, Nov 26, 2013
+ * @version 1.0.1.4, Jul 27, 2016
  * @since 0.1.0
  */
 public final class Execs {
@@ -49,7 +48,8 @@ public final class Execs {
     /**
      * Private constructor.
      */
-    private Execs() {}
+    private Execs() {
+    }
 
     /**
      * Executes the specified command.
@@ -69,7 +69,7 @@ public final class Execs {
             t.start();
 
             inputStream = p.getInputStream();
-            final String result = IOUtils.toString(inputStream);
+            final String result = IOUtils.toString(inputStream, "UTF-8");
 
             inputStream.close();
             p.destroy();
@@ -102,14 +102,14 @@ public final class Execs {
             t.start();
 
             inputStream = p.getInputStream();
-            final String result = IOUtils.toString(inputStream);
+            final String result = IOUtils.toString(inputStream, "UTF-8");
 
             inputStream.close();
             p.destroy();
 
             return result;
         } catch (final IOException e) {
-            LOGGER.log(Level.ERROR, "Executes command [" + cmds + "] failed", e);
+            LOGGER.log(Level.ERROR, "Executes commands [" + Arrays.toString(cmds) + "] failed", e);
 
             return null;
         } finally {
@@ -148,11 +148,13 @@ public final class Execs {
         public void run() {
             try {
                 String s;
-                
-                while (null != (s = bufferedReader.readLine())) {}
 
+                while (null != (s = bufferedReader.readLine())) {
+                }
+            } catch (final IOException e) {
+            } finally {
                 IOUtils.closeQuietly(bufferedReader);
-            } catch (final IOException e) {}
+            }
         }
     }
 }
