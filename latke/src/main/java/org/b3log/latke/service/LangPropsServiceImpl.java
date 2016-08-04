@@ -28,15 +28,12 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.model.Label;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * Language service implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Jul 30, 2016
+ * @version 1.1.1.0, Aug 4, 2016
  */
 @Named
 @Singleton
@@ -76,46 +73,12 @@ public class LangPropsServiceImpl implements LangPropsService {
             final Enumeration<String> keys = langBundle.getKeys();
             while (keys.hasMoreElements()) {
                 final String key = keys.nextElement();
-                String value = langBundle.getString(key);
-
-                value = StringUtils.replace(value, "${servePath}", Latkes.getServePath());
-                value = StringUtils.replace(value, "${staticServePath}", Latkes.getStaticServePath());
+                final String value = replaceVars(langBundle.getString(key));
 
                 ret.put(key, value);
             }
 
             LANGS.put(locale, ret);
-        }
-
-        return ret;
-    }
-
-    @Override
-    public JSONObject getLabels(final Locale locale) {
-        final JSONObject ret = new JSONObject();
-        ResourceBundle langBundle;
-
-        try {
-            langBundle = ResourceBundle.getBundle(Keys.LANGUAGE, locale);
-        } catch (final MissingResourceException e) {
-            LOGGER.log(Level.WARN, "{0}, using default locale[{1}]  instead", new Object[]{e.getMessage(), Latkes.getLocale()});
-
-            langBundle = ResourceBundle.getBundle(Keys.LANGUAGE, Latkes.getLocale());
-        }
-
-        final Enumeration<String> keys = langBundle.getKeys();
-        final JSONArray labels = new JSONArray();
-
-        ret.put(Label.LABELS, labels);
-
-        while (keys.hasMoreElements()) {
-            final JSONObject label = new JSONObject();
-            final String key = keys.nextElement();
-
-            label.put(Label.LABEL_ID, key);
-            label.put(Label.LABEL_TEXT, langBundle.getString(key));
-
-            labels.put(label);
         }
 
         return ret;
@@ -148,11 +111,32 @@ public class LangPropsServiceImpl implements LangPropsService {
         }
 
         try {
-            return ResourceBundle.getBundle(baseName, locale).getString(key);
+            return replaceVars(ResourceBundle.getBundle(baseName, locale).getString(key));
         } catch (final MissingResourceException e) {
             LOGGER.log(Level.WARN, "{0}, get it from default locale[{1}]", new Object[]{e.getMessage(), Latkes.getLocale()});
 
             return ResourceBundle.getBundle(baseName, Latkes.getLocale()).getString(key);
         }
+    }
+
+    /**
+     * Replaces all variables of the specified language value.
+     *
+     * <p>
+     * Variables:
+     * <ul>
+     * <li>${servePath}</li>
+     * <li>${staticServePath}</li>
+     * </ul>
+     * </p>
+     *
+     * @param langValue the specified language value
+     * @return replaced value
+     */
+    private String replaceVars(final String langValue) {
+        String ret = StringUtils.replace(langValue, "${servePath}", Latkes.getServePath());
+        ret = StringUtils.replace(ret, "${staticServePath}", Latkes.getStaticServePath());
+
+        return ret;
     }
 }
