@@ -23,7 +23,7 @@ import org.json.JSONObject;
  * None repository implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, Jun 25, 2016
+ * @version 1.2.0.1, Sep 4, 2016
  */
 public final class NoneRepository implements Repository {
 
@@ -71,7 +71,7 @@ public final class NoneRepository implements Repository {
     }
 
     @Override
-    public List<JSONObject> select(final String statement) throws RepositoryException {
+    public List<JSONObject> select(final String statement, final Object... params) throws RepositoryException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

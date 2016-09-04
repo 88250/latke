@@ -41,7 +41,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.2.1.7, Jan 25, 2016
+ * @version 2.2.1.8, Sep 4, 2016
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -179,9 +179,9 @@ public abstract class AbstractRepository implements Repository {
     }
 
     @Override
-    public List<JSONObject> select(final String statement) throws RepositoryException {
+    public List<JSONObject> select(final String statement, final Object... params) throws RepositoryException {
         try {
-            return repository.select(statement);
+            return repository.select(statement, params);
         } catch (final JDBCRepositoryException e) {
             LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, statement={2}]", e.getMessage(), repository.getName(),
                     statement);

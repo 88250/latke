@@ -23,7 +23,7 @@ import org.json.JSONObject;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.4, Jun 25, 2016
+ * @version 1.2.2.5, Sep 4, 2016
  */
 public interface Repository {
 
@@ -117,11 +117,12 @@ public interface Repository {
      * Gets json objects by the specified query statement.
      *
      * @param statement the specified query statement
+     * @param params the specified parameters
      * @return a list of result, returns an empty list if not found
      *
      * @throws RepositoryException repository exception
      */
-    List<JSONObject> select(final String statement) throws RepositoryException;
+    List<JSONObject> select(final String statement, final Object... params) throws RepositoryException;
 
     /**
      * Gets a list of json objects randomly with the specified fetch size.

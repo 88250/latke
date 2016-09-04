@@ -19,6 +19,7 @@ import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,7 +60,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.7, Jun 25, 2016
+ * @version 1.2.2.8, Sep 4, 2016
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -72,7 +73,7 @@ public final class JdbcRepository implements Repository {
     /**
      * Repository name.
      */
-    private String name;
+    private final String name;
 
     /**
      * Writable?
@@ -87,12 +88,12 @@ public final class JdbcRepository implements Repository {
     /**
      * The current transaction.
      */
-    public static final ThreadLocal<JdbcTransaction> TX = new InheritableThreadLocal<JdbcTransaction>();
+    public static final ThreadLocal<JdbcTransaction> TX = new InheritableThreadLocal<>();
 
     /**
      * The current JDBC connection.
      */
-    public static final ThreadLocal<Connection> CONN = new ThreadLocal<Connection>();
+    public static final ThreadLocal<Connection> CONN = new ThreadLocal<>();
 
     /**
      * Key generator.
@@ -119,6 +120,15 @@ public final class JdbcRepository implements Repository {
         }
     }
 
+    /**
+     * Constructs a JDBC repository with the specified name.
+     *
+     * @param name the specified name
+     */
+    public JdbcRepository(final String name) {
+        this.name = name;
+    }
+
     @Override
     public String add(final JSONObject jsonObject) throws RepositoryException {
         final JdbcTransaction currentTransaction = TX.get();
@@ -128,7 +138,7 @@ public final class JdbcRepository implements Repository {
         }
 
         final Connection connection = getConnection();
-        final List<Object> paramList = new ArrayList<Object>();
+        final List<Object> paramList = new ArrayList<>();
         final StringBuilder sql = new StringBuilder();
         String id = null;
 
@@ -216,8 +226,7 @@ public final class JdbcRepository implements Repository {
     }
 
     @Override
-    public void update(final String id, final JSONObject jsonObject)
-            throws RepositoryException {
+    public void update(final String id, final JSONObject jsonObject) throws RepositoryException {
         if (Strings.isEmptyOrNull(id)) {
             return;
         }
@@ -231,7 +240,7 @@ public final class JdbcRepository implements Repository {
         final JSONObject oldJsonObject = get(id);
 
         final Connection connection = getConnection();
-        final List<Object> paramList = new ArrayList<Object>();
+        final List<Object> paramList = new ArrayList<>();
         final StringBuilder sqlBuilder = new StringBuilder();
 
         try {
@@ -264,9 +273,8 @@ public final class JdbcRepository implements Repository {
      * @param sql sql
      * @throws JSONException JSONException
      */
-    private void update(final String id, final JSONObject oldJsonObject,
-            final JSONObject jsonObject, final List<Object> paramList,
-            final StringBuilder sql) throws JSONException {
+    private void update(final String id, final JSONObject oldJsonObject, final JSONObject jsonObject,
+            final List<Object> paramList, final StringBuilder sql) throws JSONException {
         final JSONObject needUpdateJsonObject = getNeedUpdateJsonObject(oldJsonObject, jsonObject);
 
         if (needUpdateJsonObject.length() == 0) {
@@ -286,10 +294,8 @@ public final class JdbcRepository implements Repository {
      * @param sql sql
      * @throws JSONException JSONException
      */
-    private void setUpdateProperties(final String id,
-            final JSONObject needUpdateJsonObject,
-            final List<Object> paramList, final StringBuilder sql)
-            throws JSONException {
+    private void setUpdateProperties(final String id, final JSONObject needUpdateJsonObject,
+            final List<Object> paramList, final StringBuilder sql) throws JSONException {
         final Iterator<String> keys = needUpdateJsonObject.keys();
         String key;
 
@@ -381,8 +387,8 @@ public final class JdbcRepository implements Repository {
      * @param sql sql
      */
     private void remove(final String id, final StringBuilder sql) {
-        sql.append("delete from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("='").append(id).append(
-                "'");
+        sql.append("delete from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).
+                append("='").append(id).append("'");
     }
 
     @Override
@@ -394,7 +400,7 @@ public final class JdbcRepository implements Repository {
 
         try {
             get(sql);
-            final ArrayList<Object> paramList = new ArrayList<Object>();
+            final ArrayList<Object> paramList = new ArrayList<>();
 
             paramList.add(id);
             ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName());
@@ -414,12 +420,13 @@ public final class JdbcRepository implements Repository {
      * @param sql sql
      */
     private void get(final StringBuilder sql) {
-        sql.append("select * from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("=").append("?");
+        sql.append("select * from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).
+                append("=").append("?");
     }
 
     @Override
     public Map<String, JSONObject> get(final Iterable<String> ids) throws RepositoryException {
-        final Map<String, JSONObject> map = new HashMap<String, JSONObject>();
+        final Map<String, JSONObject> map = new HashMap<>();
         JSONObject jsonObject;
 
         for (final String id : ids) {
@@ -454,7 +461,7 @@ public final class JdbcRepository implements Repository {
 
         final StringBuilder sql = new StringBuilder();
         final Connection connection = getConnection();
-        final List<Object> paramList = new ArrayList<Object>();
+        final List<Object> paramList = new ArrayList<>();
 
         try {
             final Map<String, Object> paginationCnt = get(currentPageNum, pageSize, pageCount, query, sql, paramList);
@@ -489,11 +496,16 @@ public final class JdbcRepository implements Repository {
     }
 
     @Override
-    public List<JSONObject> select(final String statement) throws RepositoryException {
+    public List<JSONObject> select(final String statement, final Object... params) throws RepositoryException {
+        JSONArray jsonResults;
+
         final Connection connection = getConnection();
         try {
-
-            final JSONArray jsonResults = JdbcUtil.queryJsonArray(statement, Collections.emptyList(), connection, getName());
+            if (null == params || 0 == params.length) {
+                jsonResults = JdbcUtil.queryJsonArray(statement, Collections.emptyList(), connection, getName());
+            } else {
+                jsonResults = JdbcUtil.queryJsonArray(statement, Arrays.asList(params), connection, getName());
+            }
 
             return CollectionUtils.jsonArrayToList(jsonResults);
         } catch (final SQLException e) {
@@ -521,7 +533,7 @@ public final class JdbcRepository implements Repository {
      */
     private Map<String, Object> get(final int currentPageNum, final int pageSize, final int pageCount,
             final Query query, final StringBuilder sql, final List<Object> paramList) throws RepositoryException {
-        final Map<String, Object> ret = new HashMap<String, Object>();
+        final Map<String, Object> ret = new HashMap<>();
 
         int pageCnt = pageCount;
         int recordCnt = 0;
@@ -620,9 +632,8 @@ public final class JdbcRepository implements Repository {
         final int start = (currentPageNum - 1) * pageSize;
         final int end = start + pageSize;
 
-        sql.append(
-                JdbcFactory.createJdbcFactory().queryPage(start, end, selectSql.toString(), filterSql.toString(), orderBySql.toString(),
-                        getName()));
+        sql.append(JdbcFactory.createJdbcFactory().queryPage(start, end, selectSql.toString(), filterSql.toString(),
+                orderBySql.toString(), getName()));
     }
 
     /**
@@ -677,9 +688,8 @@ public final class JdbcRepository implements Repository {
     }
 
     @Override
-    public List<JSONObject> getRandomly(final int fetchSize)
-            throws RepositoryException {
-        final List<JSONObject> jsonObjects = new ArrayList<JSONObject>();
+    public List<JSONObject> getRandomly(final int fetchSize) throws RepositoryException {
+        final List<JSONObject> jsonObjects = new ArrayList<>();
 
         final StringBuilder sql = new StringBuilder();
         JSONArray jsonArray;
@@ -688,7 +698,7 @@ public final class JdbcRepository implements Repository {
 
         getRandomly(fetchSize, sql);
         try {
-            jsonArray = JdbcUtil.queryJsonArray(sql.toString(), new ArrayList<Object>(), connection, getName());
+            jsonArray = JdbcUtil.queryJsonArray(sql.toString(), new ArrayList<>(), connection, getName());
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObjects.add(jsonArray.getJSONObject(i));
@@ -716,17 +726,18 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public long count() throws RepositoryException {
-        final StringBuilder sql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
+        final StringBuilder sql = new StringBuilder("select count("
+                + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
 
-        return count(sql, new ArrayList<Object>());
+        return count(sql, new ArrayList<>());
     }
 
     @Override
     public long count(final Query query) throws RepositoryException {
-        final StringBuilder countSql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(
-                getName());
+        final StringBuilder countSql = new StringBuilder("select count("
+                + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
 
-        final List<Object> paramList = new ArrayList<Object>();
+        final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSql = new StringBuilder();
 
         getFilterSql(filterSql, paramList, query.getFilter());
@@ -824,15 +835,6 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * Constructs a JDBC repository with the specified name.
-     *
-     * @param name the specified name
-     */
-    public JdbcRepository(final String name) {
-        this.name = name;
-    }
-
-    /**
      * dispose the resource when requestDestroyed .
      */
     public static void dispose() {
@@ -893,8 +895,7 @@ public final class JdbcRepository implements Repository {
      * @throws RepositoryException repository exception
      */
     private void processPropertyFilter(final StringBuilder filterSql,
-            final List<Object> paramList, final PropertyFilter propertyFilter)
-            throws RepositoryException {
+            final List<Object> paramList, final PropertyFilter propertyFilter) throws RepositoryException {
         String filterOperator = null;
 
         switch (propertyFilter.getOperator()) {
@@ -980,8 +981,7 @@ public final class JdbcRepository implements Repository {
      * @throws RepositoryException repository exception
      */
     private void processCompositeFilter(final StringBuilder filterSql,
-            final List<Object> paramList, final CompositeFilter compositeFilter)
-            throws RepositoryException {
+            final List<Object> paramList, final CompositeFilter compositeFilter) throws RepositoryException {
         final List<Filter> subFilters = compositeFilter.getSubFilters();
 
         if (2 > subFilters.size()) {
