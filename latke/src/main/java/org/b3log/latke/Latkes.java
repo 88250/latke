@@ -285,7 +285,7 @@ public final class Latkes {
         final String cmdSyntax = isWindows ? "java -cp WEB-INF/lib/*;WEB-INF/classes com.yourpackage.Starter"
                 : "java -cp WEB-INF/lib/*:WEB-INF/classes com.yourpackage.Starter";
         final String header = "\nLatke Application (" + appPackage + ")\n\n";
-        final String footer = "\nReport bugs or request features please visit: https://github.com/b3log/solo\n\n";
+        final String footer = "\nReport bugs or request features please visit: https://github.com/b3log/latke\n\n";
         try {
             commandLine = commandLineParser.parse(options, args);
         } catch (final ParseException e) {
