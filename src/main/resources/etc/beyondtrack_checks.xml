@@ -37,7 +37,7 @@
     Most Checks are configurable, be sure to consult the documentation.
     To completely disable a check, just comment it out or delete it from the file.
     Finally, it is worth reading the documentation.
-    Version: 1.0.1.6, Dec 18, 2015
+    Version: 1.0.1.7, Sep 4, 2016
     Author: Liang Ding
 -->
 <!DOCTYPE module PUBLIC
@@ -151,7 +151,6 @@
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <!--<module name="AvoidInlineConditionals"/>-->
-        <module name="DoubleCheckedLocking"/>    <!-- MY FAVOURITE -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="FinalLocalVariable">
@@ -172,7 +171,6 @@
         <module name="InnerAssignment"/>
         <module name="MagicNumber"/>
         <module name="MissingSwitchDefault"/>
-        <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="UnnecessaryParentheses"/>

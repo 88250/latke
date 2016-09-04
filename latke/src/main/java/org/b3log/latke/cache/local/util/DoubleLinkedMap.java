@@ -15,15 +15,12 @@
  */
 package org.b3log.latke.cache.local.util;
 
-
 import java.io.Serializable;
 
-
 /**
- * This is a generic thread safe double linked map. It's very simple and all
- * the operations are so quick that course grained synchronization is more than
- * acceptable.
- * 
+ * This is a generic thread safe double linked map. It's very simple and all the operations are so quick that course
+ * grained synchronization is more than acceptable.
+ *
  * @param <K> the type of the key of this map's elements
  * @param <V> the type of the nodes of this map
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
@@ -46,7 +43,7 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
      */
     private DoubleLinkedMapNode<K, V> first;
 
-    /** .
+    /**
      * LRU double linked map tail node.
      */
     private DoubleLinkedMapNode<K, V> last;
@@ -73,8 +70,7 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
      * Gets a value in the map by the specified key.
      *
      * @param key the specified key
-     * @return the value of the specified key, if not found, returns
-     *         <code>null</code>
+     * @return the value of the specified key, if not found, returns <code>null</code>
      */
     public synchronized V get(final K key) {
         if (first == null) {
@@ -317,7 +313,6 @@ public final class DoubleLinkedMap<K, V> implements Serializable {
     }
 }
 
-
 /**
  * A node of {@link DoubleLinkedMap double linked map}.
  *
@@ -359,7 +354,7 @@ final class DoubleLinkedMapNode<K, V> implements Serializable {
      * @param key the key of the specified node's content instance
      * @param value the specified node's content instance
      */
-    public DoubleLinkedMapNode(final K key, final V value) {
+    DoubleLinkedMapNode(final K key, final V value) {
         this.key = key;
         this.value = value;
     }

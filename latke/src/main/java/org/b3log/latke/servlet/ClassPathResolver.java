@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet;
 
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -43,7 +42,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-
 /**
  * Resolver for scanning the classpath.
  *
@@ -64,7 +62,7 @@ public final class ClassPathResolver {
     private static final String JAR_URL_SEPARATOR = "!/";
 
     /**
-     *  URL prefix for loading from the file system: "file:".
+     * URL prefix for loading from the file system: "file:".
      */
     private static final String FILE_URL_PREFIX = "file:";
 
@@ -72,16 +70,17 @@ public final class ClassPathResolver {
      * URL protocol for a JBoss VFS resource: "vfs".
      */
     public static final String URL_PROTOCOL_VFS = "vfs";
-    
+
     /**
      * Private constructor.
      */
-    private ClassPathResolver() {}
+    private ClassPathResolver() {
+    }
 
     /**
-     * Gets all URLs (resources) under the pattern. 
-     * 
-     * @param locationPattern  the pattern of classPath (a ant-style string) 
+     * Gets all URLs (resources) under the pattern.
+     *
+     * @param locationPattern the pattern of classPath (a ant-style string)
      * @return all URLS
      */
     public static Set<URL> getResources(final String locationPattern) {
@@ -94,7 +93,7 @@ public final class ClassPathResolver {
 
         for (final URL rootDirResource : rootDirResources) {
             LOGGER.log(Level.INFO, "RootDirResource [protocol={0}, path={1}]",
-                new Object[] {rootDirResource.getProtocol(), rootDirResource.getPath()});
+                    new Object[]{rootDirResource.getProtocol(), rootDirResource.getPath()});
 
             if (isJarURL(rootDirResource)) {
                 result.addAll(doFindPathMatchingJarResources(rootDirResource, subPattern));
@@ -111,9 +110,9 @@ public final class ClassPathResolver {
     /**
      * get rootPath from locationPattern.
      * <p>
-     *      if "/context/** / *.xml"
-     *      should get the result "/context/"
-     * </p> 
+     * if "/context/** / *.xml" should get the result "/context/"
+     * </p>
+     *
      * @param locationPattern locationPattern
      * @return the RootPath string.
      */
@@ -128,8 +127,9 @@ public final class ClassPathResolver {
     }
 
     /**
-     * the URLS under Root path ,each of which we should scan from.    
-     * @param rootPath  rootPath
+     * the URLS under Root path ,each of which we should scan from.
+     *
+     * @param rootPath rootPath
      * @return the URLS under the Root path
      */
     private static Set<URL> getResourcesFromRoot(final String rootPath) {
@@ -159,29 +159,34 @@ public final class ClassPathResolver {
 
     /**
      * check if the URL of the Rousource is a JAR resource.
-     * @param rootDirResource  rootDirResource
+     *
+     * @param rootDirResource rootDirResource
      * @return isJAR
      */
     private static boolean isJarURL(final URL rootDirResource) {
 
         final String protocol = rootDirResource.getProtocol();
 
-        /** Determine whether the given URL points to a resource in a jar file,
-         * that is, has protocol "jar", "zip", "wsjar" or "code-source".
-         * <p>"zip" and "wsjar" are used by BEA WebLogic Server and IBM WebSphere, respectively,
-         * but can be treated like jar files. The same applies to "code-source" URLs on Oracle
-         * OC4J, provided that the path contains a jar separator.
-         * **/
+        /**
+         * Determine whether the given URL points to a resource in a jar file, that is, has protocol "jar", "zip",
+         * "wsjar" or "code-source".
+         * <p>
+         * "zip" and "wsjar" are used by BEA WebLogic Server and IBM WebSphere, respectively, but can be treated like
+         * jar files. The same applies to "code-source" URLs on Oracle OC4J, provided that the path contains a jar
+         * separator.
+         * *
+         */
         return "jar".equals(protocol) || "zip".equals(protocol) || "wsjar".equals(protocol)
-            || ("code-source".equals(protocol) && rootDirResource.getPath().contains(JAR_URL_SEPARATOR));
+                || ("code-source".equals(protocol) && rootDirResource.getPath().contains(JAR_URL_SEPARATOR));
 
     }
 
     /**
      * scan the jar to get the URLS of the Classes.
+     *
      * @param rootDirResource which is "Jar"
      * @param subPattern subPattern
-     * @return the URLs of all the matched classes 
+     * @return the URLs of all the matched classes
      */
     private static Collection<? extends URL> doFindPathMatchingJarResources(final URL rootDirResource, final String subPattern) {
 
@@ -276,6 +281,7 @@ public final class ClassPathResolver {
 
     /**
      * Resolve the given jar file URL into a JarFile object.
+     *
      * @param jarFileUrl jarFileUrl
      * @return the JarFile
      * @throws IOException IOException
@@ -296,9 +302,10 @@ public final class ClassPathResolver {
 
     /**
      * scan the system file to get the URLS of the Classes.
+     *
      * @param rootDirResource rootDirResource which is in File System
      * @param subPattern subPattern
-     * @return the URLs of all the matched classes 
+     * @return the URLs of all the matched classes
      */
     private static Collection<? extends URL> doFindPathMatchingFileResources(final URL rootDirResource, final String subPattern) {
 
@@ -352,6 +359,7 @@ public final class ClassPathResolver {
 
     /**
      * Create a URI instance for the given location String, replacing spaces with "%20" quotes first.
+     *
      * @param location the location String to convert into a URI instance
      * @return the URI instance
      * @throws URISyntaxException if the location wasn't a valid URI
@@ -368,10 +376,12 @@ public final class ClassPathResolver {
         /**
          * the default private constructor.
          */
-        private VfsResourceMatchingDelegate() {}
+        private VfsResourceMatchingDelegate() {
+        }
 
         /**
          * scan Resources in Jboss Victual File System.
+         *
          * @param rootUrl rootUrl
          * @param locationPattern subPattern
          * @return the matched URLd
@@ -391,7 +401,6 @@ public final class ClassPathResolver {
             }
         }
     }
-
 
     /**
      * VFS visitor for path matching purposes.
@@ -415,10 +424,11 @@ public final class ClassPathResolver {
 
         /**
          * the main constructor.
-         * @param rootPath  rootPath
+         *
+         * @param rootPath rootPath
          * @param subPattern subPattern
          */
-        public PatternVirtualFileVisitor(final String rootPath, final String subPattern) {
+        PatternVirtualFileVisitor(final String rootPath, final String subPattern) {
             this.subPattern = subPattern;
             this.rootPath = rootPath.length() == 0 || rootPath.endsWith("/") ? rootPath : rootPath + "/";
         }
@@ -442,6 +452,7 @@ public final class ClassPathResolver {
 
         /**
          * return the matched URLs.
+         *
          * @return URLs
          */
         public Set<URL> getResources() {

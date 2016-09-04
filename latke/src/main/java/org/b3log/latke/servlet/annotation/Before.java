@@ -25,7 +25,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * the before advice mark for processMethod.(for both processClass and processMethod). 
+ * The before advice mark for processMethod.(for both processClass and processMethod).
+ * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.1.0.0, Jan 17, 2013
  */
@@ -35,6 +36,8 @@ public @interface Before {
 
     /**
      * the real BeforeRequestProcessAdvice.
+     * 
+     * @return advice class
      */
     Class<? extends BeforeRequestProcessAdvice>[] adviceClass() default BeforeRequestProcessAdvice.class;
 

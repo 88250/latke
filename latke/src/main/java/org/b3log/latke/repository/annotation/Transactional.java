@@ -36,11 +36,15 @@ public @interface Transactional {
     
     /**
      * Transaction isolation level.
+     * 
+     * @return isolation
      */
     Isolation isolation() default Isolation.READ_COMMITTED;
     
     /**
      * Transaction propagation type.
+     * 
+     * @return propagation
      */
     Propagation propagation() default Propagation.REQUIRED;
 }

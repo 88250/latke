@@ -37,6 +37,8 @@ public @interface PathVariable {
 
     /**
      * The URI template variable to bind to. 
+     * 
+     * @return value
      */
     String value();
 }

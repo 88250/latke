@@ -96,7 +96,7 @@ public final class LocalThreadService implements ThreadService {
          * @param timeout the specified timeout
          * @param monitor the specified monitor
          */
-        public Worker(final Runnable runnable, final long timeout, final Object monitor) {
+        Worker(final Runnable runnable, final long timeout, final Object monitor) {
             this.runnable = runnable;
             this.timeout = timeout;
             this.monitor = monitor;

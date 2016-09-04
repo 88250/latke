@@ -36,6 +36,8 @@ public @interface Render {
 
     /**
      * The id of the render, for plugin to identify.
+     * 
+     * @return value
      */
     String value();
 }

@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.util;
 
-
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -24,17 +23,17 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  * Stop watch utilities for timing of a thread of tasks.
  *
  * <p>
- * Invokes method {@link #start(java.lang.String)} for timing a task, invokes method {@link #end()} for stop timing the corresponding task,
- * the start and end must match exactly.
+ * Invokes method {@link #start(java.lang.String)} for timing a task, invokes method {@link #end()} for stop timing the
+ * corresponding task, the start and end must match exactly.
  * </p>
  *
  * <p>
- * <b>Note</b>: Remember to {@linkplain Stopwatchs#release() release} a stopwatch if finished statistics finally to avoid memory leak.
+ * <b>Note</b>: Remember to {@linkplain Stopwatchs#release() release} a stopwatch if finished statistics finally to
+ * avoid memory leak.
  * </p>
  *
  * <p>
@@ -155,12 +154,11 @@ public final class Stopwatchs {
      * Gets the current timing statistics.
      *
      * <p>
-     * If a task is not ended, the outputs will be minus for percentage and
-     * elapsed, the absolute value of the elapsed filed is the start time.
+     * If a task is not ended, the outputs will be minus for percentage and elapsed, the absolute value of the elapsed
+     * filed is the start time.
      * </p>
      *
-     * @return the current timing statistics, returns {@code "No stopwatch"}
-     * if not stopwatch
+     * @return the current timing statistics, returns {@code "No stopwatch"} if not stopwatch
      */
     public static String getTimingStat() {
         final Stopwatch root = STOPWATCH.get();
@@ -177,19 +175,17 @@ public final class Stopwatchs {
     }
 
     /**
-     * Gets elapsed time from the specified parent stopwatch with the specified
-     * task title.
+     * Gets elapsed time from the specified parent stopwatch with the specified task title.
      *
      * @param taskTitle the specified task title
      * @return
      * <ul>
-     * <li>{@linkplain org.b3log.latke.util.Stopwatchs.Stopwatch#getElapsedTime() elapsed time} of the found
-     * task if it {@linkplain org.b3log.latke.util.Stopwatchs.Stopwatch#isEnded() is ended}</li>
+     * <li>{@linkplain org.b3log.latke.util.Stopwatchs.Stopwatch#getElapsedTime() elapsed time} of the found task if it
+     * {@linkplain org.b3log.latke.util.Stopwatchs.Stopwatch#isEnded() is ended}</li>
      * <li>{@linkplain System#currentTimeMillis() the current time} subtracts
      * {@linkplain org.b3log.latke.util.Stopwatchs.Stopwatch#startTime the start time} of the found task if it
      * {@linkplain org.b3log.latke.util.Stopwatchs.Stopwatch#isRunning() is running} </li>
-     * <li>{@code -1} if not found any stopwatch corresponding to the
-     * specified task title</li>
+     * <li>{@code -1} if not found any stopwatch corresponding to the specified task title</li>
      * </ul>
      */
     public static long getElapsed(final String taskTitle) {
@@ -219,8 +215,7 @@ public final class Stopwatchs {
     }
 
     /**
-     * Gets stopwatch from the specified parent stopwatch with the specified
-     * task title.
+     * Gets stopwatch from the specified parent stopwatch with the specified task title.
      *
      * @param parent the specified parent
      * @param taskTitle the specified task title
@@ -279,14 +274,14 @@ public final class Stopwatchs {
     /**
      * Private constructor.
      */
-    private Stopwatchs() {}
+    private Stopwatchs() {
+    }
 
     /**
      * Stopwatch for timing a task.
      *
      * <p>
-     * A stopwatch based on a tree-structure for timing sub-tasks, and
-     * calculating running time of tasks hierarchically.
+     * A stopwatch based on a tree-structure for timing sub-tasks, and calculating running time of tasks hierarchically.
      *
      * <pre>
      * 0 -- 0 -- 0 -- 0 -- 0 -- 0 -- 0 -- 0 -- 0 -- 0 -- 0
@@ -297,8 +292,8 @@ public final class Stopwatchs {
      * </p>
      *
      * <p>
-     * The task for timing is specified by the {@linkplain #taskTitle task title},
-     * if exists two tasks with the same title in a task tree,
+     * The task for timing is specified by the {@linkplain #taskTitle task title}, if exists two tasks with the same
+     * title in a task tree,
      * </p>
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
@@ -337,12 +332,11 @@ public final class Stopwatchs {
         private static final MathContext MATH_CONTEXT = new MathContext(4, RoundingMode.HALF_UP);
 
         /**
-         * Constructs a stopwatch with the specified task title and starts it
-         * at once.
+         * Constructs a stopwatch with the specified task title and starts it at once.
          *
          * @param taskTitle the specified task title
          */
-        public Stopwatch(final String taskTitle) {
+        Stopwatch(final String taskTitle) {
             this.taskTitle = taskTitle;
             startTime = System.currentTimeMillis();
         }
@@ -350,8 +344,7 @@ public final class Stopwatchs {
         /**
          * Determines whether this stopwatch is ended.
          *
-         * @return {@code true} if it is ended, returns {@code false}
-         * otherwise
+         * @return {@code true} if it is ended, returns {@code false} otherwise
          */
         public boolean isEnded() {
             return endTime > 0;
@@ -360,8 +353,7 @@ public final class Stopwatchs {
         /**
          * Determines whether this stopwatch is running.
          *
-         * @return {@code true} if it is running, return {@code false}
-         * otherwise
+         * @return {@code true} if it is running, return {@code false} otherwise
          */
         public boolean isRunning() {
             return 0 == endTime;
@@ -425,8 +417,7 @@ public final class Stopwatchs {
         /**
          * Gets the elapsed time.
          *
-         * @return elapsed time,
-         * {@linkplain #startTime startTime} - {@linkplain #endTime endTime}
+         * @return elapsed time, {@linkplain #startTime startTime} - {@linkplain #endTime endTime}
          */
         public long getElapsedTime() {
             return endTime - startTime;
@@ -497,7 +488,7 @@ public final class Stopwatchs {
             final BigDecimal percenOfRoot = new BigDecimal(percentOfRoot, MATH_CONTEXT);
 
             final StringBuilder stringBuilder = new StringBuilder("[").append(percenOfRoot).append("]%, [").append(getElapsedTime()).append("]ms [").append(getTaskTitle()).append("]").append(
-                Strings.LINE_SEPARATOR);
+                    Strings.LINE_SEPARATOR);
 
             return stringBuilder.toString();
         }

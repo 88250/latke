@@ -63,7 +63,9 @@ import java.lang.annotation.Target;
 public @interface BeforeMethod {
 
     /**
-     * The name of invoking method. 
+     * The name of invoking method.
+     * 
+     * @return value
      */
     String value();
 }

@@ -45,21 +45,29 @@ public @interface RequestProcessing {
      * Semantics of these values adapting to the URL patterns (&lt;url-pattern/&gt;) configures in web application
      * descriptor (web.xml) of a servlet. Ant-style path pattern and regular expression pattern are also supported.
      * </p>
+     * 
+     * @return values
      */
     String[] value() default {};
 
     /**
      * The URI patterns mode.
+     * 
+     * @return URI patterns mode
      */
     URIPatternMode uriPatternsMode() default URIPatternMode.ANT_PATH;
 
     /**
      * The HTTP request methods the annotated method should process.
+     * 
+     * @return HTTP request methods
      */
     HTTPRequestMethod[] method() default {HTTPRequestMethod.GET};
 
     /**
      * User customized data convert class.
+     * 
+     * @return convert class
      */
     Class<? extends ConvertSupport> convertClass() default ConvertSupport.class;
 }
