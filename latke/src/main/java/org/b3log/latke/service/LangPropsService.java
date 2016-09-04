@@ -15,23 +15,20 @@
  */
 package org.b3log.latke.service;
 
-
 import java.util.Locale;
 import java.util.Map;
-import org.json.JSONObject;
-
 
 /**
  * Language service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Jul 8, 2013
+ * @version 3.0.0.0, Aug 4, 2016
  */
 public interface LangPropsService {
 
     /**
-     * Gets a value from {@link org.b3log.latke.Latkes#getLocale() the current locale} specified
-     * language properties file with the specified key.
+     * Gets a value from {@link org.b3log.latke.Latkes#getLocale() the current locale} specified language properties
+     * file with the specified key.
      *
      * @param key the specified key
      * @return value
@@ -45,26 +42,4 @@ public interface LangPropsService {
      * @return a map of language configurations
      */
     Map<String, String> getAll(final Locale locale);
-
-    /**
-     * Gets all language properties as labels from lang_(by the specified
-     * locale).properties file. If not found lang_(locale).properties
-     * configurations, using {@link org.b3log.latke.Latkes#getLocale()} instead.
-     *
-     * @param locale the specified locale
-     * @return for example,
-     * <pre>
-     * {
-     *     "msgs": {
-     *         "localeNotFound":
-     *             "Unsupported locale, using default locale(zh_CN) instead."
-     *     },
-     *     "labels": [
-     *         {"labelId": "projectName", "labelText": "B3log Web"},
-     *         ....
-     *     ]
-     * }
-     * </pre>
-     */
-    JSONObject getLabels(final Locale locale);
 }

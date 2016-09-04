@@ -5,7 +5,7 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 
 Yet another simple web framework based on Java servlet technology.
 
-* [为什么又要造一个叫 Latke 的轮子](http://88250.b3log.org/why-latke-exists)
+* [为什么又要造一个叫 Latke 的轮子](https://hacpai.com/article/1403847528022)
 * [Latke 快速上手指南](https://hacpai.com/article/1466870492857)
 * [Latke 数据备份与恢复](https://docs.google.com/document/d/1IQkkUuaCPNHc_Wjw_5mNwPKUX8TpkAGCGqUaAErOTLo/edit?usp=sharing)
 
@@ -13,7 +13,7 @@ Yet another simple web framework based on Java servlet technology.
 <dependency>
     <groupId>org.b3log</groupId>
     <artifactId>latke</artifactId>
-    <version>2.2.8</version>
+    <version>2.2.10</version>
 </dependency>
 ```
 

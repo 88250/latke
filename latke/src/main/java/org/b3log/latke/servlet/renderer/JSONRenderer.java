@@ -30,7 +30,7 @@ import java.io.PrintWriter;
  * <a href="http://json.org">JSON</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.1, Jan 2, 2016
+ * @version 1.1.1.1, Aug 26, 2016
  */
 public final class JSONRenderer extends AbstractHTTPResponseRenderer {
 
@@ -104,15 +104,16 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
     public void render(final HTTPRequestContext context) {
         final HttpServletResponse response = context.getResponse();
 
-        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         try {
             final PrintWriter writer = response.getWriter();
 
             if (!isJSONP) {
+                response.setContentType("application/json");
                 writer.println(jsonObject);
             } else {
+                response.setContentType("application/javascript");
                 writer.print(callback + "(" + jsonObject + ")");
             }
 
