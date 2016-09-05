@@ -15,11 +15,9 @@
  */
 package org.b3log.latke;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -56,7 +54,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.6.7.12, Sep 4, 2016
+ * @version 2.6.7.13, Sep 5, 2016
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -282,20 +280,18 @@ public final class Latkes {
         final String appPackage = clazz.getPackage().getName();
 
         final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
-        final String cmdSyntax = isWindows ? "java -cp WEB-INF/lib/*;WEB-INF/classes com.yourpackage.Starter"
-                : "java -cp WEB-INF/lib/*:WEB-INF/classes com.yourpackage.Starter";
-        final String header = "\nLatke Application (" + appPackage + ")\n\n";
-        final String footer = "\nReport bugs or request features please visit: https://github.com/b3log/latke\n\n";
+        final String cmdSyntax = isWindows ? "java -cp WEB-INF/lib/*;WEB-INF/classes " + clazz.getName()
+                : "java -cp WEB-INF/lib/*:WEB-INF/classes " + clazz.getName();
         try {
             commandLine = commandLineParser.parse(options, args);
         } catch (final ParseException e) {
-            helpFormatter.printHelp(cmdSyntax, header, options, footer, true);
+            helpFormatter.printHelp(cmdSyntax, options, true);
 
             return;
         }
 
         if (commandLine.hasOption("h")) {
-            helpFormatter.printHelp(cmdSyntax, header, options, footer, true);
+            helpFormatter.printHelp(cmdSyntax, options, true);
 
             return;
         }
@@ -338,12 +334,6 @@ public final class Latkes {
             logger.log(Level.ERROR, "Bootstrap failed", e);
 
             System.exit(-1);
-        }
-
-        try {
-            Desktop.getDesktop().browse(new URI(serverScheme + "://" + serverHost + ":" + serverPort + contextPath));
-        } catch (final Throwable e) {
-            LOGGER.trace("Open browser failed [msg=" + e.getMessage() + "], please ignore this exception");
         }
     }
 
