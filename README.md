@@ -7,6 +7,7 @@ Yet another simple web framework based on Java servlet technology.
 
 * [为什么又要造一个叫 Latke 的轮子](https://hacpai.com/article/1403847528022)
 * [Latke 快速上手指南](https://hacpai.com/article/1466870492857)
+* [Latke 配置剖析](https://hacpai.com/article/1474087427032)
 * [Latke 数据备份与恢复](https://docs.google.com/document/d/1IQkkUuaCPNHc_Wjw_5mNwPKUX8TpkAGCGqUaAErOTLo/edit?usp=sharing)
 
 ```xml
