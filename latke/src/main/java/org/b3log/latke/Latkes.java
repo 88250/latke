@@ -27,13 +27,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 import javax.servlet.ServletContext;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cron.CronService;
@@ -45,16 +38,12 @@ import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.thread.local.LocalThreadService;
 import org.b3log.latke.util.Strings;
 import org.b3log.latke.util.freemarker.Templates;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.util.log.Log;
-import org.eclipse.jetty.util.log.Slf4jLog;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.6.7.13, Sep 5, 2016
+ * @version 2.6.8.13, Sep 18, 2016
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -220,120 +209,6 @@ public final class Latkes {
         } catch (final Exception e) {
             LOGGER.log(Level.DEBUG, "Not found Latke remote.properties");
             // Ignored
-        }
-    }
-
-    /**
-     * Bootstraps Latke application with the specified main class.
-     *
-     * @param clazz the specified main class
-     * @param args the specified main arguments
-     */
-    public static void boot(final Class<?> clazz, final String... args) {
-        try {
-            Log.setLog(new Slf4jLog());
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-
-        final Logger logger = Logger.getLogger(Latkes.class);
-
-        final Options options = new Options();
-        final Option listenPortOpt = Option.builder("lp").longOpt("listen_port").argName("LISTEN_PORT")
-                .hasArg().desc("listen port, default is 8080").build();
-        options.addOption(listenPortOpt);
-
-        final Option serverSchemeOpt = Option.builder("ss").longOpt("server_scheme").argName("SERVER_SCHEME")
-                .hasArg().desc("browser visit protocol, default is http").build();
-        options.addOption(serverSchemeOpt);
-
-        final Option serverHostOpt = Option.builder("sh").longOpt("server_host").argName("SERVER_HOST")
-                .hasArg().desc("browser visit domain name, default is localhost").build();
-        options.addOption(serverHostOpt);
-
-        final Option serverPortOpt = Option.builder("sp").longOpt("server_port").argName("SERVER_PORT")
-                .hasArg().desc("browser visit port, default is 8080").build();
-        options.addOption(serverPortOpt);
-
-        final Option staticServerSchemeOpt = Option.builder("sss").longOpt("static_server_scheme").argName("STATIC_SERVER_SCHEME")
-                .hasArg().desc("browser visit static resource protocol, default is http").build();
-        options.addOption(staticServerSchemeOpt);
-
-        final Option staticServerHostOpt = Option.builder("ssh").longOpt("static_server_host").argName("STATIC_SERVER_HOST")
-                .hasArg().desc("browser visit static resource domain name, default is localhost").build();
-        options.addOption(staticServerHostOpt);
-
-        final Option staticServerPortOpt = Option.builder("ssp").longOpt("static_server_port").argName("STATIC_SERVER_PORT")
-                .hasArg().desc("browser visit static resource port, default is 8080").build();
-        options.addOption(staticServerPortOpt);
-
-        final Option runtimeModeOpt = Option.builder("rm").longOpt("runtime_mode").argName("RUNTIME_MODE")
-                .hasArg().desc("runtime mode (DEVELOPMENT/PRODUCTION), default is DEVELOPMENT").build();
-        options.addOption(runtimeModeOpt);
-
-        options.addOption("h", "help", false, "print help for the command");
-
-        final HelpFormatter helpFormatter = new HelpFormatter();
-        final CommandLineParser commandLineParser = new DefaultParser();
-        CommandLine commandLine;
-
-        final String appPackage = clazz.getPackage().getName();
-
-        final boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
-        final String cmdSyntax = isWindows ? "java -cp WEB-INF/lib/*;WEB-INF/classes " + clazz.getName()
-                : "java -cp WEB-INF/lib/*:WEB-INF/classes " + clazz.getName();
-        try {
-            commandLine = commandLineParser.parse(options, args);
-        } catch (final ParseException e) {
-            helpFormatter.printHelp(cmdSyntax, options, true);
-
-            return;
-        }
-
-        if (commandLine.hasOption("h")) {
-            helpFormatter.printHelp(cmdSyntax, options, true);
-
-            return;
-        }
-
-        String portArg = commandLine.getOptionValue("listen_port");
-        if (!Strings.isNumeric(portArg)) {
-            portArg = "8080";
-        }
-
-        serverScheme = commandLine.getOptionValue("server_scheme");
-        serverHost = commandLine.getOptionValue("server_host");
-        serverPort = commandLine.getOptionValue("server_port");
-        staticServerScheme = commandLine.getOptionValue("static_server_scheme");
-        staticServerHost = commandLine.getOptionValue("static_server_host");
-        staticServerPort = commandLine.getOptionValue("static_server_port");
-        if (null != commandLine.getOptionValue("runtime_mode")) {
-            runtimeMode = RuntimeMode.valueOf(commandLine.getOptionValue("runtime_mode"));
-        }
-
-        Latkes.setScanPath(appPackage);
-        Latkes.initRuntimeEnv();
-
-        String webappDirLocation = "src/main/webapp/"; // POM structure in dev env
-        final File file = new File(webappDirLocation);
-        if (!file.exists()) {
-            webappDirLocation = "."; // production environment
-        }
-
-        final Server servletServer = new Server(Integer.valueOf(portArg));
-        final WebAppContext root = new WebAppContext();
-        root.setParentLoaderPriority(true); // Use parent class loader
-        root.setContextPath("/");
-        root.setDescriptor(webappDirLocation + "/WEB-INF/web.xml");
-        root.setResourceBase(webappDirLocation);
-        servletServer.setHandler(root);
-
-        try {
-            servletServer.start();
-        } catch (final Exception e) {
-            logger.log(Level.ERROR, "Bootstrap failed", e);
-
-            System.exit(-1);
         }
     }
 
