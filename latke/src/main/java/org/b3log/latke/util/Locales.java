@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.util;
 
-
 import org.b3log.latke.Keys;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -26,12 +25,11 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-
 /**
  * Locale utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.2, May 11, 2012
+ * @version 1.1.1.2, Oct 27, 2016
  */
 public final class Locales {
 
@@ -39,6 +37,11 @@ public final class Locales {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Locales.class.getName());
+
+    /**
+     * Thread local holder for locale.
+     */
+    private static final ThreadLocal<Locale> LOCALE = new InheritableThreadLocal<>();
 
     /**
      * Language start description in Accept-Language of request header.
@@ -63,16 +66,17 @@ public final class Locales {
     /**
      * Private default constructor.
      */
-    private Locales() {}
+    private Locales() {
+    }
 
     /**
      * Gets locale with the specified request.
      *
      * By the following steps:
      * <ol>
-     *     <li>Gets from session of the specified request</li>
-     *     <li>Gets from the specified request header</li>
-     *     <li>Using {@link Latkes#getLocale() server configuration}</li>
+     * <li>Gets from session of the specified request</li>
+     * <li>Gets from the specified request header</li>
+     * <li>Using {@link Latkes#getLocale() server configuration}</li>
      * </ol>
      *
      * @param request the specified request
@@ -122,8 +126,7 @@ public final class Locales {
      * Determines whether the server has the specified locale configuration or not.
      *
      * @param locale the specified locale
-     * @return {@code true} if the server has the specified locale,
-     * {@code false} otherwise
+     * @return {@code true} if the server has the specified locale, {@code false} otherwise
      */
     public static boolean hasLocale(final Locale locale) {
         try {
@@ -137,7 +140,7 @@ public final class Locales {
 
     /**
      * Sets the specified locale into session of the specified request.
-     * 
+     *
      * <p>
      * If no session of the specified request, do nothing.
      * </p>
@@ -155,15 +158,37 @@ public final class Locales {
         }
 
         session.setAttribute(Keys.LOCALE, locale);
-        LOGGER.log(Level.DEBUG, "Client[sessionId={0}] sets locale to [{1}]", new Object[] {session.getId(), locale.toString()});
+        LOGGER.log(Level.DEBUG, "Client[sessionId={0}] sets locale to [{1}]", new Object[]{session.getId(), locale.toString()});
+    }
+
+    /**
+     * Sets locale.
+     *
+     * @param locale the specified locale
+     */
+    public static void setLocale(final Locale locale) {
+        LOCALE.set(locale);
+    }
+
+    /**
+     * Gets locale.
+     *
+     * @return locale
+     */
+    public static Locale getLocale() {
+        final Locale ret = LOCALE.get();
+        if (null == ret) {
+            return Latkes.getLocale();
+        }
+
+        return ret;
     }
 
     /**
      * Gets country from the specified locale string.
      *
      * @param localeString the specified locale string
-     * @return country, if the length of specified locale string less than 5,
-     * returns ""
+     * @return country, if the length of specified locale string less than 5, returns ""
      */
     public static String getCountry(final String localeString) {
         if (localeString.length() >= COUNTRY_END) {
@@ -177,8 +202,7 @@ public final class Locales {
      * Gets language from the specified locale string.
      *
      * @param localeString the specified locale string
-     * @return language, if the length of specified locale string less than 2,
-     * returns ""
+     * @return language, if the length of specified locale string less than 2, returns ""
      */
     public static String getLanguage(final String localeString) {
         if (localeString.length() >= LANG_END) {

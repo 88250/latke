@@ -28,12 +28,13 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.Locales;
 
 /**
  * Language service implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.0, Oct 27, 2016
+ * @version 1.2.1.1, Oct 27, 2016
  */
 @Named
 @Singleton
@@ -86,7 +87,7 @@ public class LangPropsServiceImpl implements LangPropsService {
 
     @Override
     public String get(final String key) {
-        return get(Keys.LANGUAGE, key, Latkes.getLocale());
+        return get(Keys.LANGUAGE, key, Locales.getLocale());
     }
 
     @Override
