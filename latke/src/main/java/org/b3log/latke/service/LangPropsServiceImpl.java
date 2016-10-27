@@ -33,7 +33,7 @@ import org.b3log.latke.logging.Logger;
  * Language service implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.0, Aug 4, 2016
+ * @version 1.2.1.0, Oct 27, 2016
  */
 @Named
 @Singleton
@@ -54,7 +54,7 @@ public class LangPropsServiceImpl implements LangPropsService {
         Map<String, String> ret = LANGS.get(locale);
 
         if (null == ret) {
-            ret = new HashMap<String, String>();
+            ret = new HashMap<>();
             ResourceBundle langBundle;
 
             try {
@@ -87,6 +87,11 @@ public class LangPropsServiceImpl implements LangPropsService {
     @Override
     public String get(final String key) {
         return get(Keys.LANGUAGE, key, Latkes.getLocale());
+    }
+
+    @Override
+    public String get(final String key, final Locale locale) {
+        return get(Keys.LANGUAGE, key, locale);
     }
 
     /**

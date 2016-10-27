@@ -22,7 +22,7 @@ import java.util.Map;
  * Language service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 3.0.0.0, Aug 4, 2016
+ * @version 3.1.0.0, Oct 27, 2016
  */
 public interface LangPropsService {
 
@@ -34,6 +34,15 @@ public interface LangPropsService {
      * @return value
      */
     String get(final String key);
+
+    /**
+     * Gets a value with the specified key and locale.
+     *
+     * @param key the specified key
+     * @param locale the specified locale
+     * @return value
+     */
+    String get(final String key, final Locale locale);
 
     /**
      * Gets all language properties as a map by the specified locale.
