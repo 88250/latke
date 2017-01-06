@@ -9,3 +9,6 @@ release.properties
 /latke-repository-/target/
 /latke-repository-sqlserver/target/
 /latke-repository-redis/target/
+
+.idea/
+*.iml

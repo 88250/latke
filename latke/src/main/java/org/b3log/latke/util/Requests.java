@@ -25,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -37,7 +38,7 @@ import org.json.JSONObject;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 1.0.3.2, May 4, 2014
+ * @version 1.1.3.2, Jan 6, 2017
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -49,12 +50,10 @@ public final class Requests {
 
     /**
      * The pagination path pattern.
-     *
      * <p>
      * The first star represents "the current page number", the second star represents "the page size", and the third star represents
      * "the window size". Argument of each of these stars should be a number.
      * </p>
-     *
      * <p>
      * For example, the request URI is "xxx/1/2/3", so the specified path is "1/2/3". The first number represents
      * "the current page number", the second number represents "the page size", and the third number represents "the window size", all of
@@ -77,18 +76,18 @@ public final class Requests {
      * HTTP header "User-Agent" pattern for mobile device requests.
      */
     private static final Pattern MOBILE_USER_AGENT_PATTERN = Pattern.compile(
-        "android.+mobile|avantgo|bada|blackberry|blazer|compal|elaine|fennec"
-            + "|hiptop|iemobile|ip(hone|od)|iris|kindle|lge|maemo|midp|mmp|opera m(ob|in)i"
-            + "|palm( os)?|phone|p(ixi|re)|plucker|pocket|psp|symbian|treo|up.(browser"
-            + "|link)|ucweb|vodafone|wap|webos|windows (ce|phone)|xda|xiino|htc|MQQBrowser",
+            "android.+mobile|avantgo|bada|blackberry|blazer|compal|elaine|fennec"
+                    + "|hiptop|iemobile|ip(hone|od)|iris|kindle|lge|maemo|midp|mmp|opera m(ob|in)i"
+                    + "|palm( os)?|phone|p(ixi|re)|plucker|pocket|psp|symbian|treo|up.(browser"
+                    + "|link)|ucweb|vodafone|wap|webos|windows (ce|phone)|xda|xiino|htc|MQQBrowser",
             Pattern.CASE_INSENSITIVE);
 
     /**
      * HTTP header "User-Agent" pattern for search engine bot requests.
      */
     private static final Pattern SEARCH_ENGINE_BOT_USER_AGENT_PATTERN = Pattern.compile(
-        "spider|bot|fetcher|crawler" + "|google|yahoo|sogou|youdao|Xianguo.com|RssBandit|JianKongBao Monitor|BAE Online Platform" + "|B3log",
-        Pattern.CASE_INSENSITIVE);
+            "spider|bot|fetcher|crawler" + "|google|yahoo|sogou|youdao|Xianguo.com|RssBandit|JianKongBao Monitor|BAE Online Platform" + "|B3log",
+            Pattern.CASE_INSENSITIVE);
 
     /**
      * Cookie expiry of "visited".
@@ -97,9 +96,9 @@ public final class Requests {
 
     /**
      * Logs the specified request with the specified level and logger.
-     *
+     * <p>
      * Logging information of the specified request includes:
-     *
+     * <p>
      * <ul>
      * <li>method</li>
      * <li>URL</li>
@@ -109,39 +108,50 @@ public final class Requests {
      * <li>remote (address, port, host)</li>
      * <li>headers</li>
      * </ul>
+     * </p>
      *
      * @param httpServletRequest the specified HTTP servlet request
-     * @param level the specified logging level
-     * @param logger the specified logger
+     * @param level              the specified logging level
+     * @param logger             the specified logger
      */
     public static void log(final HttpServletRequest httpServletRequest, final Level level, final Logger logger) {
         if (!logger.isLoggable(level)) {
             return;
         }
 
+        logger.log(level, getLog(httpServletRequest));
+    }
+
+    /**
+     * Gets log of the specified request.
+     *
+     * @param httpServletRequest the specified request
+     * @return log
+     */
+    public static String getLog(final HttpServletRequest httpServletRequest) {
         final String indents = "    ";
         final StringBuilder logBuilder = new StringBuilder("Request [").append(Strings.LINE_SEPARATOR);
 
         logBuilder.append(indents).append("method=").append(httpServletRequest.getMethod()).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("URL=").append(httpServletRequest.getRequestURL()).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("contentType=").append(httpServletRequest.getContentType()).append(",").append(
-            Strings.LINE_SEPARATOR);
+                Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("characterEncoding=").append(httpServletRequest.getCharacterEncoding()).append(",").append(
-            Strings.LINE_SEPARATOR);
+                Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("local=[").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append(indents).append("addr=").append(httpServletRequest.getLocalAddr()).append(",").append(
-            Strings.LINE_SEPARATOR);
+                Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getLocalPort()).append(",").append(
-            Strings.LINE_SEPARATOR);
+                Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append(indents).append("name=").append(httpServletRequest.getLocalName()).append("],").append(
-            Strings.LINE_SEPARATOR);
+                Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("remote=[").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("addr=").append(httpServletRequest.getRemoteAddr()).append(",").append(
-            Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("addr=").append(getRemoteAddr(httpServletRequest)).append(",").append(
+                Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getRemotePort()).append(",").append(
-            Strings.LINE_SEPARATOR);
+                Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append(indents).append("host=").append(httpServletRequest.getRemoteHost()).append("],").append(
-            Strings.LINE_SEPARATOR);
+                Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("headers=[").append(Strings.LINE_SEPARATOR);
 
         final StringBuilder headerLogBuilder = new StringBuilder();
@@ -160,14 +170,13 @@ public final class Requests {
 
         logBuilder.append(headerLogBuilder.toString()).append(Strings.LINE_SEPARATOR).append("]");
 
-        logger.log(level, logBuilder.toString());
+        return logBuilder.toString();
     }
 
     /**
      * Gets the Internet Protocol (IP) address of the end-client that sent the specified request.
-     *
      * <p>
-     * It will try to get HTTP head "X-forwarded-for" or "X-Real-IP" from the last proxy to get the request first, if not found, try to get 
+     * It will try to get HTTP head "X-forwarded-for" or "X-Real-IP" from the last proxy to get the request first, if not found, try to get
      * it directly by {@link HttpServletRequest#getRemoteAddr()}.
      * </p>
      *
@@ -236,21 +245,18 @@ public final class Requests {
 
     /**
      * Determines whether the specified request has been served.
-     *
      * <p>
      * A "served request" is a request a URI as former one. For example, if a client is request "/test", all requests from the client
      * subsequent in 24 hours will be treated as served requests, requested URIs save in client cookie (name: "visited").
      * </p>
-     *
      * <p>
      * If the specified request has not been served, appends the request URI in client cookie.
      * </p>
-     *
      * <p>
      * Sees this issue (https://github.com/b3log/b3log-solo/issues/44) for more details.
      * </p>
      *
-     * @param request the specified request
+     * @param request  the specified request
      * @param response the specified response
      * @return {@code true} if the specified request has been served, returns {@code false} otherwise
      */
@@ -343,7 +349,7 @@ public final class Requests {
      * Builds pagination request with the specified path.
      *
      * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN}
-     * for the details
+     *             for the details
      * @return pagination request json object, for example,
      * <pre>
      * {
@@ -352,7 +358,6 @@ public final class Requests {
      *     "paginationWindowSize": int
      * }
      * </pre>
-     *
      * @see #PAGINATION_PATH_PATTERN
      */
     public static JSONObject buildPaginationRequest(final String path) {
@@ -453,21 +458,21 @@ public final class Requests {
     /**
      * Gets the request json object with the specified request.
      *
-     * @param request the specified request
+     * @param request  the specified request
      * @param response the specified response, sets its content type with "application/json"
      * @return a json object
      * @throws ServletException servlet exception
-     * @throws IOException io exception
+     * @throws IOException      io exception
      */
     public static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("application/json");
 
         final StringBuilder sb = new StringBuilder();
         BufferedReader reader;
 
         final String errMsg = "Can not parse request[requestURI=" + request.getRequestURI() + ", method=" + request.getMethod()
-            + "], returns an empty json object";
+                + "], returns an empty json object";
 
         try {
             try {
@@ -501,5 +506,6 @@ public final class Requests {
     /**
      * Private default constructor.
      */
-    private Requests() {}
+    private Requests() {
+    }
 }

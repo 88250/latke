@@ -21,15 +21,20 @@ import org.b3log.latke.servlet.handler.Handler;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.Requests;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
  * the HttpControl for one request to do the data-stored and handler process.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 18, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.2, Jan 6, 2017
  */
 public class HttpControl {
 
@@ -41,7 +46,7 @@ public class HttpControl {
     /**
      * the constructor.
      *
-     * @param handlerIterable   Iterator<Handler>
+     * @param handlerIterable    Iterator<Handler>
      * @param httpRequestContext HTTPRequestContext
      */
     public HttpControl(final Iterator<Handler> handlerIterable, final HTTPRequestContext httpRequestContext) {
@@ -93,7 +98,10 @@ public class HttpControl {
             try {
                 ihandlerIterable.next().handle(httpRequestContext, this);
             } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, "Request processing failed", e);
+                final HttpServletRequest request = httpRequestContext.getRequest();
+                final String log = Requests.getLog(request);
+
+                LOGGER.log(Level.ERROR, log + " processing failed ", e);
             }
         }
     }
