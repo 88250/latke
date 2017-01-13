@@ -17,7 +17,7 @@ Yet another simple web framework based on Java servlet technology.
     <version>2.3.6</version>
 </dependency>
 ```
-讨论区：https://hacpai.com/tag/Latke
+**讨论区：https://hacpai.com/tag/Latke**
 
 ## Use cases
 
