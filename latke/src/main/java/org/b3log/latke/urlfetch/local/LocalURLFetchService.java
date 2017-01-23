@@ -15,10 +15,6 @@
  */
 package org.b3log.latke.urlfetch.local;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
@@ -28,29 +24,34 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 
+import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+
 /**
  * Local URL fetch service.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.3, Jul 7, 2015
+ * @version 1.1.1.4, Jan 23, 2017
  */
 public final class LocalURLFetchService implements URLFetchService {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LocalURLFetchService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LocalURLFetchService.class);
+
+    /**
+     * Timeout for async fetch.
+     */
+    private static final long ASYNC_TIME_OUT = 30000;
 
     /**
      * Thread service.
      */
     private ThreadService threadService = ThreadServiceFactory.getThreadService();
-
-    /**
-     * Timeout for async fetch.
-     */
-    private static final long ASYNC_TIME_OUT = 10000;
 
     @Override
     public HTTPResponse fetch(final HTTPRequest request) throws IOException {
@@ -65,16 +66,49 @@ public final class LocalURLFetchService implements URLFetchService {
 
     @Override
     public Future<?> fetchAsync(final HTTPRequest request) {
-        final FutureTask<HTTPResponse> futureTask = new FutureTask<HTTPResponse>(new Callable<HTTPResponse>() {
+        final FutureTask<HTTPResponse> futureTask = new FetchTask(new Callable<HTTPResponse>() {
             @Override
             public HTTPResponse call() throws Exception {
                 LOGGER.log(Level.DEBUG, "Fetch async, request=[" + request.toString() + "]");
+
                 return fetch(request);
             }
-        });
+        }, request);
+
 
         threadService.submit(futureTask, ASYNC_TIME_OUT);
 
         return futureTask;
+    }
+
+    /**
+     * URL fetch task.
+     *
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
+     * @version 1.0.0.0, Jan 23, 2017
+     */
+    private static class FetchTask extends FutureTask<HTTPResponse> {
+
+        /**
+         * Request.
+         */
+        private HTTPRequest request;
+
+        /**
+         * Constructs a fetch task with the specified callable and request.
+         *
+         * @param callable the specified callable
+         * @param request  the specified request
+         */
+        FetchTask(final Callable<HTTPResponse> callable, final HTTPRequest request) {
+            super(callable);
+
+            this.request = request;
+        }
+
+        @Override
+        public String toString() {
+            return "URL Fetch [request=" + request.toString() + "]";
+        }
     }
 }
