@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.renderer;
 
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -25,19 +24,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
 /**
  * <a href="http://json.org">JSON</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.1, Aug 26, 2016
+ * @version 1.2.1.1, Mar 5, 2017
  */
 public final class JSONRenderer extends AbstractHTTPResponseRenderer {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JSONRenderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JSONRenderer.class);
+
+    /**
+     * Pretty output.
+     */
+    private boolean pretty;
 
     /**
      * JSON object to render.
@@ -47,16 +50,34 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
     /**
      * Determines whether render as JSONP.
      */
-    private boolean isJSONP;
+    private boolean jsonp;
 
     /**
      * JSONP callback function name.
      */
     private String callback = "callback";
-    
+
+    /**
+     * Determins whether pretty rendering.
+     *
+     * @return {@code true} for pretty rendering, returns {@code false} otherwise
+     */
+    public boolean isPretty() {
+        return pretty;
+    }
+
+    /**
+     * Sets whether pretty rendering.
+     *
+     * @param pretty {@code true} for pretty rendering, {@code false} otherwise
+     */
+    public void setPretty(final boolean pretty) {
+        this.pretty = pretty;
+    }
+
     /**
      * Gets the json object to render.
-     * 
+     *
      * @return the json object
      */
     public JSONObject getJSONObject() {
@@ -65,7 +86,7 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
 
     /**
      * Sets the json object to render with the specified json object.
-     * 
+     *
      * @param jsonObject the specified json object
      */
     public void setJSONObject(final JSONObject jsonObject) {
@@ -73,25 +94,33 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
     }
 
     /**
+     * Determines whether render as JSONP.
+     *
+     * @return {@code true} for JSONP, {@code false} otherwise
+     */
+    public boolean isJSONP() {
+        return jsonp;
+    }
+
+    /**
      * Sets whether render as JSONP.
-     * 
+     *
      * @param isJSONP {@code true} for JSONP, {@code false} otherwise
-     * @return this 
+     * @return this
      */
     public JSONRenderer setJSONP(final boolean isJSONP) {
-        this.isJSONP = isJSONP;
+        this.jsonp = isJSONP;
 
         return this;
     }
 
     /**
      * Sets JSONP callback function.
-     * 
      * <p>
-     * Invokes this method will set {@link #isJSONP} to {@code true} 
+     * Invokes this method will set {@link #isJSONP} to {@code true}
      * automatically.
      * </p>
-     * 
+     *
      * @param callback the specified callback function name
      */
     public void setCallback(final String callback) {
@@ -103,18 +132,20 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
     @Override
     public void render(final HTTPRequestContext context) {
         final HttpServletResponse response = context.getResponse();
-
         response.setCharacterEncoding("UTF-8");
 
         try {
             final PrintWriter writer = response.getWriter();
 
-            if (!isJSONP) {
+            final int indent = 4;
+            final String output = pretty ? jsonObject.toString(indent) : jsonObject.toString();
+
+            if (!jsonp) {
                 response.setContentType("application/json");
-                writer.println(jsonObject);
+                writer.println(output);
             } else {
                 response.setContentType("application/javascript");
-                writer.print(callback + "(" + jsonObject + ")");
+                writer.print(callback + "(" + output + ")");
             }
 
             writer.close();

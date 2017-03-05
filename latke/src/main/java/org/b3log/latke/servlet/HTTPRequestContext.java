@@ -15,19 +15,19 @@
  */
 package org.b3log.latke.servlet;
 
+import org.b3log.latke.Keys;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.b3log.latke.Keys;
-import org.b3log.latke.servlet.renderer.JSONRenderer;
-import org.json.JSONObject;
 
 /**
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Jan 2, 2016
+ * @version 1.2.0.0, Mar 5, 2017
  */
 public final class HTTPRequestContext {
 
@@ -98,6 +98,22 @@ public final class HTTPRequestContext {
      */
     public void setResponse(final HttpServletResponse response) {
         this.response = response;
+    }
+
+    /**
+     * Pretty rends with the specified json object.
+     *
+     * @param json the specified json object
+     * @return this context
+     */
+    public HTTPRequestContext renderJSONPretty(final JSONObject json) {
+        final JSONRenderer jsonRenderer = new JSONRenderer();
+        jsonRenderer.setJSONObject(json);
+        jsonRenderer.setPretty(true);
+
+        this.renderer = jsonRenderer;
+
+        return this;
     }
 
     /**
@@ -199,7 +215,7 @@ public final class HTTPRequestContext {
      * Renders with {"name", obj}.
      *
      * @param name the specified name
-     * @param obj the specified object
+     * @param obj  the specified object
      * @return this context
      */
     public HTTPRequestContext renderJSONValue(final String name, final Object obj) {
