@@ -70,7 +70,7 @@
         <jedis.version>2.8.1</jedis.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <JDK.version>1.7</JDK.version>
+        <JDK.version>1.8</JDK.version>
     </properties>
 
     <scm>
