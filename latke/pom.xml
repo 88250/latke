@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
     Description: Latke web framework project. 
-    Version: 2.2.9.10, Sep 18, 2016
+    Version: 2.2.9.11, Mar 18, 2017
     Author: Liang Ding
     Author: Liceng Yao
 -->
@@ -122,7 +122,7 @@
             </dependency>
 
             <dependency>
-                <groupId>javassist</groupId>
+                <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
             </dependency>
@@ -208,7 +208,7 @@
         </dependency>
 
         <dependency>
-            <groupId>javassist</groupId>
+            <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
         </dependency>
 
