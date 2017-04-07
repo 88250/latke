@@ -22,7 +22,6 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import javax.enterprise.inject.spi.AnnotatedConstructor;
 
 
 /**
@@ -33,11 +32,11 @@ import javax.enterprise.inject.spi.AnnotatedConstructor;
  * @version 1.0.0.3, Mar 30, 2010
  */
 public class AnnotatedConstructorImpl<T> extends AbstractAnnotatedCallableImpl<T> implements
-    AnnotatedConstructor<T> {
+        AnnotatedConstructor<T> {
 
     /**
      * Constructs an annotated constructor with the specified constructor.
-     * 
+     *
      * @param constructor the specified constructor
      */
     public AnnotatedConstructorImpl(final Constructor<T> constructor) {

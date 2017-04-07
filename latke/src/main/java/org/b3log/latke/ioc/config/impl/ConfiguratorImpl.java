@@ -24,14 +24,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import javax.enterprise.inject.spi.Bean;
-import javax.inject.Named;
+
+import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.bean.BeanImpl;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.InjectionPointValidator;
+import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.util.Reflections;
 import org.b3log.latke.logging.Level;

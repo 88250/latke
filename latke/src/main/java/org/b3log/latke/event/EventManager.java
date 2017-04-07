@@ -18,8 +18,9 @@ package org.b3log.latke.event;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import javax.inject.Named;
-import javax.inject.Singleton;
+
+import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.b3log.latke.thread.local.LocalThreadService;
 

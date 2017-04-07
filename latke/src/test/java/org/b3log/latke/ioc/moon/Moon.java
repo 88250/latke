@@ -15,8 +15,8 @@
  */
 package org.b3log.latke.ioc.moon;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.inject.Singleton;
 
 /**
  *

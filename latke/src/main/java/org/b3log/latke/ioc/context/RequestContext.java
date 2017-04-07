@@ -13,35 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.context.impl;
-
+package org.b3log.latke.ioc.context;
 
 import java.lang.annotation.Annotation;
-import javax.inject.Singleton;
-import org.b3log.latke.ioc.context.AbstractContext;
-
 
 /**
- * Singleton context.
+ * Request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Nov 27, 2009
+ * @version 1.0.0.1, Jun 10, 2009
  */
-public final class SingletonContext extends AbstractContext {
+public final class RequestContext extends AbstractContext {
 
     /**
-     * Constructs an singleton context.
+     * Constructs a request context.
      */
-    public SingletonContext() {
-        this(Singleton.class);
+    public RequestContext() {
+        this(RequestScoped.class);
     }
 
     /**
-     * Constructs an singleton context with the specified scope type.
-     * 
+     * Constructs a request context with the specified scope type.
+     *
      * @param scopeType the specified scope type
      */
-    private SingletonContext(final Class<? extends Annotation> scopeType) {
+    private RequestContext(final Class<? extends Annotation> scopeType) {
         super(scopeType);
     }
 }

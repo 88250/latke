@@ -17,13 +17,13 @@ package org.b3log.latke.ioc;
 
 
 import org.b3log.latke.ioc.bean.LatkeBean;
+import org.b3log.latke.ioc.config.Configurator;
+import org.b3log.latke.ioc.context.Context;
+import org.b3log.latke.ioc.context.CreationalContext;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
-import javax.enterprise.context.spi.Context;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.BeanManager;
-import org.b3log.latke.ioc.config.Configurator;
 
 
 /**
@@ -36,14 +36,14 @@ public interface LatkeBeanManager extends BeanManager {
 
     /**
      * Gets the bean configurator.
-     * 
+     *
      * @return bean configurator
      */
     Configurator getConfigurator();
 
     /**
      * Gets a bean with the specified bean type and qualifiers.
-     * 
+     *
      * @param beanType the specified bean type
      * @param qualifiers the specified qualifiers
      * @return bean
@@ -52,7 +52,7 @@ public interface LatkeBeanManager extends BeanManager {
 
     /**
      * Gets a bean with the specified bean class.
-     * 
+     *
      * @param <T> tye type of bean class
      * @param beanClass the specified bean class
      * @return bean
@@ -61,15 +61,15 @@ public interface LatkeBeanManager extends BeanManager {
 
     /**
      * Gets a bean with the specified name.
-     * 
+     *
      * @param name the specified name
      * @return bean
      */
     LatkeBean<?> getBean(final String name);
-    
+
     /**
      * Gets a reference with the specified bean class.
-     * 
+     *
      * @param <T> the type of bean class
      * @param beanClass the specified bean class
      * @return reference
@@ -78,7 +78,7 @@ public interface LatkeBeanManager extends BeanManager {
 
     /**
      * Gets a reference of the specified bean.
-     * 
+     *
      * @param <T> the type of bean class
      * @param bean the specified bean
      * @return reference
@@ -87,7 +87,7 @@ public interface LatkeBeanManager extends BeanManager {
 
     /**
      * Gets a reference of the specified bean and creational context.
-     * 
+     *
      * @param bean the specified bean
      * @param creationalContext the specified creational context
      * @return reference
@@ -96,21 +96,21 @@ public interface LatkeBeanManager extends BeanManager {
 
     /**
      * Adds the specified bean.
-     * 
+     *
      * @param bean the specified bean
      */
     void addBean(final LatkeBean<?> bean);
 
     /**
      * Gets all beans.
-     * 
+     *
      * @return beans
      */
     Set<LatkeBean<?>> getBeans();
-    
+
     /**
      * Gets beans with the specified stereo type.
-     * 
+     *
      * @param stereoType the specified stereo type
      * @return beans
      */
@@ -118,7 +118,7 @@ public interface LatkeBeanManager extends BeanManager {
 
     /**
      * Adds the specified context.
-     * 
+     *
      * @param context the specified context
      */
     void addContext(final Context context);

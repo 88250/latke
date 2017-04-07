@@ -22,10 +22,6 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.AntPathMatcher;
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileVisitor;
-import org.jboss.vfs.VisitorAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -387,25 +383,27 @@ public final class ClassPathResolver {
          * @return the matched URLd
          */
         public static Set<URL> findMatchingResources(final URL rootUrl, final String locationPattern) {
-            VirtualFile root;
+//            VirtualFile root;
+//
+//            try {
+//                root = VFS.getChild(rootUrl.toURI());
+//                final PatternVirtualFileVisitor visitor = new PatternVirtualFileVisitor(root.getPathName(), locationPattern);
+//
+//                root.visit(visitor);
+//                return visitor.getResources();
+//            } catch (final Exception e) {
+//                LOGGER.log(Level.ERROR, "findMatchingResources in Jboss VPF wrong", e);
+//                return new HashSet<URL>();
+//            }
 
-            try {
-                root = VFS.getChild(rootUrl.toURI());
-                final PatternVirtualFileVisitor visitor = new PatternVirtualFileVisitor(root.getPathName(), locationPattern);
-
-                root.visit(visitor);
-                return visitor.getResources();
-            } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, "findMatchingResources in Jboss VPF wrong", e);
-                return new HashSet<URL>();
-            }
+            throw new UnsupportedOperationException("JBoss VFS not supported yet!");
         }
     }
 
     /**
      * VFS visitor for path matching purposes.
      */
-    private static class PatternVirtualFileVisitor implements VirtualFileVisitor {
+    private static class PatternVirtualFileVisitor { // implements VirtualFileVisitor {
 
         /**
          * the subPattern of the Pattern URL(not full).
@@ -433,22 +431,22 @@ public final class ClassPathResolver {
             this.rootPath = rootPath.length() == 0 || rootPath.endsWith("/") ? rootPath : rootPath + "/";
         }
 
-        @Override
-        public VisitorAttributes getAttributes() {
-            return VisitorAttributes.RECURSE;
-        }
-
-        @Override
-        public void visit(final VirtualFile vf) {
-            if (AntPathMatcher.match(this.subPattern, vf.getPathName().substring(this.rootPath.length()))) {
-                try {
-                    this.resources.add(vf.toURL());
-                } catch (final Exception e) {
-                    LOGGER.log(Level.ERROR, "getting URL from JBOSS VirtualFile occurs error ", e);
-                    throw new RuntimeException("getting URL from JBOSS VirtualFile occurs error ", e);
-                }
-            }
-        }
+//        @Override
+//        public VisitorAttributes getAttributes() {
+//            return VisitorAttributes.RECURSE;
+//        }
+//
+//        @Override
+//        public void visit(final VirtualFile vf) {
+//            if (AntPathMatcher.match(this.subPattern, vf.getPathName().substring(this.rootPath.length()))) {
+//                try {
+//                    this.resources.add(vf.toURL());
+//                } catch (final Exception e) {
+//                    LOGGER.log(Level.ERROR, "getting URL from JBOSS VirtualFile occurs error ", e);
+//                    throw new RuntimeException("getting URL from JBOSS VirtualFile occurs error ", e);
+//                }
+//            }
+//        }
 
         /**
          * return the matched URLs.

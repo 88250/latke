@@ -16,17 +16,13 @@
 package org.b3log.latke.ioc.util;
 
 
+import org.b3log.latke.ioc.inject.*;
 import org.b3log.latke.util.Reflections;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import javax.enterprise.inject.Stereotype;
-import javax.inject.Named;
-import javax.inject.Qualifier;
-import javax.inject.Scope;
-import javax.inject.Singleton;
 import org.b3log.latke.ioc.literal.NamedLiteral;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;

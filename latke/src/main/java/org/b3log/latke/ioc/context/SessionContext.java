@@ -13,35 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.context.impl;
+package org.b3log.latke.ioc.context;
 
 
 import java.lang.annotation.Annotation;
-import javax.enterprise.context.RequestScoped;
 import org.b3log.latke.ioc.context.AbstractContext;
+import org.b3log.latke.ioc.context.SessionScoped;
 
 
 /**
- * Request context.
+ * Session context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Jun 10, 2009
+ * @version 1.0.0.2, Jun 10, 2009
  */
-public final class RequestContext extends AbstractContext {
+public final class SessionContext extends AbstractContext {
 
     /**
-     * Constructs a request context.
+     * Constructs an session context.
      */
-    public RequestContext() {
-        this(RequestScoped.class);
+    public SessionContext() {
+        this(SessionScoped.class);
     }
 
     /**
-     * Constructs a request context with the specified scope type.
+     * Constructs an session context with the specified scope type.
      * 
      * @param scopeType the specified scope type
      */
-    private RequestContext(final Class<? extends Annotation> scopeType) {
+    private SessionContext(final Class<? extends Annotation> scopeType) {
         super(scopeType);
     }
 }

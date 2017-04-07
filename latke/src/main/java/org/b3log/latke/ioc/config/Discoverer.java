@@ -16,17 +16,11 @@
 package org.b3log.latke.ioc.config;
 
 
-import java.io.DataInputStream;
-import java.net.URL;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
-import javax.inject.Named;
+import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.annotation.Repository;
@@ -36,6 +30,13 @@ import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ArrayUtils;
 import org.b3log.latke.util.Strings;
+
+import java.io.DataInputStream;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 /**

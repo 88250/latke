@@ -16,14 +16,13 @@
 package org.b3log.latke.ioc.bean;
 
 
-import java.lang.annotation.Annotation;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
+import org.b3log.latke.ioc.BeanManager;
 
+import java.lang.annotation.Annotation;
 
 /**
  * B3log Latke bean model.
- * 
+ * <p>
  * <p>Adds some setters for a {@link Bean}.
  *
  * @param <T>
@@ -34,7 +33,7 @@ public interface LatkeBean<T> extends Bean<T> {
 
     /**
      * Sets a scope of this bean with the specified scope.
-     * 
+     *
      * @param scope the specified scope
      * @return this bean
      */
@@ -42,8 +41,8 @@ public interface LatkeBean<T> extends Bean<T> {
 
     /**
      * Sets qualifiers of this bean with the specified qualifiers.
-     * 
-     * @param qualifier the specified qualifier
+     *
+     * @param qualifier  the specified qualifier
      * @param qualifiers the specified qualifiers
      * @return this bean
      */
@@ -51,7 +50,7 @@ public interface LatkeBean<T> extends Bean<T> {
 
     /**
      * Sets the name of this bean with the specified name.
-     * 
+     *
      * @param name the specified name
      * @return this bean
      */
@@ -59,7 +58,7 @@ public interface LatkeBean<T> extends Bean<T> {
 
     /**
      * Gets the bean manager.
-     * 
+     *
      * @return the bean manager
      */
     BeanManager getBeanManager();

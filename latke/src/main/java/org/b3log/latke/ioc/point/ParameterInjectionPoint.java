@@ -15,11 +15,10 @@
  */
 package org.b3log.latke.ioc.point;
 
+import org.b3log.latke.ioc.annotated.AnnotatedParameter;
+import org.b3log.latke.ioc.bean.Bean;
 
 import java.lang.reflect.Member;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import javax.enterprise.inject.spi.Bean;
-
 
 /**
  * Parameter injection point.

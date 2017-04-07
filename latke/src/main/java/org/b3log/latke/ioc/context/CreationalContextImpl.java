@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.context.impl;
+package org.b3log.latke.ioc.context;
 
+import org.b3log.latke.ioc.bean.Bean;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-
 
 /**
  * Creational context.

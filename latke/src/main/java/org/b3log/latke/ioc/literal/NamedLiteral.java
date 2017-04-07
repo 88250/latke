@@ -15,9 +15,7 @@
  */
 package org.b3log.latke.ioc.literal;
 
-
-import javax.inject.Named;
-
+import org.b3log.latke.ioc.inject.Named;
 
 /**
  * named literal.

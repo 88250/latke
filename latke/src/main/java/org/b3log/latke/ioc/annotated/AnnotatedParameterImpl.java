@@ -19,9 +19,6 @@ package org.b3log.latke.ioc.annotated;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
-import javax.enterprise.inject.spi.AnnotatedCallable;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-
 
 /**
  * An annotated parameter.

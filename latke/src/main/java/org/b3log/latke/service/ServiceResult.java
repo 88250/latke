@@ -32,7 +32,6 @@ package org.b3log.latke.service;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Oct 25, 2011
  */
-// TODO: 88250, service result?
 public final class ServiceResult<T> {
 
     /**
@@ -111,7 +110,7 @@ public final class ServiceResult<T> {
      * 
      * <p>
      * Callers of a service cares whether the invocation is 
-     * {@link ServiceResult#successful successful}or not, so there is no result 
+     * {@link ServiceResult#successful successful} or not, so there is no result
      * need to hold. This 'null' type should be as the type of the result for 
      * clarity.
      * </p>

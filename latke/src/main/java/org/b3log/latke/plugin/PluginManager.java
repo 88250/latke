@@ -16,24 +16,6 @@
 package org.b3log.latke.plugin;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
@@ -41,6 +23,9 @@ import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
@@ -49,6 +34,15 @@ import org.b3log.latke.util.Stopwatchs;
 import org.b3log.latke.util.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.*;
 
 
 /**

@@ -15,8 +15,8 @@
  */
 package org.b3log.latke.ioc.moon.water;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.moon.annotation.Artifical;
 import org.b3log.latke.ioc.moon.annotation.Water;
 import org.b3log.latke.ioc.moon.ArtificalMoon;

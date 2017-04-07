@@ -16,20 +16,21 @@
 package org.b3log.latke.repository.annotation;
 
 
+import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Stereotype;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.enterprise.inject.Stereotype;
-import javax.inject.Named;
 
 
 /**
  * Indicates that an annotated type is a repository.
  * 
  * <p>
- * In Latke IoC container, a repository is {@link javax.inject.Singleton singleton} scope by default.
+ * In Latke IoC container, a repository is {@link org.b3log.latke.ioc.inject.Singleton singleton} scope by default.
  * </p>
  * 
  * @author <a href="http://88250.b3log.org">Liang Ding</a>

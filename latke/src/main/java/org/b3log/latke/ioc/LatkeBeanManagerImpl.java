@@ -16,40 +16,24 @@
 package org.b3log.latke.ioc;
 
 
-import org.b3log.latke.ioc.bean.LatkeBean;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.context.spi.Context;
-import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.Decorator;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.enterprise.inject.spi.InterceptionType;
-import javax.enterprise.inject.spi.Interceptor;
-import javax.enterprise.inject.spi.ObserverMethod;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.ioc.context.impl.CreationalContextImpl;
-import org.b3log.latke.ioc.context.impl.SingletonContext;
+import org.b3log.latke.ioc.annotated.AnnotatedType;
+import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.impl.ConfiguratorImpl;
+import org.b3log.latke.ioc.context.Context;
+import org.b3log.latke.ioc.context.ContextNotActiveException;
+import org.b3log.latke.ioc.context.Contextual;
+import org.b3log.latke.ioc.context.CreationalContext;
+import org.b3log.latke.ioc.context.CreationalContextImpl;
+import org.b3log.latke.ioc.context.SingletonContext;
+import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Provider;
+import org.b3log.latke.ioc.inject.Singleton;
+import org.b3log.latke.ioc.point.InjectionPoint;
+import org.b3log.latke.ioc.point.InjectionTarget;
 import org.b3log.latke.ioc.util.Beans;
-import org.b3log.latke.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
@@ -57,7 +41,12 @@ import org.b3log.latke.repository.impl.UserRepository;
 import org.b3log.latke.service.LangPropsServiceImpl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
+import org.b3log.latke.util.Reflections;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * Latke bean manager implementation.
@@ -99,16 +88,6 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
      */
     private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsServiceImpl.class, BeforeRequestProcessAdvice.class,
         AfterRequestProcessAdvice.class, UserRepository.class, EventManager.class, PluginManager.class);
-
-    @Override
-    public ELResolver getELResolver() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public ExpressionFactory wrapExpressionFactory(final javax.el.ExpressionFactory expressionFactory) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     /**
      * Root bean manager holder.
@@ -209,7 +188,6 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Object getReference(final Bean bean, final Type beanType, final CreationalContext ctx) {
         final Context activeContext = getContext(bean.getScope());
 
@@ -282,21 +260,6 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
 
     @Override
     public void fireEvent(final Object event, final Annotation... qualifiers) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public <T> Set<ObserverMethod<? super T>> resolveObserverMethods(final T event, final Annotation... qualifiers) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Decorator<?>> resolveDecorators(final Set<Type> types, final Annotation... qualifiers) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Interceptor<?>> resolveInterceptors(final InterceptionType type, final Annotation... interceptorBindings) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

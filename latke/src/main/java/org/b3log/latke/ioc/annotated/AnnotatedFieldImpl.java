@@ -23,9 +23,6 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import javax.enterprise.inject.spi.AnnotatedField;
-import javax.enterprise.inject.spi.AnnotatedType;
-
 
 /**
  * An annotated field.

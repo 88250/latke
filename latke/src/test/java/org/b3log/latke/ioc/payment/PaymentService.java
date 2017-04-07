@@ -15,10 +15,10 @@
  */
 package org.b3log.latke.ioc.payment;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import org.b3log.latke.ioc.context.ApplicationScoped;
+import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Provider;
 import org.b3log.latke.ioc.payment.annotation.Asynchronous;
 import org.b3log.latke.ioc.payment.annotation.Pay;
 import org.b3log.latke.ioc.payment.annotation.Synchronous;

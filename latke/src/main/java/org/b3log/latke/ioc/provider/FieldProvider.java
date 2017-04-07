@@ -15,10 +15,8 @@
  */
 package org.b3log.latke.ioc.provider;
 
-
-import javax.enterprise.inject.spi.AnnotatedField;
 import org.b3log.latke.ioc.LatkeBeanManager;
-
+import org.b3log.latke.ioc.annotated.AnnotatedField;
 
 /**
  * Field provider.

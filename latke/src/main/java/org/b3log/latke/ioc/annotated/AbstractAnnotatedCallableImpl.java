@@ -16,19 +16,13 @@
 package org.b3log.latke.ioc.annotated;
 
 
+import org.b3log.latke.util.CollectionUtils;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import javax.enterprise.inject.spi.AnnotatedCallable;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import javax.enterprise.inject.spi.AnnotatedType;
-import org.b3log.latke.util.CollectionUtils;
 
 
 /**

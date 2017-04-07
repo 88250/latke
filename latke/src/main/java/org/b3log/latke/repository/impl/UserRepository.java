@@ -15,23 +15,17 @@
  */
 package org.b3log.latke.repository.impl;
 
-
-import javax.inject.Named;
-import javax.inject.Singleton;
 import org.b3log.latke.Keys;
+import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Role;
 import org.b3log.latke.model.User;
-import org.b3log.latke.repository.AbstractRepository;
-import org.b3log.latke.repository.FilterOperator;
-import org.b3log.latke.repository.PropertyFilter;
-import org.b3log.latke.repository.Query;
-import org.b3log.latke.repository.RepositoryException;
+import org.b3log.latke.repository.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 /**
  * User repository implementation.

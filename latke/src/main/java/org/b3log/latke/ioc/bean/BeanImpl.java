@@ -16,43 +16,30 @@
 package org.b3log.latke.ioc.bean;
 
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.AnnotatedConstructor;
-import javax.enterprise.inject.spi.AnnotatedField;
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.annotated.AnnotatedTypeImpl;
+import org.b3log.latke.ioc.annotated.*;
+import org.b3log.latke.ioc.annotated.AnnotatedType;
 import org.b3log.latke.ioc.config.Configurator;
+import org.b3log.latke.ioc.context.CreationalContext;
+import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Provider;
 import org.b3log.latke.ioc.literal.NamedLiteral;
 import org.b3log.latke.ioc.point.FieldInjectionPoint;
+import org.b3log.latke.ioc.point.InjectionPoint;
 import org.b3log.latke.ioc.point.ParameterInjectionPoint;
 import org.b3log.latke.ioc.provider.FieldProvider;
 import org.b3log.latke.ioc.provider.ParameterProvider;
-import org.b3log.latke.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.Reflections;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.util.*;
 
 
 /**
@@ -68,106 +55,89 @@ public class BeanImpl<T> implements LatkeBean<T> {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(BeanImpl.class.getName());
-
+    /**
+     * Stereo types.
+     */
+    private final Set<Class<? extends Annotation>> stereotypes;
     /**
      * Bean manager.
      */
     private LatkeBeanManager beanManager;
-
     /**
      * Bean configurator.
      */
     private Configurator configurator;
-
     /**
      * Bean name.
      */
     private String name;
-
     /**
      * Bean scope.
      */
     private Class<? extends Annotation> scope;
-
     /**
      * Bean qualifiers.
      */
     private Set<Annotation> qualifiers;
-
     /**
      * Bean class.
      */
     private Class<T> beanClass;
-
     /**
      * Proxy class.
      */
     private Class<T> proxyClass;
-
     /**
      * Javassist method handler.
      */
     private JavassistMethodHandler javassistMethodHandler;
-
     /**
      * Bean types.
      */
     private Set<Type> types;
-
     /**
      * Annotated type of this bean.
      */
     private AnnotatedType<T> annotatedType;
-
     /**
      * Field injection points.
      */
     private Set<FieldInjectionPoint> fieldInjectionPoints;
-
     /**
      * Constructor parameter injection points.
      */
     private Map<AnnotatedConstructor<T>, List<ParameterInjectionPoint>> constructorParameterInjectionPoints;
-
     /**
      * Method parameter injection points.
      */
     private Map<AnnotatedMethod<?>, List<ParameterInjectionPoint>> methodParameterInjectionPoints;
-
     /**
      * Constructor parameter providers.
      */
     private List<ParameterProvider<?>> constructorParameterProviders;
-
     /**
      * Field provider.
      */
     private Set<FieldProvider<?>> fieldProviders;
-
     /**
      * Method parameter providers.
      */
     private Map<AnnotatedMethod<?>, List<ParameterProvider<?>>> methodParameterProviders;
 
     /**
-     * Stereo types.
-     */
-    private final Set<Class<? extends Annotation>> stereotypes;
-
-    /**
      * Constructs a Latke bean.
-     * 
+     *
      * @param beanManager the specified bean manager
-     * @param name the specified bean name
-     * @param scope the specified bean scope
-     * @param qualifiers the specified bean qualifiers
-     * @param beanClass the specified bean class
-     * @param types the specified bean types
-     * @param stereotypes the specified stereo types 
+     * @param name        the specified bean name
+     * @param scope       the specified bean scope
+     * @param qualifiers  the specified bean qualifiers
+     * @param beanClass   the specified bean class
+     * @param types       the specified bean types
+     * @param stereotypes the specified stereo types
      */
     public BeanImpl(final LatkeBeanManager beanManager, final String name, final Class<? extends Annotation> scope,
-        final Set<Annotation> qualifiers, final Class<T> beanClass, final Set<Type> types,
-        final Set<Class<? extends Annotation>> stereotypes) {
+                    final Set<Annotation> qualifiers, final Class<T> beanClass, final Set<Type> types,
+                    final Set<Class<? extends Annotation>> stereotypes) {
         this.beanManager = beanManager;
         this.name = name;
         this.scope = scope;
@@ -201,7 +171,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     /**
      * Resolves dependencies for the specified reference.
-     * 
+     *
      * @param reference the specified reference
      * @throws Exception exception
      */
@@ -216,7 +186,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     /**
      * Constructs the bean object with dependencies resolved.
-     * 
+     *
      * @return bean object
      * @throws Exception exception
      */
@@ -262,7 +232,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     /**
      * Resolves current class field dependencies for the specified reference.
-     * 
+     *
      * @param reference the specified reference
      */
     private void resolveCurrentclassFieldDependencies(final Object reference) {
@@ -302,12 +272,12 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     /**
      * Resolves current class method dependencies for the specified reference.
-     * 
+     *
      * @param reference the specified reference
      */
     private void resolveCurrentclassMethodDependencies(final Object reference) {
         for (final Map.Entry<AnnotatedMethod<?>, List<ParameterInjectionPoint>> methodParameterInjectionPoint
-            : methodParameterInjectionPoints.entrySet()) {
+                : methodParameterInjectionPoints.entrySet()) {
             final List<ParameterInjectionPoint> paraSet = methodParameterInjectionPoint.getValue();
             final Object[] args = new Object[paraSet.size()];
             int i = 0;
@@ -352,9 +322,9 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     /**
      * Resolves super class field dependencies for the specified reference.
-     * 
+     *
      * @param reference the specified reference
-     * @param clazz the super class of the specified reference
+     * @param clazz     the super class of the specified reference
      * @throws Exception exception
      */
     private void resolveSuperclassFieldDependencies(final Object reference, final Class<?> clazz) throws Exception {
@@ -406,9 +376,9 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     /**
      * Resolves super class method dependencies for the specified reference.
-     * 
+     *
      * @param reference the specified reference
-     * @param clazz the super class of the specified reference
+     * @param clazz     the super class of the specified reference
      * @throws Exception exception
      */
     private void resolveSuperclassMethodDependencies(final Object reference, final Class<?> clazz) throws Exception {
@@ -427,7 +397,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
         final BeanImpl<?> superBean = (BeanImpl<?>) beanManager.getBean(clazz);
 
         for (final Map.Entry<AnnotatedMethod<?>, List<ParameterInjectionPoint>> methodParameterInjectionPoint
-            : superBean.methodParameterInjectionPoints.entrySet()) {
+                : superBean.methodParameterInjectionPoints.entrySet()) {
             final List<ParameterInjectionPoint> paraSet = methodParameterInjectionPoint.getValue();
             final Object[] args = new Object[paraSet.size()];
             int i = 0;
@@ -526,6 +496,15 @@ public class BeanImpl<T> implements LatkeBean<T> {
         return scope;
     }
 
+    /**
+     * Sets the scope with the specified scope.
+     *
+     * @param scope the specified scope
+     */
+    private void setScope(final Class<? extends Annotation> scope) {
+        this.scope = scope;
+    }
+
     @Override
     public Set<Type> getTypes() {
         return types;
@@ -556,7 +535,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
 
     @Override
     public LatkeBean<T> qualified(final Annotation qualifier,
-        final Annotation... qualifiers) {
+                                  final Annotation... qualifiers) {
         addQualifier(qualifier);
         for (final Annotation q : qualifiers) {
             addQualifier(q);
@@ -574,7 +553,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
     @Override
     public String toString() {
         return "[name=" + name + ", scope=" + scope.getName() + ", qualifiers=" + qualifiers + ", class=" + beanClass.getName() + ", types="
-            + types + "]";
+                + types + "]";
     }
 
     /**
@@ -670,17 +649,8 @@ public class BeanImpl<T> implements LatkeBean<T> {
     }
 
     /**
-     * Sets the scope with the specified scope.
-     * 
-     * @param scope the specified scope
-     */
-    private void setScope(final Class<? extends Annotation> scope) {
-        this.scope = scope;
-    }
-
-    /**
      * Adds a qualifier with the specified qualifier.
-     * 
+     *
      * @param qualifier the specified qualifier
      */
     private void addQualifier(final Annotation qualifier) {
@@ -699,23 +669,8 @@ public class BeanImpl<T> implements LatkeBean<T> {
     }
 
     /**
-     * Sets the named qualifier with the specified named qualifier.
-     * 
-     * @param namedQualifier the specified named qualifier
-     */
-    private void setNamedQualifier(final Annotation namedQualifier) {
-        for (final Annotation qualifier : qualifiers) {
-            if (qualifier.annotationType().equals(Named.class)) {
-                qualifiers.remove(qualifier);
-                qualifiers.add(namedQualifier);
-                name = ((Named) namedQualifier).value();
-            }
-        }
-    }
-
-    /**
      * Gets the named qualifier.
-     * 
+     *
      * @return named aualifier
      */
     private Annotation getNamedQualifier() {
@@ -726,5 +681,20 @@ public class BeanImpl<T> implements LatkeBean<T> {
         }
 
         throw new RuntimeException("A bean has one qualifier(Named) at least!");
+    }
+
+    /**
+     * Sets the named qualifier with the specified named qualifier.
+     *
+     * @param namedQualifier the specified named qualifier
+     */
+    private void setNamedQualifier(final Annotation namedQualifier) {
+        for (final Annotation qualifier : qualifiers) {
+            if (qualifier.annotationType().equals(Named.class)) {
+                qualifiers.remove(qualifier);
+                qualifiers.add(namedQualifier);
+                name = ((Named) namedQualifier).value();
+            }
+        }
     }
 }

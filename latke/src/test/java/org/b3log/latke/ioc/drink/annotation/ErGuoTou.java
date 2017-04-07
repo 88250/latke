@@ -15,11 +15,12 @@
  */
 package org.b3log.latke.ioc.drink.annotation;
 
+import org.b3log.latke.ioc.inject.Qualifier;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.inject.Qualifier;
 
 /**
  * 

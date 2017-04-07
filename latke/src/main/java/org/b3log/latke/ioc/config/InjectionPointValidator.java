@@ -22,10 +22,11 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import javax.enterprise.inject.AmbiguousResolutionException;
-import javax.enterprise.inject.UnsatisfiedResolutionException;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.InjectionPoint;
+
+import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.inject.AmbiguousResolutionException;
+import org.b3log.latke.ioc.inject.UnsatisfiedResolutionException;
+import org.b3log.latke.ioc.point.InjectionPoint;
 import org.b3log.latke.util.Reflections;
 
 

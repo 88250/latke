@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.ioc.speaker;
 
-import javax.inject.Named;
+import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.speaker.annotation.Morning;
 
 /**

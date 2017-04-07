@@ -15,8 +15,8 @@
  */
 package org.b3log.latke.intercept;
 
-import javax.inject.Named;
 import org.b3log.latke.intercept.annotation.BeforeMethod;
+import org.b3log.latke.ioc.inject.Named;
 
 @Named
 public class A {

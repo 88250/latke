@@ -19,12 +19,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Set;
-import javax.enterprise.inject.spi.Annotated;
-import javax.enterprise.inject.spi.Bean;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.annotated.Annotated;
+import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.config.Configurator;
+import org.b3log.latke.ioc.inject.Provider;
+import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.util.Reflections;
 

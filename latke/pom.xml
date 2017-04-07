@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
     Description: Latke web framework project. 
-    Version: 2.2.9.11, Mar 18, 2017
+    Version: 2.3.9.11, Apr 8, 2017
     Author: Liang Ding
     Author: Liceng Yao
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke</artifactId>
@@ -66,12 +67,6 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>${cdi.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
@@ -82,12 +77,6 @@
                 <artifactId>slf4j-jdk14</artifactId>
                 <version>${slf4j.version}</version>
                 <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.el</groupId>
-                <artifactId>el-api</artifactId>
-                <version>${el-api.version}</version>
             </dependency>
 
             <dependency>
@@ -146,12 +135,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.jboss</groupId>
-                <artifactId>jboss-vfs</artifactId>
-                <version>${jboss-vfs.version}</version>
-            </dependency>
-            
         </dependencies>
     </dependencyManagement>
 
@@ -163,11 +146,6 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -175,11 +153,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
         </dependency>
 
         <dependency>
@@ -221,15 +194,10 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss</groupId>
-            <artifactId>jboss-vfs</artifactId>
         </dependency>
 
         <dependency>
@@ -238,9 +206,9 @@
             <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -252,5 +220,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

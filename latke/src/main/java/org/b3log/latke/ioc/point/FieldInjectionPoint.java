@@ -16,9 +16,10 @@
 package org.b3log.latke.ioc.point;
 
 
+import org.b3log.latke.ioc.annotated.AnnotatedField;
+import org.b3log.latke.ioc.bean.Bean;
+
 import java.lang.reflect.Field;
-import javax.enterprise.inject.spi.AnnotatedField;
-import javax.enterprise.inject.spi.Bean;
 
 
 /**

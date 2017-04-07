@@ -21,9 +21,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import javax.enterprise.inject.spi.Annotated;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.InjectionPoint;
+
+import org.b3log.latke.ioc.annotated.Annotated;
+import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.util.Beans;
 
 
@@ -78,7 +78,6 @@ public abstract class AbstractInjectionPoint implements InjectionPoint {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Bean<?> getBean() {
         return ownerBean;
     }

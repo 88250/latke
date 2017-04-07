@@ -15,30 +15,26 @@
  */
 package org.b3log.latke.ioc.context;
 
-
-import javax.enterprise.context.spi.Contextual;
-
-
 /**
  * Latke beans context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.1, Nov 27, 2009
  */
-public interface LatkeBeansContext extends javax.enterprise.context.spi.Context {
+public interface LatkeBeansContext extends Context {
 
     /**
      * Sets the active with the specified active.
-     * 
+     *
      * @param active the specified active
      */
     void setActive(final boolean active);
 
     /**
      * Adds the specified bean and reference.
-     * 
-     * @param <T> the type of contextual 
-     * @param bean the specified bean
+     *
+     * @param <T>       the type of contextual
+     * @param bean      the specified bean
      * @param reference the specified reference
      */
     <T> void add(final Contextual<T> bean, final T reference);

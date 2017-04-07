@@ -15,11 +15,11 @@
  */
 package org.b3log.latke.ioc.drink.mix;
 
-import javax.inject.Inject;
 import org.b3log.latke.ioc.drink.Drink;
 import org.b3log.latke.ioc.drink.annotation.ErGuoTou;
 import org.b3log.latke.ioc.drink.annotation.Orange;
 import org.b3log.latke.ioc.drink.juice.Juice;
+import org.b3log.latke.ioc.inject.Inject;
 
 /**
  *

@@ -17,12 +17,12 @@ package org.b3log.latke.ioc.main;
 
 import java.util.Arrays;
 import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.inject.Named;
 
 @Named("Main")
 public class Main {

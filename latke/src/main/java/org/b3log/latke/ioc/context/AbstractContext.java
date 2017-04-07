@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.ioc.context;
 
+import org.b3log.latke.ioc.bean.Bean;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -22,10 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import javax.enterprise.context.spi.Contextual;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-
 
 /**
  * Abstract context.
@@ -52,7 +49,7 @@ public abstract class AbstractContext implements LatkeBeansContext {
 
     /**
      * Constructs a context with the specified scope type.
-     * 
+     *
      * @param scopeType the specified scope type
      */
     public AbstractContext(final Class<? extends Annotation> scopeType) {
@@ -89,9 +86,9 @@ public abstract class AbstractContext implements LatkeBeansContext {
 
     /**
      * Gets reference of the specified bean and creational context.
-     * 
-     * @param <T> the type of contextual
-     * @param bean the specified bean
+     *
+     * @param <T>               the type of contextual
+     * @param bean              the specified bean
      * @param creationalContext the specified creational context
      * @return reference
      */
@@ -115,8 +112,8 @@ public abstract class AbstractContext implements LatkeBeansContext {
 
     /**
      * Removes the specified bean.
-     * 
-     * @param <T> the type of contextual
+     *
+     * @param <T>  the type of contextual
      * @param bean the specified bean
      */
     public <T> void remove(final Contextual<T> bean) {
@@ -155,8 +152,8 @@ public abstract class AbstractContext implements LatkeBeansContext {
     /**
      * Destroys the specified bean's instance.
      *
-     * @param <T> the type of contextual
-     * @param bean the specified bean
+     * @param <T>          the type of contextual
+     * @param bean         the specified bean
      * @param beanInstance the specified bean's instance
      */
     private <T> void destroyReference(final Bean<T> bean, final T beanInstance) {

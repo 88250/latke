@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.drink.wine;
+package org.b3log.latke.ioc.annotated;
 
-
-import org.b3log.latke.ioc.drink.Bottle;
-import org.b3log.latke.ioc.inject.Inject;
-import org.b3log.latke.ioc.inject.Provider;
+import java.util.List;
 
 /**
+ * <p>Represents a callable member of a Java type.</p>
  *
- * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 27, 2009
+ * @author Gavin King
+ * @author Pete Muir
+ *
+ * @param <X> the declaring type
  */
-public class WineBottle implements Bottle {
+public interface AnnotatedCallable<X> extends AnnotatedMember<X>
+{
 
-    public final Provider<Spirit> wineProvider;
+    /**
+     * <p>Get the parameters of the callable member.</p>
+     *
+     * @return the parameters
+     */
+    public List<AnnotatedParameter<X>> getParameters();
 
-    @Inject
-    public WineBottle(final Provider<Spirit> wineProvider) {
-        this.wineProvider = wineProvider;
-    }
-
-    @Override
-    public Spirit pour() {
-        return wineProvider.get();
-    }
 }

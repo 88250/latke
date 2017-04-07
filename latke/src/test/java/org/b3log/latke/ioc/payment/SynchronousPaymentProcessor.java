@@ -16,8 +16,9 @@
 package org.b3log.latke.ioc.payment;
 
 import java.io.Serializable;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+
+import org.b3log.latke.ioc.context.SessionScoped;
+import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.payment.annotation.Synchronous;
 
 /**
