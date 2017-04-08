@@ -14,7 +14,7 @@ Yet another simple web framework based on Java servlet technology.
 <dependency>
     <groupId>org.b3log</groupId>
     <artifactId>latke</artifactId>
-    <version>2.3.8</version>
+    <version>2.3.10</version>
 </dependency>
 ```
 **讨论区：https://hacpai.com/tag/Latke**
