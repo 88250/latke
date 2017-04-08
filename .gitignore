@@ -1,4 +1,4 @@
-﻿/latke/target/
+/latke/target/
 /latke-client/target/
 /latke-repository-mysql/target/
 /latke-repository-h2/target/
@@ -12,3 +12,4 @@ release.properties
 
 .idea/
 *.iml
+latke/target/checkstyle-cachefile
