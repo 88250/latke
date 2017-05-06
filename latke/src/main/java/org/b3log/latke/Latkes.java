@@ -15,18 +15,6 @@
  */
 package org.b3log.latke;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.TimeZone;
-import javax.servlet.ServletContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cron.CronService;
@@ -39,11 +27,24 @@ import org.b3log.latke.thread.local.LocalThreadService;
 import org.b3log.latke.util.Strings;
 import org.b3log.latke.util.freemarker.Templates;
 
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.TimeZone;
+
 /**
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.6.8.13, Sep 18, 2016
+ * @version 2.6.9.13, May 6, 2017
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -54,7 +55,22 @@ public final class Latkes {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Latkes.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Latkes.class);
+
+    /**
+     * Local properties (local.properties).
+     */
+    private static final Properties LOCAL_PROPS = new Properties();
+
+    /**
+     * Latke configurations (latke.properties).
+     */
+    private static final Properties LATKE_PROPS = new Properties();
+
+    /**
+     * Latke remote interfaces configurations (remote.properties).
+     */
+    private static final Properties REMOTE_PROPS = new Properties();
 
     /**
      * Locale. Initializes this by {@link #setLocale(java.util.Locale)}.
@@ -70,11 +86,6 @@ public final class Latkes {
      * Which mode Latke runs in?
      */
     private static RuntimeMode runtimeMode;
-
-    /**
-     * Local properties (local.properties).
-     */
-    private static final Properties LOCAL_PROPS = new Properties();
 
     /**
      * Application startup time millisecond.
@@ -152,18 +163,7 @@ public final class Latkes {
     private static String scanPath;
 
     /**
-     * Latke configurations (latke.properties).
-     */
-    private static final Properties LATKE_PROPS = new Properties();
-
-    /**
-     * Latke remote interfaces configurations (remote.properties).
-     */
-    private static final Properties REMOTE_PROPS = new Properties();
-
-    /**
      * H2 database TCP server.
-     *
      * <p>
      * If Latke is running on {@link RuntimeEnv#LOCAL LOCAL} environment and using {@link RuntimeDatabase#H2 H2}
      * database and specified newTCPServer=true in local.properties, creates a H2 TCP server and starts it.
@@ -213,8 +213,13 @@ public final class Latkes {
     }
 
     /**
+     * Private constructor.
+     */
+    private Latkes() {
+    }
+
+    /**
      * Gets static resource (JS, CSS files) version.
-     *
      * <p>
      * Returns the value of "staticResourceVersion" property in local.properties. Returns the
      * {@link #startupTimeMillis application startup millisecond} if not found the "staticResourceVersion" property in
@@ -236,8 +241,16 @@ public final class Latkes {
     }
 
     /**
-     * Gets server scheme.
+     * Sets static resource version with the specified static resource version.
      *
+     * @param staticResourceVersion the specified static resource version
+     */
+    public static void setStaticResourceVersion(final String staticResourceVersion) {
+        Latkes.staticResourceVersion = staticResourceVersion;
+    }
+
+    /**
+     * Gets server scheme.
      * <p>
      * Returns the value of "serverScheme" property in latke.properties.
      * </p>
@@ -257,8 +270,16 @@ public final class Latkes {
     }
 
     /**
-     * Gets server host.
+     * Sets server scheme with the specified server scheme.
      *
+     * @param serverScheme the specified server scheme
+     */
+    public static void setServerScheme(final String serverScheme) {
+        Latkes.serverScheme = serverScheme;
+    }
+
+    /**
+     * Gets server host.
      * <p>
      * Returns the value of "serverHost" property in latke.properties.
      * </p>
@@ -278,8 +299,16 @@ public final class Latkes {
     }
 
     /**
-     * Gets server port.
+     * Sets server host with the specified server host.
      *
+     * @param serverHost the specified server host
+     */
+    public static void setServerHost(final String serverHost) {
+        Latkes.serverHost = serverHost;
+    }
+
+    /**
+     * Gets server port.
      * <p>
      * Returns the value of "serverPort" property in latke.properties.
      * </p>
@@ -292,6 +321,15 @@ public final class Latkes {
         }
 
         return serverPort;
+    }
+
+    /**
+     * Sets server port with the specified server port.
+     *
+     * @param serverPort the specified server port
+     */
+    public static void setServerPort(final String serverPort) {
+        Latkes.serverPort = serverPort;
     }
 
     /**
@@ -329,7 +367,6 @@ public final class Latkes {
 
     /**
      * Gets static server scheme.
-     *
      * <p>
      * Returns the value of "staticServerScheme" property in latke.properties, returns the value of "serverScheme" if
      * not found.
@@ -350,8 +387,16 @@ public final class Latkes {
     }
 
     /**
-     * Gets static server host.
+     * Sets static server scheme with the specified static server scheme.
      *
+     * @param staticServerScheme the specified static server scheme
+     */
+    public static void setStaticServerScheme(final String staticServerScheme) {
+        Latkes.staticServerScheme = staticServerScheme;
+    }
+
+    /**
+     * Gets static server host.
      * <p>
      * Returns the value of "staticServerHost" property in latke.properties, returns the value of "serverHost" if not
      * found.
@@ -372,8 +417,16 @@ public final class Latkes {
     }
 
     /**
-     * Gets static server port.
+     * Sets static server host with the specified static server host.
      *
+     * @param staticServerHost the specified static server host
+     */
+    public static void setStaticServerHost(final String staticServerHost) {
+        Latkes.staticServerHost = staticServerHost;
+    }
+
+    /**
+     * Gets static server port.
      * <p>
      * Returns the value of "staticServerPort" property in latke.properties, returns the value of "serverPort" if not
      * found.
@@ -391,6 +444,15 @@ public final class Latkes {
         }
 
         return staticServerPort;
+    }
+
+    /**
+     * Sets static server port with the specified static server port.
+     *
+     * @param staticServerPort the specified static server port
+     */
+    public static void setStaticServerPort(final String staticServerPort) {
+        Latkes.staticServerPort = staticServerPort;
     }
 
     /**
@@ -433,15 +495,29 @@ public final class Latkes {
      * @return context path
      */
     public static String getContextPath() {
-        if (null == contextPath) {
-            contextPath = LATKE_PROPS.getProperty("contextPath");
-
-            if (null == contextPath) {
-                contextPath = "";
-            }
+        if (null != contextPath) {
+            return contextPath;
         }
 
+        final String contextPathConf = LATKE_PROPS.getProperty("contextPath");
+        if (null != contextPathConf) {
+            contextPath = contextPathConf;
+
+            return contextPath;
+        }
+
+        contextPath = StringUtils.EMPTY;
+
         return contextPath;
+    }
+
+    /**
+     * Sets context path with the specified context path.
+     *
+     * @param contextPath the specified context path
+     */
+    public static void setContextPath(final String contextPath) {
+        Latkes.contextPath = contextPath;
     }
 
     /**
@@ -459,6 +535,15 @@ public final class Latkes {
         }
 
         return staticPath;
+    }
+
+    /**
+     * Sets static path with the specified static path.
+     *
+     * @param staticPath the specified static path
+     */
+    public static void setStaticPath(final String staticPath) {
+        Latkes.staticPath = staticPath;
     }
 
     /**
@@ -485,7 +570,6 @@ public final class Latkes {
 
     /**
      * Gets runtime configuration of a service specified by the given service name.
-     *
      * <p>
      * If current runtime environment is local, returns local in any case.
      * </p>
@@ -510,7 +594,6 @@ public final class Latkes {
 
     /**
      * Initializes {@linkplain RuntimeEnv runtime environment}.
-     *
      * <p>
      * Sets the current {@link RuntimeMode runtime mode} to {@link RuntimeMode#DEVELOPMENT development mode}.
      * </p>
@@ -605,15 +688,6 @@ public final class Latkes {
     }
 
     /**
-     * Sets the runtime mode with the specified mode.
-     *
-     * @param runtimeMode the specified mode
-     */
-    public static void setRuntimeMode(final RuntimeMode runtimeMode) {
-        Latkes.runtimeMode = runtimeMode;
-    }
-
-    /**
      * Gets the runtime mode.
      *
      * @return runtime mode
@@ -627,6 +701,15 @@ public final class Latkes {
     }
 
     /**
+     * Sets the runtime mode with the specified mode.
+     *
+     * @param runtimeMode the specified mode
+     */
+    public static void setRuntimeMode(final RuntimeMode runtimeMode) {
+        Latkes.runtimeMode = runtimeMode;
+    }
+
+    /**
      * Gets the runtime database.
      *
      * @return runtime database
@@ -635,7 +718,7 @@ public final class Latkes {
         if (RuntimeEnv.LOCAL != runtimeEnv) {
             throw new RuntimeException(
                     "Underlying database can be specified when Latke runs on [LOCAL] environment only, " + "current runtime enviornment ["
-                    + runtimeEnv + ']');
+                            + runtimeEnv + ']');
         }
 
         final String runtimeDatabase = LOCAL_PROPS.getProperty("runtimeDatabase");
@@ -654,15 +737,6 @@ public final class Latkes {
     }
 
     /**
-     * Sets the locale with the specified locale.
-     *
-     * @param locale the specified locale
-     */
-    public static void setLocale(final Locale locale) {
-        Latkes.locale = locale;
-    }
-
-    /**
      * Gets the locale. If the {@link #locale} has not been initialized, invoking this method will throw
      * {@link RuntimeException}.
      *
@@ -674,6 +748,15 @@ public final class Latkes {
         }
 
         return locale;
+    }
+
+    /**
+     * Sets the locale with the specified locale.
+     *
+     * @param locale the specified locale
+     */
+    public static void setLocale(final Locale locale) {
+        Latkes.locale = locale;
     }
 
     /**
@@ -855,92 +938,5 @@ public final class Latkes {
 
             return null;
         }
-    }
-
-    /**
-     * Sets server scheme with the specified server scheme.
-     *
-     * @param serverScheme the specified server scheme
-     */
-    public static void setServerScheme(final String serverScheme) {
-        Latkes.serverScheme = serverScheme;
-    }
-
-    /**
-     * Sets static server scheme with the specified static server scheme.
-     *
-     * @param staticServerScheme the specified static server scheme
-     */
-    public static void setStaticServerScheme(final String staticServerScheme) {
-        Latkes.staticServerScheme = staticServerScheme;
-    }
-
-    /**
-     * Sets server host with the specified server host.
-     *
-     * @param serverHost the specified server host
-     */
-    public static void setServerHost(final String serverHost) {
-        Latkes.serverHost = serverHost;
-    }
-
-    /**
-     * Sets static server host with the specified static server host.
-     *
-     * @param staticServerHost the specified static server host
-     */
-    public static void setStaticServerHost(final String staticServerHost) {
-        Latkes.staticServerHost = staticServerHost;
-    }
-
-    /**
-     * Sets server port with the specified server port.
-     *
-     * @param serverPort the specified server port
-     */
-    public static void setServerPort(final String serverPort) {
-        Latkes.serverPort = serverPort;
-    }
-
-    /**
-     * Sets static server port with the specified static server port.
-     *
-     * @param staticServerPort the specified static server port
-     */
-    public static void setStaticServerPort(final String staticServerPort) {
-        Latkes.staticServerPort = staticServerPort;
-    }
-
-    /**
-     * Sets context path with the specified context path.
-     *
-     * @param contextPath the specified context path
-     */
-    public static void setContextPath(final String contextPath) {
-        Latkes.contextPath = contextPath;
-    }
-
-    /**
-     * Sets static path with the specified static path.
-     *
-     * @param staticPath the specified static path
-     */
-    public static void setStaticPath(final String staticPath) {
-        Latkes.staticPath = staticPath;
-    }
-
-    /**
-     * Sets static resource version with the specified static resource version.
-     *
-     * @param staticResourceVersion the specified static resource version
-     */
-    public static void setStaticResourceVersion(final String staticResourceVersion) {
-        Latkes.staticResourceVersion = staticResourceVersion;
-    }
-
-    /**
-     * Private constructor.
-     */
-    private Latkes() {
     }
 }
