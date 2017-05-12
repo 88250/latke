@@ -14,10 +14,14 @@ Yet another simple web framework based on Java servlet technology.
 <dependency>
     <groupId>org.b3log</groupId>
     <artifactId>latke</artifactId>
-    <version>2.3.10</version>
+    <version>2.3.11</version>
 </dependency>
 ```
-**讨论区：https://hacpai.com/tag/Latke**
+
+社区支持：
+
+* 论坛：https://hacpai.com/tag/Latke
+* Q 群：242561391
 
 ## Use cases
 
