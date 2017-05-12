@@ -33,6 +33,16 @@ import java.util.List;
 public final class HTTPRequest {
 
     /**
+     * Default connect timeout.
+     */
+    private static final int DEFAULT_CONNECT_TIMEOUT = 1000 * 2;
+
+    /**
+     * Default read timeout.
+     */
+    private static final int DEFAULT_READ_TIMEOUT = 1000 * 10;
+
+    /**
      * URL.
      */
     private URL url;
@@ -55,12 +65,12 @@ public final class HTTPRequest {
     /**
      * Connect timeout in milliseconds.
      */
-    private int connectTimeout = 1000 * 2;
+    private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
 
     /**
      * Read timeout in mmilliseconds.
      */
-    private int readTimeout = 1000 * 10;
+    private int readTimeout = DEFAULT_READ_TIMEOUT;
 
     /**
      * Adds the specified HTTP header.
