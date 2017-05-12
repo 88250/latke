@@ -65,16 +65,8 @@
         <url>http://code.google.com/p/latke/issues/list</url>
     </issueManagement>
 
-    <mailingLists>
-        <mailingList>
-            <name>b3log-latke-dev</name>
-            <archive>https://groups.google.com/group/b3log-latke-dev</archive>
-            <post>b3log-latke-dev@googlegroups.com</post>
-        </mailingList>
-    </mailingLists>
-
     <scm>
-        <url>https://github.com/b3log/b3log-latke</url>
+        <url>https://github.com/b3log/latke</url>
     </scm>
 
     <reporting>

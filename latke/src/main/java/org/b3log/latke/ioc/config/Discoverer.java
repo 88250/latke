@@ -80,7 +80,7 @@ public final class Discoverer {
         
         LOGGER.debug("scanPath[" + scanPath + "]");
 
-        // See issue #17 (https://github.com/b3log/b3log-latke/issues/17) for more details
+        // See issue #17 (https://github.com/b3log/latke/issues/17) for more details
 
         final Collection<Class<?>> ret = new HashSet<Class<?>>();
 

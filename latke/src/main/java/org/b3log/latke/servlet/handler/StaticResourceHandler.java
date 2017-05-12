@@ -94,7 +94,7 @@ public class StaticResourceHandler implements Handler {
         if (requestDispatcher == null) {
             throw new IllegalStateException(
                     "Unable to locate the default servlet for serving static content. "
-                    + "Please report this bug on https://github.com/b3log/b3log-latke/issues/new");
+                    + "Please report this bug on https://github.com/b3log/latke/issues/new");
         }
 
         LOGGER.log(Level.DEBUG, "The default servlet for serving static resource is [{0}]", defaultServletName);

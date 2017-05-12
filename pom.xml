@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.11, Apr 8, 2017
+    Version: 1.2.2.12, May 12, 2017
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -11,7 +11,7 @@
     <version>2.3.12-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Latke Parent</name>
-    <url>https://github.com/b3log/b3log-latke</url>
+    <url>https://github.com/b3log/latke</url>
     <description>Yet another simple web framework based on Java servlet technology.</description>
     <inceptionYear>2009</inceptionYear>
 
@@ -70,24 +70,16 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:b3log/b3log-latke.git</connection>
-        <developerConnection>scm:git:git@github.com:b3log/b3log-latke.git</developerConnection>
-        <url>git@github.com:b3log/b3log-latke.git</url>
+        <connection>scm:git:git@github.com:b3log/latke.git</connection>
+        <developerConnection>scm:git:git@github.com:b3log/latke.git</developerConnection>
+        <url>git@github.com:b3log/latke.git</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>Github Issues</system>
-        <url>https://github.com/b3log/b3log-latke/issues</url>
+        <url>https://github.com/b3log/latke/issues</url>
     </issueManagement>
-
-    <mailingLists>
-        <mailingList>
-            <name>b3log-latke-dev</name>
-            <archive>https://groups.google.com/group/b3log-latke-dev</archive>
-            <post>b3log-latke-dev@googlegroups.com</post>
-        </mailingList>
-    </mailingLists>
     
     <build>
         <plugins>
