@@ -15,10 +15,8 @@
  */
 package org.b3log.latke.urlfetch;
 
-
 import java.io.IOException;
 import java.util.concurrent.Future;
-
 
 /**
  * URL fetch service.
@@ -29,21 +27,21 @@ import java.util.concurrent.Future;
 public interface URLFetchService {
 
     /**
-     * Execute the specified request and return its response. 
-     * 
+     * Execute the specified request and return its response.
+     *
      * @param request the specified request
      * @return response
-     * @throws IOException if the remote service could not be contacted or the 
-     * request URL could not be fetched
+     * @throws IOException if the remote service could not be contacted or the
+     *                     request URL could not be fetched
      */
     HTTPResponse fetch(final HTTPRequest request) throws IOException;
 
     /**
-     * The asynchronous version of interface 
+     * The asynchronous version of interface
      * {@link #fetch(org.b3log.latke.urlfetch.HTTPRequest)}.
-     * 
+     *
      * @param request the specified request
-     * @return future response 
+     * @return future response
      */
     Future<?> fetchAsync(final HTTPRequest request);
 }

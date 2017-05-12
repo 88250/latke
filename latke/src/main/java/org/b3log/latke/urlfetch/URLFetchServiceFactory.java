@@ -23,15 +23,14 @@ import org.b3log.latke.logging.Logger;
  * URL fetch service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.5, Jan 8, 2016
+ * @version 2.0.0.6, May 12, 2017
  */
-@SuppressWarnings("unchecked")
 public final class URLFetchServiceFactory {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(URLFetchServiceFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(URLFetchServiceFactory.class);
 
     /**
      * URL fetch service.
@@ -63,17 +62,17 @@ public final class URLFetchServiceFactory {
     }
 
     /**
+     * Private constructor.
+     */
+    private URLFetchServiceFactory() {
+    }
+
+    /**
      * Gets URL fetch service.
      *
      * @return URL fetch service
      */
     public static URLFetchService getURLFetchService() {
         return URL_FETCH_SERVICE;
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private URLFetchServiceFactory() {
     }
 }

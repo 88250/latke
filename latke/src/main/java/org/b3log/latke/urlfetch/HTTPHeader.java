@@ -36,8 +36,8 @@ public final class HTTPHeader {
 
     /**
      * Constructs a HTTP header with the specified name and value.
-     * 
-     * @param name the specified name
+     *
+     * @param name  the specified name
      * @param value the specified value
      */
     public HTTPHeader(final String name, final String value) {
@@ -47,7 +47,7 @@ public final class HTTPHeader {
 
     /**
      * Gets the name.
-     * 
+     *
      * @return name
      */
     public String getName() {
@@ -56,7 +56,7 @@ public final class HTTPHeader {
 
     /**
      * Sets the name with the specified name.
-     * 
+     *
      * @param name the specified name
      */
     public void setName(final String name) {
@@ -65,7 +65,7 @@ public final class HTTPHeader {
 
     /**
      * Gets the value.
-     * 
+     *
      * @return value
      */
     public String getValue() {
@@ -74,7 +74,7 @@ public final class HTTPHeader {
 
     /**
      * Sets the value with the specified value.
-     * 
+     *
      * @param value the specified value
      */
     public void setValue(final String value) {

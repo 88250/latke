@@ -26,21 +26,21 @@ import org.b3log.latke.urlfetch.HTTPRequest;
  * PUT method handler.
  * 
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 12, 2012
+ * @version 1.0.0.1, May 12, 2017
  */
 class UrlFetchPutHandler extends UrlFetchCommonHandler {
 
     @Override
     protected void configConnection(final HttpURLConnection httpURLConnection, final HTTPRequest request)
         throws IOException {
+        super.configConnection(httpURLConnection, request);
+
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setUseCaches(false);
 
         if (null != request.getPayload()) {
             final OutputStream outputStream = httpURLConnection.getOutputStream();
-
             outputStream.write(request.getPayload());
-
             outputStream.flush();
             outputStream.close();
         }

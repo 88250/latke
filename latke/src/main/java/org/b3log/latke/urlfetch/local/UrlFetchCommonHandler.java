@@ -15,6 +15,17 @@
  */
 package org.b3log.latke.urlfetch.local;
 
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
+import org.b3log.latke.urlfetch.HTTPHeader;
+import org.b3log.latke.urlfetch.HTTPRequest;
+import org.b3log.latke.urlfetch.HTTPResponse;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,34 +34,143 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.servlet.http.HttpServletResponse;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
-import org.b3log.latke.urlfetch.HTTPHeader;
-import org.b3log.latke.urlfetch.HTTPRequest;
-import org.b3log.latke.urlfetch.HTTPResponse;
 
 /**
  * Common handler for URL fetch.
- *
+ * <p>
  * match {@link org.b3log.latke.servlet.HTTPRequestMethod}<br>GET, HEAD</br>
  * the core method is {@link #doFetch(HTTPRequest)}
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.5, Feb 17, 2016
- *
+ * @version 1.0.1.6, May 12, 2017
  */
 class UrlFetchCommonHandler {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(UrlFetchCommonHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UrlFetchCommonHandler.class);
+
+    static {
+        try {
+            final SSLContext ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[]{new DefaultTrustManager()}, new SecureRandom());
+            SSLContext.setDefault(ctx);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Init SSL context failed", e);
+        }
+    }
+
+    /**
+     * doFetch- the template method.
+     *
+     * @param request the specified request
+     * @return {@link HTTPResponse}
+     * @throws IOException IOException from java.net
+     * @see #prepareConnection(HTTPRequest)
+     * @see #configConnection(HttpURLConnection, HTTPRequest)
+     * @see #resultConnection(HttpURLConnection)
+     */
+    protected HTTPResponse doFetch(final HTTPRequest request) throws IOException {
+        final HttpURLConnection httpURLConnection = prepareConnection(request);
+
+        configConnection(httpURLConnection, request);
+        httpURLConnection.connect();
+
+        final HTTPResponse ret = resultConnection(httpURLConnection);
+        httpURLConnection.disconnect();
+
+        return ret;
+    }
+
+    /**
+     * @param request the specified HTTP request
+     * @return {@link HttpURLConnection}
+     * @throws IOException IOException from java.net
+     */
+    protected HttpURLConnection prepareConnection(final HTTPRequest request) throws IOException {
+        if (request.getURL() == null) {
+            throw new IOException("URL for URLFetch should not be null");
+        }
+
+        final HttpURLConnection ret = (HttpURLConnection) request.getURL().openConnection();
+        ret.setRequestMethod(request.getRequestMethod().toString());
+        for (final HTTPHeader httpHeader : request.getHeaders()) {
+            ret.setRequestProperty(httpHeader.getName(), httpHeader.getValue());
+        }
+
+        // Properties prop = System.getProperties();
+        // prop.setProperty("http.proxyHost", "10.1.2.188");
+        // prop.setProperty("http.proxyPort", "80");
+        // prop.setProperty("https.proxyHost", "10.1.2.188");
+        // prop.setProperty("https.proxyPort", "80");
+        return ret;
+    }
+
+    /**
+     * @param httpURLConnection {@link HttpURLConnection}
+     * @param request           the specified HTTP request
+     * @throws IOException IOException from java.net
+     */
+    protected void configConnection(final HttpURLConnection httpURLConnection, final HTTPRequest request)
+            throws IOException {
+        httpURLConnection.setConnectTimeout(request.getConnectTimeout());
+        httpURLConnection.setReadTimeout(request.getReadTimeout());
+    }
+
+    /**
+     * @param httpURLConnection {@link HttpURLConnection}
+     * @return HTTPResponse the http response
+     * @throws IOException IOException from java.net
+     */
+    protected HTTPResponse resultConnection(final HttpURLConnection httpURLConnection) throws IOException {
+        final HTTPResponse ret = new HTTPResponse();
+
+        ret.setResponseCode(httpURLConnection.getResponseCode());
+        ret.setFinalURL(httpURLConnection.getURL());
+
+        InputStream retStream;
+        if (HttpServletResponse.SC_OK <= ret.getResponseCode() && ret.getResponseCode() < HttpServletResponse.SC_BAD_REQUEST) {
+            retStream = httpURLConnection.getInputStream();
+        } else {
+            retStream = httpURLConnection.getErrorStream();
+        }
+        ret.setContent(inputStreamToByte(retStream));
+
+        fillHttpResponseHeader(ret, httpURLConnection.getHeaderFields());
+
+        return ret;
+    }
+
+    /**
+     * @param httpResponse HTTP Rsponse
+     * @param headerFields headerFiedls in HTTP response
+     */
+    protected void fillHttpResponseHeader(final HTTPResponse httpResponse, final Map<String, List<String>> headerFields) {
+        for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
+            httpResponse.addHeader(new HTTPHeader(entry.getKey(), entry.getValue().toString()));
+        }
+    }
+
+    /**
+     * @param is {@link InputStream}
+     * @return Byte[]
+     * @throws IOException from java.io
+     */
+    // XXX need to move to 'util'
+    private byte[] inputStreamToByte(final InputStream is) throws IOException {
+        final ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
+        int ch;
+        while ((ch = is.read()) != -1) {
+            bytestream.write(ch);
+        }
+
+        final byte[] ret = bytestream.toByteArray();
+        bytestream.close();
+
+        return ret;
+    }
 
     /**
      * Default trust manager.
@@ -69,135 +189,5 @@ class UrlFetchCommonHandler {
         public X509Certificate[] getAcceptedIssuers() {
             return null;
         }
-    }
-
-    static {
-        try {
-            final SSLContext ctx = SSLContext.getInstance("TLS");
-            ctx.init(new KeyManager[0], new TrustManager[]{new DefaultTrustManager()}, new SecureRandom());
-            SSLContext.setDefault(ctx);
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Init SSL context failed", e);
-        }
-    }
-
-    /**
-     * doFetch- the template method.
-     *
-     * @see #prepareConnection(HTTPRequest)
-     * @see #configConnection(HttpURLConnection, HTTPRequest)
-     * @see #resultConnection(HttpURLConnection)
-     *
-     * @param request the specified request
-     * @return {@link HTTPResponse}
-     * @throws IOException IOException from java.net
-     */
-    protected HTTPResponse doFetch(final HTTPRequest request) throws IOException {
-        final HttpURLConnection httpURLConnection = prepareConnection(request);
-
-        configConnection(httpURLConnection, request);
-        httpURLConnection.connect();
-
-        final HTTPResponse ret = resultConnection(httpURLConnection);
-        httpURLConnection.disconnect();
-
-        return ret;
-    }
-
-    /**
-     *
-     * @param request the specified HTTP request
-     * @return {@link HttpURLConnection}
-     * @throws IOException IOException from java.net
-     */
-    protected HttpURLConnection prepareConnection(final HTTPRequest request) throws IOException {
-        if (request.getURL() == null) {
-            throw new IOException("URL for URLFetch should not be null");
-        }
-
-        final HttpURLConnection ret = (HttpURLConnection) request.getURL().openConnection();
-
-        ret.setRequestMethod(request.getRequestMethod().toString());
-
-        for (HTTPHeader httpHeader : request.getHeaders()) {
-            // XXX set or add
-            ret.setRequestProperty(httpHeader.getName(), httpHeader.getValue());
-        }
-
-        // Properties prop = System.getProperties();
-        // prop.setProperty("http.proxyHost", "10.1.2.188");
-        // prop.setProperty("http.proxyPort", "80");
-        // prop.setProperty("https.proxyHost", "10.1.2.188");
-        // prop.setProperty("https.proxyPort", "80");
-        return ret;
-    }
-
-    /**
-     *
-     * @param httpURLConnection {@link HttpURLConnection}
-     * @param request the specified HTTP request
-     * @throws IOException IOException from java.net
-     */
-    protected void configConnection(final HttpURLConnection httpURLConnection, final HTTPRequest request)
-            throws IOException {
-    }
-
-    /**
-     *
-     * @param httpURLConnection {@link HttpURLConnection}
-     * @return HTTPResponse the http response
-     * @throws IOException IOException from java.net
-     */
-    protected HTTPResponse resultConnection(final HttpURLConnection httpURLConnection) throws IOException {
-        final HTTPResponse ret = new HTTPResponse();
-
-        ret.setResponseCode(httpURLConnection.getResponseCode());
-        ret.setFinalURL(httpURLConnection.getURL());
-
-        InputStream retStream;
-
-        if (HttpServletResponse.SC_OK <= ret.getResponseCode() && ret.getResponseCode() < HttpServletResponse.SC_BAD_REQUEST) {
-            retStream = httpURLConnection.getInputStream();
-        } else {
-            retStream = httpURLConnection.getErrorStream();
-        }
-        ret.setContent(inputStreamToByte(retStream));
-
-        fillHttpResponseHeader(ret, httpURLConnection.getHeaderFields());
-
-        return ret;
-    }
-
-    /**
-     *
-     * @param httpResponse HTTP Rsponse
-     * @param headerFields headerFiedls in HTTP response
-     */
-    protected void fillHttpResponseHeader(final HTTPResponse httpResponse, final Map<String, List<String>> headerFields) {
-        for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
-            httpResponse.addHeader(new HTTPHeader(entry.getKey(), entry.getValue().toString()));
-        }
-    }
-
-    /**
-     *
-     * @param is {@link InputStream}
-     * @return Byte[]
-     * @throws IOException from java.io
-     */
-    // XXX need to move to 'util'
-    private byte[] inputStreamToByte(final InputStream is) throws IOException {
-        final ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
-        int ch;
-
-        while ((ch = is.read()) != -1) {
-            bytestream.write(ch);
-        }
-
-        final byte[] ret = bytestream.toByteArray();
-
-        bytestream.close();
-
-        return ret;
     }
 }

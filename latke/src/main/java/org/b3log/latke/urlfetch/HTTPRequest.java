@@ -15,19 +15,20 @@
  */
 package org.b3log.latke.urlfetch;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.b3log.latke.servlet.HTTPRequestMethod;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.b3log.latke.servlet.HTTPRequestMethod;
 
 /**
  * Encapsulation of a single HTTP request that is made via the {@link URLFetchService}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.1, Jul 7, 2015
+ * @version 1.2.1.1, May 12, 2017
  */
 public final class HTTPRequest {
 
@@ -52,6 +53,16 @@ public final class HTTPRequest {
     private List<HTTPHeader> headers = new ArrayList<HTTPHeader>();
 
     /**
+     * Connect timeout in milliseconds.
+     */
+    private int connectTimeout = 1000 * 2;
+
+    /**
+     * Read timeout in mmilliseconds.
+     */
+    private int readTimeout = 1000 * 10;
+
+    /**
      * Adds the specified HTTP header.
      *
      * @param header the specified HTTP header
@@ -71,7 +82,7 @@ public final class HTTPRequest {
 
     /**
      * Gets the payload ({@link HTTPRequestMethod#POST POST} data body).
-     *
+     * <p>
      * <p>
      * Certain HTTP methods ({@linkplain HTTPRequestMethod#GET GET}) will NOT have any payload, and this method will
      * return {@code null}.
@@ -85,7 +96,7 @@ public final class HTTPRequest {
 
     /**
      * Sets the payload with the specified payload.
-     *
+     * <p>
      * <p>
      * This method should NOT be called for certain HTTP methods (e.g. {@link HTTPRequestMethod#GET GET}).
      * </p>
@@ -130,6 +141,42 @@ public final class HTTPRequest {
      */
     public void setURL(final URL url) {
         this.url = url;
+    }
+
+    /**
+     * Gets the connect timeout.
+     *
+     * @return connect timeout
+     */
+    public int getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    /**
+     * Sets the connect timeout with the specified connect timeout.
+     *
+     * @param connectTimeout the specified connect timeout
+     */
+    public void setConnectTimeout(final int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    /**
+     * Gets the read timeout.
+     *
+     * @return read timeout
+     */
+    public int getReadTimeout() {
+        return readTimeout;
+    }
+
+    /**
+     * Sets the read timeout with the specified read timeout.
+     *
+     * @param readTimeout the specified read timeout
+     */
+    public void setReadTimeout(final int readTimeout) {
+        this.readTimeout = readTimeout;
     }
 
     @Override

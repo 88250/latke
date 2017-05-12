@@ -16,41 +16,41 @@
 package org.b3log.latke.urlfetch.local;
 
 
+import org.b3log.latke.urlfetch.HTTPRequest;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import org.b3log.latke.urlfetch.HTTPRequest;
 
 
 /**
  * Specific Handler for urlfetch.
- * 
+ * <p>
  * match {@link org.b3log.latke.servlet.HTTPRequestMethod}<br>POST</br>
  * Override {@link #configConnection(HttpURLConnection, HTTPRequest)}
- * 
+ * </p>
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 0.0.0.2, Aug 15, 2011
- * 
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 0.0.0.3, May 12, 2017
  */
 class UrlFetchPostHandler extends UrlFetchCommonHandler {
 
     @Override
     protected void configConnection(final HttpURLConnection httpURLConnection, final HTTPRequest request)
-        throws IOException {
+            throws IOException {
+        super.configConnection(httpURLConnection, request);
+
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setUseCaches(false);
 
         if (request.getPayload() != null) {
-
             final OutputStream outputStream = httpURLConnection.getOutputStream();
-
             outputStream.write(request.getPayload());
-
             outputStream.flush();
             outputStream.close();
         }
-        
-        // TODO: request.getPayloadMap()
 
+        // TODO: request.getPayloadMap()
     }
 }
