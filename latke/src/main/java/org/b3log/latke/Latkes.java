@@ -44,7 +44,7 @@ import java.util.TimeZone;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.6.9.13, May 6, 2017
+ * @version 2.7.9.13, May 22, 2017
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -506,9 +506,10 @@ public final class Latkes {
             return contextPath;
         }
 
-        contextPath = StringUtils.EMPTY;
+        final ServletContext servletContext = AbstractServletListener.getServletContext();
+        Latkes.contextPath = servletContext.getContextPath();
 
-        return contextPath;
+        return Latkes.contextPath;
     }
 
     /**
@@ -776,6 +777,16 @@ public final class Latkes {
      */
     public static String getLocalProperty(final String key) {
         return LOCAL_PROPS.getProperty(key);
+    }
+
+    /**
+     * Gets a property specified by the given key from file "latke.properties".
+     *
+     * @param key the given key
+     * @return the value, returns {@code null} if not found
+     */
+    public static String getLatkeProperty(final String key) {
+        return LATKE_PROPS.getProperty(key);
     }
 
     /**

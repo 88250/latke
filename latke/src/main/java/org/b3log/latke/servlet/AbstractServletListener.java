@@ -19,26 +19,22 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.config.Discoverer;
+import org.b3log.latke.ioc.mock.MockServletContext;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
+import javax.servlet.*;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.Collection;
 import java.util.Locale;
-import org.b3log.latke.ioc.mock.MockServletContext;
 
 /**
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.6.4, Jan 7, 2016
+ * @version 1.0.6.5, May 22, 2016
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -57,6 +53,19 @@ public abstract class AbstractServletListener implements ServletContextListener,
     }
 
     /**
+     * Gets the servlet context.
+     *
+     * @return the servlet context
+     */
+    public static ServletContext getServletContext() {
+        if (null == servletContext) {
+            throw new IllegalStateException("Initializes the servlet context first!");
+        }
+
+        return servletContext;
+    }
+
+    /**
      * Initializes context, locale and runtime environment.
      *
      * @param servletContextEvent servlet context event
@@ -65,9 +74,6 @@ public abstract class AbstractServletListener implements ServletContextListener,
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
         servletContext = servletContextEvent.getServletContext();
 
-        final String contextPath = servletContext.getContextPath();
-        Latkes.setContextPath(contextPath);
-
         Latkes.initRuntimeEnv();
         LOGGER.info("Initializing the context....");
 
@@ -75,7 +81,6 @@ public abstract class AbstractServletListener implements ServletContextListener,
         LOGGER.log(Level.INFO, "Default locale [{0}]", Latkes.getLocale());
 
         final String realPath = servletContext.getRealPath("/");
-
         LOGGER.log(Level.INFO, "Server [realPath={0}, contextPath={1}]", new Object[]{realPath, servletContext.getContextPath()});
 
         try {
@@ -120,18 +125,5 @@ public abstract class AbstractServletListener implements ServletContextListener,
         if (Latkes.runsWithJDBCDatabase()) {
             JdbcRepository.dispose();
         }
-    }
-
-    /**
-     * Gets the servlet context.
-     *
-     * @return the servlet context
-     */
-    public static ServletContext getServletContext() {
-        if (null == servletContext) {
-            throw new IllegalStateException("Initializes the servlet context first!");
-        }
-
-        return servletContext;
     }
 }
