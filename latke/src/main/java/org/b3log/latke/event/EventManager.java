@@ -15,20 +15,20 @@
  */
 package org.b3log.latke.event;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
-import org.b3log.latke.thread.local.LocalThreadService;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 /**
  * Event manager.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.4, Jul 7, 2016
+ * @version 1.1.2.5, Jun 14, 2017
  */
 @Named("LatkeBuiltInEventManager")
 @Singleton
@@ -52,7 +52,7 @@ public class EventManager {
     /**
      * Fire the specified event asynchronously.
      *
-     * @param <T> the result type
+     * @param <T>   the result type
      * @param event the specified event
      * @return future result
      * @throws EventException event exception
@@ -69,7 +69,7 @@ public class EventManager {
             }
         });
 
-        LocalThreadService.EXECUTOR_SERVICE.execute(futureTask);
+        Latkes.EXECUTOR_SERVICE.execute(futureTask);
 
         return futureTask;
     }

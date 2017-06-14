@@ -15,11 +15,10 @@
  */
 package org.b3log.latke.urlfetch.local;
 
+import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
-import org.b3log.latke.thread.ThreadService;
-import org.b3log.latke.thread.ThreadServiceFactory;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
@@ -34,7 +33,7 @@ import java.util.concurrent.FutureTask;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.4, Jan 23, 2017
+ * @version 1.1.1.5, Jun 14, 2017
  */
 public final class LocalURLFetchService implements URLFetchService {
 
@@ -42,16 +41,6 @@ public final class LocalURLFetchService implements URLFetchService {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(LocalURLFetchService.class);
-
-    /**
-     * Timeout for async fetch.
-     */
-    private static final long ASYNC_TIME_OUT = 30000;
-
-    /**
-     * Thread service.
-     */
-    private ThreadService threadService = ThreadServiceFactory.getThreadService();
 
     @Override
     public HTTPResponse fetch(final HTTPRequest request) throws IOException {
@@ -66,19 +55,15 @@ public final class LocalURLFetchService implements URLFetchService {
 
     @Override
     public Future<?> fetchAsync(final HTTPRequest request) {
-        final FutureTask<HTTPResponse> futureTask = new FetchTask(new Callable<HTTPResponse>() {
-            @Override
-            public HTTPResponse call() throws Exception {
-                LOGGER.log(Level.DEBUG, "Fetch async, request=[" + request.toString() + "]");
+        final FutureTask<HTTPResponse> ret = new FetchTask(() -> {
+            LOGGER.log(Level.DEBUG, "Fetch async, request=[" + request.toString() + "]");
 
-                return fetch(request);
-            }
+            return fetch(request);
         }, request);
 
+        Latkes.EXECUTOR_SERVICE.submit(ret);
 
-        threadService.submit(futureTask, ASYNC_TIME_OUT);
-
-        return futureTask;
+        return ret;
     }
 
     /**

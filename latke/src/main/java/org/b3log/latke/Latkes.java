@@ -23,7 +23,6 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.servlet.AbstractServletListener;
-import org.b3log.latke.thread.local.LocalThreadService;
 import org.b3log.latke.util.Strings;
 import org.b3log.latke.util.freemarker.Templates;
 
@@ -39,18 +38,25 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.7.9.13, May 22, 2017
+ * @version 2.7.9.14, Jun 14, 2017
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
  * @see #getStaticServePath()
  */
 public final class Latkes {
+
+    /**
+     * Executor service.
+     */
+    public static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
     /**
      * Logger.
@@ -838,7 +844,7 @@ public final class Latkes {
             }
 
             CronService.shutdown();
-            LocalThreadService.EXECUTOR_SERVICE.shutdown();
+            EXECUTOR_SERVICE.shutdown();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
         }
