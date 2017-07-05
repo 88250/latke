@@ -16,10 +16,15 @@
 package org.b3log.latke.cache.redis;
 
 import org.b3log.latke.cache.AbstractCache;
+import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
+import redis.clients.jedis.Jedis;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Redis cache.
@@ -38,42 +43,75 @@ public final class RedisCache<K extends Serializable, V extends Serializable> ex
     private static final Logger LOGGER = Logger.getLogger(RedisCache.class);
 
     @Override
-    public boolean contains(K key) {
-        return false;
+    public boolean contains(final K key) {
+        try (final Jedis jedis = Connections.getJedis()) {
+            return jedis.exists(key.toString());
+        }
     }
 
     @Override
-    public void put(K key, V value) {
-
+    public void put(final K key, final V value) {
+        try (final Jedis jedis = Connections.getJedis()) {
+            jedis.set(key.toString(), value.toString());
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Put data to cache with key [" + key.toString() + "] failed", e);
+        }
     }
 
     @Override
-    public V get(K key) {
-        return null;
+    public V get(final K key) {
+        try (final Jedis jedis = Connections.getJedis()) {
+            final String s = jedis.get(key.toString());
+            final JSONObject ret = new JSONObject(s);
+
+            return (V) ret;
+        } catch (final JSONException e) {
+            LOGGER.log(Level.ERROR, "Get data from cache with key [" + key.toString() + "] failed", e);
+
+            return null;
+        }
     }
 
     @Override
-    public long inc(K key, long delta) {
-        return 0;
+    public long inc(final K key, final long delta) {
+        try (final Jedis jedis = Connections.getJedis()) {
+            return jedis.incrBy(key.toString(), delta);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Inc data to cache with key [" + key.toString() + "] failed", e);
+
+            return Long.MIN_VALUE;
+        }
     }
 
     @Override
-    public void remove(K key) {
-
+    public void remove(final K key) {
+        try (final Jedis jedis = Connections.getJedis()) {
+            jedis.del(key.toString());
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Remove data to cache with key [" + key.toString() + "] failed", e);
+        }
     }
 
     @Override
-    public void remove(Collection<K> keys) {
-
+    public void remove(final Collection<K> keys) {
+        try (final Jedis jedis = Connections.getJedis()) {
+            jedis.del(keys.toArray(new String[]{}));
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Remove data to cache with keys [" + keys.toString() + "] failed", e);
+        }
     }
 
     @Override
     public void removeAll() {
-
+        try (final Jedis jedis = Connections.getJedis()) {
+            final Set<String> keys = jedis.keys("*");
+            remove((Set<K>) keys);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Clear cache failed", e);
+        }
     }
 
     @Override
     public void collect() {
-
     }
 }

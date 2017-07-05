@@ -28,7 +28,7 @@ import java.util.Map;
  * Cache factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.1.1, Jul 5, 2017
+ * @version 2.1.1.2, Jul 6, 2017
  */
 public final class CacheFactory {
 
@@ -84,8 +84,14 @@ public final class CacheFactory {
                     case LOCAL_LRU:
                         final Class<Cache<String, ?>> localLruCache = (Class<Cache<String, ?>>) Class.forName(
                                 "org.b3log.latke.cache.local.memory.LruMemoryCache");
-
                         ret = localLruCache.newInstance();
+
+                        break;
+                    case REDIS:
+                        final Class<Cache<String, ?>> redisCache = (Class<Cache<String, ?>>) Class.forName(
+                                "org.b3log.latke.cache.redis.RedisCache");
+                        ret = redisCache.newInstance();
+
                         break;
                     default:
                         throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
