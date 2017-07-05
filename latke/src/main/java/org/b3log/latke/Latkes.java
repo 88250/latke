@@ -688,7 +688,7 @@ public final class Latkes {
      */
     public static RuntimeEnv getRuntimeEnv() {
         if (null == Latkes.runtimeEnv) {
-            throw new RuntimeException("Runtime enviornment has not been initialized!");
+            throw new RuntimeException("Runtime environment has not been initialized!");
         }
 
         return Latkes.runtimeEnv;
@@ -724,8 +724,8 @@ public final class Latkes {
     public static RuntimeDatabase getRuntimeDatabase() {
         if (RuntimeEnv.LOCAL != runtimeEnv) {
             throw new RuntimeException(
-                    "Underlying database can be specified when Latke runs on [LOCAL] environment only, " + "current runtime enviornment ["
-                            + runtimeEnv + ']');
+                    "Underlying database can be specified when Latke runs on [LOCAL] environment only, "
+                            + "current runtime environment [" + runtimeEnv + ']');
         }
 
         final String runtimeDatabase = LOCAL_PROPS.getProperty("runtimeDatabase");

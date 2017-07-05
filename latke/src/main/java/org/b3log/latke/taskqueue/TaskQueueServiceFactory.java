@@ -52,7 +52,7 @@ public final class TaskQueueServiceFactory {
 
                     break;
                 default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
             }
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize Task Queue Service!", e);

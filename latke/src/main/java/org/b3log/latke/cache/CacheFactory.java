@@ -65,7 +65,7 @@ public final class CacheFactory {
                 break;
 
             default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
         }
     }
 
@@ -91,7 +91,7 @@ public final class CacheFactory {
                         ret = localLruCache.newInstance();
                         break;
                     default:
-                        throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                        throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
                 }
 
                 CACHES.put(cacheName, ret);

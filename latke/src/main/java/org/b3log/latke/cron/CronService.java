@@ -87,7 +87,7 @@ public final class CronService {
 
                     break;
                 default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Can not initialize Cron Service!", e);

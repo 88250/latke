@@ -92,7 +92,7 @@ public abstract class AbstractRepository implements Repository {
 
                     break;
                 default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the enviornment correctly");
+                    throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
             }
 
             final Constructor<Repository> constructor = repositoryClass.getConstructor(String.class);
