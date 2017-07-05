@@ -15,14 +15,9 @@
  */
 package org.b3log.latke.repository;
 
-import java.lang.reflect.Constructor;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeDatabase;
-import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -31,24 +26,27 @@ import org.b3log.latke.util.Callstacks;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Constructor;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Abstract repository.
- *
  * <p>
  * This is a base adapter for wrapped {@link #repository repository}, the underlying repository will be instantiated in
- * the {@link #AbstractRepository(java.lang.String) constructor} with
- * {@link Latkes#getRuntimeEnv() the current runtime environment}.
+ * the {@link #AbstractRepository(java.lang.String) constructor}..
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.2.1.8, Sep 4, 2016
+ * @version 2.2.1.9, Jul 5, 2017
  */
 public abstract class AbstractRepository implements Repository {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractRepository.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AbstractRepository.class);
 
     /**
      * Repository.
@@ -60,39 +58,24 @@ public abstract class AbstractRepository implements Repository {
      *
      * @param name the specified name
      */
-    @SuppressWarnings("unchecked")
     public AbstractRepository(final String name) {
-        final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
-
         try {
-            Class<Repository> repositoryClass = null;
+            Class<Repository> repositoryClass;
 
-            switch (runtimeEnv) {
-                case LOCAL:
-                    final RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
+            final RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
+            switch (runtimeDatabase) {
+                case MYSQL:
+                case H2:
+                case MSSQL:
+                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
 
-                    switch (runtimeDatabase) {
-                        case MYSQL:
-                        case H2:
-                        case MSSQL:
-                            repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
-
-                            break;
-                        case REDIS:
-                            repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.redis.RedisRepository");
-
-                            break;
-                        case NONE:
-                            repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
-
-                            break;
-                        default:
-                            throw new RuntimeException("The runtime database [" + runtimeDatabase + "] is not support NOW!");
-                    }
+                    break;
+                case NONE:
+                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
 
                     break;
                 default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
+                    throw new RuntimeException("The runtime database [" + runtimeDatabase + "] is not support NOW!");
             }
 
             final Constructor<Repository> constructor = repositoryClass.getConstructor(String.class);
@@ -104,6 +87,15 @@ public abstract class AbstractRepository implements Repository {
 
         Repositories.addRepository(repository);
         LOGGER.log(Level.INFO, "Constructed repository[name={0}]", name);
+    }
+
+    /**
+     * Checks the current method is whether invoked as internal call.
+     *
+     * @return {@code true} if the current method is invoked as internal call, return {@code false} otherwise
+     */
+    private static boolean isInternalCall() {
+        return Callstacks.isCaller("org.b3log.latke.remote.RepositoryAccessor", "*");
     }
 
     @Override
@@ -143,6 +135,7 @@ public abstract class AbstractRepository implements Repository {
             return repository.get(id);
         } catch (final JDBCRepositoryException e) {
             LOGGER.log(Level.WARN, "SQL exception[msg={0}]", e.getMessage());
+
             return null;
         }
     }
@@ -162,8 +155,8 @@ public abstract class AbstractRepository implements Repository {
         try {
             return repository.get(query);
         } catch (final JDBCRepositoryException e) {
-            LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, query={2}]", e.getMessage(), repository.getName(),
-                    query.toString());
+            LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, query={2}]",
+                    e.getMessage(), repository.getName(), query.toString());
 
             final JSONObject ret = new JSONObject();
             final JSONObject pagination = new JSONObject();
@@ -183,8 +176,8 @@ public abstract class AbstractRepository implements Repository {
         try {
             return repository.select(statement, params);
         } catch (final JDBCRepositoryException e) {
-            LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, statement={2}]", e.getMessage(), repository.getName(),
-                    statement);
+            LOGGER.log(Level.WARN, "SQL exception[msg={0}, repository={1}, statement={2}]",
+                    e.getMessage(), repository.getName(), statement);
 
             return Collections.emptyList();
         }
@@ -237,14 +230,5 @@ public abstract class AbstractRepository implements Repository {
      */
     protected Repository getUnderlyingRepository() {
         return repository;
-    }
-
-    /**
-     * Checks the current method is whether invoked as internal call.
-     *
-     * @return {@code true} if the current method is invoked as internal call, return {@code false} otherwise
-     */
-    private static boolean isInternalCall() {
-        return Callstacks.isCaller("org.b3log.latke.remote.RepositoryAccessor", "*");
     }
 }

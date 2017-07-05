@@ -15,22 +15,20 @@
  */
 package org.b3log.latke.image;
 
-import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Logger;
 
 /**
  * Image service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Jan 8, 2016
+ * @version 2.0.0.2, Jul 5, 2017
  */
 public final class ImageServiceFactory {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ImageServiceFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ImageServiceFactory.class);
 
     /**
      * Image service.
@@ -38,27 +36,23 @@ public final class ImageServiceFactory {
     private static final ImageService IMAGE_SERVICE;
 
     static {
-        LOGGER.info("Constructing Image Service....");
-
-        final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
+        LOGGER.info("Constructing image service....");
 
         try {
-            Class<ImageService> serviceClass = null;
-
-            switch (runtimeEnv) {
-                case LOCAL:
-                    serviceClass = (Class<ImageService>) Class.forName("org.b3log.latke.image.local.LocalImageService");
-                    IMAGE_SERVICE = serviceClass.newInstance();
-
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
-            }
+            final Class<ImageService> serviceClass = (Class<ImageService>) Class.forName(
+                    "org.b3log.latke.image.local.LocalImageService");
+            IMAGE_SERVICE = serviceClass.newInstance();
         } catch (final Exception e) {
-            throw new RuntimeException("Can not initialize Image Service!", e);
+            throw new RuntimeException("Can not initialize image service!", e);
         }
 
-        LOGGER.info("Constructed Image Service");
+        LOGGER.info("Constructed image service");
+    }
+
+    /**
+     * Private default constructor.
+     */
+    private ImageServiceFactory() {
     }
 
     /**
@@ -68,11 +62,5 @@ public final class ImageServiceFactory {
      */
     public static ImageService getImageService() {
         return IMAGE_SERVICE;
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private ImageServiceFactory() {
     }
 }

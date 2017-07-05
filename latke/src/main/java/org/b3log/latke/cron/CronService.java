@@ -15,80 +15,74 @@
  */
 package org.b3log.latke.cron;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+
 /**
  * Cron jobs service.
- *
  * <p>
  * Loads cron jobs configurations from cron.xml and schedules tasks.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.5, Jan 8, 2016
+ * @version 2.0.0.6, Jul 5, 2017
  */
 public final class CronService {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(CronService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CronService.class);
 
     /**
      * Cron jobs.
      */
-    private static final List<Cron> CRONS = new ArrayList<Cron>();
+    private static final List<Cron> CRONS = new ArrayList<>();
 
     /**
      * Timers.
      */
-    private static final List<Timer> TIMERS = new ArrayList<Timer>();
+    private static final List<Timer> TIMERS = new ArrayList<>();
+
+    /**
+     * Private default constructor.
+     */
+    private CronService() {
+    }
 
     /**
      * Constructs cron jobs and schedules them.
      */
     public static void start() {
-        LOGGER.info("Constructing Cron Service....");
+        LOGGER.info("Constructing cron service....");
 
         shutdown();
 
-        final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
-
         try {
-            switch (runtimeEnv) {
-                case LOCAL:
-                    loadCronXML();
+            loadCronXML();
 
-                    for (final Cron cron : CRONS) {
-                        cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getURL());
+            for (final Cron cron : CRONS) {
+                final Timer timer = new Timer();
+                TIMERS.add(timer);
 
-                        final Timer timer = new Timer();
+                cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getURL());
+                timer.scheduleAtFixedRate(cron, Cron.TEN * Cron.THOUSAND, cron.getPeriod());
 
-                        TIMERS.add(timer);
-
-                        timer.scheduleAtFixedRate(cron, Cron.TEN * Cron.THOUSAND, cron.getPeriod());
-
-                        LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getURL());
-                    }
-
-                    LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
-
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
+                LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getURL());
             }
+
+            LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Can not initialize Cron Service!", e);
 
@@ -150,11 +144,5 @@ public final class CronService {
             LOGGER.log(Level.ERROR, "Reads cron.xml failed", e);
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private CronService() {
     }
 }

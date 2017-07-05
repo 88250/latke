@@ -34,14 +34,14 @@ import java.util.Locale;
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.6.5, May 22, 2016
+ * @version 1.0.6.6, Jul 5, 2017
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractServletListener.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AbstractServletListener.class);
 
     /**
      * Servlet context.
@@ -81,7 +81,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
         LOGGER.log(Level.INFO, "Default locale [{0}]", Latkes.getLocale());
 
         final String realPath = servletContext.getRealPath("/");
-        LOGGER.log(Level.INFO, "Server [realPath={0}, contextPath={1}]", new Object[]{realPath, servletContext.getContextPath()});
+        LOGGER.log(Level.INFO, "Server [realPath={0}, contextPath={1}]", realPath, servletContext.getContextPath());
 
         try {
             final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
@@ -109,9 +109,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
     @Override
     public void requestDestroyed(final ServletRequestEvent servletRequestEvent) {
-        if (Latkes.runsWithJDBCDatabase()) {
-            JdbcRepository.dispose();
-        }
+        JdbcRepository.dispose();
     }
 
     @Override
@@ -122,8 +120,6 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
     @Override
     public void sessionDestroyed(final HttpSessionEvent httpSessionEvent) {
-        if (Latkes.runsWithJDBCDatabase()) {
-            JdbcRepository.dispose();
-        }
+        JdbcRepository.dispose();
     }
 }

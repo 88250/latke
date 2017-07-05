@@ -22,12 +22,7 @@ import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.bean.LatkeBean;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.impl.ConfiguratorImpl;
-import org.b3log.latke.ioc.context.Context;
-import org.b3log.latke.ioc.context.ContextNotActiveException;
-import org.b3log.latke.ioc.context.Contextual;
-import org.b3log.latke.ioc.context.CreationalContext;
-import org.b3log.latke.ioc.context.CreationalContextImpl;
-import org.b3log.latke.ioc.context.SingletonContext;
+import org.b3log.latke.ioc.context.*;
 import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Provider;
 import org.b3log.latke.ioc.inject.Singleton;
@@ -37,7 +32,6 @@ import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
-import org.b3log.latke.repository.impl.UserRepository;
 import org.b3log.latke.service.LangPropsServiceImpl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
@@ -52,7 +46,7 @@ import java.util.*;
  * Latke bean manager implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.6, Oct 8, 2013
+ * @version 1.0.0.7, Jul 5, 2017
  */
 @Named("beanManager")
 @Singleton
@@ -61,7 +55,22 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LatkeBeanManagerImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LatkeBeanManagerImpl.class);
+
+    /**
+     * Built-in beans.
+     */
+    private static Set<LatkeBean<?>> builtInBeans;
+
+    /**
+     * Built-in bean classes.
+     */
+    private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(
+            LangPropsServiceImpl.class,
+            BeforeRequestProcessAdvice.class,
+            AfterRequestProcessAdvice.class,
+            EventManager.class,
+            PluginManager.class);
 
     /**
      * Configurator.
@@ -77,42 +86,6 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
      * Contexts.
      */
     private Map<Class<? extends Annotation>, Set<Context>> contexts;
-
-    /**
-     * Built-in beans.
-     */
-    private static Set<LatkeBean<?>> builtInBeans;
-
-    /**
-     * Built-in bean classes.
-     */
-    private static List<Class<?>> builtInBeanClasses = Arrays.<Class<?>>asList(LangPropsServiceImpl.class, BeforeRequestProcessAdvice.class,
-        AfterRequestProcessAdvice.class, UserRepository.class, EventManager.class, PluginManager.class);
-
-    /**
-     * Root bean manager holder.
-     */
-    private static final class BeanManagerHolder {
-
-        /**
-         * Private constructor.
-         */
-        private BeanManagerHolder() {}
-
-        /**
-         * Singleton of bean manager.
-         */
-        private static LatkeBeanManager instance = new LatkeBeanManagerImpl();
-    }
-
-    /**
-     * Gets the root bean manager.
-     *
-     * @return the root bean manager
-     */
-    public static LatkeBeanManager getInstance() {
-        return BeanManagerHolder.instance;
-    }
 
     /**
      * Constructs a Latke bean manager.
@@ -144,6 +117,15 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
         beans.addAll(builtInBeans);
 
         LOGGER.log(Level.DEBUG, "Created Latke bean manager");
+    }
+
+    /**
+     * Gets the root bean manager.
+     *
+     * @return the root bean manager
+     */
+    public static LatkeBeanManager getInstance() {
+        return BeanManagerHolder.instance;
     }
 
     @Override
@@ -335,7 +317,7 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
 
         if (ret.size() > 1) {
             throw new IllegalArgumentException(
-                "There is more than one active context object for the given scope[name=" + scopeType.getName() + "]");
+                    "There is more than one active context object for the given scope[name=" + scopeType.getName() + "]");
         }
 
         return ret.iterator().next();
@@ -427,5 +409,22 @@ public class LatkeBeanManagerImpl implements LatkeBeanManager {
         final LatkeBean<T> bean = getBean(beanClass);
 
         return getReference(bean);
+    }
+
+    /**
+     * Root bean manager holder.
+     */
+    private static final class BeanManagerHolder {
+
+        /**
+         * Singleton of bean manager.
+         */
+        private static LatkeBeanManager instance = new LatkeBeanManagerImpl();
+
+        /**
+         * Private constructor.
+         */
+        private BeanManagerHolder() {
+        }
     }
 }

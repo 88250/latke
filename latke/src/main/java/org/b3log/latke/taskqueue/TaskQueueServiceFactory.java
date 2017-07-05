@@ -15,22 +15,20 @@
  */
 package org.b3log.latke.taskqueue;
 
-import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeEnv;
 import org.b3log.latke.logging.Logger;
 
 /**
  * Task queue service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Jan 8, 2016
+ * @version 2.0.0.5, Jul 5, 2017
  */
 public final class TaskQueueServiceFactory {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(TaskQueueServiceFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TaskQueueServiceFactory.class);
 
     /**
      * Task queue service.
@@ -38,27 +36,23 @@ public final class TaskQueueServiceFactory {
     private static final TaskQueueService TASK_QUEUE_SERVICE;
 
     static {
-        LOGGER.info("Constructing Task Query Service....");
-
-        final RuntimeEnv runtimeEnv = Latkes.getRuntimeEnv();
+        LOGGER.info("Constructing task queue service....");
 
         try {
-            Class<TaskQueueService> serviceClass = null;
-
-            switch (runtimeEnv) {
-                case LOCAL:
-                    serviceClass = (Class<TaskQueueService>) Class.forName("org.b3log.latke.taskqueue.local.LocalTaskQueueService");
-                    TASK_QUEUE_SERVICE = serviceClass.newInstance();
-
-                    break;
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
-            }
+            final Class<TaskQueueService> serviceClass = (Class<TaskQueueService>) Class.forName(
+                    "org.b3log.latke.taskqueue.local.LocalTaskQueueService");
+            TASK_QUEUE_SERVICE = serviceClass.newInstance();
         } catch (final Exception e) {
-            throw new RuntimeException("Can not initialize Task Queue Service!", e);
+            throw new RuntimeException("Can not initialize task queue service!", e);
         }
 
-        LOGGER.info("Constructed Task Query Service");
+        LOGGER.info("Constructed task queue service");
+    }
+
+    /**
+     * Private default constructor.
+     */
+    private TaskQueueServiceFactory() {
     }
 
     /**
@@ -68,11 +62,5 @@ public final class TaskQueueServiceFactory {
      */
     public static TaskQueueService getTaskQueueService() {
         return TASK_QUEUE_SERVICE;
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private TaskQueueServiceFactory() {
     }
 }

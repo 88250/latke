@@ -15,27 +15,27 @@
  */
 package org.b3log.latke.cache;
 
+import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeEnv;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 
 /**
  * Cache factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.1.1, Jan 8, 2016
+ * @version 2.1.1.1, Jul 5, 2017
  */
 public final class CacheFactory {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(CacheFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CacheFactory.class);
 
     /**
      * Caches.
@@ -43,27 +43,25 @@ public final class CacheFactory {
     private static final Map<String, Cache<String, ?>> CACHES = Collections.synchronizedMap(new HashMap<String, Cache<String, ?>>());
 
     /**
-     * Removes all caches.
+     * Private default constructor.
      */
-    public static synchronized void removeAll() {
-        RuntimeEnv runtime = Latkes.getRuntime("cache");
+    private CacheFactory() {
+    }
 
-        if (RuntimeEnv.LOCAL == Latkes.getRuntimeEnv()) { // Always LOCAL cache if runs on a standard servlet container
-            runtime = RuntimeEnv.LOCAL;
-        }
-
-        switch (runtime) {
-            case LOCAL:
-                // Clears cache one by one
+    /**
+     * Clears all caches.
+     */
+    public static synchronized void clearAll() {
+        switch (Latkes.getRuntimeCache()) {
+            case LOCAL_LRU:
                 for (final Map.Entry<String, Cache<String, ?>> entry : CACHES.entrySet()) {
                     final Cache<String, ?> cache = entry.getValue();
 
                     cache.removeAll();
-                    LOGGER.log(Level.TRACE, "Clears cache[name={0}]", entry.getKey());
+                    LOGGER.log(Level.TRACE, "Cleared cache [name={0}]", entry.getKey());
                 }
 
                 break;
-
             default:
                 throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
         }
@@ -75,16 +73,15 @@ public final class CacheFactory {
      * @param cacheName the given cache name
      * @return a cache specified by the given cache name
      */
-    @SuppressWarnings("unchecked")
     public static synchronized Cache<String, ? extends Serializable> getCache(final String cacheName) {
-        LOGGER.log(Level.INFO, "Constructing Cache[name={0}]....", cacheName);
+        LOGGER.log(Level.INFO, "Constructing cache [name={0}]....", cacheName);
 
         Cache<String, ?> ret = CACHES.get(cacheName);
 
         try {
             if (null == ret) {
-                switch (Latkes.getRuntime("cache")) {
-                    case LOCAL:
+                switch (Latkes.getRuntimeCache()) {
+                    case LOCAL_LRU:
                         final Class<Cache<String, ?>> localLruCache = (Class<Cache<String, ?>>) Class.forName(
                                 "org.b3log.latke.cache.local.memory.LruMemoryCache");
 
@@ -100,14 +97,8 @@ public final class CacheFactory {
             throw new RuntimeException("Can not get cache: " + e.getMessage(), e);
         }
 
-        LOGGER.log(Level.INFO, "Constructed Cache[name={0}]", cacheName);
+        LOGGER.log(Level.INFO, "Constructed cache [name={0}, runtime={1}]", cacheName, Latkes.getRuntimeCache());
 
-        return (Cache<String, Serializable>) ret;
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private CacheFactory() {
+        return ret;
     }
 }

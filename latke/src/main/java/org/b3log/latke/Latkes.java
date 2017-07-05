@@ -45,7 +45,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.7.9.14, Jun 14, 2017
+ * @version 2.7.9.15, Jul 5, 2017
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -82,11 +82,6 @@ public final class Latkes {
      * Locale. Initializes this by {@link #setLocale(java.util.Locale)}.
      */
     private static Locale locale;
-
-    /**
-     * Where Latke runs on?.
-     */
-    private static RuntimeEnv runtimeEnv;
 
     /**
      * Which mode Latke runs in?
@@ -171,32 +166,34 @@ public final class Latkes {
     /**
      * H2 database TCP server.
      * <p>
-     * If Latke is running on {@link RuntimeEnv#LOCAL LOCAL} environment and using {@link RuntimeDatabase#H2 H2}
-     * database and specified newTCPServer=true in local.properties, creates a H2 TCP server and starts it.
+     * If Latke is using {@link RuntimeDatabase#H2 H2} database and specified newTCPServer=true in local.properties,
+     * creates a H2 TCP server and starts it.
      * </p>
      */
     private static org.h2.tools.Server h2;
 
     static {
         LOGGER.debug("Loading latke.properties");
+
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/latke.properties");
-
             if (null != resourceAsStream) {
                 LATKE_PROPS.load(resourceAsStream);
+
                 LOGGER.debug("Loaded latke.properties");
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Not found latke.properties");
+
             throw new RuntimeException("Not found latke.properties");
         }
 
         LOGGER.debug("Loading local.properties");
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/local.properties");
-
             if (null != resourceAsStream) {
                 LOCAL_PROPS.load(resourceAsStream);
+
                 LOGGER.debug("Loaded local.properties");
             }
         } catch (final Exception e) {
@@ -210,6 +207,7 @@ public final class Latkes {
 
             if (null != resourceAsStream) {
                 REMOTE_PROPS.load(resourceAsStream);
+
                 LOGGER.debug("Loaded remote.properties");
             }
         } catch (final Exception e) {
@@ -576,122 +574,65 @@ public final class Latkes {
     }
 
     /**
-     * Gets runtime configuration of a service specified by the given service name.
-     * <p>
-     * If current runtime environment is local, returns local in any case.
-     * </p>
-     *
-     * @param serviceName the given service name
-     * @return runtime configuration, returns {@code null} if not found
-     */
-    public static RuntimeEnv getRuntime(final String serviceName) {
-        if (RuntimeEnv.LOCAL == getRuntimeEnv()) {
-            return RuntimeEnv.LOCAL;
-        }
-
-        final String value = LATKE_PROPS.getProperty(serviceName);
-
-        if (null == value) {
-            LOGGER.log(Level.WARN, "Rutnime service[name={0}] is undefined, please configure it in latkes.properties", serviceName);
-            return null;
-        }
-
-        return RuntimeEnv.valueOf(value);
-    }
-
-    /**
-     * Initializes {@linkplain RuntimeEnv runtime environment}.
-     * <p>
-     * Sets the current {@link RuntimeMode runtime mode} to {@link RuntimeMode#DEVELOPMENT development mode}.
-     * </p>
-     *
-     * @see RuntimeEnv
+     * Initializes Latke runtime environment.
      */
     public static void initRuntimeEnv() {
-        if (null != runtimeEnv) {
-            return;
-        }
-
         LOGGER.log(Level.TRACE, "Initializes runtime environment from configuration file");
-        final String runtimeEnvValue = LATKE_PROPS.getProperty("runtimeEnv");
-
-        if (null != runtimeEnvValue) {
-            runtimeEnv = RuntimeEnv.valueOf(runtimeEnvValue);
-        }
-
-        runtimeEnv = RuntimeEnv.LOCAL;
 
         if (null == runtimeMode) {
             final String runtimeModeValue = LATKE_PROPS.getProperty("runtimeMode");
-
             if (null != runtimeModeValue) {
                 runtimeMode = RuntimeMode.valueOf(runtimeModeValue);
             } else {
                 LOGGER.log(Level.TRACE, "Can't parse runtime mode in latke.properties, default to [PRODUCTION]");
+
                 runtimeMode = RuntimeMode.PRODUCTION;
             }
         }
 
-        LOGGER.log(Level.INFO, "Latke is running on [{0}] with mode [{1}]", new Object[]{Latkes.getRuntimeEnv(), Latkes.getRuntimeMode()});
+        LOGGER.log(Level.INFO, "Latke is running with mode [{0}]", Latkes.getRuntimeMode());
 
-        if (RuntimeEnv.LOCAL == runtimeEnv) {
-            // Read local database configurations
-            final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
+        // Read local database configurations
+        final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
 
-            LOGGER.log(Level.INFO, "Runtime database is [{0}]", runtimeDatabase);
+        LOGGER.log(Level.INFO, "Runtime database is [{0}]", runtimeDatabase);
 
-            if (RuntimeDatabase.H2 == runtimeDatabase) {
-                final String newTCPServer = Latkes.getLocalProperty("newTCPServer");
+        if (RuntimeDatabase.H2 == runtimeDatabase) {
+            final String newTCPServer = Latkes.getLocalProperty("newTCPServer");
 
-                if ("true".equals(newTCPServer)) {
-                    LOGGER.log(Level.INFO, "Starting H2 TCP server");
+            if ("true".equals(newTCPServer)) {
+                LOGGER.log(Level.INFO, "Starting H2 TCP server");
 
-                    final String jdbcURL = Latkes.getLocalProperty("jdbc.URL");
+                final String jdbcURL = Latkes.getLocalProperty("jdbc.URL");
 
-                    if (Strings.isEmptyOrNull(jdbcURL)) {
-                        throw new IllegalStateException("The jdbc.URL in local.properties is required");
-                    }
-
-                    final String[] parts = jdbcURL.split(":");
-
-                    if (parts.length != Integer.valueOf("5")/* CheckStyle.... */) {
-                        throw new IllegalStateException("jdbc.URL should like [jdbc:h2:tcp://localhost:8250/~/] (the port part is required)");
-                    }
-
-                    String port = parts[parts.length - 1];
-
-                    port = StringUtils.substringBefore(port, "/");
-
-                    LOGGER.log(Level.TRACE, "H2 TCP port [{0}]", port);
-
-                    try {
-                        h2 = org.h2.tools.Server.createTcpServer(new String[]{"-tcpPort", port, "-tcpAllowOthers"}).start();
-                    } catch (final SQLException e) {
-                        final String msg = "H2 TCP server create failed";
-
-                        LOGGER.log(Level.ERROR, msg, e);
-                        throw new IllegalStateException(msg);
-                    }
-
-                    LOGGER.info("Started H2 TCP server");
+                if (Strings.isEmptyOrNull(jdbcURL)) {
+                    throw new IllegalStateException("The jdbc.URL in local.properties is required");
                 }
+
+                final String[] parts = jdbcURL.split(":");
+                if (parts.length != Integer.valueOf("5")/* CheckStyle.... */) {
+                    throw new IllegalStateException("jdbc.URL should like [jdbc:h2:tcp://localhost:8250/~/] (the port part is required)");
+                }
+
+                String port = parts[parts.length - 1];
+                port = StringUtils.substringBefore(port, "/");
+
+                LOGGER.log(Level.TRACE, "H2 TCP port [{0}]", port);
+
+                try {
+                    h2 = org.h2.tools.Server.createTcpServer(new String[]{"-tcpPort", port, "-tcpAllowOthers"}).start();
+                } catch (final SQLException e) {
+                    final String msg = "H2 TCP server create failed";
+                    LOGGER.log(Level.ERROR, msg, e);
+
+                    throw new IllegalStateException(msg);
+                }
+
+                LOGGER.info("Started H2 TCP server");
             }
         }
 
         locale = new Locale("en_US");
-    }
-
-    /**
-     * Gets the runtime environment.
-     *
-     * @return runtime environment
-     */
-    public static RuntimeEnv getRuntimeEnv() {
-        if (null == Latkes.runtimeEnv) {
-            throw new RuntimeException("Runtime environment has not been initialized!");
-        }
-
-        return Latkes.runtimeEnv;
     }
 
     /**
@@ -717,25 +658,36 @@ public final class Latkes {
     }
 
     /**
+     * Gets the runtime cache.
+     *
+     * @return runtime cache
+     */
+    public static RuntimeCache getRuntimeCache() {
+        final String runtimeCache = LOCAL_PROPS.getProperty("runtimeCache");
+        if (null == runtimeCache) {
+            return RuntimeCache.LOCAL_LRU;
+        }
+
+        final RuntimeCache ret = RuntimeCache.valueOf(runtimeCache);
+        if (null == ret) {
+            throw new RuntimeException("Please configures a valid runtime cache in local.properties!");
+        }
+
+        return ret;
+    }
+
+    /**
      * Gets the runtime database.
      *
      * @return runtime database
      */
     public static RuntimeDatabase getRuntimeDatabase() {
-        if (RuntimeEnv.LOCAL != runtimeEnv) {
-            throw new RuntimeException(
-                    "Underlying database can be specified when Latke runs on [LOCAL] environment only, "
-                            + "current runtime environment [" + runtimeEnv + ']');
-        }
-
         final String runtimeDatabase = LOCAL_PROPS.getProperty("runtimeDatabase");
-
         if (null == runtimeDatabase) {
             throw new RuntimeException("Please configures runtime database in local.properties!");
         }
 
         final RuntimeDatabase ret = RuntimeDatabase.valueOf(runtimeDatabase);
-
         if (null == ret) {
             throw new RuntimeException("Please configures a valid runtime database in local.properties!");
         }
@@ -764,15 +716,6 @@ public final class Latkes {
      */
     public static void setLocale(final Locale locale) {
         Latkes.locale = locale;
-    }
-
-    /**
-     * Determines whether Latkes runs with a JDBC database.
-     *
-     * @return {@code true} if Latkes runs with a JDBC database, returns {@code false} otherwise
-     */
-    public static boolean runsWithJDBCDatabase() {
-        return RuntimeEnv.LOCAL == Latkes.getRuntimeEnv();
     }
 
     /**
@@ -819,28 +762,16 @@ public final class Latkes {
      */
     public static void shutdown() {
         try {
-            if (RuntimeEnv.LOCAL != getRuntimeEnv()) {
-                return;
-            }
-
             Connections.shutdownConnectionPool();
 
-            final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
+            if (RuntimeDatabase.H2 == getRuntimeDatabase()) {
+                final String newTCPServer = Latkes.getLocalProperty("newTCPServer");
+                if ("true".equals(newTCPServer)) {
+                    h2.stop();
+                    h2.shutdown();
 
-            switch (runtimeDatabase) {
-                case H2:
-                    final String newTCPServer = Latkes.getLocalProperty("newTCPServer");
-
-                    if ("true".equals(newTCPServer)) {
-                        h2.stop();
-                        h2.shutdown();
-
-                        LOGGER.log(Level.INFO, "Closed H2 TCP server");
-                    }
-                    break;
-
-                default:
-
+                    LOGGER.log(Level.INFO, "Closed H2 TCP server");
+                }
             }
 
             CronService.shutdown();
@@ -851,16 +782,16 @@ public final class Latkes {
 
         Lifecycle.endApplication();
 
-        // This manually deregisters JDBC driver, which prevents Tomcat from complaining about memory leaks
+        // Manually unregister JDBC driver, which prevents Tomcat from complaining about memory leaks
         final Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             final Driver driver = drivers.nextElement();
 
             try {
                 DriverManager.deregisterDriver(driver);
-                LOGGER.log(Level.TRACE, "Deregistered JDBC driver [" + driver + "]");
+                LOGGER.log(Level.TRACE, "Unregistered JDBC driver [" + driver + "]");
             } catch (final SQLException e) {
-                LOGGER.log(Level.ERROR, "Deregister JDBC driver [" + driver + "] failed", e);
+                LOGGER.log(Level.ERROR, "Unregister JDBC driver [" + driver + "] failed", e);
             }
         }
     }

@@ -15,22 +15,20 @@
  */
 package org.b3log.latke.user;
 
-import freemarker.log.Logger;
-import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Logger;
 
 /**
  * User service factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.3, Jan 8, 2016
+ * @version 2.0.0.4, Jul 5, 2017
  */
-@SuppressWarnings("unchecked")
 public final class UserServiceFactory {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(UserServiceFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserServiceFactory.class);
 
     /**
      * User service.
@@ -38,25 +36,23 @@ public final class UserServiceFactory {
     private static final UserService USER_SERVICE;
 
     static {
-        LOGGER.info("Constructing User Service....");
+        LOGGER.info("Constructing user service....");
 
         try {
-            Class<UserService> serviceClass = null;
-
-            switch (Latkes.getRuntime("userService")) {
-                case LOCAL:
-                    serviceClass = (Class<UserService>) Class.forName("org.b3log.latke.user.local.LocalUserService");
-                    USER_SERVICE = serviceClass.newInstance();
-                    break;
-
-                default:
-                    throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
-            }
+            final Class<UserService> serviceClass = (Class<UserService>) Class.forName(
+                    "org.b3log.latke.user.local.LocalUserService");
+            USER_SERVICE = serviceClass.newInstance();
         } catch (final Exception e) {
-            throw new RuntimeException("Can not initialize User Service!", e);
+            throw new RuntimeException("Can not initialize user service!", e);
         }
 
-        LOGGER.info("Constructed User Service");
+        LOGGER.info("Constructed user service");
+    }
+
+    /**
+     * Private default constructor.
+     */
+    private UserServiceFactory() {
     }
 
     /**
@@ -66,11 +62,5 @@ public final class UserServiceFactory {
      */
     public static UserService getUserService() {
         return USER_SERVICE;
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private UserServiceFactory() {
     }
 }

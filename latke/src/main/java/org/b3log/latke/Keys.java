@@ -16,17 +16,18 @@
 package org.b3log.latke;
 
 
+import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
-import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 
 
 /**
  * This class defines framework (non-functional) keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.8, Mar 14, 2014
+ * @version 1.1.2.8, Jul 5, 2017
  */
 public final class Keys {
 
@@ -106,25 +107,28 @@ public final class Keys {
     public static final String FREEMARKER_ACTION = "FreeMarkerAction";
 
     /**
+     * Private constructor.
+     */
+    private Keys() {
+    }
+
+    /**
      * Fills the server info into the specified data model.
-     * 
-     * <p>
-     *   <ul>
-     *     <li>{@value org.b3log.latke.Keys.Server#SERVER_SCHEME}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#SERVER_HOST}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#SERVER_PORT}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#SERVER}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#CONTEXT_PATH}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#SERVE_PATH}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVER_SCHEME}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVER_HOST}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVER_PORT}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVER}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#STATIC_PATH}</li>
-     *     <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVE_PATH}</li>
-     *   </ul>
-     * </p>
-     * 
+     * <ul>
+     * <li>{@value org.b3log.latke.Keys.Server#SERVER_SCHEME}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#SERVER_HOST}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#SERVER_PORT}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#SERVER}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#CONTEXT_PATH}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#SERVE_PATH}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVER_SCHEME}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVER_HOST}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVER_PORT}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVER}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#STATIC_PATH}</li>
+     * <li>{@value org.b3log.latke.Keys.Server#STATIC_SERVE_PATH}</li>
+     * </ul>
+     *
      * @param dataModel the specified data model
      */
     public static void fillServer(final Map<String, Object> dataModel) {
@@ -145,18 +149,17 @@ public final class Keys {
 
     /**
      * Fills the runtime info into the specified data model.
-     * 
-     * <p>
-     *   <ul>
-     *     <li>{@value org.b3log.latke.Keys.Runtime#RUNTIME_ENV}</li>
-     *     <li>{@value org.b3log.latke.Keys.Runtime#RUNTIME_MODE}</li>
-     *   </ul>
-     * </p>
-     * 
+     * <ul>
+     * <li>{@value org.b3log.latke.Keys.Runtime#RUNTIME_CACHE}</li>
+     * <li>{@value org.b3log.latke.Keys.Runtime#RUNTIME_DATABASE}</li>
+     * <li>{@value org.b3log.latke.Keys.Runtime#RUNTIME_MODE}</li>
+     * </ul>
+     *
      * @param dataModel the specified data model
      */
     public static void fillRuntime(final Map<String, Object> dataModel) {
-        dataModel.put(Runtime.RUNTIME_ENV, Latkes.getRuntimeEnv().name());
+        dataModel.put(Runtime.RUNTIME_CACHE, Latkes.getRuntimeCache().name());
+        dataModel.put(Runtime.RUNTIME_DATABASE, Latkes.getRuntimeDatabase().name());
         dataModel.put(Runtime.RUNTIME_MODE, Latkes.getRuntimeMode().name());
     }
 
@@ -201,9 +204,9 @@ public final class Keys {
         /**
          * Privates constructor.
          */
-        private HttpRequest() {}
+        private HttpRequest() {
+        }
     }
-
 
     /**
      * This class defines server keys.
@@ -276,22 +279,27 @@ public final class Keys {
         /**
          * Private constructor.
          */
-        private Server() {}
+        private Server() {
+        }
     }
-
 
     /**
      * This class defines runtime keys.
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.0, Sep 6, 2012
+     * @version 1.1.0.0, Jul 5, 2015
      */
     public static final class Runtime {
 
         /**
-         * Key of runtime environment.
+         * Key of runtime cache.
          */
-        public static final String RUNTIME_ENV = "runtimeEnv";
+        public static final String RUNTIME_CACHE = "runtimeCache";
+
+        /**
+         * Key of runtime database.
+         */
+        public static final String RUNTIME_DATABASE = "runtimeDatabase";
 
         /**
          * Key of runtime mode.
@@ -301,11 +309,7 @@ public final class Keys {
         /**
          * Private constructor.
          */
-        private Runtime() {}
+        private Runtime() {
+        }
     }
-
-    /**
-     * Private constructor.
-     */
-    private Keys() {}
 }
