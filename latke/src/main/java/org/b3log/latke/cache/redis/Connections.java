@@ -20,6 +20,7 @@ import org.b3log.latke.RuntimeCache;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
 
 /**
  * Redis connection utilities.
@@ -30,6 +31,9 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 final class Connections {
 
+    /**
+     * Pool.
+     */
     private static JedisPool pool;
 
     static {
@@ -45,8 +49,14 @@ final class Connections {
             final int port = Integer.valueOf(Latkes.getLocalProperty("redis.port"));
             final String password = Latkes.getLatkeProperty("redis.password");
 
-            pool = new JedisPool(jedisPoolConfig, host, port, 2000, password);
+            pool = new JedisPool(jedisPoolConfig, host, port, Protocol.DEFAULT_TIMEOUT, password);
         }
+    }
+
+    /**
+     * Private constructor.
+     */
+    private Connections() {
     }
 
     /**
