@@ -26,7 +26,6 @@
         <module>latke-repository-h2</module>
         <module>latke-repository-mysql</module>
         <module>latke-repository-sqlserver</module>
-        <module>latke-repository-redis</module>
     </modules>
     
     <organization>
