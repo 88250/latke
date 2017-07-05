@@ -589,12 +589,9 @@ public final class Latkes {
                 runtimeMode = RuntimeMode.PRODUCTION;
             }
         }
+        LOGGER.log(Level.INFO, "Runtime mode is [{0}]", Latkes.getRuntimeMode());
 
-        LOGGER.log(Level.INFO, "Latke is running with mode [{0}]", Latkes.getRuntimeMode());
-
-        // Read local database configurations
         final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
-
         LOGGER.log(Level.INFO, "Runtime database is [{0}]", runtimeDatabase);
 
         if (RuntimeDatabase.H2 == runtimeDatabase) {
@@ -632,6 +629,9 @@ public final class Latkes {
             }
         }
 
+        final RuntimeCache runtimeCache = getRuntimeCache();
+        LOGGER.log(Level.INFO, "Runtime cache is [{0}]", runtimeCache);
+
         locale = new Locale("en_US");
     }
 
@@ -665,6 +665,8 @@ public final class Latkes {
     public static RuntimeCache getRuntimeCache() {
         final String runtimeCache = LOCAL_PROPS.getProperty("runtimeCache");
         if (null == runtimeCache) {
+            LOGGER.debug("Not found [runtimeCache] in local.properties, uses [LOCAL_LRU] as default");
+
             return RuntimeCache.LOCAL_LRU;
         }
 

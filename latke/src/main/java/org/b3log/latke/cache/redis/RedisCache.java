@@ -16,7 +16,7 @@ import java.util.Collection;
  * @since 2.3.13
  */
 public final class RedisCache<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> {
-    
+
     /**
      * Logger.
      */

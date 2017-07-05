@@ -16,7 +16,6 @@
 package org.b3log.latke.cache.local.memory;
 
 import org.b3log.latke.cache.AbstractCache;
-import org.b3log.latke.cache.local.util.DoubleLinkedMap;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Serializer;
