@@ -15,13 +15,15 @@
  */
 package org.b3log.latke.cache.local.memory;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Collection;
+import org.b3log.latke.cache.AbstractCache;
 import org.b3log.latke.cache.local.util.DoubleLinkedMap;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Serializer;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * This is a Least Recently Used (LRU) pure memory cache. This cache use a thread-safe {@link DoubleLinkedMap} to hold
@@ -31,14 +33,14 @@ import org.b3log.latke.util.Serializer;
  * @param <K> the type of the key of the object
  * @param <V> the type of the objects
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.9, Jul 11, 2016
+ * @version 1.0.3.10, Jul 5, 2017
  */
-public final class LruMemoryCache<K extends Serializable, V extends Serializable> extends AbstractMemoryCache<K, V> implements Serializable {
+public final class LruMemoryCache<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements Serializable {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LruMemoryCache.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LruMemoryCache.class);
 
     /**
      * Default serial version uid.
@@ -77,19 +79,6 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
 
             cachedCountInc();
         }
-    }
-
-    /**
-     * Just put sync, as the same as {@link #put(java.io.Serializable, java.io.Serializable)}.
-     *
-     * No Async at present.
-     *
-     * @param key the key of the specified object
-     * @param value the specified object
-     */
-    @Override
-    public void putAsync(final K key, final V value) {
-        put(key, value);
     }
 
     @Override
