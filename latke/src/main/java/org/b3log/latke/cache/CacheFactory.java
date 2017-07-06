@@ -48,25 +48,6 @@ public final class CacheFactory {
     }
 
     /**
-     * Clears all caches.
-     */
-    public static synchronized void clearAll() {
-        switch (Latkes.getRuntimeCache()) {
-            case LOCAL_LRU:
-                for (final Map.Entry<String, Cache> entry : CACHES.entrySet()) {
-                    final Cache cache = entry.getValue();
-
-                    cache.removeAll();
-                    LOGGER.log(Level.TRACE, "Cleared cache [name={0}]", entry.getKey());
-                }
-
-                break;
-            default:
-                throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
-        }
-    }
-
-    /**
      * Gets a cache specified by the given cache name.
      *
      * @param cacheName the given cache name
@@ -79,22 +60,25 @@ public final class CacheFactory {
 
         try {
             if (null == ret) {
+                Class<Cache> cacheClass;
                 switch (Latkes.getRuntimeCache()) {
                     case LOCAL_LRU:
-                        final Class<Cache> localLruCache = (Class<Cache>) Class.forName(
-                                "org.b3log.latke.cache.local.memory.LruMemoryCache");
-                        ret = localLruCache.newInstance();
+                        cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.local.memory.LruMemoryCache");
 
                         break;
                     case REDIS:
-                        final Class<Cache> redisCache = (Class<Cache>) Class.forName(
-                                "org.b3log.latke.cache.redis.RedisCache");
-                        ret = redisCache.newInstance();
+                        cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.redis.RedisCache");
+
+                        break;
+                    case NONE:
+                        cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.NoneCache");
 
                         break;
                     default:
                         throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
                 }
+
+                ret = cacheClass.newInstance();
 
                 ret.setName(cacheName);
                 CACHES.put(cacheName, ret);
@@ -106,5 +90,17 @@ public final class CacheFactory {
         LOGGER.log(Level.INFO, "Constructed cache [name={0}, runtime={1}]", cacheName, Latkes.getRuntimeCache());
 
         return ret;
+    }
+
+    /**
+     * Clears all caches.
+     */
+    public static synchronized void clearAll() {
+        for (final Map.Entry<String, Cache> entry : CACHES.entrySet()) {
+            final Cache cache = entry.getValue();
+
+            cache.removeAll();
+            LOGGER.log(Level.TRACE, "Cleared cache [name={0}]", entry.getKey());
+        }
     }
 }
