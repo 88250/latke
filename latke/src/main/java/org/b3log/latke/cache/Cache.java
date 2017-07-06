@@ -33,6 +33,20 @@ import java.util.Collection;
 public interface Cache {
 
     /**
+     * Sets the name of this cache with the specified name.
+     *
+     * @param name the specified name
+     */
+    void setName(final String name);
+
+    /**
+     * Gets the name of this cache.
+     *
+     * @return name of this cache
+     */
+    String getName();
+
+    /**
      * Checks whether an object specified by the given key is in cache.
      *
      * @param key the given key
@@ -93,19 +107,19 @@ public interface Cache {
     void removeAll();
 
     /**
-     * Sets the maximum objects count of this cache.
-     *
-     * @param maxCount the maximum count of this cache
-     */
-    void setMaxCount(final long maxCount);
-
-    /**
      * Gets the maximum objects count of this cache.
      *
      * @return the maximum objects count of this cache, returns {@code -1} if
      * cache is unavailable.
      */
     long getMaxCount();
+
+    /**
+     * Sets the maximum objects count of this cache.
+     *
+     * @param maxCount the maximum count of this cache
+     */
+    void setMaxCount(final long maxCount);
 
     /**
      * Gets the hit count of this cache.

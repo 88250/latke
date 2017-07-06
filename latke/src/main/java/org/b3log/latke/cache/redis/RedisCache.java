@@ -22,7 +22,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -49,7 +51,7 @@ public final class RedisCache extends AbstractCache {
     @Override
     public void put(final String key, final JSONObject value) {
         try (final Jedis jedis = Connections.getJedis()) {
-            jedis.set(key, value.toString());
+            jedis.set(getName() + key, value.toString());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Put data to cache with key [" + key + "] failed", e);
         }
@@ -58,7 +60,7 @@ public final class RedisCache extends AbstractCache {
     @Override
     public JSONObject get(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            final String s = jedis.get(key);
+            final String s = jedis.get(getName() + key);
             if (null == s) {
                 return null;
             }
@@ -74,7 +76,7 @@ public final class RedisCache extends AbstractCache {
     @Override
     public void remove(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            jedis.del(key);
+            jedis.del(getName() + key);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove data to cache with key [" + key + "] failed", e);
         }
@@ -82,8 +84,14 @@ public final class RedisCache extends AbstractCache {
 
     @Override
     public void remove(final Collection<String> keys) {
+        final List<String> cacheKeys = new ArrayList<>(keys.size());
+        final String cacheName = getName();
+        for (final String key : keys) {
+            cacheKeys.add(cacheName + key);
+        }
+
         try (final Jedis jedis = Connections.getJedis()) {
-            jedis.del(keys.toArray(new String[]{}));
+            jedis.del(cacheKeys.toArray(new String[]{}));
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove data to cache with keys [" + keys + "] failed", e);
         }

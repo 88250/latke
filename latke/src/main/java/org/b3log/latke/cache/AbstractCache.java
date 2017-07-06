@@ -52,11 +52,20 @@ public abstract class AbstractCache implements Cache {
     private long cachedCount;
 
     /**
-     * Put asynchronously.
-     *
-     * @param key   the key of the specified object
-     * @param value the specified object
+     * Name of this cache.
      */
+    private String name;
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(final String name) {
+        this.name = name;
+    }
+
     @Override
     public void putAsync(final String key, final JSONObject value) {
         Latkes.EXECUTOR_SERVICE.submit(() -> put(key, value));
