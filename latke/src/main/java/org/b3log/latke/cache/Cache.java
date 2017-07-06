@@ -16,102 +16,76 @@
 package org.b3log.latke.cache;
 
 
-import java.io.Serializable;
+import org.json.JSONObject;
+
 import java.util.Collection;
 
 
 /**
  * This is the top interface of cache like structures.
- * 
  * <p>
  * This cache can not hold {@code null} key or value.
  * </p>
  *
- * @param <K> the key of an object
- * @param <V> the type of objects
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.9, Dec 3, 2011
+ * @version 2.0.2.9, Jul 6, 2017
  */
-public interface Cache<K extends Serializable, V extends Serializable> {
+public interface Cache {
 
     /**
      * Checks whether an object specified by the given key is in cache.
-     * 
+     *
      * @param key the given key
      * @return {@code true} if it is in cache, returns {@code false} otherwise
      */
-    boolean contains(final K key);
+    boolean contains(final String key);
 
     /**
      * Puts the specified object into this cache.
-     *
      * <p>
-     * Throws {@link IllegalArgumentException} if the specified key or value is 
-     * {@code null}.
+     * Throws {@link IllegalArgumentException} if the specified key or value is {@code null}.
      * </p>
      *
-     * @param key the key of the specified object
+     * @param key   the key of the specified object
      * @param value the specified object
      */
-    void put(final K key, final V value);
+    void put(final String key, final JSONObject value);
 
     /**
      * Puts the specified object into this cache asynchronously.
-     * 
      * <p>
-     * Throws {@link IllegalArgumentException} if the specified key or value is 
-     * {@code null}.
+     * Throws {@link IllegalArgumentException} if the specified key or value is {@code null}.
      * </p>
-     * 
-     * @param key the key of the specified object
+     *
+     * @param key   the key of the specified object
      * @param value the specified object
      */
-    void putAsync(final K key, final V value);
+    void putAsync(final String key, final JSONObject value);
 
     /**
      * Gets a object by the specified key.
-     * 
      * <p>
      * Returns {@code null} if the specified key is {@code null}.
      * </p>
-     * 
+     *
      * @param key the specified key
      * @return if found, returns the object, otherwise returns {@code null}
      */
-    V get(final K key);
-
-    /**
-     * Increments the value specified by the given key with the specified delta.
-     *
-     * <p>
-     * If the value specified by the given key is not present in this cache,
-     * initialize it as {@code 1L}.
-     * </p>
-     * 
-     * <p>
-     * Throws {@link IllegalArgumentException} if the specified key is 
-     * {@code null}.
-     * </p>
-     *
-     * @param key the given key
-     * @param delta the specified delta value
-     * @return the post-increment value
-     */
-    long inc(final K key, final long delta);
+    JSONObject get(final String key);
 
     /**
      * Removes a object by the specified key.
-     * 
+     *
      * @param key the specified key
      */
-    void remove(final K key);
+    void remove(final String key);
 
     /**
      * Removes objects by the specified keys.
-     * 
+     *
      * @param keys the specified keys
      */
-    void remove(final Collection<K> keys);
+    void remove(final Collection<String> keys);
 
     /**
      * Removes all cached objects.
@@ -163,21 +137,7 @@ public interface Cache<K extends Serializable, V extends Serializable> {
     long getCachedCount();
 
     /**
-     * Gets cached bytes.
-     *
-     * @return cached bytes, returns {@code -1} if cache is unavailable.
-     */
-    long getCachedBytes();
-
-    /**
-     * Gets hit bytes.
-     *
-     * @return hit bytes, returns {@code -1} if cache is unavailable.
-     */
-    long getHitBytes();
-
-    /**
-     * Collects all useless cached objects. 
+     * Collects all useless cached objects.
      */
     void collect();
 }

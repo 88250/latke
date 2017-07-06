@@ -16,23 +16,21 @@
 package org.b3log.latke.cache;
 
 
-import java.io.Serializable;
+import org.json.JSONObject;
+
 import java.util.Collection;
 
 
 /**
  * Do not cache.
- * 
  * <p>
  * Has no effect by calling any caching related operations on this cache, it is a mock cache implementation.
  * </p>
- * 
- * @param <K> the key of an object
- * @param <V> the type of objects
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 19, 2012
+ * @version 2.0.0.0, Jul 6, 2017
  */
-public final class NoCache<K extends Serializable, V extends Serializable> implements Cache<K, V> {
+public final class NoCache implements Cache {
 
     /**
      * Name of this cache.
@@ -58,37 +56,38 @@ public final class NoCache<K extends Serializable, V extends Serializable> imple
     }
 
     @Override
-    public boolean contains(final K key) {
+    public boolean contains(final String key) {
         return false;
     }
 
     @Override
-    public void put(final K key, final V value) {}
+    public void put(final String key, final JSONObject value) {
+    }
 
     @Override
-    public void putAsync(final K key, final V value) {}
+    public void putAsync(final String key, final JSONObject value) {
+    }
 
     @Override
-    public V get(final K key) {
+    public JSONObject get(final String key) {
         return null;
     }
 
     @Override
-    public long inc(final K key, final long delta) {
-        return 0;
+    public void remove(final String key) {
     }
 
     @Override
-    public void remove(final K key) {}
+    public void remove(final Collection<String> keys) {
+    }
 
     @Override
-    public void remove(final Collection<K> keys) {}
+    public void removeAll() {
+    }
 
     @Override
-    public void removeAll() {}
-
-    @Override
-    public void setMaxCount(final long maxCount) {}
+    public void setMaxCount(final long maxCount) {
+    }
 
     @Override
     public long getMaxCount() {
@@ -111,20 +110,11 @@ public final class NoCache<K extends Serializable, V extends Serializable> imple
     }
 
     @Override
-    public long getCachedBytes() {
-        return -1;
-    }
-
-    @Override
-    public long getHitBytes() {
-        return -1;
-    }
-
-    @Override
     public long getCachedCount() {
         return -1;
     }
 
     @Override
-    public void collect() {}
+    public void collect() {
+    }
 }

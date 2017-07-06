@@ -43,7 +43,7 @@ public class RedisCacheTestCase {
             return;
         }
 
-        final Cache<String, JSONObject> cache = (Cache<String, JSONObject>) CacheFactory.getCache("test");
+        final Cache cache = CacheFactory.getCache("test");
         Assert.assertNotNull(cache);
 
         final String k0 = Ids.genTimeMillisId();

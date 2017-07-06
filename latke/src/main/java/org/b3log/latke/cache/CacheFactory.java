@@ -19,7 +19,6 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +39,7 @@ public final class CacheFactory {
     /**
      * Caches.
      */
-    private static final Map<String, Cache<String, ?>> CACHES = Collections.synchronizedMap(new HashMap<String, Cache<String, ?>>());
+    private static final Map<String, Cache> CACHES = Collections.synchronizedMap(new HashMap<String, Cache>());
 
     /**
      * Private default constructor.
@@ -54,8 +53,8 @@ public final class CacheFactory {
     public static synchronized void clearAll() {
         switch (Latkes.getRuntimeCache()) {
             case LOCAL_LRU:
-                for (final Map.Entry<String, Cache<String, ?>> entry : CACHES.entrySet()) {
-                    final Cache<String, ?> cache = entry.getValue();
+                for (final Map.Entry<String, Cache> entry : CACHES.entrySet()) {
+                    final Cache cache = entry.getValue();
 
                     cache.removeAll();
                     LOGGER.log(Level.TRACE, "Cleared cache [name={0}]", entry.getKey());
@@ -73,22 +72,22 @@ public final class CacheFactory {
      * @param cacheName the given cache name
      * @return a cache specified by the given cache name
      */
-    public static synchronized Cache<String, ? extends Serializable> getCache(final String cacheName) {
+    public static synchronized Cache getCache(final String cacheName) {
         LOGGER.log(Level.INFO, "Constructing cache [name={0}]....", cacheName);
 
-        Cache<String, ?> ret = CACHES.get(cacheName);
+        Cache ret = CACHES.get(cacheName);
 
         try {
             if (null == ret) {
                 switch (Latkes.getRuntimeCache()) {
                     case LOCAL_LRU:
-                        final Class<Cache<String, ?>> localLruCache = (Class<Cache<String, ?>>) Class.forName(
+                        final Class<Cache> localLruCache = (Class<Cache>) Class.forName(
                                 "org.b3log.latke.cache.local.memory.LruMemoryCache");
                         ret = localLruCache.newInstance();
 
                         break;
                     case REDIS:
-                        final Class<Cache<String, ?>> redisCache = (Class<Cache<String, ?>>) Class.forName(
+                        final Class<Cache> redisCache = (Class<Cache>) Class.forName(
                                 "org.b3log.latke.cache.redis.RedisCache");
                         ret = redisCache.newInstance();
 

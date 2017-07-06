@@ -16,19 +16,15 @@
 package org.b3log.latke.cache;
 
 import org.b3log.latke.Latkes;
-
-import java.io.Serializable;
+import org.json.JSONObject;
 
 /**
- * The abstract memory cache.
+ * Abstract cache.
  *
- * @param <K> the type of the key of objects
- * @param <V> the type of objects
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.7, Jul 5, 2017
+ * @version 2.0.2.7, Jul 6, 2017
  */
-public abstract class AbstractCache<K extends Serializable, V extends Serializable>
-        implements Cache<K, V> {
+public abstract class AbstractCache implements Cache {
 
     /**
      * Maximum objects count of this cache.
@@ -62,13 +58,10 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
      * @param value the specified object
      */
     @Override
-    public void putAsync(final K key, final V value) {
+    public void putAsync(final String key, final JSONObject value) {
         Latkes.EXECUTOR_SERVICE.submit(() -> put(key, value));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final long getHitCount() {
         return hitCount;
@@ -90,9 +83,6 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
         hitCount++;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final long getMissCount() {
         return missCount;
@@ -114,9 +104,6 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
         missCount++;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final long getPutCount() {
         return putCount;
@@ -138,9 +125,6 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
         putCount++;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final long getCachedCount() {
         return cachedCount;
@@ -169,31 +153,14 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
         cachedCount--;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final long getMaxCount() {
         return maxCount;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final void setMaxCount(final long maxCount) {
         this.maxCount = maxCount;
     }
 
-    @Override
-    public long getCachedBytes() {
-        // TODO: getCachedBytes
-        return -1;
-    }
-
-    @Override
-    public long getHitBytes() {
-        // TODO: getHitBytes
-        return -1;
-    }
 }

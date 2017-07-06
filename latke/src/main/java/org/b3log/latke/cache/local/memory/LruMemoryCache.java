@@ -16,11 +16,9 @@
 package org.b3log.latke.cache.local.memory;
 
 import org.b3log.latke.cache.AbstractCache;
-import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.util.Serializer;
+import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -29,12 +27,10 @@ import java.util.Collection;
  * the objects, and the least recently used objects will be moved to the end of the list and to remove by invoking
  * {@link #collect()} method.
  *
- * @param <K> the type of the key of the object
- * @param <V> the type of the objects
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.3.10, Jul 5, 2017
+ * @version 2.0.3.10, Jul 6, 2017
  */
-public final class LruMemoryCache<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> implements Serializable {
+public final class LruMemoryCache extends AbstractCache implements Serializable {
 
     /**
      * Logger.
@@ -42,24 +38,19 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
     private static final Logger LOGGER = Logger.getLogger(LruMemoryCache.class);
 
     /**
-     * Default serial version uid.
-     */
-    private static final long serialVersionUID = 1L;
-
-    /**
      * a thread-safe double linked list is used to hold all objects.
      */
-    private DoubleLinkedMap<K, byte[]> map;
+    private DoubleLinkedMap<String, JSONObject> map;
 
     /**
      * Constructs a {@code LruMemoryCache} object.
      */
     public LruMemoryCache() {
-        map = new DoubleLinkedMap<K, byte[]>();
+        map = new DoubleLinkedMap<>();
     }
 
     @Override
-    public void put(final K key, final V value) {
+    public void put(final String key, final JSONObject value) {
         remove(key);
 
         putCountInc();
@@ -69,63 +60,42 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
                 collect();
             }
 
-            try {
-                map.addFirst(key, Serializer.serialize((Serializable) value));
-            } catch (final IOException e) {
-                LOGGER.log(Level.ERROR, "Cache error[key=" + key + ']', e);
-                return;
-            }
+            map.addFirst(key, value);
 
             cachedCountInc();
         }
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public synchronized V get(final K key) {
-        final byte[] bytes = map.get(key);
-
-        if (bytes != null) {
+    public synchronized JSONObject get(final String key) {
+        final JSONObject ret = map.get(key);
+        if (null != ret) {
             hitCountInc();
             map.makeFirst(key);
 
-            try {
-                return (V) Serializer.deserialize(bytes);
-            } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, "Gets cached object failed[key=" + key + "]", e);
-                return null;
-            }
+            return ret;
         }
 
         missCountInc();
+
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public synchronized void remove(final K key) {
+    public synchronized void remove(final String key) {
         final boolean removed = map.remove(key);
-
         if (removed) {
             cachedCountDec();
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public synchronized void remove(final Collection<K> keys) {
-        for (final K key : keys) {
+    public synchronized void remove(final Collection<String> keys) {
+        for (final String key : keys) {
             remove(key);
         }
     }
 
-    /**
-     * {@inheritDoc} Removes these useless objects directly.
-     */
     @Override
     public synchronized void collect() {
         map.removeLast();
@@ -141,29 +111,7 @@ public final class LruMemoryCache<K extends Serializable, V extends Serializable
     }
 
     @Override
-    public boolean contains(final K key) {
+    public boolean contains(final String key) {
         return null != get(key); // XXX: performance issue
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public long inc(final K key, final long delta) {
-        V ret = get(key);
-
-        if (null == ret || !(ret instanceof Long)) {
-            final Long v = delta;
-
-            ret = (V) v;
-            put(key, ret);
-        }
-
-        if (ret instanceof Long) {
-            final Long v = (Long) ret + delta;
-
-            ret = (V) v;
-            put(key, ret);
-        }
-
-        return (Long) ret;
     }
 }

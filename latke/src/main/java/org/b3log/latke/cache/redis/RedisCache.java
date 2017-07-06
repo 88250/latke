@@ -22,20 +22,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
 /**
  * Redis cache.
  *
- * @param <K> the type of the key of the object
- * @param <V> the type of the objects
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 5, 2017
+ * @version 1.0.0.0, Jul 6, 2017
  * @since 2.3.13
  */
-public final class RedisCache<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> {
+public final class RedisCache extends AbstractCache {
 
     /**
      * Logger.
@@ -43,28 +40,25 @@ public final class RedisCache<K extends Serializable, V extends Serializable> ex
     private static final Logger LOGGER = Logger.getLogger(RedisCache.class);
 
     @Override
-    public boolean contains(final K key) {
+    public boolean contains(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            return jedis.exists(key.toString());
+            return jedis.exists(key);
         }
     }
 
     @Override
-    public void put(final K key, final V value) {
+    public void put(final String key, final JSONObject value) {
         try (final Jedis jedis = Connections.getJedis()) {
-            jedis.set(key.toString(), value.toString());
+            jedis.set(key, value.toString());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Put data to cache with key [" + key.toString() + "] failed", e);
         }
     }
 
     @Override
-    public V get(final K key) {
+    public JSONObject get(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            final String s = jedis.get(key.toString());
-            final JSONObject ret = new JSONObject(s);
-
-            return (V) ret;
+            return new JSONObject(jedis.get(key.toString()));
         } catch (final JSONException e) {
             LOGGER.log(Level.ERROR, "Get data from cache with key [" + key.toString() + "] failed", e);
 
@@ -73,18 +67,7 @@ public final class RedisCache<K extends Serializable, V extends Serializable> ex
     }
 
     @Override
-    public long inc(final K key, final long delta) {
-        try (final Jedis jedis = Connections.getJedis()) {
-            return jedis.incrBy(key.toString(), delta);
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Inc data to cache with key [" + key.toString() + "] failed", e);
-
-            return Long.MIN_VALUE;
-        }
-    }
-
-    @Override
-    public void remove(final K key) {
+    public void remove(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
             jedis.del(key.toString());
         } catch (final Exception e) {
@@ -93,7 +76,7 @@ public final class RedisCache<K extends Serializable, V extends Serializable> ex
     }
 
     @Override
-    public void remove(final Collection<K> keys) {
+    public void remove(final Collection<String> keys) {
         try (final Jedis jedis = Connections.getJedis()) {
             jedis.del(keys.toArray(new String[]{}));
         } catch (final Exception e) {
@@ -105,7 +88,7 @@ public final class RedisCache<K extends Serializable, V extends Serializable> ex
     public void removeAll() {
         try (final Jedis jedis = Connections.getJedis()) {
             final Set<String> keys = jedis.keys("*");
-            remove((Set<K>) keys);
+            remove((Set<String>) keys);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Clear cache failed", e);
         }
