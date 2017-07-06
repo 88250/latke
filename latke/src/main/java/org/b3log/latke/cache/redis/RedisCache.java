@@ -51,16 +51,21 @@ public final class RedisCache extends AbstractCache {
         try (final Jedis jedis = Connections.getJedis()) {
             jedis.set(key, value.toString());
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Put data to cache with key [" + key.toString() + "] failed", e);
+            LOGGER.log(Level.ERROR, "Put data to cache with key [" + key + "] failed", e);
         }
     }
 
     @Override
     public JSONObject get(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            return new JSONObject(jedis.get(key.toString()));
+            final String s = jedis.get(key);
+            if (null == s) {
+                return null;
+            }
+
+            return new JSONObject(s);
         } catch (final JSONException e) {
-            LOGGER.log(Level.ERROR, "Get data from cache with key [" + key.toString() + "] failed", e);
+            LOGGER.log(Level.ERROR, "Get data from cache with key [" + key + "] failed", e);
 
             return null;
         }
@@ -69,9 +74,9 @@ public final class RedisCache extends AbstractCache {
     @Override
     public void remove(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            jedis.del(key.toString());
+            jedis.del(key);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Remove data to cache with key [" + key.toString() + "] failed", e);
+            LOGGER.log(Level.ERROR, "Remove data to cache with key [" + key + "] failed", e);
         }
     }
 
@@ -80,7 +85,7 @@ public final class RedisCache extends AbstractCache {
         try (final Jedis jedis = Connections.getJedis()) {
             jedis.del(keys.toArray(new String[]{}));
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Remove data to cache with keys [" + keys.toString() + "] failed", e);
+            LOGGER.log(Level.ERROR, "Remove data to cache with keys [" + keys + "] failed", e);
         }
     }
 
@@ -88,7 +93,7 @@ public final class RedisCache extends AbstractCache {
     public void removeAll() {
         try (final Jedis jedis = Connections.getJedis()) {
             final Set<String> keys = jedis.keys("*");
-            remove((Set<String>) keys);
+            remove(keys);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Clear cache failed", e);
         }
