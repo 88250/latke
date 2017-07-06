@@ -96,6 +96,7 @@ public final class CacheFactory {
                         throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
                 }
 
+                ret.setName(cacheName);
                 CACHES.put(cacheName, ret);
             }
         } catch (final Exception e) {
