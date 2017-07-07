@@ -15,31 +15,29 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
+import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeDatabase;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
-import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-
 
 /**
- * 
  * JDBC Factory.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Mar 6, 2014
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.2, Jul 7, 2017
  */
 public final class JdbcFactory implements JdbcDatabase {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JdbcRepository.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JdbcRepository.class);
 
     /**
      * the holder of the databaseSolution.
@@ -55,11 +53,11 @@ public final class JdbcFactory implements JdbcDatabase {
      * All JdbcDatabaseSolution class names.
      */
     @SuppressWarnings("serial")
-    private static Map<RuntimeDatabase, String> jdbcDatabaseSolutionMap = new HashMap<RuntimeDatabase, String>() {
+    private static Map<Latkes.RuntimeDatabase, String> jdbcDatabaseSolutionMap = new HashMap<Latkes.RuntimeDatabase, String>() {
         {
-            put(RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
-            put(RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
-            put(RuntimeDatabase.MSSQL, "org.b3log.latke.repository.sqlserver.SQLServerJdbcDatabaseSolution");
+            put(Latkes.RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
+            put(Latkes.RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
+            put(Latkes.RuntimeDatabase.MSSQL, "org.b3log.latke.repository.sqlserver.SQLServerJdbcDatabaseSolution");
         }
     };
 
@@ -75,13 +73,14 @@ public final class JdbcFactory implements JdbcDatabase {
 
     /**
      * singleton way to get jdbcFactory.
-     * 
+     *
      * @return JdbcFactory jdbcFactory.
      */
     public static synchronized JdbcFactory createJdbcFactory() {
-        if (jdbcFactory == null) {
+        if (null == jdbcFactory) {
             jdbcFactory = new JdbcFactory();
         }
+
         return jdbcFactory;
     }
 
@@ -98,13 +97,12 @@ public final class JdbcFactory implements JdbcDatabase {
         try {
             databaseSolution = (AbstractJdbcDatabaseSolution) Class.forName(databaseSolutionClassName).newInstance();
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "init the [" + databaseSolutionClassName + "]JdbcDatabaseSolution instance wrong", e);
+            LOGGER.log(Level.ERROR, "Init JdbcDatabaseSolution [" + databaseSolutionClassName + "] instance failed", e);
         }
     }
 
     @Override
-    public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql,
-        final String tableName) {
+    public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql, final String tableName) {
         return databaseSolution.queryPage(start, end, selectSql, filterSql, orderBySql, tableName);
     }
 

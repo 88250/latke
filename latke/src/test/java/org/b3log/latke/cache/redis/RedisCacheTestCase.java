@@ -16,7 +16,6 @@
 package org.b3log.latke.cache.redis;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeCache;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
 import org.b3log.latke.util.Ids;
@@ -39,7 +38,7 @@ public class RedisCacheTestCase {
 
     @Test
     public void put() throws Exception {
-        if (RuntimeCache.REDIS != Latkes.getRuntimeCache()) {
+        if (Latkes.RuntimeCache.REDIS != Latkes.getRuntimeCache()) {
             return;
         }
 

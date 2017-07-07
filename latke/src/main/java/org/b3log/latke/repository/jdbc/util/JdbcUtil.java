@@ -15,21 +15,9 @@
  */
 package org.b3log.latke.repository.jdbc.util;
 
-import java.io.IOException;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.RepositoryException;
@@ -37,24 +25,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * JDBC utilities.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.3, Mar 29, 2015
+ * @version 1.1.2.4, Jul 7, 2017
  */
 public final class JdbcUtil {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JdbcUtil.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JdbcUtil.class);
 
     /**
      * executeSql.
      *
-     * @param sql sql
+     * @param sql        sql
      * @param connection connection
      * @return ifsuccess
      * @throws SQLException SQLException
@@ -72,8 +66,8 @@ public final class JdbcUtil {
     /**
      * executeSql.
      *
-     * @param sql sql
-     * @param paramList paramList
+     * @param sql        sql
+     * @param paramList  paramList
      * @param connection connection
      * @return is success
      * @throws SQLException SQLException
@@ -96,18 +90,17 @@ public final class JdbcUtil {
     /**
      * queryJsonObject.
      *
-     * @param sql sql
-     * @param paramList paramList
+     * @param sql        sql
+     * @param paramList  paramList
      * @param connection connection
-     * @param tableName tableName
-     *
+     * @param tableName  tableName
      * @return JSONObject only one record.
-     * @throws SQLException SQLException
-     * @throws JSONException JSONException
+     * @throws SQLException        SQLException
+     * @throws JSONException       JSONException
      * @throws RepositoryException repositoryException
      */
     public static JSONObject queryJsonObject(final String sql, final List<Object> paramList, final Connection connection,
-            final String tableName) throws SQLException, JSONException, RepositoryException {
+                                             final String tableName) throws SQLException, JSONException, RepositoryException {
 
         return queryJson(sql, paramList, connection, true, tableName);
 
@@ -116,37 +109,35 @@ public final class JdbcUtil {
     /**
      * queryJsonArray.
      *
-     * @param sql sql
-     * @param paramList paramList
+     * @param sql        sql
+     * @param paramList  paramList
      * @param connection connection
-     * @param tableName tableName
-     *
+     * @param tableName  tableName
      * @return JSONArray
-     * @throws SQLException SQLException
-     * @throws JSONException JSONException
+     * @throws SQLException        SQLException
+     * @throws JSONException       JSONException
      * @throws RepositoryException repositoryException
      */
     public static JSONArray queryJsonArray(final String sql, final List<Object> paramList, final Connection connection,
-            final String tableName) throws SQLException, JSONException, RepositoryException {
+                                           final String tableName) throws SQLException, JSONException, RepositoryException {
         final JSONObject jsonObject = queryJson(sql, paramList, connection, false, tableName);
 
         return jsonObject.getJSONArray(Keys.RESULTS);
     }
 
     /**
-     * @param sql sql
-     * @param paramList paramList
+     * @param sql        sql
+     * @param paramList  paramList
      * @param connection connection
-     * @param ifOnlyOne ifOnlyOne to determine return object or array.
-     * @param tableName tableName
-     *
+     * @param ifOnlyOne  ifOnlyOne to determine return object or array.
+     * @param tableName  tableName
      * @return JSONObject
-     * @throws SQLException SQLException
-     * @throws JSONException JSONException
+     * @throws SQLException        SQLException
+     * @throws JSONException       JSONException
      * @throws RepositoryException respsitoryException
      */
     private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection,
-            final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
+                                        final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
         LOGGER.log(Level.TRACE, "Query SQL [{0}]", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -171,10 +162,9 @@ public final class JdbcUtil {
      * @param resultSet resultSet
      * @param ifOnlyOne ifOnlyOne
      * @param tableName tableName
-     *
      * @return JSONObject
-     * @throws SQLException SQLException
-     * @throws JSONException JSONException
+     * @throws SQLException        SQLException
+     * @throws JSONException       JSONException
      * @throws RepositoryException RepositoryException
      */
     private static JSONObject resultSetToJsonObject(final ResultSet resultSet, final boolean ifOnlyOne, final String tableName)
@@ -191,7 +181,7 @@ public final class JdbcUtil {
         final Map<String, FieldDefinition> dMap = new HashMap<String, FieldDefinition>();
 
         for (FieldDefinition fieldDefinition : definitionList) {
-            if (RuntimeDatabase.H2 == Latkes.getRuntimeDatabase()) {
+            if (Latkes.RuntimeDatabase.H2 == Latkes.getRuntimeDatabase()) {
                 dMap.put(fieldDefinition.getName().toUpperCase(), fieldDefinition);
             } else {
                 dMap.put(fieldDefinition.getName(), fieldDefinition);

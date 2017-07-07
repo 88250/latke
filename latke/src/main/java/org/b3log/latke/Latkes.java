@@ -17,6 +17,7 @@ package org.b3log.latke;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.cache.redis.RedisCache;
 import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
@@ -45,7 +46,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.7.9.15, Jul 5, 2017
+ * @version 2.7.9.16, Jul 7, 2017
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -235,7 +236,6 @@ public final class Latkes {
     public static String getStaticResourceVersion() {
         if (null == staticResourceVersion) {
             staticResourceVersion = LATKE_PROPS.getProperty("staticResourceVersion");
-
             if (null == staticResourceVersion) {
                 staticResourceVersion = startupTimeMillis;
             }
@@ -264,7 +264,6 @@ public final class Latkes {
     public static String getServerScheme() {
         if (null == serverScheme) {
             serverScheme = LATKE_PROPS.getProperty("serverScheme");
-
             if (null == serverScheme) {
                 throw new IllegalStateException("latke.properties [serverScheme] is empty");
             }
@@ -293,7 +292,6 @@ public final class Latkes {
     public static String getServerHost() {
         if (null == serverHost) {
             serverHost = LATKE_PROPS.getProperty("serverHost");
-
             if (null == serverHost) {
                 throw new IllegalStateException("latke.properties [serverHost] is empty");
             }
@@ -345,7 +343,6 @@ public final class Latkes {
         if (null == server) {
             final StringBuilder serverBuilder = new StringBuilder(getServerScheme()).append("://").append(getServerHost());
             final String port = getServerPort();
-
             if (!Strings.isEmptyOrNull(port) && !port.equals("80")) {
                 serverBuilder.append(':').append(port);
             }
@@ -381,7 +378,6 @@ public final class Latkes {
     public static String getStaticServerScheme() {
         if (null == staticServerScheme) {
             staticServerScheme = LATKE_PROPS.getProperty("staticServerScheme");
-
             if (null == staticServerScheme) {
                 staticServerScheme = getServerScheme();
             }
@@ -411,7 +407,6 @@ public final class Latkes {
     public static String getStaticServerHost() {
         if (null == staticServerHost) {
             staticServerHost = LATKE_PROPS.getProperty("staticServerHost");
-
             if (null == staticServerHost) {
                 staticServerHost = getServerHost();
             }
@@ -441,7 +436,6 @@ public final class Latkes {
     public static String getStaticServerPort() {
         if (null == staticServerPort) {
             staticServerPort = LATKE_PROPS.getProperty("staticServerPort");
-
             if (null == staticServerPort) {
                 staticServerPort = getServerPort();
             }
@@ -469,7 +463,6 @@ public final class Latkes {
             final StringBuilder staticServerBuilder = new StringBuilder(getStaticServerScheme()).append("://").append(getStaticServerHost());
 
             final String port = getStaticServerPort();
-
             if (!Strings.isEmptyOrNull(port) && !port.equals("80")) {
                 staticServerBuilder.append(':').append(port);
             }
@@ -764,8 +757,15 @@ public final class Latkes {
      */
     public static void shutdown() {
         try {
-            Connections.shutdownConnectionPool();
+            CronService.shutdown();
 
+            EXECUTOR_SERVICE.shutdown();
+
+            if (RuntimeCache.REDIS == getRuntimeCache()) {
+                RedisCache.shutdown();
+            }
+
+            Connections.shutdownConnectionPool();
             if (RuntimeDatabase.H2 == getRuntimeDatabase()) {
                 final String newTCPServer = Latkes.getLocalProperty("newTCPServer");
                 if ("true".equals(newTCPServer)) {
@@ -775,9 +775,6 @@ public final class Latkes {
                     LOGGER.log(Level.INFO, "Closed H2 TCP server");
                 }
             }
-
-            CronService.shutdown();
-            EXECUTOR_SERVICE.shutdown();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
         }
@@ -819,9 +816,7 @@ public final class Latkes {
         LOGGER.debug("Loading skin [dirName=" + skinDirName + ']');
 
         final ServletContext servletContext = AbstractServletListener.getServletContext();
-
         Templates.MAIN_CFG.setServletContextForTemplateLoading(servletContext, "skins/" + skinDirName);
-
         Latkes.setTimeZone("Asia/Shanghai");
 
         LOGGER.info("Loaded skins....");
@@ -837,9 +832,7 @@ public final class Latkes {
     public static String getSkinName(final String skinDirName) {
         try {
             final Properties ret = new Properties();
-
             final File file = getWebFile("/skins/" + skinDirName + "/skin.properties");
-
             ret.load(new FileInputStream(file));
 
             return ret.getProperty("name");
@@ -865,7 +858,6 @@ public final class Latkes {
 
         try {
             final URL resource = servletContext.getResource(path);
-
             if (null == resource) {
                 return null;
             }
@@ -874,11 +866,8 @@ public final class Latkes {
 
             if (null == ret) {
                 final File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-
                 ret = new File(tempdir.getPath() + path);
-
                 FileUtils.copyURLToFile(resource, ret);
-
                 ret.deleteOnExit();
             }
 
@@ -889,4 +878,79 @@ public final class Latkes {
             return null;
         }
     }
+
+    /**
+     * Latke runtime JDBC database specified in the configuration file local.properties.
+     *
+     * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
+     * @version 1.0.0.6, Jul 5, 2016
+     * @see Latkes#getRuntimeDatabase()
+     */
+    public enum RuntimeDatabase {
+
+        /**
+         * None.
+         */
+        NONE,
+        /**
+         * Oracle.
+         */
+        ORACLE,
+        /**
+         * MySQL.
+         */
+        MYSQL,
+        /**
+         * H2.
+         */
+        H2,
+        /**
+         * MSSQL.
+         */
+        MSSQL,
+    }
+
+    /**
+     * Latke runtime cache specified in the configuration file local.properties.
+     *
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
+     * @version 1.0.0.0, Jul 5, 2017
+     * @see Latkes#getRuntimeCache()
+     */
+    public enum RuntimeCache {
+
+        /**
+         * None.
+         */
+        NONE,
+        /**
+         * Local LRU memory cache.
+         */
+        LOCAL_LRU,
+        /**
+         * Redis.
+         */
+        REDIS,
+    }
+
+    /**
+     * Latke runtime mode.
+     *
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
+     * @version 1.0.0.0, Jun 24, 2011
+     * @see Latkes#getRuntimeMode()
+     */
+    public enum RuntimeMode {
+
+        /**
+         * Indicates Latke runs in development.
+         */
+        DEVELOPMENT,
+        /**
+         * Indicates Latke runs in production.
+         */
+        PRODUCTION,
+    }
+
 }

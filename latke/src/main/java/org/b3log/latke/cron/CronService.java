@@ -101,8 +101,9 @@ public final class CronService {
         for (final Timer timer : TIMERS) {
             timer.cancel();
         }
-
         TIMERS.clear();
+
+        LOGGER.log(Level.INFO, "Closed cron service");
     }
 
     /**

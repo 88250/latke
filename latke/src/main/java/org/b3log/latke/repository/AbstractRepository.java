@@ -17,7 +17,6 @@ package org.b3log.latke.repository;
 
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -62,7 +61,7 @@ public abstract class AbstractRepository implements Repository {
         try {
             Class<Repository> repositoryClass;
 
-            final RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
+            final Latkes.RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
             switch (runtimeDatabase) {
                 case MYSQL:
                 case H2:

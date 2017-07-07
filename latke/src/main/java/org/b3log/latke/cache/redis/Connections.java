@@ -16,7 +16,6 @@
 package org.b3log.latke.cache.redis;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeCache;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -39,8 +38,8 @@ final class Connections {
     static {
         final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 
-        final RuntimeCache runtimeCache = Latkes.getRuntimeCache();
-        if (RuntimeCache.REDIS == runtimeCache) {
+        final Latkes.RuntimeCache runtimeCache = Latkes.getRuntimeCache();
+        if (Latkes.RuntimeCache.REDIS == runtimeCache) {
             final int minConnCnt = Integer.valueOf(Latkes.getLocalProperty("redis.minConnCnt"));
             jedisPoolConfig.setMinIdle(minConnCnt);
             final int maxConnCnt = Integer.valueOf(Latkes.getLocalProperty("redis.maxConnCnt"));
@@ -64,7 +63,14 @@ final class Connections {
      *
      * @return jedis
      */
-    public static Jedis getJedis() {
+    static Jedis getJedis() {
         return pool.getResource();
+    }
+
+    /**
+     * Shutdowns pool.
+     */
+    static void shutdown() {
+        pool.close();
     }
 }

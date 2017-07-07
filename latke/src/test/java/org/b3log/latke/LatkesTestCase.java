@@ -31,8 +31,8 @@ public class LatkesTestCase {
     public void initRuntimeEnv() {
         Latkes.initRuntimeEnv();
 
-        final RuntimeCache runtimeCache = Latkes.getRuntimeCache();
-        Assert.assertEquals(runtimeCache, RuntimeCache.REDIS);
+        final Latkes.RuntimeCache runtimeCache = Latkes.getRuntimeCache();
+        Assert.assertEquals(runtimeCache, Latkes.RuntimeCache.REDIS);
 
         final String redisHost = Latkes.getLocalProperty("redis.host");
         Assert.assertEquals(redisHost, "localhost");

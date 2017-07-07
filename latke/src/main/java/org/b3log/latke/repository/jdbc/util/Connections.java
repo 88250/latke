@@ -17,30 +17,28 @@ package org.b3log.latke.repository.jdbc.util;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.RuntimeDatabase;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Callstacks;
 import org.h2.jdbcx.JdbcConnectionPool;
 
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+
 /**
  * JDBC connection utilities.
- *
  * <p>
- * Uses <a href="https://github.com/alibaba/druid">Druid</a> or
- * <a href="http://www.h2database.com">H2</a> as the underlying connection pool.
+ * Uses <a href="https://github.com/alibaba/druid">Druid</a> or <a href="http://www.h2database.com">H2</a> as the underlying connection pool.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.2.3.2, Jan 6, 2016
+ * @version 1.2.3.3, Jal 7, 2017
  */
 public final class Connections {
 
@@ -96,7 +94,7 @@ public final class Connections {
 
     static {
         try {
-            if (RuntimeDatabase.NONE != Latkes.getRuntimeDatabase()) {
+            if (Latkes.RuntimeDatabase.NONE != Latkes.getRuntimeDatabase()) {
                 final String driver = Latkes.getLocalProperty("jdbc.driver");
 
                 Class.forName(driver);
@@ -200,7 +198,7 @@ public final class Connections {
             ret.setAutoCommit(false);
 
             return ret;
-        } else if (RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
+        } else if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
             return null;
         }
 

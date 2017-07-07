@@ -45,6 +45,10 @@ public final class RedisCache extends AbstractCache {
     public boolean contains(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
             return jedis.exists(key);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Contains key [" + key + "] failed", e);
+
+            return false;
         }
     }
 
@@ -104,6 +108,17 @@ public final class RedisCache extends AbstractCache {
             remove(keys);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Clear cache failed", e);
+        }
+    }
+
+    /**
+     * Shutdowns redis cache.
+     */
+    public static void shutdown() {
+        try {
+            Connections.shutdown();
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Shutdown redis connection pool failed", e);
         }
     }
 
