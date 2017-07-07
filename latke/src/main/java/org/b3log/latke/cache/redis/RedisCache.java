@@ -18,7 +18,6 @@ package org.b3log.latke.cache.redis;
 import org.b3log.latke.cache.AbstractCache;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.json.JSONException;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
@@ -31,7 +30,7 @@ import java.util.Set;
  * Redis cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 6, 2017
+ * @version 1.0.0.1, Jul 7, 2017
  * @since 2.3.13
  */
 public final class RedisCache extends AbstractCache {
@@ -43,46 +42,74 @@ public final class RedisCache extends AbstractCache {
 
     @Override
     public boolean contains(final String key) {
-        try (final Jedis jedis = Connections.getJedis()) {
+        Jedis jedis = null;
+        try {
+            jedis = Connections.getJedis();
+
             return jedis.exists(key);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Contains key [" + key + "] failed", e);
 
             return false;
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
     @Override
     public void put(final String key, final JSONObject value) {
-        try (final Jedis jedis = Connections.getJedis()) {
+        Jedis jedis = null;
+        try {
+            jedis = Connections.getJedis();
+
             jedis.set(getName() + key, value.toString());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Put data to cache with key [" + key + "] failed", e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
     @Override
     public JSONObject get(final String key) {
-        try (final Jedis jedis = Connections.getJedis()) {
+        Jedis jedis = null;
+        try {
+            jedis = Connections.getJedis();
+
             final String s = jedis.get(getName() + key);
             if (null == s) {
                 return null;
             }
 
             return new JSONObject(s);
-        } catch (final JSONException e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Get data from cache with key [" + key + "] failed", e);
 
             return null;
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
     @Override
     public void remove(final String key) {
-        try (final Jedis jedis = Connections.getJedis()) {
+        Jedis jedis = null;
+        try {
+            jedis = Connections.getJedis();
+
             jedis.del(getName() + key);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove data to cache with key [" + key + "] failed", e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
@@ -94,20 +121,34 @@ public final class RedisCache extends AbstractCache {
             cacheKeys.add(cacheName + key);
         }
 
-        try (final Jedis jedis = Connections.getJedis()) {
+        Jedis jedis = null;
+        try {
+            jedis = Connections.getJedis();
+
             jedis.del(cacheKeys.toArray(new String[]{}));
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove data to cache with keys [" + keys + "] failed", e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
     @Override
     public void removeAll() {
-        try (final Jedis jedis = Connections.getJedis()) {
+        Jedis jedis = null;
+        try {
+            jedis = Connections.getJedis();
+
             final Set<String> keys = jedis.keys("*");
             remove(keys);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Clear cache failed", e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 
