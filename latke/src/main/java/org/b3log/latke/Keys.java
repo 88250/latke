@@ -15,21 +15,24 @@
  */
 package org.b3log.latke;
 
-
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
-
 /**
  * This class defines framework (non-functional) keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.8, Jul 5, 2017
+ * @version 1.2.2.8, Aug 11, 2017
  */
 public final class Keys {
+
+    /**
+     * Key of token.
+     */
+    public static final String TOKEN = "token";
 
     /**
      * Key of message.

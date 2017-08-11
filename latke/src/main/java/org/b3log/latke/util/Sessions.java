@@ -15,29 +15,32 @@
  */
 package org.b3log.latke.util;
 
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Keys;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.json.JSONObject;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Session utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.1, Aug 26, 2015
+ * @version 2.0.2.1, Aug 11, 2017
  */
 public final class Sessions {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Sessions.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Sessions.class);
 
     /**
      * Cookie expiry: one year.
@@ -45,30 +48,51 @@ public final class Sessions {
     private static final int COOKIE_EXPIRY = 60 * 60 * 24 * 365;
 
     /**
+     * Cookie name.
+     */
+    public static final String COOKIE_NAME;
+
+    /**
+     * Cookie secret.
+     */
+    public static final String COOKIE_SECRET;
+
+    static {
+        String cookieNameConf = Latkes.getLatkeProperty("cookieName");
+        if (StringUtils.isBlank(cookieNameConf)) {
+            cookieNameConf = "b3log-latke";
+        }
+        COOKIE_NAME = cookieNameConf;
+
+        String cookieSecret = Latkes.getLatkeProperty("cookieSecret");
+        if (StringUtils.isBlank(cookieSecret)) {
+            cookieSecret = "Beyond";
+        }
+        COOKIE_SECRET = cookieSecret;
+    }
+
+    /**
      * Private default constructor.
      */
-    private Sessions() {}
+    private Sessions() {
+    }
 
     /**
      * Logins the specified user from the specified request.
-     * 
      * <p>
      * If no session of the specified request, do nothing.
      * </p>
      *
-     * @param request the specified request
+     * @param request  the specified request
      * @param response the specified response
-     * @param user the specified user, for example,
-     * <pre>
-     * {
-     *     "userEmail": "",
-     *     "userPassword": ""
-     * }
-     * </pre>
+     * @param user     the specified user, for example,
+     *                 {
+     *                 "userEmail": "",
+     *                 "userPassword": ""
+     *                 }
      */
     public static void login(final HttpServletRequest request, final HttpServletResponse response, final JSONObject user) {
         final HttpSession session = request.getSession(false);
-
         if (null == session) {
             LOGGER.warn("The session is null");
             return;
@@ -78,15 +102,17 @@ public final class Sessions {
 
         try {
             final JSONObject cookieJSONObject = new JSONObject();
-
-            cookieJSONObject.put(User.USER_EMAIL, user.optString(User.USER_EMAIL));
+            cookieJSONObject.put(Keys.OBJECT_ID, user.optString(Keys.OBJECT_ID));
             cookieJSONObject.put(User.USER_PASSWORD, user.optString(User.USER_PASSWORD));
 
-            final Cookie cookie = new Cookie("b3log-latke", cookieJSONObject.toString());
+            final String random = RandomStringUtils.random(16);
+            cookieJSONObject.put(Keys.TOKEN, user.optString(User.USER_PASSWORD) + ":" + random);
 
+            final String cookieValue = Crypts.encryptByAES(cookieJSONObject.toString(), COOKIE_SECRET);
+            final Cookie cookie = new Cookie(COOKIE_NAME, cookieValue);
             cookie.setPath("/");
             cookie.setMaxAge(COOKIE_EXPIRY);
-            
+
             response.addCookie(cookie);
         } catch (final Exception e) {
             LOGGER.log(Level.WARN, "Can not write cookie", e);
@@ -96,16 +122,14 @@ public final class Sessions {
     /**
      * Logouts a user with the specified request.
      *
-     * @param request the specified request
+     * @param request  the specified request
      * @param response the specified response
      * @return {@code true} if succeed, otherwise returns {@code false}
      */
     public static boolean logout(final HttpServletRequest request, final HttpServletResponse response) {
         final HttpSession session = request.getSession(false);
-
         if (null != session) {
-            final Cookie cookie = new Cookie("b3log-latke", null);
-
+            final Cookie cookie = new Cookie(COOKIE_NAME, null);
             cookie.setMaxAge(0);
             cookie.setPath("/");
 
@@ -121,13 +145,12 @@ public final class Sessions {
 
     /**
      * Gets the current user with the specified request.
-     * 
+     *
      * @param request the specified request
-     * @return the current user, returns {@code null} if not logged in 
+     * @return the current user, returns {@code null} if not logged in
      */
     public static JSONObject currentUser(final HttpServletRequest request) {
         final HttpSession session = request.getSession(false);
-
         if (null != session) {
             return (JSONObject) session.getAttribute(User.USER);
         }
@@ -143,7 +166,6 @@ public final class Sessions {
      */
     public static String currentUserPwd(final HttpServletRequest request) {
         final HttpSession session = request.getSession(false);
-
         if (null != session) {
             final JSONObject user = (JSONObject) session.getAttribute(User.USER);
 
@@ -161,7 +183,6 @@ public final class Sessions {
      */
     public static String currentUserName(final HttpServletRequest request) {
         final HttpSession session = request.getSession(false);
-
         if (null != session) {
             final JSONObject user = (JSONObject) session.getAttribute(User.USER);
 
@@ -179,7 +200,6 @@ public final class Sessions {
      */
     public static String currentUserEmail(final HttpServletRequest request) {
         final HttpSession session = request.getSession(false);
-
         if (null != session) {
             final JSONObject user = (JSONObject) session.getAttribute(User.USER);
 
