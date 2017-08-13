@@ -33,7 +33,7 @@ import javax.servlet.http.HttpSession;
  * Session utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.1, Aug 11, 2017
+ * @version 2.0.2.2, Aug 13, 2017
  */
 public final class Sessions {
 
@@ -43,9 +43,9 @@ public final class Sessions {
     private static final Logger LOGGER = Logger.getLogger(Sessions.class);
 
     /**
-     * Cookie expiry: one year.
+     * Cookie expiry in 30 days.
      */
-    private static final int COOKIE_EXPIRY = 60 * 60 * 24 * 365;
+    private static final int COOKIE_EXPIRY = 60 * 60 * 24 * 30;
 
     /**
      * Cookie name.
@@ -56,6 +56,11 @@ public final class Sessions {
      * Cookie secret.
      */
     public static final String COOKIE_SECRET;
+
+    /**
+     * Cookie HTTP only.
+     */
+    public static final boolean COOKIE_HTTP_ONLY;
 
     static {
         String cookieNameConf = Latkes.getLatkeProperty("cookieName");
@@ -69,6 +74,8 @@ public final class Sessions {
             cookieSecret = "Beyond";
         }
         COOKIE_SECRET = cookieSecret;
+
+        COOKIE_HTTP_ONLY = Boolean.valueOf(Latkes.getLocalProperty("cookieHttpOnly"));
     }
 
     /**
@@ -112,6 +119,7 @@ public final class Sessions {
             final Cookie cookie = new Cookie(COOKIE_NAME, cookieValue);
             cookie.setPath("/");
             cookie.setMaxAge(COOKIE_EXPIRY);
+            cookie.setHttpOnly(COOKIE_HTTP_ONLY);
 
             response.addCookie(cookie);
         } catch (final Exception e) {
