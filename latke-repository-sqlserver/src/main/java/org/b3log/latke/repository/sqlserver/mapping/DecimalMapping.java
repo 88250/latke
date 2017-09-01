@@ -15,16 +15,14 @@
  */
 package org.b3log.latke.repository.sqlserver.mapping;
 
-
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-
 
 /**
  * Decimal mapping.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Mar 10, 2014
+ * @version 1.0.1.0, Sep 1, 2017
  */
 public class DecimalMapping implements Mapping {
 
@@ -33,22 +31,22 @@ public class DecimalMapping implements Mapping {
         final StringBuilder sql = new StringBuilder();
 
         sql.append(definition.getName());
-        sql.append(" dicimal(");
-        
+        sql.append(" decimal(");
+
         if (null == definition.getLength()) {
             sql.append("9, ");
         } else {
             sql.append(definition.getLength());
         }
-        
+
         if (null == definition.getPresision()) {
             sql.append(2);
         } else {
             sql.append(definition.getPresision());
         }
-        
+
         sql.append(") ");
-        
+
         if (!definition.getNullable()) {
             sql.append(" not null");
         }
