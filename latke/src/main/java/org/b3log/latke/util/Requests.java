@@ -15,38 +15,33 @@
  */
 package org.b3log.latke.util;
 
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Enumeration;
-import java.util.regex.Pattern;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 /**
  * Request utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 1.1.3.2, Jan 6, 2017
+ * @version 1.1.4.0, Sep 2, 2017
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(Requests.class.getName());
 
     /**
      * The pagination path pattern.
@@ -61,6 +56,11 @@ public final class Requests {
      * </p>
      */
     public static final String PAGINATION_PATH_PATTERN = "*/*/*";
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(Requests.class);
 
     /**
      * Default page size.
@@ -95,10 +95,15 @@ public final class Requests {
     private static final int COOKIE_EXPIRY = 60 * 60 * 24; // 24 hours
 
     /**
+     * Private default constructor.
+     */
+    private Requests() {
+    }
+
+    /**
      * Logs the specified request with the specified level and logger.
      * <p>
      * Logging information of the specified request includes:
-     * <p>
      * <ul>
      * <li>method</li>
      * <li>URL</li>
@@ -108,7 +113,6 @@ public final class Requests {
      * <li>remote (address, port, host)</li>
      * <li>headers</li>
      * </ul>
-     * </p>
      *
      * @param httpServletRequest the specified HTTP servlet request
      * @param level              the specified logging level
@@ -155,8 +159,7 @@ public final class Requests {
         logBuilder.append(indents).append("headers=[").append(Strings.LINE_SEPARATOR);
 
         final StringBuilder headerLogBuilder = new StringBuilder();
-        @SuppressWarnings("unchecked")
-        final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+        @SuppressWarnings("unchecked") final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
 
         while (headerNames.hasMoreElements()) {
             final String name = headerNames.nextElement();
@@ -253,7 +256,7 @@ public final class Requests {
      * If the specified request has not been served, appends the request URI in client cookie.
      * </p>
      * <p>
-     * Sees this issue (https://github.com/b3log/b3log-solo/issues/44) for more details.
+     * Sees this issue (https://github.com/b3log/solo/issues/44) for more details.
      * </p>
      *
      * @param request  the specified request
@@ -262,7 +265,6 @@ public final class Requests {
      */
     public static boolean hasBeenServed(final HttpServletRequest request, final HttpServletResponse response) {
         final Cookie[] cookies = request.getCookies();
-
         if (null == cookies || 0 == cookies.length) {
             return false;
         }
@@ -280,7 +282,8 @@ public final class Requests {
                     continue;
                 }
 
-                cookieJSONArray = new JSONArray(cookie.getValue());
+                final String value = URLDecoder.decode(cookie.getValue(), "UTF-8");
+                cookieJSONArray = new JSONArray(value);
                 if (null == cookieJSONArray || 0 == cookieJSONArray.length()) {
                     return false;
                 }
@@ -299,26 +302,22 @@ public final class Requests {
 
             if (needToCreate) {
                 final StringBuilder builder = new StringBuilder("[").append("\"").append(request.getRequestURI()).append("\"]");
-
-                final Cookie c = new Cookie("visited", builder.toString());
-
+                final Cookie c = new Cookie("visited", URLEncoder.encode(builder.toString(), "UTF-8"));
                 c.setMaxAge(COOKIE_EXPIRY);
                 c.setPath("/");
                 response.addCookie(c);
             } else if (needToAppend) {
                 cookieJSONArray.put(request.getRequestURI());
 
-                final Cookie c = new Cookie("visited", cookieJSONArray.toString());
-
+                final Cookie c = new Cookie("visited", URLEncoder.encode(cookieJSONArray.toString(), "UTF-8"));
                 c.setMaxAge(COOKIE_EXPIRY);
                 c.setPath("/");
                 response.addCookie(c);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.WARN, "Parses cookie failed, clears the cookie[name=visited]", e);
+            LOGGER.log(Level.WARN, "Parses cookie failed, clears the cookie[name=visited]");
 
             final Cookie c = new Cookie("visited", null);
-
             c.setMaxAge(0);
             c.setPath("/");
 
@@ -501,11 +500,5 @@ public final class Requests {
 
             return new JSONObject();
         }
-    }
-
-    /**
-     * Private default constructor.
-     */
-    private Requests() {
     }
 }
