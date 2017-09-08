@@ -36,7 +36,7 @@ public final class TextHTMLRenderer extends AbstractHTTPResponseRenderer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(TextHTMLRenderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TextHTMLRenderer.class);
 
     /**
      * Content to render.

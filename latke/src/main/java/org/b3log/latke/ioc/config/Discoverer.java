@@ -50,7 +50,7 @@ public final class Discoverer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Discoverer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Discoverer.class);
 
     /**
      * Built-in component packages.

@@ -45,7 +45,7 @@ public final class Repositories {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Repositories.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Repositories.class);
 
     /**
      * Repository holder.

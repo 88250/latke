@@ -47,7 +47,7 @@ public abstract class AbstractGZIPFilter implements Filter {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractGZIPFilter.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AbstractGZIPFilter.class);
 
     @Override
     public void init(final FilterConfig cfg) throws ServletException {}

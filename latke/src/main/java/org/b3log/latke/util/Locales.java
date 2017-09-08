@@ -36,7 +36,7 @@ public final class Locales {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Locales.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Locales.class);
 
     /**
      * Thread local holder for locale.

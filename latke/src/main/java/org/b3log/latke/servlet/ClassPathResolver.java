@@ -50,7 +50,7 @@ public final class ClassPathResolver {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ClassPathResolver.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ClassPathResolver.class);
 
     /**
      * Separator between JAR URL and file path within the JAR.

@@ -41,7 +41,7 @@ public final class LocalMailService implements MailService {
                 try {
                     new MailSender().sendMail(message);
                 } catch (final Exception e) {
-                    Logger.getLogger(LocalMailService.class.getName()).log(Level.ERROR, "Sends mail failed", e);
+                    Logger.getLogger(LocalMailService.class).log(Level.ERROR, "Sends mail failed", e);
                 }
             }
         }).start();

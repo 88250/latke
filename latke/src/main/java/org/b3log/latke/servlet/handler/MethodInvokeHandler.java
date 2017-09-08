@@ -37,7 +37,7 @@ public class MethodInvokeHandler implements Handler {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(MethodInvokeHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MethodInvokeHandler.class);
 
     /**
      * the shared-invoke-result-data name.

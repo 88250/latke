@@ -43,7 +43,7 @@ public class LangPropsServiceImpl implements LangPropsService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LangPropsServiceImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LangPropsServiceImpl.class);
 
     /**
      * Language properties.

@@ -41,7 +41,7 @@ public final class Beans {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Beans.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Beans.class);
 
     /**
      * Private constructor.

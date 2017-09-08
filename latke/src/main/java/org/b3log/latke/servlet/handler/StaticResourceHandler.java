@@ -38,7 +38,7 @@ public class StaticResourceHandler implements Handler {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(StaticResourceHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(StaticResourceHandler.class);
 
     /**
      * Default Servlet name used by Tomcat, Jetty, JBoss, and GlassFish.

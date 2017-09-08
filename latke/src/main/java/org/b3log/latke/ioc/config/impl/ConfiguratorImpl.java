@@ -50,7 +50,7 @@ public final class ConfiguratorImpl implements Configurator {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ConfiguratorImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ConfiguratorImpl.class);
 
     /**
      * Bean manager.

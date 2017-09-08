@@ -51,7 +51,7 @@ public class RequestDispatchHandler implements Handler {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(RequestDispatchHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RequestDispatchHandler.class);
 
     /**
      * the shared-matched-result-data name.
@@ -61,7 +61,7 @@ public class RequestDispatchHandler implements Handler {
     /**
      * all processors holder for match.
      */
-    private final List<ProcessorInfo> processorInfos = new ArrayList<ProcessorInfo>();
+    private final List<ProcessorInfo> processorInfos = new ArrayList<>();
 
     /**
      * constructor.

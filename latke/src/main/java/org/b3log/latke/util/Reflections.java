@@ -46,7 +46,7 @@ final public class Reflections {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Reflections.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Reflections.class);
 
     /**
      * Private constructor.

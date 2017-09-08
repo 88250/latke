@@ -124,7 +124,7 @@ public final class EmailSender implements Runnable {
         try {
             sendMail();
         } catch (final MessagingException ex) {
-            Logger.getLogger(EmailSender.class.getName()).error(ex.getMessage());
+            Logger.getLogger(EmailSender.class).error(ex.getMessage());
         }
     }
 

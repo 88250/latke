@@ -33,7 +33,7 @@ public final class MD5 {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(MD5.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MD5.class);
 
     /**
      * Message digest.

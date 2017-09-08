@@ -50,7 +50,7 @@ public final class MockServletContext implements ServletContext {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(MockServletContext.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MockServletContext.class);
 
     /**
      * Web root.
