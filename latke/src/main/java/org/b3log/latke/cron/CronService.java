@@ -28,6 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Cron jobs service.
@@ -36,7 +37,7 @@ import java.util.Timer;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.6, Jul 5, 2017
+ * @version 2.0.0.7, Sep 8, 2017
  */
 public final class CronService {
 
@@ -80,6 +81,8 @@ public final class CronService {
                 timer.scheduleAtFixedRate(cron, Cron.TEN * Cron.THOUSAND, cron.getPeriod());
 
                 LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getURL());
+
+                TimeUnit.SECONDS.sleep(5);
             }
 
             LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
