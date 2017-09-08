@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.plugin;
 
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
@@ -44,12 +43,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
-
 /**
  * Plugin loader.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.2, May 31, 2014
+ * @version 1.0.2.3, Sep 8, 2017
  */
 @Named("LatkeBuiltInPluginManager")
 @Singleton
@@ -63,23 +61,20 @@ public class PluginManager {
     /**
      * Type of loaded event.
      */
-    public static final String PLUGIN_LOADED_EVENT = "pluginLoadedEvt";
+    private static final String PLUGIN_LOADED_EVENT = "pluginLoadedEvt";
 
     /**
      * Plugins cache.
-     *
      * <p>
-     * Caches plugins with the key "plugins" and its value is the real holder,
-     * a map: &lt;"hosting view name", plugins&gt;
+     * Caches plugins with the key "plugins" and its value is the real holder, a map: &lt;"hosting view name", plugins&gt;
      * </p>
      */
-    @SuppressWarnings("unchecked")
-    private Map<String, HashSet<AbstractPlugin>> pluginCache = new HashMap<String, HashSet<AbstractPlugin>>();
+    private Map<String, HashSet<AbstractPlugin>> pluginCache = new HashMap<>();
 
     /**
      * Plugin class loaders.
      */
-    private Set<ClassLoader> classLoaders = new HashSet<ClassLoader>();
+    private Set<ClassLoader> classLoaders = new HashSet<>();
 
     /**
      * Event manager.
@@ -99,7 +94,7 @@ public class PluginManager {
             load();
         }
 
-        final List<AbstractPlugin> ret = new ArrayList<AbstractPlugin>();
+        final List<AbstractPlugin> ret = new ArrayList<>();
 
         for (final Map.Entry<String, HashSet<AbstractPlugin>> entry : pluginCache.entrySet()) {
             ret.addAll(entry.getValue());
@@ -139,10 +134,9 @@ public class PluginManager {
         classLoaders.clear();
 
         final ServletContext servletContext = AbstractServletListener.getServletContext();
-        @SuppressWarnings("unchecked")
         final Set<String> pluginDirPaths = servletContext.getResourcePaths("/plugins");
 
-        final List<AbstractPlugin> plugins = new ArrayList<AbstractPlugin>();
+        final List<AbstractPlugin> plugins = new ArrayList<>();
 
         if (null != pluginDirPaths) {
             for (final String pluginDirPath : pluginDirPaths) {
@@ -161,7 +155,7 @@ public class PluginManager {
         }
 
         try {
-            eventManager.fireEventSynchronously(new Event<List<AbstractPlugin>>(PLUGIN_LOADED_EVENT, plugins));
+            eventManager.fireEventSynchronously(new Event<>(PLUGIN_LOADED_EVENT, plugins));
         } catch (final EventException e) {
             throw new RuntimeException("Plugin load error", e);
         }
@@ -173,7 +167,7 @@ public class PluginManager {
      * Loads a plugin by the specified plugin directory and put it into the specified holder.
      *
      * @param pluginDirPath the specified plugin directory
-     * @param holder the specified holder
+     * @param holder        the specified holder
      * @return loaded plugin
      * @throws Exception exception
      */
@@ -182,30 +176,25 @@ public class PluginManager {
         final ServletContext servletContext = AbstractServletListener.getServletContext();
 
         String plugin = StringUtils.substringAfter(pluginDirPath, "/plugins");
-
         plugin = plugin.replace("/", "");
 
         final File file = Latkes.getWebFile("/plugins/" + plugin + "/plugin.properties");
-
         props.load(new FileInputStream(file));
 
         final URL defaultClassesFileDirURL = servletContext.getResource("/plugins/" + plugin + "classes");
-
         URL classesFileDirURL = null;
-
         try {
             classesFileDirURL = servletContext.getResource(props.getProperty("classesDirPath"));
         } catch (final MalformedURLException e) {
             LOGGER.log(Level.ERROR, "Reads [" + props.getProperty("classesDirPath") + "] failed", e);
         }
 
-        final URLClassLoader classLoader = new URLClassLoader(new URL[] {
-            defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
+        final URLClassLoader classLoader = new URLClassLoader(new URL[]{
+                defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
 
         classLoaders.add(classLoader);
 
         String pluginClassName = props.getProperty(Plugin.PLUGIN_CLASS);
-
         if (StringUtils.isBlank(pluginClassName)) {
             pluginClassName = NotInteractivePlugin.class.getName();
         }
@@ -225,9 +214,7 @@ public class PluginManager {
         ret.setRendererId(rendererId);
 
         setPluginProps(plugin, ret, props);
-
         registerEventListeners(props, classLoader, ret);
-
         register(ret, holder);
 
         ret.changeStatus();
@@ -242,36 +229,30 @@ public class PluginManager {
      * @param holder the specified holder
      */
     private void register(final AbstractPlugin plugin, final Map<String, HashSet<AbstractPlugin>> holder) {
-
         final String rendererId = plugin.getRendererId();
 
-        /**
+        /*
          * the rendererId support multiple,using ';' to split.
          * and using Map to match the plugin is not flexible, a regular expression match pattern may be needed in futrue.
          */
         final String[] redererIds = rendererId.split(";");
 
-        for (String rid : redererIds) {
+        for (final String rid : redererIds) {
+            final HashSet<AbstractPlugin> set = holder.computeIfAbsent(rid, k -> new HashSet<>());
 
-            HashSet<AbstractPlugin> set = holder.get(rid);
-
-            if (null == set) {
-                set = new HashSet<AbstractPlugin>();
-                holder.put(rid, set);
-            }
             set.add(plugin);
         }
 
         LOGGER.log(Level.DEBUG, "Registered plugin[name={0}, version={1}] for rendererId[name={2}], [{3}] plugins totally",
-            new Object[] {plugin.getName(), plugin.getVersion(), rendererId, holder.size()});
+                plugin.getName(), plugin.getVersion(), rendererId, holder.size());
     }
 
     /**
      * Sets the specified plugin's properties from the specified properties file under the specified plugin directory.
      *
      * @param pluginDirName the specified plugin directory
-     * @param plugin the specified plugin
-     * @param props the specified properties file
+     * @param plugin        the specified plugin
+     * @param props         the specified properties file
      * @throws Exception exception
      */
     private static void setPluginProps(final String pluginDirName, final AbstractPlugin plugin, final Properties props) throws Exception {
@@ -280,7 +261,7 @@ public class PluginManager {
         final String version = props.getProperty(Plugin.PLUGIN_VERSION);
         final String types = props.getProperty(Plugin.PLUGIN_TYPES);
 
-        LOGGER.log(Level.TRACE, "Plugin[name={0}, author={1}, version={2}, types={3}]", new Object[] {name, author, version, types});
+        LOGGER.log(Level.TRACE, "Plugin[name={0}, author={1}, version={2}, types={3}]", name, author, version, types);
 
         plugin.setAuthor(author);
         plugin.setName(name);
@@ -305,31 +286,23 @@ public class PluginManager {
             }
         }
 
-        final String[] typeArray = types.split(",");
-
-        for (int i = 0; i < typeArray.length; i++) {
-            final PluginType type = PluginType.valueOf(typeArray[i]);
-
-            plugin.addType(type);
-        }
+        Arrays.stream(types.split(",")).map(PluginType::valueOf).forEach(plugin::addType);
     }
 
     /**
      * Registers event listeners with the specified plugin properties, class loader and plugin.
      *
-     * @param props the specified plugin properties
+     * @param props       the specified plugin properties
      * @param classLoader the specified class loader
-     * @param plugin the specified plugin
+     * @param plugin      the specified plugin
      * @throws Exception exception
      */
     private void registerEventListeners(final Properties props, final URLClassLoader classLoader, final AbstractPlugin plugin)
-        throws Exception {
+            throws Exception {
         final String eventListenerClasses = props.getProperty(Plugin.PLUGIN_EVENT_LISTENER_CLASSES);
         final String[] eventListenerClassArray = eventListenerClasses.split(",");
 
-        for (int i = 0; i < eventListenerClassArray.length; i++) {
-            final String eventListenerClassName = eventListenerClassArray[i];
-
+        for (final String eventListenerClassName : eventListenerClassArray) {
             if (Strings.isEmptyOrNull(eventListenerClassName)) {
                 LOGGER.log(Level.INFO, "No event listener to load for plugin[name={0}]", plugin.getName());
                 return;
@@ -338,13 +311,12 @@ public class PluginManager {
             LOGGER.log(Level.DEBUG, "Loading event listener[className={0}]", eventListenerClassName);
 
             final Class<?> eventListenerClass = classLoader.loadClass(eventListenerClassName);
-
             final AbstractEventListener<?> eventListener = (AbstractEventListener) eventListenerClass.newInstance();
 
             plugin.addEventListener(eventListener);
 
             LOGGER.log(Level.DEBUG, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",
-                new Object[] {eventListener.getClass(), eventListener.getEventType(), plugin.getName()});
+                    eventListener.getClass(), eventListener.getEventType(), plugin.getName());
         }
     }
 
