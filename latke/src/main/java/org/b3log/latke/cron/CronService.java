@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.7, Sep 8, 2017
+ * @version 2.0.1.0, Sep 8, 2017
  */
 public final class CronService {
 
@@ -71,33 +71,35 @@ public final class CronService {
      * Constructs cron jobs and schedules them.
      */
     public static void start() {
-        LOGGER.info("Constructing cron service....");
+        new Thread(() -> {
+            LOGGER.info("Constructing cron service....");
 
-        shutdown();
+            shutdown();
 
-        try {
-            loadCronXML();
+            try {
+                loadCronXML();
 
-            for (final Cron cron : CRONS) {
-                final Timer timer = new Timer();
-                TIMERS.add(timer);
+                for (final Cron cron : CRONS) {
+                    final Timer timer = new Timer();
+                    TIMERS.add(timer);
 
-                cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getURL());
-                timer.scheduleAtFixedRate(cron, Cron.TEN * Cron.THOUSAND, cron.getPeriod());
+                    cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getURL());
+                    timer.scheduleAtFixedRate(cron, Cron.TEN * Cron.THOUSAND, cron.getPeriod());
 
-                LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getURL());
+                    LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getURL());
 
-                TimeUnit.SECONDS.sleep(SETUP_INTERVAL);
+                    TimeUnit.SECONDS.sleep(SETUP_INTERVAL);
+                }
+
+                LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
+            } catch (final Exception e) {
+                LOGGER.log(Level.ERROR, "Can not initialize Cron Service!", e);
+
+                throw new IllegalStateException(e);
             }
 
-            LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Can not initialize Cron Service!", e);
-
-            throw new IllegalStateException(e);
-        }
-
-        LOGGER.info("Constructed Cron Service");
+            LOGGER.info("Constructed Cron Service");
+        }).start();
     }
 
     /**
