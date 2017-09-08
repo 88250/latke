@@ -61,7 +61,7 @@ public class PluginManager {
     /**
      * Type of loaded event.
      */
-    private static final String PLUGIN_LOADED_EVENT = "pluginLoadedEvt";
+    public static final String PLUGIN_LOADED_EVENT = "pluginLoadedEvt";
 
     /**
      * Plugins cache.
