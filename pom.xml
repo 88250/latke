@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.14, Aug 11, 2017
+    Version: 1.2.2.15, Sep 8, 2017
     Author: Liang Ding
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke-parent</artifactId>
@@ -184,36 +185,6 @@
                         <phase>compile</phase>
                         <goals>
                             <goal>checkstyle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.tiobe.jacobe</groupId>
-                <artifactId>maven-jacobe-plugin</artifactId>
-                <version>1.0</version>
-                <configuration>
-                    <jacobeExecutable>${jacobeExecutable}</jacobeExecutable>
-                    <rules>
-                        <param>indent=4</param>
-                        <param>continuationindent=2</param>
-                    </rules>
-                    <configurationFile>src/main/resources/etc/jacobe/sun.cfg</configurationFile>
-                    <comparisonThreshold>0.01</comparisonThreshold>
-                    <javadoc>private</javadoc>
-                    <noAssert>true</noAssert>
-                    <noEnum>false</noEnum>
-                    <noBackup>true</noBackup>
-                    <overwrite>true</overwrite>
-                    <outputExtension>formatted</outputExtension>
-                    <input>${basedir}/src/main/java</input>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>jacobe</goal>
                         </goals>
                     </execution>
                 </executions>
