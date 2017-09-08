@@ -37,7 +37,7 @@ public final class PNGRenderer extends AbstractHTTPResponseRenderer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(PNGRenderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PNGRenderer.class);
 
     /**
      * Image to render.

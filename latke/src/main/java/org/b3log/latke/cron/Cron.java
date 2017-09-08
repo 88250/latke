@@ -36,7 +36,7 @@ public final class Cron extends TimerTask {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Cron.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Cron.class);
 
     /**
      * Time unit constant - 10.

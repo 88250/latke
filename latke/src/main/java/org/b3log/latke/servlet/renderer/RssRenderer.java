@@ -36,7 +36,7 @@ public final class RssRenderer extends AbstractHTTPResponseRenderer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(RssRenderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RssRenderer.class);
 
     /**
      * Content to render.

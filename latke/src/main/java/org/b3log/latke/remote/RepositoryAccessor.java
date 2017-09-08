@@ -57,7 +57,7 @@ public class RepositoryAccessor {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(RepositoryAccessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(RepositoryAccessor.class);
 
     /**
      * Gets whether repositories is writable.

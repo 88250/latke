@@ -32,7 +32,7 @@ public final class Callstacks {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Callstacks.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Callstacks.class);
 
     /**
      * Checks the current method is whether invoked by a caller specified by the given class name and method name.

@@ -74,7 +74,7 @@ public abstract class AbstractPlugin implements Serializable {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractPlugin.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AbstractPlugin.class);
 
     /**
      * Default serial version id.

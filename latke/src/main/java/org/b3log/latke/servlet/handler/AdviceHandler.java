@@ -53,7 +53,7 @@ public class AdviceHandler implements Handler {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AdviceHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AdviceHandler.class);
 
     @Override
     public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {

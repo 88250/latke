@@ -34,7 +34,7 @@ public class StaticFileRenderer extends AbstractHTTPResponseRenderer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(StaticFileRenderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(StaticFileRenderer.class);
     
     /**
      * Request dispatcher.

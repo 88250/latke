@@ -36,7 +36,7 @@ public final class HTTP500Renderer extends AbstractHTTPResponseRenderer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(HTTP500Renderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(HTTP500Renderer.class);
 
     /**
      * the internal exception.

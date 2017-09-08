@@ -45,7 +45,7 @@ public final class Connections {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Connections.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Connections.class);
 
     /**
      * Pool type.

@@ -35,7 +35,7 @@ public final class HTTP404Renderer extends AbstractHTTPResponseRenderer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(HTTP404Renderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(HTTP404Renderer.class);
 
     @Override
     public void render(final HTTPRequestContext context) {

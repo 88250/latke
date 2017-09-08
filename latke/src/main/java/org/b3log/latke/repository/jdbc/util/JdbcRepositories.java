@@ -53,7 +53,7 @@ public final class JdbcRepositories {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JdbcRepositories.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JdbcRepositories.class);
 
     /**
      * the String jsonType to JdbcType.

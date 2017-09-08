@@ -41,7 +41,7 @@ public final class StaticResources {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(StaticResources.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(StaticResources.class);
 
     /**
      * Static resource path patterns.

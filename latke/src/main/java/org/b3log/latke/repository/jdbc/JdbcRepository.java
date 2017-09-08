@@ -61,7 +61,7 @@ public final class JdbcRepository implements Repository {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JdbcRepository.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JdbcRepository.class);
     /**
      * Key generator.
      */

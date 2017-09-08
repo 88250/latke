@@ -41,7 +41,7 @@ public final class Lifecycle {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Lifecycle.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Lifecycle.class);
 
     /**
      * Latke bean manager.

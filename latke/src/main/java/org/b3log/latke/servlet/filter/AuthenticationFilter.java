@@ -42,7 +42,7 @@ public final class AuthenticationFilter implements Filter {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class);
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}

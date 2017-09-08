@@ -54,7 +54,7 @@ public class BeanImpl<T> implements LatkeBean<T> {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(BeanImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(BeanImpl.class);
     /**
      * Stereo types.
      */

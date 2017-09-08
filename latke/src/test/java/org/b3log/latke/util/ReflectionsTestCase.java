@@ -73,7 +73,7 @@ class FeedProcessor {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(FeedProcessor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FeedProcessor.class);
 
     /**
      * Blog articles Atom output.

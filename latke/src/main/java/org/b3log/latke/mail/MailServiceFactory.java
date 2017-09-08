@@ -28,7 +28,7 @@ public final class MailServiceFactory {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(MailServiceFactory.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MailServiceFactory.class);
 
     /**
      * Mail service.

@@ -43,12 +43,12 @@ public final class LocalTaskQueueService implements TaskQueueService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LocalTaskQueueService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LocalTaskQueueService.class);
 
     /**
      * the queueMap to hold all queue.
      */
-    private static Map<String, Queue> queueMap = new Hashtable<String, Queue>();
+    private static Map<String, Queue> queueMap = new Hashtable<>();
 
     /**
      * Determines whether the queue has been initialized.

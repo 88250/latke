@@ -38,7 +38,7 @@ public final class ViewLoadEventHandler extends AbstractEventListener<ViewLoadEv
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ViewLoadEventHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ViewLoadEventHandler.class);
 
     @Override
     public String getEventType() {

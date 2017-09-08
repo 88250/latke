@@ -37,7 +37,7 @@ public final class Templates {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Templates.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Templates.class);
 
     /**
      * Main template {@link Configuration configuration}.

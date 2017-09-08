@@ -37,7 +37,7 @@ public final class JPGRenderer extends AbstractHTTPResponseRenderer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JPGRenderer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JPGRenderer.class);
 
     /**
      * Image to render.

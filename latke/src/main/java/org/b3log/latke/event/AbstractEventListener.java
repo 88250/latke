@@ -38,7 +38,7 @@ public abstract class AbstractEventListener<T> implements Serializable {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractEventListener.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AbstractEventListener.class);
 
     /**
      * Gets the event type of this listener could handle.

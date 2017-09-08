@@ -43,7 +43,7 @@ public final class LocalUserService implements UserService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LocalUserService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LocalUserService.class);
 
     @Override
     public GeneralUser getCurrentUser(final HttpServletRequest request) {

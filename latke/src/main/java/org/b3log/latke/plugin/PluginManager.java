@@ -58,7 +58,7 @@ public class PluginManager {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(PluginManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PluginManager.class);
 
     /**
      * Type of loaded event.

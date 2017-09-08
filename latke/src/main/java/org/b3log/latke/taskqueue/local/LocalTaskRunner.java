@@ -39,7 +39,7 @@ public final class LocalTaskRunner extends Thread {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LocalTaskRunner.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LocalTaskRunner.class);
 
     /**
      * the task need to do .
