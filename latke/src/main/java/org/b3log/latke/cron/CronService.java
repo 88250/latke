@@ -57,6 +57,11 @@ public final class CronService {
     private static final List<Timer> TIMERS = new ArrayList<>();
 
     /**
+     * Cron setup interval in seconds.
+     */
+    private static final int SETUP_INTERVAL = 5;
+
+    /**
      * Private default constructor.
      */
     private CronService() {
@@ -82,7 +87,7 @@ public final class CronService {
 
                 LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getURL());
 
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(SETUP_INTERVAL);
             }
 
             LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
