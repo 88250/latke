@@ -87,17 +87,14 @@ public class JdbcRepositoryTestCase {
     public void createTestTable() {
         final StringBuffer createTableSql = new StringBuffer();
 
-        createTableSql.append("            IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[basetable]')"
-                + "         AND OBJECTPROPERTY(id, N'IsUserTable') = 1) CREATE TABLE [dbo].[basetable]");
+        createTableSql.append("CREATE TABLE basetable");
         createTableSql.append("   ( ");
-        createTableSql.append("  oId VARCHAR(200) NOT NULL, ");
+        createTableSql.append("  oId VARCHAR2(200) NOT NULL, ");
         createTableSql.append("  col1 INT, ");
-        createTableSql.append("  col2 VARCHAR(200), ");
-        createTableSql.append("  col3 DECIMAL(10,2), ");
-        createTableSql.append("  col4 CHAR(1), ");
+        createTableSql.append("  col2 VARCHAR2(200), ");
+        createTableSql.append("  col3 CHAR(1), ");
         createTableSql.append("  PRIMARY KEY (oId) ");
         createTableSql.append(" ) ");
-        createTableSql.append("; ");
 
         try {
             final Connection connection = Connections.getConnection();

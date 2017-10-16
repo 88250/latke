@@ -32,7 +32,7 @@ public class StringMapping implements Mapping {
         final StringBuilder sql = new StringBuilder();
 
         sql.append(definition.getName());
-        sql.append(" nvarchar(").append(definition.getLength()).append(')');
+        sql.append(" varchar2(").append(definition.getLength()).append(')');
         if (!definition.getNullable()) {
             sql.append(" not null");
         }
