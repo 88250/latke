@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Jul 7, 2017
+ * @version 1.0.0.3, Oct 16, 2017
  */
 public final class JdbcFactory implements JdbcDatabase {
 
@@ -58,6 +58,7 @@ public final class JdbcFactory implements JdbcDatabase {
             put(Latkes.RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
             put(Latkes.RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
             put(Latkes.RuntimeDatabase.MSSQL, "org.b3log.latke.repository.sqlserver.SQLServerJdbcDatabaseSolution");
+            put(Latkes.RuntimeDatabase.ORACLE, "org.b3log.latke.repository.oracle.OracleJdbcDatabaseSolution");
         }
     };
 

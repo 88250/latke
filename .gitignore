@@ -8,7 +8,7 @@ pom.xml.*
 release.properties
 /latke-repository-/target/
 /latke-repository-sqlserver/target/
-/latke-repository-redis/target/
+/latke-repository-oracle/target/
 
 .idea/
 *.iml

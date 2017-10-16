@@ -38,7 +38,7 @@ import java.util.Properties;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.2.3.3, Jal 7, 2017
+ * @version 1.2.3.4, Oct 16, 2017
  */
 public final class Connections {
 
@@ -140,7 +140,11 @@ public final class Connections {
                         druid.setTestOnReturn(true);
                         druid.setTestOnBorrow(false);
                         druid.setTestWhileIdle(true);
-                        druid.setValidationQuery("SELECT 1");
+                        if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
+                            druid.setValidationQuery("SELECT 1 FROM DUAL");
+                        } else {
+                            druid.setValidationQuery("SELECT 1");
+                        }
                         druid.setMaxWait(CONN_TIMEOUT);
                         druid.setValidationQueryTimeout(CONN_TIMEOUT);
                     }
