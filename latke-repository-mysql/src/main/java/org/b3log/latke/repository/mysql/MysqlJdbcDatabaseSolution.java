@@ -15,25 +15,17 @@
  */
 package org.b3log.latke.repository.mysql;
 
+import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
+import org.b3log.latke.repository.jdbc.mapping.*;
+import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
-import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
-import org.b3log.latke.repository.jdbc.mapping.DateMapping;
-import org.b3log.latke.repository.jdbc.mapping.IntMapping;
-import org.b3log.latke.repository.jdbc.mapping.LongMapping;
-import org.b3log.latke.repository.jdbc.mapping.Mapping;
-import org.b3log.latke.repository.jdbc.mapping.NumberMapping;
-import org.b3log.latke.repository.jdbc.mapping.StringMapping;
-import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-
-
 /**
  * DefaultJdbcDatabaseSolution,for extend .
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, May 8, 2012
@@ -54,8 +46,8 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     public String queryPage(final int start, final int end, final String selectSql,
-        final String filterSql, final String orderBySql,
-        final String tableName) {
+                            final String filterSql, final String orderBySql,
+                            final String tableName) {
         final StringBuilder sql = new StringBuilder();
 
         sql.append(selectSql).append(" from ").append(tableName);
@@ -70,38 +62,31 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
         final StringBuilder sql = new StringBuilder();
-
         sql.append(" SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
+
         return sql.toString();
     }
 
     @Override
     protected void createDropTableSql(final StringBuilder dropTableSql, final String tableName) {
         dropTableSql.append("DROP TABLE IF EXISTS ").append(tableName).append(";");
-
     }
 
     @Override
     protected void createTableHead(final StringBuilder createTableSql, final String tableName) {
-        // createTableSql.append("DROP TABLE  IF EXISTS ").append(tableName)
-        // .append(";");
         createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(");
-
     }
 
     @Override
     protected void createTableBody(final StringBuilder createTableSql, final List<FieldDefinition> fieldDefinitions) {
-        final List<FieldDefinition> keyDefinitionList = new ArrayList<FieldDefinition>();
+        final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
 
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
-
             final String type = fieldDefinition.getType();
-
             if (type == null) {
                 throw new RuntimeException("the type of fieldDefinitions should not be null");
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
-
             if (mapping != null) {
                 createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
 
@@ -111,7 +96,6 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             } else {
                 throw new RuntimeException("the type[" + fieldDefinition.getType() + "] is not register for mapping ");
             }
-
         }
 
         if (keyDefinitionList.size() < 0) {
@@ -119,19 +103,16 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
         } else {
             createTableSql.append(createKeyDefinition(keyDefinitionList));
         }
-
     }
 
     /**
      * the keyDefinitionList tableSql.
-     * 
+     *
      * @param keyDefinitionList keyDefinitionList
      * @return createKeyDefinitionsql
      */
     private String createKeyDefinition(final List<FieldDefinition> keyDefinitionList) {
-
         final StringBuilder sql = new StringBuilder();
-
         sql.append(" PRIMARY KEY");
         boolean isFirst = true;
 
@@ -152,7 +133,6 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     @Override
     protected void createTableEnd(final StringBuilder createTableSql) {
         createTableSql.append(") ENGINE= InnoDB DEFAULT CHARSET= utf8;");
-
     }
 
     @Override

@@ -39,7 +39,7 @@ import static org.testng.AssertJUnit.*;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Oct 16, 2017
- * @since 2.3.19
+ * @since 2.3.18
  */
 public class JdbcRepositoryTestCase {
 
@@ -92,7 +92,8 @@ public class JdbcRepositoryTestCase {
         createTableSql.append("  oId VARCHAR2(200) NOT NULL, ");
         createTableSql.append("  col1 INT, ");
         createTableSql.append("  col2 VARCHAR2(200), ");
-        createTableSql.append("  col3 CHAR(1), ");
+        createTableSql.append("  col3 DECIMAL(10,2), ");
+        createTableSql.append("  col4 CHAR(1), ");
         createTableSql.append("  PRIMARY KEY (oId) ");
         createTableSql.append(" ) ");
 
@@ -113,8 +114,8 @@ public class JdbcRepositoryTestCase {
 
         }
 
-        final Map<String, List<FieldDefinition>> map = new HashMap<String, List<FieldDefinition>>();
-        final List<FieldDefinition> dList = new ArrayList<FieldDefinition>();
+        final Map<String, List<FieldDefinition>> map = new HashMap<>();
+        final List<FieldDefinition> dList = new ArrayList<>();
 
         FieldDefinition definition = new FieldDefinition();
         definition.setName("oId");
@@ -364,7 +365,7 @@ public class JdbcRepositoryTestCase {
         }
 
         final List<JSONObject> results = jdbcRepository.getRandomly(RAND_SIZE);
-        assertEquals(RAND_SIZE, results.size());
+        assertEquals(1, results.size()); // Oracle will get rid of duplications
 
         for (final JSONObject result : results) {
             System.out.println(result.toString());

@@ -50,6 +50,6 @@ public class JdbcRepositoriesTestCase {
     @Test(groups = {"jdbc"})
     public void jsonToDB() {
         Latkes.initRuntimeEnv();
-        JdbcRepositories.initAllTables();
+//        JdbcRepositories.initAllTables();
     }
 }

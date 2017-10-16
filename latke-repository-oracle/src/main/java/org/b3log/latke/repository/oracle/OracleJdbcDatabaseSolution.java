@@ -17,11 +17,15 @@ package org.b3log.latke.repository.oracle;
 
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
-import org.b3log.latke.repository.jdbc.mapping.*;
+import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
+import org.b3log.latke.repository.jdbc.mapping.IntMapping;
+import org.b3log.latke.repository.jdbc.mapping.LongMapping;
+import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.oracle.mapping.DateMapping;
 import org.b3log.latke.repository.oracle.mapping.DatetimeMapping;
+import org.b3log.latke.repository.oracle.mapping.DecimalMapping;
 import org.b3log.latke.repository.oracle.mapping.StringMapping;
 import org.b3log.latke.util.Strings;
 
@@ -33,7 +37,7 @@ import java.util.List;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Oct 16, 2017
- * @since 2.3.19
+ * @since 2.3.18
  */
 public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
@@ -44,7 +48,7 @@ public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
         registerType("int", new IntMapping());
         registerType("boolean", new BooleanMapping());
         registerType("long", new LongMapping());
-        registerType("double", new NumberMapping());
+        registerType("double", new DecimalMapping());
         registerType("String", new StringMapping());
         registerType("Date", new DateMapping());
         registerType("Datetime", new DatetimeMapping());
@@ -53,66 +57,57 @@ public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     @Override
     public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql,
                             final String tableName) {
-        final StringBuilder sql = new StringBuilder();
-
         /*
-         select * from 
-         (
-         select ROW_NUMBER() over(order by id desc) rownum, *  
-         from .... where .... order by ....
-         ) a 
-         where rownum>10000 and rownum<10501
+SELECT * FROM
+(
+    SELECT a.*, rownum r__
+    FROM
+    (
+        SELECT * FROM ORDERS WHERE CustomerID LIKE 'A%'
+        ORDER BY OrderDate DESC, ShippingDate DESC
+    ) a
+    WHERE rownum < ((pageNumber * pageSize) + 1 )
+)
+WHERE r__ >= (((pageNumber-1) * pageSize) + 1)
          */
-        final String over = Strings.isEmptyOrNull(orderBySql) ? "order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
+        final StringBuilder sql = new StringBuilder();
+        final String orderBy = Strings.isEmptyOrNull(orderBySql) ? "order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
 
-        sql.append(selectSql).append(" from (select top 100 percent ROW_NUMBER() over(").append(over).append(") rownum, * from ").append(
-                tableName);
+        sql.append(selectSql).append(" from (select a.*, rownum r__ from (select * from ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {
             sql.append(" where ").append(filterSql);
         }
-
-        sql.append(orderBySql);
-        sql.append(" ) a where rownum > ").append(start).append(" and rownum <= ").append(end);
+        sql.append(orderBy).append(" ) a where rownum < ").append(end).append(") where r__ >= ").append(start);
 
         return sql.toString();
     }
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
-
-        /*
-         SELECT TOP 5 *
-         FROM Test.dbo.basetable
-         ORDER BY CHECKSUM(NEWID())
-         */
-        final StringBuilder sql = new StringBuilder("SELECT TOP ").append(fetchSize).append(" * FROM ").append(tableName).append(
-                " ORDER BY CHECKSUM(NEWID())");
+/*
+SELECT  *
+FROM    (
+        SELECT  *
+        FROM    mytable
+        ORDER BY
+                dbms_random.value
+        )
+WHERE rownum <= 1000
+ */
+        final StringBuilder sql = new StringBuilder("SELECT ").append(" * FROM (").append("SELECT * FROM ").
+                append(tableName).append(" ORDER BY dbms_random.value) WHERE rownum <=").append(fetchSize);
 
         return sql.toString();
     }
 
     @Override
     protected void createDropTableSql(final StringBuilder dropTableSql, final String tableName) {
-
-        /*
-         IF EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[tablename]')
-         AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
-         DROP TABLE [dbo].[tablename]; 
-         */
-        dropTableSql.append("IF EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").append(tableName).append("]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) DROP TABLE [dbo].[").append(tableName).append(
-                "];");
+        dropTableSql.append("DROP TABLE IF EXISTS ").append(tableName).append(";");
     }
 
     @Override
     protected void createTableHead(final StringBuilder createTableSql, final String tableName) {
-
-        /*
-         IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[tablename]')
-         AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
-         CREATE TABLE [dbo].[tablename] ( columns specification );
-         */
-        createTableSql.append("IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").append(tableName).append(
-                "]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) ");
+        createTableSql.append("CREATE TABLE ").append(tableName).append("(");
     }
 
     @Override

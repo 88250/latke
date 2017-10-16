@@ -18,13 +18,12 @@ package org.b3log.latke.repository.jdbc.util;
 
 /**
  * FieldDefinition of each Filed in *.json.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Mar 10, 2014
+ * @version 1.0.1.0, Oct 16, 2017
  */
 public class FieldDefinition {
-
     /**
      * field name.
      */
@@ -39,7 +38,7 @@ public class FieldDefinition {
      * the length of the type.
      */
     private Integer length;
-    
+
     /**
      * Precision.
      */
@@ -48,7 +47,7 @@ public class FieldDefinition {
     /**
      * if isKey.
      */
-    private Boolean isKey;
+    private Boolean isKey = false;
 
     /**
      * if null-able.
@@ -57,7 +56,7 @@ public class FieldDefinition {
 
     /**
      * getName.
-     * 
+     *
      * @return name.
      */
     public String getName() {
@@ -66,7 +65,7 @@ public class FieldDefinition {
 
     /**
      * setName.
-     * 
+     *
      * @param name name
      */
     public void setName(final String name) {
@@ -75,7 +74,7 @@ public class FieldDefinition {
 
     /**
      * getType.
-     * 
+     *
      * @return type
      */
     public String getType() {
@@ -84,7 +83,7 @@ public class FieldDefinition {
 
     /**
      * setType.
-     * 
+     *
      * @param type type.
      */
     public void setType(final String type) {
@@ -93,7 +92,7 @@ public class FieldDefinition {
 
     /**
      * getLength.
-     * 
+     *
      * @return length
      */
     public Integer getLength() {
@@ -102,25 +101,25 @@ public class FieldDefinition {
 
     /**
      * setLength.
-     * 
+     *
      * @param length length.
      */
     public void setLength(final Integer length) {
         this.length = length;
     }
-    
+
     /**
      * Gets the precision.
-     * 
+     *
      * @return precision
      */
     public Integer getPresision() {
         return precision;
     }
-    
+
     /**
      * Sets the precision with the specified precision.
-     * 
+     *
      * @param presision the specified precision
      */
     public void setPresision(final Integer presision) {
@@ -129,7 +128,7 @@ public class FieldDefinition {
 
     /**
      * getIsKey.
-     * 
+     *
      * @return iskey
      */
     public Boolean getIsKey() {
@@ -138,7 +137,7 @@ public class FieldDefinition {
 
     /**
      * setIsKey.
-     * 
+     *
      * @param isKey isKey
      */
     public void setIsKey(final Boolean isKey) {
@@ -147,7 +146,7 @@ public class FieldDefinition {
 
     /**
      * getNullable.
-     * 
+     *
      * @return nullable
      */
     public Boolean getNullable() {
@@ -156,11 +155,10 @@ public class FieldDefinition {
 
     /**
      * setNullable.
-     * 
+     *
      * @param nullable nullable
      */
     public void setNullable(final Boolean nullable) {
         this.nullable = nullable;
     }
-
 }

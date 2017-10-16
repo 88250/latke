@@ -16,9 +16,6 @@
 package org.b3log.latke.repository.sqlserver;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
@@ -32,6 +29,9 @@ import org.b3log.latke.repository.sqlserver.mapping.DatetimeMapping;
 import org.b3log.latke.repository.sqlserver.mapping.DecimalMapping;
 import org.b3log.latke.repository.sqlserver.mapping.StringMapping;
 import org.b3log.latke.util.Strings;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -58,7 +58,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
 
     @Override
     public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql,
-        final String tableName) {
+                            final String tableName) {
         final StringBuilder sql = new StringBuilder();
 
         /*
@@ -72,7 +72,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
         final String over = Strings.isEmptyOrNull(orderBySql) ? "order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
 
         sql.append(selectSql).append(" from (select top 100 percent ROW_NUMBER() over(").append(over).append(") rownum, * from ").append(
-            tableName);
+                tableName);
         if (StringUtils.isNotBlank(filterSql)) {
             sql.append(" where ").append(filterSql);
         }
@@ -91,8 +91,8 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          FROM Test.dbo.basetable
          ORDER BY CHECKSUM(NEWID())
          */
-        final StringBuilder sql = new StringBuilder("SELECT TOP ").append(fetchSize).append(" * FROM ").append(tableName).append(
-            " ORDER BY CHECKSUM(NEWID())");
+        final StringBuilder sql = new StringBuilder("SELECT TOP ").append(fetchSize).append(" * FROM ").
+                append(tableName).append(" ORDER BY CHECKSUM(NEWID())");
 
         return sql.toString();
     }
@@ -105,8 +105,9 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
          DROP TABLE [dbo].[tablename]; 
          */
-        dropTableSql.append("IF EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").append(tableName).append("]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) DROP TABLE [dbo].[").append(tableName).append(
-            "];");
+        dropTableSql.append("IF EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").
+                append(tableName).append("]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) DROP TABLE [dbo].[")
+                .append(tableName).append("];");
     }
 
     @Override
@@ -118,7 +119,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          CREATE TABLE [dbo].[tablename] ( columns specification );
          */
         createTableSql.append("IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").append(tableName).append(
-            "]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) ");
+                "]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) ");
     }
 
     @Override

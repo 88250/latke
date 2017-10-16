@@ -23,7 +23,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Oct 16, 2017
- * @since 2.3.19
+ * @since 2.3.18
  */
 public class DatetimeMapping implements Mapping {
 
