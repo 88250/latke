@@ -41,7 +41,7 @@ import java.util.*;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.9, Jul 5, 2017
+ * @version 1.2.2.10, Oct 17, 2017
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -50,18 +50,22 @@ public final class JdbcRepository implements Repository {
      * Repository cache name.
      */
     public static final String REPOSITORY_CACHE_NAME = "repositoryCache";
+
     /**
      * The current transaction.
      */
     public static final ThreadLocal<JdbcTransaction> TX = new InheritableThreadLocal<>();
+
     /**
      * The current JDBC connection.
      */
     public static final ThreadLocal<Connection> CONN = new ThreadLocal<>();
+
     /**
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(JdbcRepository.class);
+
     /**
      * Key generator.
      */
@@ -69,7 +73,6 @@ public final class JdbcRepository implements Repository {
 
     static {
         final String value = Latkes.getLocalProperty("keyGen");
-
         if (Strings.isEmptyOrNull(value) || "org.b3log.latke.repository.TimeMillisKeyGenerator".equals(value)) {
             KEY_GEN = new TimeMillisKeyGenerator();
         } else if ("DB".equals(value)) {
@@ -116,7 +119,6 @@ public final class JdbcRepository implements Repository {
         }
 
         final Connection connection = CONN.get();
-
         if (null != connection) {
             try {
                 connection.close();
@@ -131,7 +133,6 @@ public final class JdbcRepository implements Repository {
     @Override
     public String add(final JSONObject jsonObject) throws RepositoryException {
         final JdbcTransaction currentTransaction = TX.get();
-
         if (null == currentTransaction) {
             throw new RepositoryException("Invoking add() outside a transaction");
         }
@@ -139,10 +140,10 @@ public final class JdbcRepository implements Repository {
         final Connection connection = getConnection();
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder sql = new StringBuilder();
-        String id = null;
+        String ret;
 
         try {
-            id = buildAddSql(jsonObject, paramList, sql);
+            ret = buildAddSql(jsonObject, paramList, sql);
             JdbcUtil.executeSql(sql.toString(), paramList, connection);
         } catch (final SQLException se) {
             LOGGER.log(Level.ERROR, "add:" + se.getMessage(), se);
@@ -152,7 +153,7 @@ public final class JdbcRepository implements Repository {
             throw new RepositoryException(e);
         }
 
-        return id;
+        return ret;
     }
 
     /**
@@ -169,7 +170,7 @@ public final class JdbcRepository implements Repository {
 
         if (!jsonObject.has(Keys.OBJECT_ID)) {
             if (!(KEY_GEN instanceof DBKeyGenerator)) {
-                ret = (String) KEY_GEN.gen(); // XXX: key type
+                ret = (String) KEY_GEN.gen();
                 jsonObject.put(Keys.OBJECT_ID, ret);
             }
         } else {
@@ -189,8 +190,7 @@ public final class JdbcRepository implements Repository {
      * @param sql        sql
      * @throws Exception exception
      */
-    private void setProperties(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql)
-            throws Exception {
+    private void setProperties(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) throws Exception {
         final Iterator<String> keys = jsonObject.keys();
 
         final StringBuilder insertString = new StringBuilder();
@@ -231,7 +231,6 @@ public final class JdbcRepository implements Repository {
         }
 
         final JdbcTransaction currentTransaction = TX.get();
-
         if (null == currentTransaction) {
             throw new RepositoryException("Invoking update() outside a transaction");
         }
@@ -246,7 +245,6 @@ public final class JdbcRepository implements Repository {
             update(id, oldJsonObject, jsonObject, paramList, sqlBuilder);
 
             final String sql = sqlBuilder.toString();
-
             if (Strings.isEmptyOrNull(sql)) {
                 return;
             }
@@ -313,8 +311,8 @@ public final class JdbcRepository implements Repository {
             paramList.add(needUpdateJsonObject.get(key));
         }
 
-        sql.append("update ").append(getName()).append(wildcardString).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("=").append(
-                "?");
+        sql.append("update ").append(getName()).append(wildcardString).append(" where ").append(JdbcRepositories.getDefaultKeyName()).
+                append("=").append("?");
         paramList.add(id);
     }
 
@@ -357,7 +355,6 @@ public final class JdbcRepository implements Repository {
         }
 
         final JdbcTransaction currentTransaction = TX.get();
-
         if (null == currentTransaction) {
             throw new RepositoryException("Invoking remove() outside a transaction");
         }
@@ -384,13 +381,13 @@ public final class JdbcRepository implements Repository {
      * @param sql sql
      */
     private void remove(final String id, final StringBuilder sql) {
-        sql.append("delete from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).
-                append("='").append(id).append("'");
+        sql.append("delete from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("='").
+                append(id).append("'");
     }
 
     @Override
     public JSONObject get(final String id) throws RepositoryException {
-        JSONObject ret = null;
+        JSONObject ret;
 
         final StringBuilder sql = new StringBuilder();
         final Connection connection = getConnection();
@@ -417,8 +414,8 @@ public final class JdbcRepository implements Repository {
      * @param sql sql
      */
     private void get(final StringBuilder sql) {
-        sql.append("select * from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).
-                append("=").append("?");
+        sql.append("select * from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("=").
+                append("?");
     }
 
     @Override
@@ -436,8 +433,6 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public boolean has(final String id) throws RepositoryException {
-
-        // using get() method to get result.
         return null != get(id);
     }
 
@@ -448,7 +443,7 @@ public final class JdbcRepository implements Repository {
         final int currentPageNum = query.getCurrentPageNum();
         final int pageSize = query.getPageSize();
 
-        // Asssumes the application call need to count page
+        // Assumes the application call need to count page
         int pageCount = -1;
 
         // If the application caller dose NOT want to count page, gets the page count the caller specified
@@ -465,12 +460,9 @@ public final class JdbcRepository implements Repository {
 
             // page
             final JSONObject pagination = new JSONObject();
-
             final int pageCnt = (Integer) paginationCnt.get(Pagination.PAGINATION_PAGE_COUNT);
-
             pagination.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
             pagination.put(Pagination.PAGINATION_RECORD_COUNT, paginationCnt.get(Pagination.PAGINATION_RECORD_COUNT));
-
             ret.put(Pagination.PAGINATION, pagination);
 
             // result
@@ -566,9 +558,6 @@ public final class JdbcRepository implements Repository {
         ret.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
         ret.put(Pagination.PAGINATION_RECORD_COUNT, recordCnt);
 
-//        if (currentPageNum > pageCnt) {
-//            LOGGER.log(Level.WARN, "Current page num [{0}] > page count [{1}]", new Object[] {currentPageNum, pageCnt});
-//        }
         getQuerySql(currentPageNum, pageSize, selectSql, filterSql, orderBySql, sql);
 
         return ret;
@@ -629,8 +618,8 @@ public final class JdbcRepository implements Repository {
         final int start = (currentPageNum - 1) * pageSize;
         final int end = start + pageSize;
 
-        sql.append(JdbcFactory.createJdbcFactory().queryPage(start, end, selectSql.toString(), filterSql.toString(),
-                orderBySql.toString(), getName()));
+        sql.append(JdbcFactory.createJdbcFactory().queryPage(start, end, selectSql.toString(), filterSql.toString(), orderBySql.toString(),
+                getName()));
     }
 
     /**
@@ -641,8 +630,7 @@ public final class JdbcRepository implements Repository {
      * @param filter    filter
      * @throws RepositoryException RepositoryException
      */
-    private void getFilterSql(final StringBuilder filterSql, final List<Object> paramList, final Filter filter)
-            throws RepositoryException {
+    private void getFilterSql(final StringBuilder filterSql, final List<Object> paramList, final Filter filter) throws RepositoryException {
         if (null == filter) {
             return;
         }
@@ -721,16 +709,14 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public long count() throws RepositoryException {
-        final StringBuilder sql = new StringBuilder("select count("
-                + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
+        final StringBuilder sql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
 
         return count(sql, new ArrayList<>());
     }
 
     @Override
     public long count(final Query query) throws RepositoryException {
-        final StringBuilder countSql = new StringBuilder("select count("
-                + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
+        final StringBuilder countSql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
 
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSql = new StringBuilder();
