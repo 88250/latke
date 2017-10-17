@@ -5,11 +5,11 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 
 Yet another simple web framework based on Java servlet technology.
 
-* <a href="https://hacpai.com/article/1403847528022" target="_black">为什么又要造一个叫 Latke 的轮子</a>
-* <a href="https://hacpai.com/article/1466870492857" target="_black">Latke 快速上手指南</a>
-* <a href="https://hacpai.com/article/1474087427032" target="_black">Latke 配置剖析</a>
-* <a href="https://hacpai.com/article/1493267456529" target="_black">Latke 源码解析（一）Servlet 部分</a>
-* <a href="https://hacpai.com/article/1493620909167" target="_black">Latke 源码解析（二）IOC 部分</a>
+* [为什么又要造一个叫 Latke 的轮子](https://hacpai.com/article/1403847528022)
+* [Latke 快速上手指南](https://hacpai.com/article/1466870492857)
+* [Latke 配置剖析](https://hacpai.com/article/1474087427032)
+* [Latke 源码解析（一）Servlet 部分](https://hacpai.com/article/1493267456529)
+* [Latke 源码解析（二）IOC 部分](https://hacpai.com/article/1493620909167)
 
 ```xml
 <dependency>
@@ -21,7 +21,7 @@ Yet another simple web framework based on Java servlet technology.
 
 社区支持：
 
-* <a href="https://hacpai.com/tag/Latke" target="_black">论坛：</a>
+* [论坛：](https://hacpai.com/tag/Latke)
 * Q 群：242561391
 
 ## 案例
