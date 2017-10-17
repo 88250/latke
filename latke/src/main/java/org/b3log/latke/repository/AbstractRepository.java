@@ -38,7 +38,7 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.2.1.9, Jul 5, 2017
+ * @version 2.2.1.10, Oct 17, 2017
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -66,6 +66,7 @@ public abstract class AbstractRepository implements Repository {
                 case MYSQL:
                 case H2:
                 case MSSQL:
+                case ORACLE:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
 
                     break;
