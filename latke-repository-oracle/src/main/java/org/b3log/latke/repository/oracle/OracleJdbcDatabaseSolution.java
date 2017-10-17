@@ -19,14 +19,10 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
 import org.b3log.latke.repository.jdbc.mapping.IntMapping;
-import org.b3log.latke.repository.jdbc.mapping.LongMapping;
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
-import org.b3log.latke.repository.oracle.mapping.DateMapping;
-import org.b3log.latke.repository.oracle.mapping.DatetimeMapping;
-import org.b3log.latke.repository.oracle.mapping.DecimalMapping;
-import org.b3log.latke.repository.oracle.mapping.StringMapping;
+import org.b3log.latke.repository.oracle.mapping.*;
 import org.b3log.latke.util.Strings;
 
 import java.util.ArrayList;
@@ -36,7 +32,7 @@ import java.util.List;
  * Oracle database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 16, 2017
+ * @version 1.0.0.1, Oct 17, 2017
  * @since 2.3.18
  */
 public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
@@ -48,7 +44,7 @@ public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
         registerType("int", new IntMapping());
         registerType("boolean", new BooleanMapping());
         registerType("long", new LongMapping());
-        registerType("double", new DecimalMapping());
+        registerType("double", new NumberMapping());
         registerType("String", new StringMapping());
         registerType("Date", new DateMapping());
         registerType("Datetime", new DatetimeMapping());
@@ -102,7 +98,7 @@ WHERE rownum <= 1000
 
     @Override
     protected void createDropTableSql(final StringBuilder dropTableSql, final String tableName) {
-        dropTableSql.append("DROP TABLE IF EXISTS ").append(tableName).append(";");
+        dropTableSql.append("DROP TABLE IF EXISTS ").append(tableName);
     }
 
     @Override
@@ -168,7 +164,7 @@ WHERE rownum <= 1000
 
     @Override
     protected void createTableEnd(final StringBuilder createTableSql) {
-        createTableSql.append(");");
+        createTableSql.append(")");
     }
 
     @Override

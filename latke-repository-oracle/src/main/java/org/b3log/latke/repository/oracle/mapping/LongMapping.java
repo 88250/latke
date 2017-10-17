@@ -19,31 +19,23 @@ import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**
- * String mapping.
+ * Long type mapping.
+ * <p>
+ * <p>
+ * Maps Java long type to SQL bigint type.
+ * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 17, 2017
- * @since 2.3.18
+ * @version 1.0.0.0, Feb 29, 2012
  */
-public class StringMapping implements Mapping {
+public final class LongMapping implements Mapping {
 
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
         final StringBuilder sql = new StringBuilder();
+
         sql.append(definition.getName());
-
-        if (definition.getLength() == null) {
-            definition.setLength(new Integer("0"));
-        }
-
-        final Integer length = definition.getLength();
-
-        if (length > new Integer("255")) {
-            sql.append(" clob");
-        } else {
-            sql.append(" varchar2(").append(length < 1 ? new Integer("255") : length).append(')');
-        }
-
+        sql.append(" decimal(20,0)");
         if (!definition.getNullable()) {
             sql.append(" not null");
         }
