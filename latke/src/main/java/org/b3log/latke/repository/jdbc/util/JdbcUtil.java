@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.4, Jul 7, 2017
+ * @version 1.1.2.5, Oct 17, 2017
  */
 public final class JdbcUtil {
 
@@ -46,11 +46,11 @@ public final class JdbcUtil {
     private static final Logger LOGGER = Logger.getLogger(JdbcUtil.class);
 
     /**
-     * executeSql.
+     * Executes the specified SQL with the specified connection.
      *
-     * @param sql        sql
-     * @param connection connection
-     * @return ifsuccess
+     * @param sql        the specified SQL
+     * @param connection connection the specified connection
+     * @return {@code true} if success, returns {@false} otherwise
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final Connection connection) throws SQLException {
@@ -58,30 +58,28 @@ public final class JdbcUtil {
 
         final Statement statement = connection.createStatement();
         final boolean isSuccess = !statement.execute(sql);
-
         statement.close();
+
         return isSuccess;
     }
 
     /**
-     * executeSql.
+     * Executes the specified SQL with the specified params and connection...
      *
-     * @param sql        sql
-     * @param paramList  paramList
-     * @param connection connection
-     * @return is success
+     * @param sql        the specified SQL
+     * @param paramList  the specified params
+     * @param connection the specified connection
+     * @return {@code true} if success, returns {@false} otherwise
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection) throws SQLException {
         LOGGER.log(Level.TRACE, "Execute SQL [{0}]", sql);
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
         for (int i = 1; i <= paramList.size(); i++) {
             preparedStatement.setObject(i, paramList.get(i - 1));
         }
         final boolean isSuccess = preparedStatement.execute();
-
         preparedStatement.close();
 
         return isSuccess;
@@ -103,7 +101,6 @@ public final class JdbcUtil {
                                              final String tableName) throws SQLException, JSONException, RepositoryException {
 
         return queryJson(sql, paramList, connection, true, tableName);
-
     }
 
     /**
@@ -147,7 +144,6 @@ public final class JdbcUtil {
         }
 
         final ResultSet resultSet = preparedStatement.executeQuery();
-
         final JSONObject jsonObject = resultSetToJsonObject(resultSet, ifOnlyOne, tableName);
 
         resultSet.close();
@@ -208,12 +204,9 @@ public final class JdbcUtil {
                     jsonObject.put(definition.getName(), resultSet.getBoolean(columnName));
                 } else {
                     final Object v = resultSet.getObject(columnName);
-
                     if (v instanceof Clob) {
                         final Clob clob = (Clob) v;
-
                         String str = null;
-
                         try {
                             str = IOUtils.toString(clob.getCharacterStream());
                         } catch (final IOException e) {
@@ -247,7 +240,6 @@ public final class JdbcUtil {
         }
 
         jsonObject = new JSONObject();
-
         jsonObject.put(Keys.RESULTS, jsonArray);
 
         return jsonObject;
