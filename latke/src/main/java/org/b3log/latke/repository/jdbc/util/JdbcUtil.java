@@ -16,11 +16,13 @@
 package org.b3log.latke.repository.jdbc.util;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.RepositoryException;
+import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -228,6 +231,7 @@ public final class JdbcUtil {
 
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 jsonObject.remove("R__");
+                fromOracleClobEmpty(jsonObject);
             }
 
             jsonArray.put(jsonObject);
@@ -246,7 +250,29 @@ public final class JdbcUtil {
         jsonObject.put(Keys.RESULTS, jsonArray);
 
         return jsonObject;
+    }
 
+    /**
+     * Process Oracle CLOB empty string.
+     *
+     * @param jsonObject the specified JSON object
+     */
+    public static void fromOracleClobEmpty(final JSONObject jsonObject) {
+        final Iterator<String> keys = jsonObject.keys();
+        try {
+            while (keys.hasNext()) {
+                final String name = keys.next();
+                final Object val = jsonObject.get(name);
+                if (val instanceof String) {
+                    final String valStr = (String) val;
+                    if (StringUtils.equals(valStr, JdbcRepository.ORA_EMPTY_STR)) {
+                        jsonObject.put(name, "");
+                    }
+                }
+            }
+        } catch (final JSONException e) {
+            LOGGER.log(Level.ERROR, "Process oracle clob empty failed", e);
+        }
     }
 
     /**

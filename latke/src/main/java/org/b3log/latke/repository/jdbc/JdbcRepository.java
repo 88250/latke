@@ -144,10 +144,11 @@ public final class JdbcRepository implements Repository {
 
         try {
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                oracleClobEmpty(jsonObject);
+                toOracleClobEmpty(jsonObject);
             }
             ret = buildAddSql(jsonObject, paramList, sql);
             JdbcUtil.executeSql(sql.toString(), paramList, connection);
+            JdbcUtil.fromOracleClobEmpty(jsonObject);
         } catch (final SQLException se) {
             LOGGER.log(Level.ERROR, "add:" + se.getMessage(), se);
             throw new JDBCRepositoryException(se);
@@ -246,9 +247,10 @@ public final class JdbcRepository implements Repository {
 
         try {
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                oracleClobEmpty(jsonObject);
+                toOracleClobEmpty(jsonObject);
             }
             update(id, oldJsonObject, jsonObject, paramList, sqlBuilder);
+            JdbcUtil.fromOracleClobEmpty(jsonObject);
 
             final String sql = sqlBuilder.toString();
             if (Strings.isEmptyOrNull(sql)) {
@@ -983,11 +985,16 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
+     * Placeholder for Oracle empty clob.
+     */
+    public static final String ORA_EMPTY_STR = "oranil";
+
+    /**
      * Process Oracle CLOB empty string.
      *
      * @param jsonObject the specified JSON object
      */
-    private static void oracleClobEmpty(final JSONObject jsonObject) {
+    private static void toOracleClobEmpty(final JSONObject jsonObject) {
         final Iterator<String> keys = jsonObject.keys();
         try {
             while (keys.hasNext()) {
@@ -996,7 +1003,7 @@ public final class JdbcRepository implements Repository {
                 if (val instanceof String) {
                     final String valStr = (String) val;
                     if (StringUtils.isBlank(valStr)) {
-                        jsonObject.put(name, " ");
+                        jsonObject.put(name, ORA_EMPTY_STR);
                     }
                 }
             }
