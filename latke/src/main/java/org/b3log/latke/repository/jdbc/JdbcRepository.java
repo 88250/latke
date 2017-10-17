@@ -143,6 +143,9 @@ public final class JdbcRepository implements Repository {
         String ret;
 
         try {
+            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
+                oracleClobEmpty(jsonObject);
+            }
             ret = buildAddSql(jsonObject, paramList, sql);
             JdbcUtil.executeSql(sql.toString(), paramList, connection);
         } catch (final SQLException se) {
@@ -242,6 +245,9 @@ public final class JdbcRepository implements Repository {
         final StringBuilder sqlBuilder = new StringBuilder();
 
         try {
+            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
+                oracleClobEmpty(jsonObject);
+            }
             update(id, oldJsonObject, jsonObject, paramList, sqlBuilder);
 
             final String sql = sqlBuilder.toString();
@@ -974,5 +980,28 @@ public final class JdbcRepository implements Repository {
         }
 
         filterSql.append(")");
+    }
+
+    /**
+     * Process Oracle CLOB empty string.
+     *
+     * @param jsonObject the specified JSON object
+     */
+    private static void oracleClobEmpty(final JSONObject jsonObject) {
+        final Iterator<String> keys = jsonObject.keys();
+        try {
+            while (keys.hasNext()) {
+                final String name = keys.next();
+                final Object val = jsonObject.get(name);
+                if (val instanceof String) {
+                    final String valStr = (String) val;
+                    if (StringUtils.isBlank(valStr)) {
+                        jsonObject.put(name, " ");
+                    }
+                }
+            }
+        } catch (final JSONException e) {
+            LOGGER.log(Level.ERROR, "Process oracle clob empty failed", e);
+        }
     }
 }

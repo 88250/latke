@@ -99,7 +99,6 @@ public final class JdbcUtil {
      */
     public static JSONObject queryJsonObject(final String sql, final List<Object> paramList, final Connection connection,
                                              final String tableName) throws SQLException, JSONException, RepositoryException {
-
         return queryJson(sql, paramList, connection, true, tableName);
     }
 
@@ -177,7 +176,7 @@ public final class JdbcUtil {
         final Map<String, FieldDefinition> dMap = new HashMap<String, FieldDefinition>();
 
         for (FieldDefinition fieldDefinition : definitionList) {
-            if (Latkes.RuntimeDatabase.H2 == Latkes.getRuntimeDatabase()) {
+            if (Latkes.RuntimeDatabase.H2 == Latkes.getRuntimeDatabase() || Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 dMap.put(fieldDefinition.getName().toUpperCase(), fieldDefinition);
             } else {
                 dMap.put(fieldDefinition.getName(), fieldDefinition);
@@ -225,6 +224,10 @@ public final class JdbcUtil {
                         jsonObject.put(definition.getName(), v);
                     }
                 }
+            }
+
+            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
+                jsonObject.remove("R__");
             }
 
             jsonArray.put(jsonObject);
