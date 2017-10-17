@@ -21,7 +21,7 @@ Yet another simple web framework based on Java servlet technology.
 
 社区支持：
 
-* [论坛：](https://hacpai.com/tag/Latke)
+* 论坛：[https://hacpai.com/tag/Latke](https://hacpai.com/tag/Latke)
 * Q 群：242561391
 
 ## 案例
