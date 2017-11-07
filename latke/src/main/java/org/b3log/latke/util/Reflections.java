@@ -15,6 +15,12 @@
  */
 package org.b3log.latke.util;
 
+import javassist.*;
+import javassist.bytecode.CodeAttribute;
+import javassist.bytecode.LocalVariableAttribute;
+import javassist.bytecode.MethodInfo;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -22,17 +28,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import javassist.ClassClassPath;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
-import javassist.bytecode.CodeAttribute;
-import javassist.bytecode.LocalVariableAttribute;
-import javassist.bytecode.MethodInfo;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
-
 
 /**
  * Reflection utilities.
@@ -49,14 +44,9 @@ final public class Reflections {
     private static final Logger LOGGER = Logger.getLogger(Reflections.class);
 
     /**
-     * Private constructor.
-     */
-    private Reflections() {}
-
-    /**
      * the maxFindLength to get the 'this' keyword when resolving the vaibleNames.
      */
-    private static final Integer MAX_FIND_LENGTH = 30;
+    private static final Integer MAX_FIND_LENGTH = 99;
 
     /**
      * Class pool.
@@ -68,11 +58,17 @@ final public class Reflections {
     }
 
     /**
+     * Private constructor.
+     */
+    private Reflections() {
+    }
+
+    /**
      * getMethodVariableNames in user defined.
      *
-     * @param clazz the specific clazz
+     * @param clazz            the specific clazz
      * @param targetMethodName the targetMethodName
-     * @param types the types of the method parameters
+     * @param types            the types of the method parameters
      * @return the String[] of names
      */
     public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, final Class<?>[] types) {
@@ -121,7 +117,7 @@ final public class Reflections {
             // to prevent heap error when there being some unknown reasons to resolve the VariableNames
             if (j > MAX_FIND_LENGTH) {
                 LOGGER.log(Level.WARN,
-                    "Maybe resolve to VariableNames error [class=" + clazz.getName() + ", targetMethodName=" + targetMethodName + ']');
+                        "Maybe resolve to VariableNames error [class=" + clazz.getName() + ", targetMethodName=" + targetMethodName + ']');
                 ifkill = true;
                 break;
             }
@@ -156,31 +152,28 @@ final public class Reflections {
     public static boolean isAccessable(final Package subclassPackage, final Package superclassPackage, final int superMemberModifiers) {
         if (subclassPackage.equals(superclassPackage)) {
             switch (superMemberModifiers) {
-            case Modifier.PRIVATE:
-                return false;
+                case Modifier.PRIVATE:
+                    return false;
 
-            case Modifier.PROTECTED:
-                return true;
+                case Modifier.PROTECTED:
+                    return true;
 
-            case Modifier.PUBLIC:
-                return true;
+                case Modifier.PUBLIC:
+                    return true;
 
-            default:
-                return true;
+                default:
+                    return true;
             }
         } else {
             switch (superMemberModifiers) {
-            case Modifier.PRIVATE:
-                return false;
-
-            case Modifier.PROTECTED:
-                return true;
-
-            case Modifier.PUBLIC:
-                return true;
-
-            default:
-                return false;
+                case Modifier.PRIVATE:
+                    return false;
+                case Modifier.PROTECTED:
+                    return true;
+                case Modifier.PUBLIC:
+                    return true;
+                default:
+                    return false;
             }
         }
     }
@@ -197,7 +190,7 @@ final public class Reflections {
 
             for (Field superField : superFields) {
                 if (!Modifier.isPrivate(superField.getModifiers()) && !Modifier.isStatic(superField.getModifiers())
-                    && !containField(ret, superField)) {
+                        && !containField(ret, superField)) {
                     ret.add(superField);
                 }
             }
@@ -276,7 +269,7 @@ final public class Reflections {
 
             for (Method superMethod : superMethods) {
                 if (!Modifier.isPrivate(superMethod.getModifiers()) && !Modifier.isStatic(superMethod.getModifiers())
-                    && !containMethod(ret, superMethod)) {
+                        && !containMethod(ret, superMethod)) {
                     ret.add(superMethod);
                 }
             }
@@ -312,7 +305,7 @@ final public class Reflections {
     }
 
     public static boolean containField(final Set<Field> fields,
-        final Field field) {
+                                       final Field field) {
         for (final Field f : fields) {
             if (f.getName().equals(field.getName()) && f.getType().equals(field.getType())) {
                 return true;
@@ -323,7 +316,7 @@ final public class Reflections {
     }
 
     public static boolean containMethod(final Set<Method> methods,
-        final Method method) {
+                                        final Method method) {
         for (final Method m : methods) {
             if (matchSignature(m, method) && matchModifier(m, method)) {
                 return true;
@@ -344,8 +337,8 @@ final public class Reflections {
     }
 
     public static Method getMatch(final Set<Method> methods,
-        final Method maybeSuperclassMethod,
-        final boolean matchInheritance) {
+                                  final Method maybeSuperclassMethod,
+                                  final boolean matchInheritance) {
         for (final Method m : methods) {
             if (!matchInheritance) {
                 if (matchModifier(m, maybeSuperclassMethod) && matchSignature(m, maybeSuperclassMethod)) {
@@ -398,7 +391,7 @@ final public class Reflections {
     }
 
     public static boolean matchModifier(final Method method1,
-        final Method method2) {
+                                        final Method method2) {
         if (method1.getModifiers() == method2.getModifiers()) {
             return true;
         } else {
@@ -407,9 +400,9 @@ final public class Reflections {
     }
 
     public static boolean matchSignature(final Method method1,
-        final Method method2) {
+                                         final Method method2) {
         if (method1.getName().equals(method2.getName()) && method1.getReturnType().equals(method2.getReturnType())
-            && hasSameParameterTypes(method1, method2)) {
+                && hasSameParameterTypes(method1, method2)) {
             return true;
         } else {
             return false;
@@ -417,7 +410,7 @@ final public class Reflections {
     }
 
     public static boolean hasSameParameterTypes(final Method method1,
-        final Method method2) {
+                                                final Method method2) {
         final Class<?>[] parameterTypes1 = method1.getParameterTypes();
         final Class<?>[] parameterTypes2 = method2.getParameterTypes();
 
@@ -435,7 +428,7 @@ final public class Reflections {
     }
 
     public static Field getHideField(final Field superclassField,
-        final Class<?> subclass) {
+                                     final Class<?> subclass) {
         final Class<?> superclass = superclassField.getDeclaringClass();
         Class<?> currentClass = subclass;
 
@@ -450,7 +443,8 @@ final public class Reflections {
                 if (matchInheritance(m, superclassField)) {
                     return m;
                 }
-            } catch (final Exception ex) {}
+            } catch (final Exception ex) {
+            }
 
             currentClass = currentClass.getSuperclass();
         }
@@ -473,7 +467,8 @@ final public class Reflections {
                 if (matchInheritance(m, superclassMethod)) {
                     return m;
                 }
-            } catch (final Exception ex) {}
+            } catch (final Exception ex) {
+            }
 
             currentClass = currentClass.getSuperclass();
         }
