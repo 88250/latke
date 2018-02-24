@@ -21,12 +21,10 @@ import org.b3log.latke.model.Pagination;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -38,7 +36,7 @@ import java.util.regex.Pattern;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 1.1.4.0, Sep 2, 2017
+ * @version 1.1.4.1, Feb 24, 2018
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -460,11 +458,8 @@ public final class Requests {
      * @param request  the specified request
      * @param response the specified response, sets its content type with "application/json"
      * @return a json object
-     * @throws ServletException servlet exception
-     * @throws IOException      io exception
      */
-    public static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response)
-            throws ServletException, IOException {
+    public static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response) {
         response.setContentType("application/json");
 
         final StringBuilder sb = new StringBuilder();
