@@ -16,6 +16,7 @@
 package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.Keys;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.bean.LatkeBean;
@@ -26,25 +27,25 @@ import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
+import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.DefaultMatcher;
 import org.b3log.latke.util.RegexPathMatcher;
 import org.b3log.latke.util.Strings;
 import org.weborganic.furi.URIResolveResult;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import org.b3log.latke.Latkes;
-import org.b3log.latke.util.AntPathMatcher;
 
 /**
  * to match one method of processor to do the reqest handler.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Dec 23, 2015
+ * @version 1.0.1.0, Feb 24, 2018
  */
 public class RequestDispatchHandler implements Handler {
 
@@ -128,10 +129,10 @@ public class RequestDispatchHandler implements Handler {
     /**
      * get MatchResult.
      *
-     * @param uriPattern uriPattern
+     * @param uriPattern    uriPattern
      * @param processorInfo processorInfo
-     * @param requestURI requestURI
-     * @param method http method
+     * @param requestURI    requestURI
+     * @param method        http method
      * @return MatchResult
      */
     private MatchResult getResult(final String uriPattern, final ProcessorInfo processorInfo, final String requestURI, final String method) {
@@ -158,8 +159,7 @@ public class RequestDispatchHandler implements Handler {
                 if (URIResolveResult.Status.RESOLVED == result.getStatus()) {
                     final MatchResult ret = new MatchResult(processorInfo, requestURI, method, uriPattern);
 
-                    final HashMap<String, Object> map = new HashMap<String, Object>();
-
+                    final HashMap<String, Object> map = new HashMap<>();
                     for (String s : result.names()) {
                         map.put(s, result.get(s));
                     }
@@ -243,7 +243,7 @@ public class RequestDispatchHandler implements Handler {
      * addProcessorInfo.
      *
      * @param requestProcessingMethodAnn requestProcessingMethodAnn
-     * @param mthd the invoke method
+     * @param mthd                       the invoke method
      */
     private void addProcessorInfo(final RequestProcessing requestProcessingMethodAnn, final Method mthd) {
 
