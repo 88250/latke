@@ -28,4 +28,4 @@ Yet another simple web framework based on Java servlet technology.
 ## 社区支持
 
 * 论坛：[https://hacpai.com/tag/Latke](https://hacpai.com/tag/Latke)
-* Q 群：[242561391](https://shang.qq.com/wpa/qunwpa?idkey=006bb9ec83d8032b27f76c92af1ef1bfe2ec782fe980efd142de7b52ff150438)
+* Q 群：[13139268](https://shang.qq.com/wpa/qunwpa?idkey=006bb9ec83d8032b27f76c92af1ef1bfe2ec782fe980efd142de7b52ff150438)
