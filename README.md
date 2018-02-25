@@ -15,17 +15,17 @@ Yet another simple web framework based on Java servlet technology.
 <dependency>
     <groupId>org.b3log</groupId>
     <artifactId>latke</artifactId>
-    <version>2.3.18</version>
+    <version>2.3.19</version>
 </dependency>
 ```
-
-社区支持：
-
-* 论坛：[https://hacpai.com/tag/Latke](https://hacpai.com/tag/Latke)
-* Q 群：242561391
 
 ## 案例
 
 * [Demos](https://github.com/b3log/latke-demo): Hello World demo for newbies
 * [Solo](https://github.com/b3log/solo): A blogging system written in Java, feel free to create your or your team own blog. 
 * [Symphony](https://github.com/b3log/symphony): A real-time community forum written in Java
+
+## 社区支持
+
+* 论坛：[https://hacpai.com/tag/Latke](https://hacpai.com/tag/Latke)
+* Q 群：[242561391](https://shang.qq.com/wpa/qunwpa?idkey=006bb9ec83d8032b27f76c92af1ef1bfe2ec782fe980efd142de7b52ff150438)
