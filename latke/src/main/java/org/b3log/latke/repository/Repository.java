@@ -15,15 +15,16 @@
  */
 package org.b3log.latke.repository;
 
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
-import org.json.JSONObject;
 
 /**
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.5, Sep 4, 2016
+ * @version 1.2.2.6, Mar 3, 2018
  */
 public interface Repository {
 
@@ -39,12 +40,11 @@ public interface Repository {
     /**
      * Updates a certain json object by the specified id and the specified new json object.
      *
-     * @param id the specified id
+     * @param id         the specified id
      * @param jsonObject the specified new json object
      * @throws RepositoryException repository exception
      */
-    void update(final String id, final JSONObject jsonObject)
-            throws RepositoryException;
+    void update(final String id, final JSONObject jsonObject) throws RepositoryException;
 
     /**
      * Removes a json object by the specified id.
@@ -83,13 +83,13 @@ public interface Repository {
 
     /**
      * Gets json objects by the specified query.
-     *
+     * <p>
      * <h4>Pagination</h4>
      * If the "paginationPageCount" has been specified (not with {@code -1} or {@code null}) by caller (as the argument
      * {@link Query#pageCount}), the value will be used in the returned value. In other words, the page count result
      * will not be calculated by this interface, otherwise, the returned value pagination.paginationPageCount and
      * pagination.paginationRecordCount will be calculated with query condition.
-     *
+     * <p>
      * <p>
      * <b>Note</b>: The order of elements of the returned result list is decided by datastore implementation, excepts
      * {@link Query#addSort(java.lang.String, org.b3log.latke.repository.SortDirection)} be invoked.
@@ -108,7 +108,6 @@ public interface Repository {
      *     }, ....]
      * }
      * </pre>
-     *
      * @throws RepositoryException repository exception
      */
     JSONObject get(final Query query) throws RepositoryException;
@@ -117,9 +116,8 @@ public interface Repository {
      * Gets json objects by the specified query statement.
      *
      * @param statement the specified query statement
-     * @param params the specified parameters
+     * @param params    the specified parameters
      * @return a list of result, returns an empty list if not found
-     *
      * @throws RepositoryException repository exception
      */
     List<JSONObject> select(final String statement, final Object... params) throws RepositoryException;
@@ -160,7 +158,7 @@ public interface Repository {
 
     /**
      * Begins a transaction against the repository.
-     *
+     * <p>
      * <p>
      * Callers are responsible for explicitly calling {@linkplain Transaction#commit()} or
      * {@linkplain Transaction#rollback()} when they no longer need the {@code Transaction}. The {@code Transaction}
