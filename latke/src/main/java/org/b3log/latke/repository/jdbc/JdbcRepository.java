@@ -41,7 +41,7 @@ import java.util.*;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.10, Oct 17, 2017
+ * @version 1.3.0.0, Mar 3, 2018
  */
 @SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
@@ -149,11 +149,9 @@ public final class JdbcRepository implements Repository {
             ret = buildAddSql(jsonObject, paramList, sql);
             JdbcUtil.executeSql(sql.toString(), paramList, connection);
             JdbcUtil.fromOracleClobEmpty(jsonObject);
-        } catch (final SQLException se) {
-            LOGGER.log(Level.ERROR, "add:" + se.getMessage(), se);
-            throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "add:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "Add failed", e);
+
             throw new RepositoryException(e);
         }
 
@@ -258,11 +256,9 @@ public final class JdbcRepository implements Repository {
             }
 
             JdbcUtil.executeSql(sql, paramList, connection);
-        } catch (final SQLException se) {
-            LOGGER.log(Level.ERROR, "update:" + se.getMessage(), se);
-            throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "update:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "Update failed", e);
+
             throw new RepositoryException(e);
         }
     }
@@ -283,6 +279,7 @@ public final class JdbcRepository implements Repository {
 
         if (needUpdateJsonObject.length() == 0) {
             LOGGER.log(Level.INFO, "nothing to update [{0}] for repository [{1}]", new Object[]{id, getName()});
+
             return;
         }
 
@@ -373,11 +370,30 @@ public final class JdbcRepository implements Repository {
         try {
             remove(id, sql);
             JdbcUtil.executeSql(sql.toString(), connection);
-        } catch (final SQLException se) {
-            LOGGER.log(Level.ERROR, "remove:" + se.getMessage(), se);
-            throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "remove:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "Remove failed", e);
+
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
+    public void remove(final Query query) throws RepositoryException {
+        final StringBuilder deleteSQL = new StringBuilder("DELETE FROM ").append(getName());
+
+        final List<Object> paramList = new ArrayList<>();
+        final StringBuilder filterSql = new StringBuilder();
+        getFilterSql(filterSql, paramList, query.getFilter());
+        if (StringUtils.isNotBlank(filterSql.toString())) {
+            deleteSQL.append(" WHERE ").append(filterSql);
+        }
+
+        final Connection connection = getConnection();
+        try {
+            JdbcUtil.executeSql(deleteSQL.toString(), paramList, connection);
+        } catch (final SQLException e) {
+            LOGGER.log(Level.ERROR, "Remove failed", e);
+
             throw new RepositoryException(e);
         }
     }
@@ -409,7 +425,8 @@ public final class JdbcRepository implements Repository {
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "get:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "Get failed", e);
+
             throw new RepositoryException(e);
         }
 
@@ -485,7 +502,8 @@ public final class JdbcRepository implements Repository {
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "query: " + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "Query failed", e);
+
             throw new RepositoryException(e);
         }
 
@@ -508,7 +526,8 @@ public final class JdbcRepository implements Repository {
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "query: " + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "Select failed", e);
+
             throw new RepositoryException(e);
         }
     }
@@ -694,11 +713,9 @@ public final class JdbcRepository implements Repository {
             for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObjects.add(jsonArray.getJSONObject(i));
             }
-        } catch (final SQLException se) {
-            LOGGER.log(Level.ERROR, "getRandomly:" + se.getMessage(), se);
-            throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "getRandomly:" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "Get randomly failed", e);
+
             throw new RepositoryException(e);
         }
 
@@ -739,7 +756,7 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * count.
+     * Count.
      *
      * @param sql       sql
      * @param paramList paramList
@@ -755,11 +772,9 @@ public final class JdbcRepository implements Repository {
         try {
             jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName());
             count = jsonObject.getLong(jsonObject.keys().next().toString());
-        } catch (final SQLException se) {
-            LOGGER.log(Level.ERROR, "count:" + se.getMessage(), se);
-            throw new JDBCRepositoryException(se);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "count :" + e.getMessage(), e);
+            LOGGER.log(Level.ERROR, "Count failed", e);
+
             throw new RepositoryException(e);
         }
 
