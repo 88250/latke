@@ -24,7 +24,7 @@ import java.util.Map;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.6, Mar 3, 2018
+ * @version 1.3.0.0, Mar 3, 2018
  */
 public interface Repository {
 
@@ -53,6 +53,14 @@ public interface Repository {
      * @throws RepositoryException repository exception
      */
     void remove(final String id) throws RepositoryException;
+
+    /**
+     * Removes json objects by the specified query.
+     *
+     * @param query the specified query
+     * @throws RepositoryException repository exception
+     */
+    void remove(final Query query) throws RepositoryException;
 
     /**
      * Gets a json object by the specified id.
