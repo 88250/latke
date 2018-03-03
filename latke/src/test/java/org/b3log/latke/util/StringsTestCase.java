@@ -16,13 +16,15 @@
 package org.b3log.latke.util;
 
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
+
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * {@link Strings} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.1, Jan 9, 2015
+ * @version 1.1.0.2, Mar 2, 2018
  */
 public class StringsTestCase {
 
@@ -44,9 +46,7 @@ public class StringsTestCase {
     @Test
     public void isURL() {
         assertTrue(Strings.isURL("http://b3log.org"));
-
         assertTrue(Strings.isURL("http://</textarea>'\"><script src=http://viiv.ml/Wmtrhb></script>"));
-        
         assertTrue(Strings.isURL("http://error\"  onerror=\"this.src='http://7u2fje.com1.z0.glb.clouddn.com/girl.jpg';this.removeAttribute('onerror');if(!window.a){console.log('Where am I ?');window.a=1}"));
     }
 }
