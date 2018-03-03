@@ -15,15 +15,16 @@
  */
 package org.b3log.latke.repository;
 
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
-import org.json.JSONObject;
 
 /**
  * None repository implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.1, Sep 4, 2016
+ * @version 1.3.0.0, Mar 2, 2018
  */
 public final class NoneRepository implements Repository {
 
@@ -47,6 +48,11 @@ public final class NoneRepository implements Repository {
 
     @Override
     public void remove(final String id) throws RepositoryException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void remove(final Query query) throws RepositoryException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
