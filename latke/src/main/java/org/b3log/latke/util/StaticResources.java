@@ -15,13 +15,7 @@
  */
 package org.b3log.latke.util;
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
@@ -30,11 +24,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.net.URI;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+
 /**
  * Static resource utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.5, Jan 8, 2016
+ * @version 2.0.1.0, Mar 3, 2018
  */
 public final class StaticResources {
 
@@ -45,12 +48,11 @@ public final class StaticResources {
 
     /**
      * Static resource path patterns.
-     *
      * <p>
      * Initializes from file static-resources.xml.
      * </p>
      */
-    private static final Set<String> STATIC_RESOURCE_PATHS = new TreeSet<String>();
+    private static final Set<String> STATIC_RESOURCE_PATHS = new TreeSet<>();
 
     /**
      * Determines whether the static resource path patterns has been initialized.
@@ -111,13 +113,14 @@ public final class StaticResources {
 
             root.normalize();
 
-            final NodeList includes = root.getElementsByTagName("include");
-
             final StringBuilder logBuilder = new StringBuilder("Reading static files: [").append(Strings.LINE_SEPARATOR);
-
+            final NodeList includes = root.getElementsByTagName("include");
             for (int i = 0; i < includes.getLength(); i++) {
                 final Element include = (Element) includes.item(i);
-                final String path = include.getAttribute("path");
+                String path = include.getAttribute("path");
+                final URI uri = new URI("http", "b3log.org", path, null);
+                final String s = uri.toASCIIString();
+                path = StringUtils.substringAfter(s, "b3log.org");
 
                 STATIC_RESOURCE_PATHS.add(path);
 
@@ -140,7 +143,6 @@ public final class StaticResources {
 
         final StringBuilder logBuilder = new StringBuilder("Static files: [").append(Strings.LINE_SEPARATOR);
         final Iterator<String> iterator = STATIC_RESOURCE_PATHS.iterator();
-
         while (iterator.hasNext()) {
             final String pattern = iterator.next();
 
