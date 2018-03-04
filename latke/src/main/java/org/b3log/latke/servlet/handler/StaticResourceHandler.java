@@ -15,10 +15,6 @@
  */
 package org.b3log.latke.servlet.handler;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -26,12 +22,16 @@ import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.renderer.StaticFileRenderer;
 import org.b3log.latke.util.StaticResources;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Static resource handler.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Jan 8, 2016
+ * @version 2.0.0.2, Mar 3, 2018
  */
 public class StaticResourceHandler implements Handler {
 
@@ -64,8 +64,8 @@ public class StaticResourceHandler implements Handler {
      * the holder of All option Servlet Name.
      */
     private static final String[] OPTION_SERVLET_NAME = new String[]{
-        COMMON_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
-        WEBSPHERE_DEFAULT_SERVLET_NAME};
+            COMMON_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
+            WEBSPHERE_DEFAULT_SERVLET_NAME};
 
     /**
      * default servlet which container provide to resolve static resource.
@@ -78,23 +78,24 @@ public class StaticResourceHandler implements Handler {
     private String defaultServletName;
 
     /**
-     * the constructor.
+     * Public construct with specified servlet context.
      *
-     * @param servletContext {@link ServletContext}
+     * @param servletContext the specified servlet context
      */
     public StaticResourceHandler(final ServletContext servletContext) {
-
-        for (String servletName : OPTION_SERVLET_NAME) {
+        for (final String servletName : OPTION_SERVLET_NAME) {
             requestDispatcher = servletContext.getNamedDispatcher(servletName);
-            if (requestDispatcher != null) {
+            if (null != requestDispatcher) {
                 defaultServletName = servletName;
+
                 break;
             }
         }
-        if (requestDispatcher == null) {
+
+        if (null == requestDispatcher) {
             throw new IllegalStateException(
                     "Unable to locate the default servlet for serving static content. "
-                    + "Please report this bug on https://github.com/b3log/latke/issues/new");
+                            + "Please report this issue on https://github.com/b3log/latke/issues/new");
         }
 
         LOGGER.log(Level.DEBUG, "The default servlet for serving static resource is [{0}]", defaultServletName);
@@ -102,13 +103,12 @@ public class StaticResourceHandler implements Handler {
 
     @Override
     public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
-
         final HttpServletRequest request = context.getRequest();
 
         if (StaticResources.isStatic(request)) {
             if (null == requestDispatcher) {
-                throw new IllegalStateException(
-                        "A RequestDispatcher could not be located for the default servlet [" + this.defaultServletName + "]");
+                throw new IllegalStateException("A RequestDispatcher could not be located for the default servlet ["
+                        + this.defaultServletName + "]");
             }
 
             context.setRenderer(new StaticFileRenderer(requestDispatcher));
