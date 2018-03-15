@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DefaultJdbcDatabaseSolution,for extend .
+ * MysqlJdbcDatabaseSolution, for extend.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, May 8, 2012
+ * @version 1.0.0.3, May 15, 2018
  */
 public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
@@ -132,7 +132,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     protected void createTableEnd(final StringBuilder createTableSql) {
-        createTableSql.append(") ENGINE= InnoDB DEFAULT CHARSET= utf8;");
+        createTableSql.append(") ENGINE=InnoDB;");
     }
 
     @Override
