@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.*;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, May 15, 2018
+ * @version 2.0.0.0, May 15, 2018
  */
 public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
@@ -73,33 +74,37 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    protected void createTableHead(final StringBuilder createTableSql, final String tableName) {
-        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(");
+    protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
     }
 
     @Override
-    protected void createTableBody(final StringBuilder createTableSql, final List<FieldDefinition> fieldDefinitions) {
+    protected void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
         final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
-
+        final List<FieldDefinition> fieldDefinitions = repositoryDefinition.getKeys();
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
             final String type = fieldDefinition.getType();
             if (type == null) {
                 throw new RuntimeException("the type of fieldDefinitions should not be null");
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
-            if (mapping != null) {
-                createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
-
+            if (null != mapping) {
+                createTableSql.append(mapping.toDataBaseSting(fieldDefinition));
+                final String description = fieldDefinition.getDescription();
+                if (StringUtils.isNotBlank(description)) {
+                    createTableSql.append(" COMMENT '" + description + "'");
+                }
+                createTableSql.append(", ");
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
             } else {
-                throw new RuntimeException("the type[" + fieldDefinition.getType() + "] is not register for mapping ");
+                throw new RuntimeException("The type [" + fieldDefinition.getType() + "] is not register for mapping");
             }
         }
 
         if (keyDefinitionList.size() < 0) {
-            throw new RuntimeException("no key talbe is not allow");
+            throw new RuntimeException("Table must have a primary key");
         } else {
             createTableSql.append(createKeyDefinition(keyDefinitionList));
         }
@@ -127,12 +132,18 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
         }
 
         sql.append(")");
+
         return sql.toString();
     }
 
     @Override
-    protected void createTableEnd(final StringBuilder createTableSql) {
-        createTableSql.append(") ENGINE=InnoDB;");
+    protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+        createTableSql.append(") ENGINE=InnoDB");
+
+        final String description = repositoryDefinition.getDescription();
+        if (StringUtils.isNotBlank(description)) {
+            createTableSql.append(" COMMENT='" + description + "'");
+        }
     }
 
     @Override

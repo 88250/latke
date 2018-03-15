@@ -15,27 +15,32 @@
  */
 package org.b3log.latke.repository.jdbc.util;
 
-
 /**
  * FieldDefinition of each Filed in *.json.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Oct 16, 2017
+ * @version 2.0.0.0, Mar 15, 2018
  */
 public class FieldDefinition {
+
     /**
-     * field name.
+     * Field name.
      */
     private String name;
 
     /**
-     * field type.
+     * Field description.
+     */
+    private String description;
+
+    /**
+     * Field type.
      */
     private String type;
 
     /**
-     * the length of the type.
+     * The length of the type.
      */
     private Integer length;
 
@@ -70,6 +75,24 @@ public class FieldDefinition {
      */
     public void setName(final String name) {
         this.name = name;
+    }
+
+    /**
+     * Gets the description.
+     *
+     * @return description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description with the specified description.
+     *
+     * @param description the specified description
+     */
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
     /**

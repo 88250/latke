@@ -22,6 +22,7 @@ import org.b3log.latke.repository.jdbc.mapping.IntMapping;
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
+import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 import org.b3log.latke.repository.oracle.mapping.*;
 import org.b3log.latke.util.Strings;
 
@@ -32,7 +33,7 @@ import java.util.List;
  * Oracle database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 17, 2017
+ * @version 2.0.0.0, Mar 15, 2018
  * @since 2.3.18
  */
 public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
@@ -102,14 +103,14 @@ WHERE rownum <= 1000
     }
 
     @Override
-    protected void createTableHead(final StringBuilder createTableSql, final String tableName) {
-        createTableSql.append("CREATE TABLE ").append(tableName).append("(");
+    protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+        createTableSql.append("CREATE TABLE ").append(repositoryDefinition.getName()).append("(");
     }
 
     @Override
-    protected void createTableBody(final StringBuilder createTableSql, final List<FieldDefinition> fieldDefinitions) {
+    protected void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
         final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
-
+        final List<FieldDefinition> fieldDefinitions = repositoryDefinition.getKeys();
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
             final String type = fieldDefinition.getType();
             if (type == null) {
@@ -163,7 +164,7 @@ WHERE rownum <= 1000
     }
 
     @Override
-    protected void createTableEnd(final StringBuilder createTableSql) {
+    protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
         createTableSql.append(")");
     }
 

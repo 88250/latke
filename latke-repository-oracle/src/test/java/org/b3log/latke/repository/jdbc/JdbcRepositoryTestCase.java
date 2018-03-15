@@ -19,17 +19,16 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.*;
-import org.b3log.latke.repository.jdbc.util.Connections;
-import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
-import org.b3log.latke.repository.jdbc.util.JdbcUtil;
+import org.b3log.latke.repository.jdbc.util.*;
 import org.json.JSONObject;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.AssertJUnit.*;
@@ -38,7 +37,7 @@ import static org.testng.AssertJUnit.*;
  * JdbcRepositoryTestCase, now using Oracle 11g for test.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 16, 2017
+ * @version 2.0.0.0, Mar 15, 2018
  * @since 2.3.18
  */
 public class JdbcRepositoryTestCase {
@@ -114,7 +113,10 @@ public class JdbcRepositoryTestCase {
 
         }
 
-        final Map<String, List<FieldDefinition>> map = new HashMap<>();
+        final List<RepositoryDefinition> repositoryDefinitions = new ArrayList<>();
+        final RepositoryDefinition repositoryDefinition = new RepositoryDefinition();
+        repositoryDefinitions.add(repositoryDefinition);
+        JdbcRepositories.setRepositoryDefinitions(repositoryDefinitions);
         final List<FieldDefinition> dList = new ArrayList<>();
 
         FieldDefinition definition = new FieldDefinition();
@@ -143,8 +145,8 @@ public class JdbcRepositoryTestCase {
         definition.setType("boolean");
         dList.add(definition);
 
-        map.put("basetable", dList);
-        JdbcRepositories.setRepositoriesMap(map);
+        repositoryDefinition.setName("basetable");
+        repositoryDefinition.setKeys(dList);
     }
 
     /**

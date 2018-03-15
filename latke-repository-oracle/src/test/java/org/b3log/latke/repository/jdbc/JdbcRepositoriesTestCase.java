@@ -16,12 +16,11 @@
 package org.b3log.latke.repository.jdbc;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
+import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.testng.AssertJUnit.assertNotNull;
 
@@ -29,7 +28,7 @@ import static org.testng.AssertJUnit.assertNotNull;
  * JdbcRepositoriesTestCase.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 16, 2017
+ * @version 2.0.0.0, Mar 15, 2018
  */
 public class JdbcRepositoriesTestCase {
 
@@ -39,9 +38,9 @@ public class JdbcRepositoriesTestCase {
     @Test
     public void jsonToModel() {
         Latkes.initRuntimeEnv();
-        final Map<String, List<FieldDefinition>> map = JdbcRepositories.getRepositoriesMap();
+        final List<RepositoryDefinition> repositoryDefinitions = JdbcRepositories.getRepositoryDefinitions();
 
-        assertNotNull(map);
+        assertNotNull(repositoryDefinitions);
     }
 
     /**

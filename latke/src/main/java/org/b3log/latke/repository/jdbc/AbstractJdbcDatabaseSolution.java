@@ -17,13 +17,12 @@ package org.b3log.latke.repository.jdbc;
 
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.Connections;
-import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcUtil;
+import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +30,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Oct 16, 2017
+ * @version 2.0.0.0, Mar 15, 2018
  */
 public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
 
@@ -51,14 +50,14 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
     }
 
     @Override
-    public boolean createTable(final String tableName, final List<FieldDefinition> fieldDefinitions) throws SQLException {
+    public boolean createTable(final RepositoryDefinition repositoryDefinition) throws SQLException {
         final Connection connection = Connections.getConnection();
 
         try {
             final StringBuilder createTableSql = new StringBuilder();
-            createTableHead(createTableSql, tableName);
-            createTableBody(createTableSql, fieldDefinitions);
-            createTableEnd(createTableSql);
+            createTableHead(createTableSql, repositoryDefinition);
+            createTableBody(createTableSql, repositoryDefinition);
+            createTableEnd(createTableSql, repositoryDefinition);
 
             return JdbcUtil.executeSql(createTableSql.toString(), connection);
         } catch (final SQLException e) {
@@ -79,25 +78,26 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
     /**
      * abstract createTableHead for each DB to impl.
      *
-     * @param createTableSql createSql
-     * @param tableName      table name
+     * @param createTableSql       createSql
+     * @param repositoryDefinition the specified repository definition
      */
-    protected abstract void createTableHead(final StringBuilder createTableSql, final String tableName);
+    protected abstract void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition);
 
     /**
      * abstract createTableBody for each DB to impl.
      *
-     * @param createTableSql   createSql
-     * @param fieldDefinitions {@link FieldDefinition}
+     * @param createTableSql       createSql
+     * @param repositoryDefinition the specified repository definition
      */
-    protected abstract void createTableBody(final StringBuilder createTableSql, final List<FieldDefinition> fieldDefinitions);
+    protected abstract void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition);
 
     /**
      * abstract createTableEnd for each DB to impl.
      *
-     * @param createTableSql createSql
+     * @param createTableSql       createSql
+     * @param repositoryDefinition the specified repository definition
      */
-    protected abstract void createTableEnd(StringBuilder createTableSql);
+    protected abstract void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition);
 
     @Override
     public boolean clearTable(final String tableName, final boolean ifdrop) throws SQLException {

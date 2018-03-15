@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository.sqlserver;
 
-
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
@@ -24,6 +23,7 @@ import org.b3log.latke.repository.jdbc.mapping.LongMapping;
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
+import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 import org.b3log.latke.repository.sqlserver.mapping.DateMapping;
 import org.b3log.latke.repository.sqlserver.mapping.DatetimeMapping;
 import org.b3log.latke.repository.sqlserver.mapping.DecimalMapping;
@@ -33,12 +33,11 @@ import org.b3log.latke.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Microsoft SQL Server database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.1, Mar 14, 2014
+ * @version 2.0.0.0, Mar 15, 2018
  * @since 1.0.8
  */
 public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
@@ -111,30 +110,27 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
     }
 
     @Override
-    protected void createTableHead(final StringBuilder createTableSql, final String tableName) {
-
+    protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
         /*
          IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[tablename]')
          AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
          CREATE TABLE [dbo].[tablename] ( columns specification );
          */
-        createTableSql.append("IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").append(tableName).append(
-                "]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) ");
+        createTableSql.append("IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").append(
+                repositoryDefinition.getName()).append("]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) ");
     }
 
     @Override
-    protected void createTableBody(final StringBuilder createTableSql, final List<FieldDefinition> fieldDefinitions) {
-        final List<FieldDefinition> keyDefinitionList = new ArrayList<FieldDefinition>();
-
+    protected void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+        final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
+        final List<FieldDefinition> fieldDefinitions = repositoryDefinition.getKeys();
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
-
             final String type = fieldDefinition.getType();
-
             if (type == null) {
                 throw new RuntimeException("the type of fieldDefinitions should not be null");
             }
-            final Mapping mapping = getJdbcTypeMapping().get(type);
 
+            final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
                 createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
 
@@ -152,7 +148,6 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
         } else {
             createTableSql.append(createKeyDefinition(keyDefinitionList));
         }
-
     }
 
     /**
@@ -183,7 +178,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
     }
 
     @Override
-    protected void createTableEnd(final StringBuilder createTableSql) {
+    protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
         createTableSql.append(");");
     }
 

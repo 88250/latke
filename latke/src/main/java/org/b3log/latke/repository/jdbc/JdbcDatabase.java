@@ -15,66 +15,59 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 
 import java.sql.SQLException;
-import java.util.List;
-
-import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-
 
 /**
  * interface JdbcDatabase.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Dec 20, 2011
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 2.0.0.0, Mar 15, 2018
  */
 public interface JdbcDatabase {
 
     /**
-     * createTable.
-     * @param tableName tableName
-     * @param fieldDefinitions fieldDefinitions
-     * 
-     * @return ifseccuss
-     * @throws SQLException SQLException 
+     * Creates table with the specified repository definition.
+     *
+     * @param repositoryDefinition the specified repository definition
+     * @return {@code true} if successfully, returns {@code false} otherwise
+     * @throws SQLException SQLException
      */
-    boolean createTable(String tableName, List<FieldDefinition> fieldDefinitions)
-        throws SQLException;
+    boolean createTable(final RepositoryDefinition repositoryDefinition) throws SQLException;
 
     /**
-     * 
      * @param tableName tableName
-     * @param ifdrop ifdrop 
-     * <P>
-     *  ifdrop true: using drop
-     *         not: using truncate to clear data.
-     * </p>
-     * @throws SQLException   SQLException
+     * @param ifdrop    ifdrop
+     *                  <P>
+     *                  ifdrop true: using drop
+     *                  not: using truncate to clear data.
+     *                  </p>
      * @return if success to clearTable
+     * @throws SQLException SQLException
      */
     boolean clearTable(final String tableName, final boolean ifdrop) throws SQLException;
 
     /**
      * queryPage sql.
-     * 
-     * @param start start
-     * @param end end
-     * @param selectSql selectSql
-     * @param filterSql filterSql
+     *
+     * @param start      start
+     * @param end        end
+     * @param selectSql  selectSql
+     * @param filterSql  filterSql
      * @param orderBySql orderBySql
-     * @param tableName tableName
-     * @return sql 
+     * @param tableName  tableName
+     * @return sql
      */
-    String queryPage(int start, int end, String selectSql, String filterSql,
-        String orderBySql, String tableName);
+    String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql, final String tableName);
 
     /**
      * getRandomlySql.
-     * 
+     *
      * @param tableName tableName
      * @param fetchSize fetchSize
      * @return sql sql
      */
-    String getRandomlySql(final String tableName, int fetchSize);
-
+    String getRandomlySql(final String tableName, final int fetchSize);
 }

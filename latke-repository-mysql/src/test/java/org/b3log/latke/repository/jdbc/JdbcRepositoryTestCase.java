@@ -15,44 +15,30 @@
  */
 package org.b3log.latke.repository.jdbc;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertNull;
-import static org.testng.AssertJUnit.assertTrue;
-
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.model.Pagination;
-import org.b3log.latke.repository.Filter;
-import org.b3log.latke.repository.FilterOperator;
-import org.b3log.latke.repository.PropertyFilter;
-import org.b3log.latke.repository.CompositeFilter;
-import org.b3log.latke.repository.CompositeFilterOperator;
-import org.b3log.latke.repository.Query;
-import org.b3log.latke.repository.SortDirection;
-import org.b3log.latke.repository.Transaction;
-import org.b3log.latke.repository.jdbc.util.Connections;
-import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
-import org.b3log.latke.repository.jdbc.util.JdbcUtil;
+import org.b3log.latke.repository.*;
+import org.b3log.latke.repository.jdbc.util.*;
 import org.json.JSONObject;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.AssertJUnit.*;
 
 /**
  * JdbcRepositoryTestCase,now using mysql5.5.9 for test.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Feb 7, 2014
+ * @version 2.0.0.0, Mar 15, 2018
  */
 public class JdbcRepositoryTestCase {
 
@@ -122,8 +108,11 @@ public class JdbcRepositoryTestCase {
 
         }
 
-        final Map<String, List<FieldDefinition>> map = new HashMap<String, List<FieldDefinition>>();
-        final List<FieldDefinition> dList = new ArrayList<FieldDefinition>();
+        final List<RepositoryDefinition> repositoryDefinitions = new ArrayList<>();
+        final RepositoryDefinition repositoryDefinition = new RepositoryDefinition();
+        repositoryDefinitions.add(repositoryDefinition);
+        JdbcRepositories.setRepositoryDefinitions(repositoryDefinitions);
+        final List<FieldDefinition> dList = new ArrayList<>();
 
         FieldDefinition definition = new FieldDefinition();
         definition.setName("oId");
@@ -151,8 +140,8 @@ public class JdbcRepositoryTestCase {
         definition.setType("boolean");
         dList.add(definition);
 
-        map.put("basetable", dList);
-        JdbcRepositories.setRepositoriesMap(map);
+        repositoryDefinition.setName("basetable");
+        repositoryDefinition.setKeys(dList);
     }
 
     /**
@@ -276,9 +265,9 @@ public class JdbcRepositoryTestCase {
                 new PropertyFilter("col1", FilterOperator.NOT_EQUAL, new Integer("1")),
                 new PropertyFilter("col1", FilterOperator.IN, inList),
                 new CompositeFilter(
-                CompositeFilterOperator.OR,
-                Arrays.<Filter>asList(new PropertyFilter("col1", FilterOperator.EQUAL, new Integer("1")),
-                                      new PropertyFilter("col1", FilterOperator.LESS_THAN_OR_EQUAL, new Integer("1"))))));
+                        CompositeFilterOperator.OR,
+                        Arrays.<Filter>asList(new PropertyFilter("col1", FilterOperator.EQUAL, new Integer("1")),
+                                new PropertyFilter("col1", FilterOperator.LESS_THAN_OR_EQUAL, new Integer("1"))))));
 
         jdbcRepository.get(query);
     }
@@ -303,7 +292,7 @@ public class JdbcRepositoryTestCase {
         query.setFilter(new PropertyFilter("col2", FilterOperator.LIKE, "%中文%"));
 
         final JSONObject ret = jdbcRepository.get(query);
-        
+
         assertTrue(ret.optJSONObject(Pagination.PAGINATION).optInt(Pagination.PAGINATION_RECORD_COUNT) > 0);
     }
 

@@ -15,26 +15,22 @@
  */
 package org.b3log.latke.repository.h2;
 
-
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.repository.h2.mapping.BooleanMapping;
 import org.b3log.latke.repository.h2.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
-import org.b3log.latke.repository.jdbc.mapping.DateMapping;
-import org.b3log.latke.repository.jdbc.mapping.IntMapping;
-import org.b3log.latke.repository.jdbc.mapping.LongMapping;
-import org.b3log.latke.repository.jdbc.mapping.Mapping;
-import org.b3log.latke.repository.jdbc.mapping.NumberMapping;
+import org.b3log.latke.repository.jdbc.mapping.*;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
+import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * H2 database solution.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Dec 27, 2012
+ * @version 2.0.0.0, Mar 15, 2018
  */
 public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
@@ -52,7 +48,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     public String queryPage(final int start, final int end, final String selectSql,
-        final String filterSql, final String orderBySql, final String tableName) {
+                            final String filterSql, final String orderBySql, final String tableName) {
         final StringBuilder sql = new StringBuilder();
 
         sql.append(selectSql).append(" from ").append(tableName);
@@ -79,23 +75,19 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    protected void createTableHead(final StringBuilder createTableSql, final String tableName) {
-        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(");
+    protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
     }
 
     @Override
-    protected void createTableBody(final StringBuilder createTableSql, final List<FieldDefinition> fieldDefinitions) {
-        final List<FieldDefinition> keyDefinitionList = new ArrayList<FieldDefinition>();
-
-        for (FieldDefinition fieldDefinition : fieldDefinitions) {
-
+    protected void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+        final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
+        for (FieldDefinition fieldDefinition : repositoryDefinition.getKeys()) {
             final String type = fieldDefinition.getType();
-
             if (type == null) {
                 throw new RuntimeException("the type of fieldDefinitions should not be null");
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
-
             if (mapping != null) {
                 createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
 
@@ -105,7 +97,6 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             } else {
                 throw new RuntimeException("the type[" + fieldDefinition.getType() + "] is not register for mapping ");
             }
-
         }
 
         if (keyDefinitionList.size() < 0) {
@@ -117,7 +108,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     /**
      * the keyDefinitionList tableSql.
-     * 
+     *
      * @param keyDefinitionList keyDefinitionList
      * @return createKeyDefinitionsql
      */
@@ -143,7 +134,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    protected void createTableEnd(final StringBuilder createTableSql) {
+    protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
         createTableSql.append(");");
     }
 

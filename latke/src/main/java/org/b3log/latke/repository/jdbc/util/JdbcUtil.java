@@ -39,7 +39,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.5, Oct 17, 2017
+ * @version 1.1.2.6, Mar 15, 2018
  */
 public final class JdbcUtil {
 
@@ -169,15 +169,13 @@ public final class JdbcUtil {
             throws SQLException, JSONException, RepositoryException {
         final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
-        final List<FieldDefinition> definitionList = JdbcRepositories.getRepositoriesMap().get(tableName);
-
-        if (definitionList == null) {
+        final List<FieldDefinition> definitionList = JdbcRepositories.getKeys(tableName);
+        if (null == definitionList) {
             LOGGER.log(Level.ERROR, "resultSetToJsonObject: null definitionList finded for table  {0}", tableName);
             throw new RepositoryException("resultSetToJsonObject: null definitionList finded for table  " + tableName);
         }
 
-        final Map<String, FieldDefinition> dMap = new HashMap<String, FieldDefinition>();
-
+        final Map<String, FieldDefinition> dMap = new HashMap<>();
         for (FieldDefinition fieldDefinition : definitionList) {
             if (Latkes.RuntimeDatabase.H2 == Latkes.getRuntimeDatabase() || Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 dMap.put(fieldDefinition.getName().toUpperCase(), fieldDefinition);
