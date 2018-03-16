@@ -61,10 +61,10 @@ import org.json.JSONObject;
  * 
  * <p>
  * See the design document <a href="https://docs.google.com/document/d/1IQkkUuaCPNHc_Wjw_5mNwPKUX8TpkAGCGqUaAErOTLo/edit">
- * 《B3log 数据备份与恢复》</a> for more details.
+ * 《Latke 数据备份与恢复》</a> for more details.
  * </p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.1, Jan 19, 2013
  */
 public final class LatkeClient {
@@ -642,7 +642,7 @@ public final class LatkeClient {
     /**
      * Backup file comparator by file name: ${pageNum}_${pageSize}_xxxx.json.
      * 
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.0, Jan 19, 2013
      */
     private static final class BackupFileComparator implements Comparator<File> {

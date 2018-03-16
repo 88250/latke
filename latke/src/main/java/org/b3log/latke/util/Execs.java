@@ -34,7 +34,7 @@ import org.b3log.latke.logging.Logger;
  * read error stream from th executing sub process.
  * </p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.4, Jul 27, 2016
  * @since 0.1.0
  */
@@ -120,7 +120,7 @@ public final class Execs {
     /**
      * Input stream handle thread.
      *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.0, May 8, 2013
      * @since 0.1.0
      */

@@ -54,7 +54,7 @@ public final class MailServiceTestCase {
         message.setSubject("Latke Mail Service[local] Test");
         message.setHtmlBody("<htmL><body>测试</body><html>");
         message.addRecipient("jiangzezhou1989@yahoo.com.cn");
-        message.addRecipient("DL88250@gmail.com");
+        message.addRecipient("d@b3log.org");
 
         mailService.send(message);
 

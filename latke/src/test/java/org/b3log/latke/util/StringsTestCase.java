@@ -33,7 +33,7 @@ public class StringsTestCase {
      */
     @Test
     public void isEmail() {
-        assertTrue(Strings.isEmail("DL88250@gmail.com"));
+        assertTrue(Strings.isEmail("d@b3log.org"));
         assertTrue(Strings.isEmail("test@a.com"));
         assertTrue(Strings.isEmail("xxx@e-xxx.com"));
 
