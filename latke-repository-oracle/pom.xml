@@ -30,7 +30,7 @@
                 <role>Initial Committer</role>
             </roles>
             <organization>B3log</organization>
-            <organizationUrl>http://b3log.org</organizationUrl>
+            <organizationUrl>https://b3log.org</organizationUrl>
             <timezone>+8</timezone>
         </developer>
     </developers>
