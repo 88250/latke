@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 1.1.4.1, Feb 24, 2018
+ * @version 1.1.4.2, Apr 1, 2018
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -84,7 +84,7 @@ public final class Requests {
      * HTTP header "User-Agent" pattern for search engine bot requests.
      */
     private static final Pattern SEARCH_ENGINE_BOT_USER_AGENT_PATTERN = Pattern.compile(
-            "spider|bot|fetcher|crawler" + "|google|yahoo|sogou|youdao|Xianguo.com|RssBandit|JianKongBao Monitor|BAE Online Platform" + "|B3log",
+            "spider|bot|fetcher|crawler|google|yahoo|sogou|youdao|xianguo|rss|monitor|bae|b3log|symphony|solo|rhythm|pipe",
             Pattern.CASE_INSENSITIVE);
 
     /**
