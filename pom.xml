@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.18, Mar 15, 2018
+    Version: 1.2.2.19, May 14, 2018
     Author: Liang Ding
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke-parent</artifactId>
@@ -44,7 +45,7 @@
     <properties>
         <servlet.version>3.1.0</servlet.version>
         <el-api.version>1.0</el-api.version>
-        <freemarker.version>2.3.23</freemarker.version>
+        <freemarker.version>2.3.28</freemarker.version>
         <javax.mail.version>1.4.7</javax.mail.version>
         <commons-io.version>2.6</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
