@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.1.0, Sep 8, 2017
+ * @version 2.0.2.0, May 14, 2018
  */
 public final class CronService {
 
@@ -74,8 +74,6 @@ public final class CronService {
         new Thread(() -> {
             LOGGER.info("Constructing cron service....");
 
-            shutdown();
-
             try {
                 loadCronXML();
 
@@ -83,7 +81,7 @@ public final class CronService {
                     final Timer timer = new Timer();
                     TIMERS.add(timer);
 
-                    cron.setURL(Latkes.getServer() + Latkes.getContextPath() + cron.getURL());
+                    cron.setURL(Latkes.getServePath() + cron.getURL());
                     timer.scheduleAtFixedRate(cron, Cron.TEN * Cron.THOUSAND, cron.getPeriod());
 
                     LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getURL());
