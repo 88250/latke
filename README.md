@@ -58,7 +58,6 @@ Solo 的主要作者是 [Daniel](https://github.com/88250) 与 [MainLove](https:
 
 * 到 Latke 官方[讨论区](https://hacpai.com/tag/Latke)发帖（推荐做法）
 * 来一发 [issue](https://github.com/b3log/latke/issues/new)
-* 加入 Latke 开发支持 Q 群 242561391
 
 ## 鸣谢
 
