@@ -17,6 +17,7 @@ package org.b3log.latke.urlfetch;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 
 import java.net.URL;
@@ -28,7 +29,7 @@ import java.util.List;
  * Encapsulation of a single HTTP request that is made via the {@link URLFetchService}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.1, May 12, 2017
+ * @version 1.2.1.2, Jun 5, 2018
  */
 public final class HTTPRequest {
 
@@ -60,7 +61,7 @@ public final class HTTPRequest {
     /**
      * HTTP headers.
      */
-    private List<HTTPHeader> headers = new ArrayList<HTTPHeader>();
+    private List<HTTPHeader> headers = new ArrayList<>();
 
     /**
      * Connect timeout in milliseconds.
@@ -71,6 +72,13 @@ public final class HTTPRequest {
      * Read timeout in mmilliseconds.
      */
     private int readTimeout = DEFAULT_READ_TIMEOUT;
+
+    /**
+     * Public constructor.
+     */
+    public HTTPRequest() {
+        headers.add(new HTTPHeader("User-Agent", "Mozilla/5.0 (compatible; Latke/" + Latkes.VERSION + "; +https://github.com/b3log/latke)"));
+    }
 
     /**
      * Adds the specified HTTP header.
