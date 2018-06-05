@@ -39,7 +39,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.6, Mar 15, 2018
+ * @version 1.1.2.7, Jun 5, 2018
  */
 public final class JdbcUtil {
 
@@ -53,11 +53,14 @@ public final class JdbcUtil {
      *
      * @param sql        the specified SQL
      * @param connection connection the specified connection
+     * @param isDebug    the specified debug flag
      * @return {@code true} if success, returns {@false} otherwise
      * @throws SQLException SQLException
      */
-    public static boolean executeSql(final String sql, final Connection connection) throws SQLException {
-        LOGGER.log(Level.TRACE, "executeSql: {0}", sql);
+    public static boolean executeSql(final String sql, final Connection connection, final boolean isDebug) throws SQLException {
+        if (isDebug || LOGGER.isTraceEnabled()) {
+            LOGGER.log(Level.INFO, "Executing SQL [" + sql + "]");
+        }
 
         final Statement statement = connection.createStatement();
         final boolean isSuccess = !statement.execute(sql);
@@ -72,11 +75,14 @@ public final class JdbcUtil {
      * @param sql        the specified SQL
      * @param paramList  the specified params
      * @param connection the specified connection
+     * @param isDebug    the specified debug flag
      * @return {@code true} if success, returns {@false} otherwise
      * @throws SQLException SQLException
      */
-    public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection) throws SQLException {
-        LOGGER.log(Level.TRACE, "Execute SQL [{0}]", sql);
+    public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection, final boolean isDebug) throws SQLException {
+        if (isDebug || LOGGER.isTraceEnabled()) {
+            LOGGER.log(Level.INFO, "Executing SQL [" + sql + "]");
+        }
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
         for (int i = 1; i <= paramList.size(); i++) {
@@ -95,14 +101,15 @@ public final class JdbcUtil {
      * @param paramList  paramList
      * @param connection connection
      * @param tableName  tableName
+     * @param isDebug    the specified debug flag
      * @return JSONObject only one record.
      * @throws SQLException        SQLException
      * @throws JSONException       JSONException
      * @throws RepositoryException repositoryException
      */
     public static JSONObject queryJsonObject(final String sql, final List<Object> paramList, final Connection connection,
-                                             final String tableName) throws SQLException, JSONException, RepositoryException {
-        return queryJson(sql, paramList, connection, true, tableName);
+                                             final String tableName, final boolean isDebug) throws SQLException, JSONException, RepositoryException {
+        return queryJson(sql, paramList, connection, true, tableName, isDebug);
     }
 
     /**
@@ -112,14 +119,15 @@ public final class JdbcUtil {
      * @param paramList  paramList
      * @param connection connection
      * @param tableName  tableName
+     * @param isDebug    the specified debug flag
      * @return JSONArray
      * @throws SQLException        SQLException
      * @throws JSONException       JSONException
      * @throws RepositoryException repositoryException
      */
     public static JSONArray queryJsonArray(final String sql, final List<Object> paramList, final Connection connection,
-                                           final String tableName) throws SQLException, JSONException, RepositoryException {
-        final JSONObject jsonObject = queryJson(sql, paramList, connection, false, tableName);
+                                           final String tableName, final boolean isDebug) throws SQLException, JSONException, RepositoryException {
+        final JSONObject jsonObject = queryJson(sql, paramList, connection, false, tableName, isDebug);
 
         return jsonObject.getJSONArray(Keys.RESULTS);
     }
@@ -130,14 +138,17 @@ public final class JdbcUtil {
      * @param connection connection
      * @param ifOnlyOne  ifOnlyOne to determine return object or array.
      * @param tableName  tableName
+     * @param isDebug    the specified debug flag
      * @return JSONObject
      * @throws SQLException        SQLException
      * @throws JSONException       JSONException
      * @throws RepositoryException respsitoryException
      */
     private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection,
-                                        final boolean ifOnlyOne, final String tableName) throws SQLException, JSONException, RepositoryException {
-        LOGGER.log(Level.TRACE, "Query SQL [{0}]", sql);
+                                        final boolean ifOnlyOne, final String tableName, final boolean isDebug) throws SQLException, JSONException, RepositoryException {
+        if (isDebug || LOGGER.isTraceEnabled()) {
+            LOGGER.log(Level.INFO, "Executing SQL [" + sql + "]");
+        }
 
         final PreparedStatement preparedStatement = connection.prepareStatement(sql);
 

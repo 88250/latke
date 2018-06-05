@@ -41,9 +41,8 @@ import java.util.*;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.0, Mar 3, 2018
+ * @version 1.3.0.1, Jun 5, 2018
  */
-@SuppressWarnings("unchecked")
 public final class JdbcRepository implements Repository {
 
     /**
@@ -147,7 +146,7 @@ public final class JdbcRepository implements Repository {
                 toOracleClobEmpty(jsonObject);
             }
             ret = buildAddSql(jsonObject, paramList, sql);
-            JdbcUtil.executeSql(sql.toString(), paramList, connection);
+            JdbcUtil.executeSql(sql.toString(), paramList, connection, false);
             JdbcUtil.fromOracleClobEmpty(jsonObject);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Add failed", e);
@@ -255,7 +254,7 @@ public final class JdbcRepository implements Repository {
                 return;
             }
 
-            JdbcUtil.executeSql(sql, paramList, connection);
+            JdbcUtil.executeSql(sql, paramList, connection, false);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Update failed", e);
 
@@ -278,7 +277,7 @@ public final class JdbcRepository implements Repository {
         final JSONObject needUpdateJsonObject = getNeedUpdateJsonObject(oldJsonObject, jsonObject);
 
         if (needUpdateJsonObject.length() == 0) {
-            LOGGER.log(Level.INFO, "nothing to update [{0}] for repository [{1}]", new Object[]{id, getName()});
+            LOGGER.log(Level.INFO, "nothing to update [{0}] for repository [{1}]", id, getName());
 
             return;
         }
@@ -335,14 +334,10 @@ public final class JdbcRepository implements Repository {
         }
 
         final JSONObject needUpdateJsonObject = new JSONObject();
-
         final Iterator<String> keys = jsonObject.keys();
-
         String key;
-
         while (keys.hasNext()) {
             key = keys.next();
-
             if (jsonObject.get(key) == null && oldJsonObject.get(key) == null) {
                 needUpdateJsonObject.put(key, jsonObject.get(key));
             } else if (!jsonObject.optString(key).equals(oldJsonObject.optString(key))) {
@@ -369,7 +364,7 @@ public final class JdbcRepository implements Repository {
 
         try {
             remove(id, sql);
-            JdbcUtil.executeSql(sql.toString(), connection);
+            JdbcUtil.executeSql(sql.toString(), connection, false);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove failed", e);
 
@@ -390,7 +385,7 @@ public final class JdbcRepository implements Repository {
 
         final Connection connection = getConnection();
         try {
-            JdbcUtil.executeSql(deleteSQL.toString(), paramList, connection);
+            JdbcUtil.executeSql(deleteSQL.toString(), paramList, connection, false);
         } catch (final SQLException e) {
             LOGGER.log(Level.ERROR, "Remove failed", e);
 
@@ -421,7 +416,7 @@ public final class JdbcRepository implements Repository {
             final ArrayList<Object> paramList = new ArrayList<>();
 
             paramList.add(id);
-            ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName());
+            ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), false);
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
@@ -496,7 +491,7 @@ public final class JdbcRepository implements Repository {
                 return ret;
             }
 
-            final JSONArray jsonResults = JdbcUtil.queryJsonArray(sql.toString(), paramList, connection, getName());
+            final JSONArray jsonResults = JdbcUtil.queryJsonArray(sql.toString(), paramList, connection, getName(), query.isDebug());
 
             ret.put(Keys.RESULTS, jsonResults);
         } catch (final SQLException e) {
@@ -517,9 +512,9 @@ public final class JdbcRepository implements Repository {
         final Connection connection = getConnection();
         try {
             if (null == params || 0 == params.length) {
-                jsonResults = JdbcUtil.queryJsonArray(statement, Collections.emptyList(), connection, getName());
+                jsonResults = JdbcUtil.queryJsonArray(statement, Collections.emptyList(), connection, getName(), false);
             } else {
-                jsonResults = JdbcUtil.queryJsonArray(statement, Arrays.asList(params), connection, getName());
+                jsonResults = JdbcUtil.queryJsonArray(statement, Arrays.asList(params), connection, getName(), false);
             }
 
             return CollectionUtils.jsonArrayToList(jsonResults);
@@ -708,7 +703,7 @@ public final class JdbcRepository implements Repository {
 
         getRandomly(fetchSize, sql);
         try {
-            jsonArray = JdbcUtil.queryJsonArray(sql.toString(), new ArrayList<>(), connection, getName());
+            jsonArray = JdbcUtil.queryJsonArray(sql.toString(), new ArrayList<>(), connection, getName(), false);
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObjects.add(jsonArray.getJSONObject(i));
@@ -770,7 +765,7 @@ public final class JdbcRepository implements Repository {
         long count;
 
         try {
-            jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName());
+            jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), false);
             count = jsonObject.getLong(jsonObject.keys().next().toString());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Count failed", e);
