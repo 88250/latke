@@ -99,7 +99,7 @@ public class JdbcRepositoryTestCase {
 
         try {
             final Connection connection = Connections.getConnection();
-            JdbcUtil.executeSql(createTableSql.toString(), connection);
+            JdbcUtil.executeSql(createTableSql.toString(), connection, false);
             connection.commit();
             connection.close();
             Latkes.initRuntimeEnv();
