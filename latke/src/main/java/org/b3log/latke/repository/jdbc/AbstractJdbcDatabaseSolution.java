@@ -59,7 +59,7 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
             createTableBody(createTableSql, repositoryDefinition);
             createTableEnd(createTableSql, repositoryDefinition);
 
-            return JdbcUtil.executeSql(createTableSql.toString(), connection);
+            return JdbcUtil.executeSql(createTableSql.toString(), connection, false);
         } catch (final SQLException e) {
             throw e;
         } finally {
@@ -107,7 +107,7 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
             final StringBuilder clearTableSql = new StringBuilder();
             clearTableSql(clearTableSql, tableName, ifdrop);
 
-            return JdbcUtil.executeSql(clearTableSql.toString(), connection);
+            return JdbcUtil.executeSql(clearTableSql.toString(), connection, false);
         } catch (final SQLException e) {
             throw e;
         } finally {
