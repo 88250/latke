@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.util;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -23,15 +22,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.5, Nov 29, 2015
+ * @version 1.1.3.0, Jun 10, 2018
  */
 public final class Strings {
 
@@ -59,18 +56,19 @@ public final class Strings {
      * Email pattern.
      */
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-        "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-    
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
     /**
      * Private default constructor.
      */
-    private Strings() {}
+    private Strings() {
+    }
 
     /**
      * Converts the specified string into a string list line by line.
      *
      * @param string the specified string
-     * @return a list of string lines, returns {@code null} if the specified 
+     * @return a list of string lines, returns {@code null} if the specified
      * string is {@code null}
      * @throws IOException io exception
      */
@@ -99,25 +97,24 @@ public final class Strings {
 
     /**
      * Checks whether the specified string is numeric.
-     * 
+     *
      * @param string the specified string
-     * @return {@code true} if the specified string is numeric, returns 
+     * @return {@code true} if the specified string is numeric, returns
      * returns {@code false} otherwise
      */
     public static boolean isNumeric(final String string) {
-        if (isEmptyOrNull(string)) {
+        try {
+            Double.parseDouble(string);
+        } catch (final NumberFormatException nfe) {
             return false;
         }
 
-        final Pattern pattern = Pattern.compile("[0-9]*");
-        final Matcher matcher = pattern.matcher(string);
-
-        return matcher.matches();
+        return true;
     }
 
     /**
      * Checks whether the specified string is a valid email address.
-     * 
+     *
      * @param string the specified string
      * @return {@code true} if the specified string is a valid email address,
      * returns {@code false} otherwise
@@ -167,7 +164,7 @@ public final class Strings {
      * Trims every string in the specified strings array.
      *
      * @param strings the specified strings array, returns {@code null} if the
-     * specified strings is {@code null}
+     *                specified strings is {@code null}
      * @return a trimmed strings array
      */
     public static String[] trimAll(final String[] strings) {
@@ -183,20 +180,20 @@ public final class Strings {
 
         return ret;
     }
-    
+
     /**
      * Determines whether the specified strings contains the specified string, ignoring case considerations.
-     * 
-     * @param string the specified string
+     *
+     * @param string  the specified string
      * @param strings the specified strings
-     * @return {@code true} if the specified strings contains the specified string, ignoring case considerations, returns {@code false} 
+     * @return {@code true} if the specified strings contains the specified string, ignoring case considerations, returns {@code false}
      * otherwise
      */
     public static boolean containsIgnoreCase(final String string, final String[] strings) {
         if (null == strings) {
             return false;
         }
-        
+
         for (final String str : strings) {
             if (null == str && null == string) {
                 return true;
@@ -216,8 +213,8 @@ public final class Strings {
 
     /**
      * Determines whether the specified strings contains the specified string.
-     * 
-     * @param string the specified string
+     *
+     * @param string  the specified string
      * @param strings the specified strings
      * @return {@code true} if the specified strings contains the specified string, returns {@code false} otherwise
      */
@@ -225,7 +222,7 @@ public final class Strings {
         if (null == strings) {
             return false;
         }
-        
+
         for (final String str : strings) {
             if (null == str && null == string) {
                 return true;
@@ -245,7 +242,7 @@ public final class Strings {
 
     /**
      * Determines whether the specified string is a valid URL.
-     * 
+     *
      * @param string the specified string
      * @return {@code true} if the specified string is a valid URL, returns {@code false} otherwise
      */
