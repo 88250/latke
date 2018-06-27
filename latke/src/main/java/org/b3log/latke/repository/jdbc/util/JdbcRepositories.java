@@ -39,7 +39,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Mar 15, 2018
+ * @version 2.0.0.1, Jun 28, 2018
  */
 public final class JdbcRepositories {
 
@@ -297,6 +297,13 @@ public final class JdbcRepositories {
         FileWriter writer = null;
 
         try {
+            final File file = new File(destPath);
+            if (file.isDirectory()) {
+                LOGGER.log(Level.ERROR, "Can't generate repository definition file caused by the specified destination path [" + destPath + "] is a dir");
+
+                return;
+            }
+
             connection = Connections.getConnection();
 
             final DatabaseMetaData databaseMetaData = connection.getMetaData();
@@ -391,11 +398,12 @@ public final class JdbcRepositories {
                 }
             }
 
-            final File file = new File(destPath);
             FileUtils.deleteQuietly(file);
             writer = new FileWriter(file);
             final String content = repositoryJSON.toString(Integer.valueOf("4"));
             IOUtils.write(content, writer);
+
+            LOGGER.log(Level.INFO, "Generated repository definition file [" + destPath + "]");
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Init repository.json failed", e);
         } finally {
