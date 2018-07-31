@@ -15,16 +15,14 @@
  */
 package org.b3log.latke.repository;
 
-
 import java.util.Collections;
 import java.util.List;
-
 
 /**
  * Composite filter that combines serval sub filters using a {@link CompositeFilterOperator}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Sep 27, 2013
+ * @version 1.0.0.2, Jul 31, 2018
  * @see CompositeFilterOperator
  */
 public final class CompositeFilter implements Filter {
@@ -51,8 +49,8 @@ public final class CompositeFilter implements Filter {
 
     /**
      * Constructor with the specified parameters.
-     * 
-     * @param operator the specified operator
+     *
+     * @param operator   the specified operator
      * @param subFilters the specified sub filters
      */
     public CompositeFilter(final CompositeFilterOperator operator, final List<Filter> subFilters) {
@@ -62,16 +60,16 @@ public final class CompositeFilter implements Filter {
 
     /**
      * Gets the sub filters.
-     * 
+     *
      * @return sub filters
      */
     public List<Filter> getSubFilters() {
-        return Collections.unmodifiableList(subFilters);
+        return subFilters;
     }
 
     /**
      * Gets the operator.
-     * 
+     *
      * @return operator
      */
     public CompositeFilterOperator getOperator() {
@@ -110,14 +108,14 @@ public final class CompositeFilter implements Filter {
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("operator=");
-        
+
         stringBuilder.append(operator).append(", filters=[");
 
         for (int i = 0; i < subFilters.size(); i++) {
             final Filter filter = subFilters.get(i);
 
             stringBuilder.append("filter=[").append(filter.toString()).append("]");
-            
+
             if (i < subFilters.size() - 1) {
                 stringBuilder.append(", ");
             }
