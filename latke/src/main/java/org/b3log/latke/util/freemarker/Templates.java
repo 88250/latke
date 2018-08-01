@@ -15,18 +15,17 @@
  */
 package org.b3log.latke.util.freemarker;
 
-
 import freemarker.core.TemplateElement;
-import java.util.Enumeration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import java.io.IOException;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
+import java.io.IOException;
+import java.util.Enumeration;
 
 /**
- * Utilities of <a href="http://www.freemarker.org">FreeMarker</a> 
+ * Utilities of <a href="http://www.freemarker.org">FreeMarker</a>
  * template engine.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
@@ -57,15 +56,16 @@ public final class Templates {
     /**
      * Private default constructor.
      */
-    private Templates() {}
+    private Templates() {
+    }
 
     /**
      * Determines whether exists a variable specified by the given expression
      * in the specified template.
-     * 
-     * @param template the specified template
-     * @param expression the given expression, for example, 
-     * "${aVariable}", "&lt;#list recentComments as comment&gt;"
+     *
+     * @param template   the specified template
+     * @param expression the given expression, for example,
+     *                   "${aVariable}", "&lt;#list recentComments as comment&gt;"
      * @return {@code true} if it exists, returns {@code false} otherwise
      */
     public static boolean hasExpression(final Template template, final String expression) {
@@ -75,27 +75,26 @@ public final class Templates {
     }
 
     /**
-     * Determines whether the specified expression exists in the specified 
+     * Determines whether the specified expression exists in the specified
      * element (includes its children) of the specified template.
-     * 
-     * @param template the specified template
-     * @param expression the specified expression
+     *
+     * @param template        the specified template
+     * @param expression      the specified expression
      * @param templateElement the specified element
      * @return {@code true} if it exists, returns {@code false} otherwise
      */
     private static boolean hasExpression(final Template template,
-        final String expression,
-        final TemplateElement templateElement) {
+                                         final String expression,
+                                         final TemplateElement templateElement) {
         final String canonicalForm = templateElement.getCanonicalForm();
 
         if (canonicalForm.startsWith(expression)) {
             LOGGER.log(Level.TRACE, "Template has expression[nodeName={0}, expression={1}]",
-                new Object[] {templateElement.getNodeName(), expression});
+                    new Object[]{templateElement.getNodeName(), expression});
 
             return true;
         }
 
-        @SuppressWarnings("unchecked")
         final Enumeration<TemplateElement> children = templateElement.children();
 
         while (children.hasMoreElements()) {
@@ -114,7 +113,7 @@ public final class Templates {
      * template directory name and template name.
      *
      * @param templateDirName the specified template directory name
-     * @param templateName the specified template name
+     * @param templateName    the specified template name
      * @return a template, returns {@code null} if not found
      */
     public static Template getTemplate(final String templateDirName, final String templateName) {
@@ -125,13 +124,13 @@ public final class Templates {
                 }
             } catch (final Exception e) {
                 LOGGER.log(Level.ERROR, "Can not load mobile template[templateDirName={0}, templateName={1}]",
-                    new Object[] {templateDirName, templateName});
+                        new Object[]{templateDirName, templateName});
                 return null;
             }
 
             return MAIN_CFG.getTemplate(templateName);
         } catch (final IOException e) {
-            LOGGER.log(Level.WARN, "Gets template[name={0}] failed: [{1}]", new Object[] {templateName, e.getMessage()});
+            LOGGER.log(Level.WARN, "Gets template[name={0}] failed: [{1}]", new Object[]{templateName, e.getMessage()});
 
             return null;
         }

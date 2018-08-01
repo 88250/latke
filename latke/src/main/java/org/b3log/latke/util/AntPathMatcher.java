@@ -15,12 +15,10 @@
  */
 package org.b3log.latke.util;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
-
 
 /**
  * PathMatcher implementation for Ant-style path patterns.
@@ -55,12 +53,14 @@ import java.util.StringTokenizer;
  * @author Alef Arendsen
  * @author Juergen Hoeller
  * @author Rob Harrop
- * @since 16.07.2003
  * @see RegexPathMatcher
+ * @since 16.07.2003
  */
 public final class AntPathMatcher {
 
-    /** Default path separator: "/" */
+    /**
+     * Default path separator: "/"
+     */
     private static final String DEFAULT_PATH_SEPARATOR = "/";
 
     private static final String pathSeparator = DEFAULT_PATH_SEPARATOR;
@@ -71,6 +71,7 @@ public final class AntPathMatcher {
      * <p>If the return value is <code>false</code>, then the {@link #match}
      * method does not have to be used because direct equality comparisons
      * on the static path Strings will lead to the same result.
+     *
      * @param path the path String to check
      * @return <code>true</code> if the given <code>path</code> represents a pattern
      */
@@ -84,6 +85,7 @@ public final class AntPathMatcher {
      * <p>If the return value is <code>false</code>, then the {@link #match}
      * method does not have to be used because direct equality comparisons
      * on the static path Strings will lead to the same result.
+     *
      * @param path the path String to check
      * @return <code>true</code> if the given <code>path</code> represents a pattern
      */
@@ -96,8 +98,9 @@ public final class AntPathMatcher {
      * <code>pattern</code>, according to this PathMatcher's matching strategy.
      * <p>Determines whether the pattern at least matches as far as the given base
      * path goes, assuming that a full path may then match as well.
+     *
      * @param pattern the pattern to match against
-     * @param path the path String to test
+     * @param path    the path String to test
      * @return <code>true</code> if the supplied <code>path</code> matched,
      * <code>false</code> if it didn't
      */
@@ -107,15 +110,16 @@ public final class AntPathMatcher {
 
     /**
      * Actually match the given <code>path</code> against the given <code>pattern</code>.
-     * @param pattern the pattern to match against
-     * @param path the path String to test
+     *
+     * @param pattern   the pattern to match against
+     * @param path      the path String to test
      * @param fullMatch whether a full pattern match is required
-     * (else a pattern match as far as the given base path goes is sufficient)
+     *                  (else a pattern match as far as the given base path goes is sufficient)
      * @return <code>true</code> if the supplied <code>path</code> matched,
      * <code>false</code> if it didn't
      */
     protected static boolean doMatch(String pattern, String path,
-        boolean fullMatch) {
+                                     boolean fullMatch) {
         if (path.startsWith(pathSeparator) != pattern.startsWith(pathSeparator)) {
             return false;
         }
@@ -246,10 +250,11 @@ public final class AntPathMatcher {
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
+     *
      * @param pattern pattern to match against.
-     * Must not be <code>null</code>.
-     * @param str string which must be matched against the pattern.
-     * Must not be <code>null</code>.
+     *                Must not be <code>null</code>.
+     * @param str     string which must be matched against the pattern.
+     *                Must not be <code>null</code>.
      * @return <code>true</code> if the string matches against the
      * pattern, or <code>false</code> otherwise.
      */
@@ -443,11 +448,12 @@ public final class AntPathMatcher {
      * delimiter characters. Each of those characters can be used to separate
      * tokens. A delimiter is always a single character; for multi-character
      * delimiters, consider using <code>delimitedListToStringArray</code>
-     * @param str the String to tokenize
+     *
+     * @param str        the String to tokenize
      * @param delimiters the delimiter characters, assembled as String
-     * (each of those characters is individually considered as delimiter)
-     * (only applies to tokens that are empty after trimming; StringTokenizer
-     * will not consider subsequent delimiters as token in the first place).
+     *                   (each of those characters is individually considered as delimiter)
+     *                   (only applies to tokens that are empty after trimming; StringTokenizer
+     *                   will not consider subsequent delimiters as token in the first place).
      * @return an array of the tokens (<code>null</code> if the input String
      * was <code>null</code>)
      * @see java.util.StringTokenizer
@@ -475,6 +481,7 @@ public final class AntPathMatcher {
     /**
      * Copy the given Collection into a String array.
      * The Collection must contain String elements only.
+     *
      * @param collection the Collection to copy
      * @return the String array (<code>null</code> if the passed-in
      * Collection was <code>null</code>)

@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository;
 
-import java.util.Collections;
 import java.util.List;
 
 /**

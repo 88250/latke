@@ -18,7 +18,7 @@ package org.b3log.latke.repository;
 
 /**
  * Transaction.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Sep 11, 2011
  */
@@ -26,7 +26,7 @@ public interface Transaction {
 
     /**
      * Gets the id of this transaction.
-     * 
+     *
      * @return id
      */
     String getId();
@@ -36,7 +36,7 @@ public interface Transaction {
      *
      * <p>
      * <b>Throws</b>:<br/>
-     * {@link java.lang.IllegalStateException} - if the transaction has already 
+     * {@link java.lang.IllegalStateException} - if the transaction has already
      * been committed, rolled back
      * </p>
      */

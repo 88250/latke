@@ -37,7 +37,7 @@ public enum CompositeFilterOperator {
 
     /**
      * Builds an composite filter with 'AND' all the specified sub filters.
-     * 
+     *
      * @param subFilters the specified sub filters
      * @return composite filter
      */
@@ -47,7 +47,7 @@ public enum CompositeFilterOperator {
 
     /**
      * Builds an composite filter with 'OR' all the specified sub filters.
-     * 
+     *
      * @param subFilters the specified sub filters
      * @return composite filter
      */

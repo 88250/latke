@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository;
 
-
 /**
  * Filter.
  *
@@ -24,4 +23,5 @@ package org.b3log.latke.repository;
  * @see CompositeFilter
  * @see PropertyFilter
  */
-public interface Filter {}
+public interface Filter {
+}

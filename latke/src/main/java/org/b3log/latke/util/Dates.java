@@ -15,11 +15,9 @@
  */
 package org.b3log.latke.util;
 
-
 import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * Date utilities.
@@ -52,7 +50,8 @@ public final class Dates {
     /**
      * Private default constructor.
      */
-    private Dates() {}
+    private Dates() {
+    }
 
     /**
      * Gets current date time string with the specified date formatter.

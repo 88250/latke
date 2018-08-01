@@ -16,14 +16,15 @@
 package org.b3log.latke.util;
 
 import org.b3log.latke.Keys;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * Locale utilities.
@@ -71,7 +72,7 @@ public final class Locales {
 
     /**
      * Gets locale with the specified request.
-     *
+     * <p>
      * By the following steps:
      * <ol>
      * <li>Gets from session of the specified request</li>
@@ -146,7 +147,7 @@ public final class Locales {
      * </p>
      *
      * @param request the specified request
-     * @param locale a new locale
+     * @param locale  a new locale
      */
     public static void setLocale(final HttpServletRequest request, final Locale locale) {
         final HttpSession session = request.getSession(false);

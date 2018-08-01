@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository;
 
-
 /**
  * Projection.
  *
@@ -46,7 +45,7 @@ public class Projection {
 
     /**
      * Gets the key.
-     * 
+     *
      * @return key
      */
     public String getKey() {
@@ -55,7 +54,7 @@ public class Projection {
 
     /**
      * Gets the value type.
-     * 
+     *
      * @return value type
      */
     public Class<?> getType() {
@@ -64,8 +63,8 @@ public class Projection {
 
     /**
      * Constructs a projection with the specified key and value type.
-     * 
-     * @param key the specified key
+     *
+     * @param key  the specified key
      * @param type the specified value type
      */
     public Projection(final String key, final Class<?> type) {

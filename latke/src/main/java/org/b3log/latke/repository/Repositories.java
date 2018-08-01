@@ -15,14 +15,6 @@
  */
 package org.b3log.latke.repository;
 
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
@@ -33,6 +25,13 @@ import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Repository utilities.
@@ -49,7 +48,7 @@ public final class Repositories {
 
     /**
      * Repository holder.
-     * 
+     *
      * <p>
      * &lt;repositoryName, {@link Repository repository}&gt;
      * <p>
@@ -68,7 +67,7 @@ public final class Repositories {
 
     /**
      * Whether all repositories is writable.
-     * 
+     *
      * @return {@code true} if they are writable, returns {@code false} otherwise
      */
     public static boolean getReposirotiesWritable() {
@@ -77,7 +76,7 @@ public final class Repositories {
 
     /**
      * Sets all repositories whether is writable with the specified flag.
-     * 
+     *
      * @param writable the specified flat, {@code true} for writable, {@code false} otherwise
      */
     public static void setRepositoriesWritable(final boolean writable) {
@@ -87,7 +86,7 @@ public final class Repositories {
 
             repository.setWritable(writable);
 
-            LOGGER.log(Level.INFO, "Sets repository[name={0}] writable[{1}]", new Object[] {repositoryName, writable});
+            LOGGER.log(Level.INFO, "Sets repository[name={0}] writable[{1}]", new Object[]{repositoryName, writable});
         }
 
         repositoryiesWritable = writable;
@@ -95,7 +94,7 @@ public final class Repositories {
 
     /**
      * Gets repository names.
-     * 
+     *
      * @return repository names, for example,
      * <pre>
      * [
@@ -125,7 +124,7 @@ public final class Repositories {
 
     /**
      * Gets repositories description.
-     * 
+     *
      * @return repositories description, returns {@code null} if not found or
      * parse the description failed
      */
@@ -138,27 +137,27 @@ public final class Repositories {
     }
 
     /**
-     * Determines whether the specified json object can not be persisted (add or update) into an repository which specified 
+     * Determines whether the specified json object can not be persisted (add or update) into an repository which specified
      * by the given repository name.
-     * 
+     *
      * <p>
-     * A valid json object to persist must match keys definitions (including type and length if had) in the repository description 
+     * A valid json object to persist must match keys definitions (including type and length if had) in the repository description
      * (repository.json) with the json object names itself.
      * </p>
-     * 
+     *
      * <p>
      * The specified keys to ignore will be bypassed, regardless of matching keys definitions.
      * </p>
-     * 
+     *
      * @param repositoryName the given repository name (maybe with table name prefix)
-     * @param jsonObject the specified json object
-     * @param ignoredKeys the specified keys to ignore
+     * @param jsonObject     the specified json object
+     * @param ignoredKeys    the specified keys to ignore
      * @throws RepositoryException if the specified json object can not be persisted
-     * @see Repository#add(org.json.JSONObject) 
-     * @see Repository#update(java.lang.String, org.json.JSONObject) 
+     * @see Repository#add(org.json.JSONObject)
+     * @see Repository#update(java.lang.String, org.json.JSONObject)
      */
     public static void check(final String repositoryName, final JSONObject jsonObject, final String... ignoredKeys)
-        throws RepositoryException {
+            throws RepositoryException {
         if (null == jsonObject) {
             throw new RepositoryException("Null to persist to repository[" + repositoryName + "]");
         }
@@ -192,14 +191,14 @@ public final class Repositories {
 
             if (!keyDescription.optBoolean("nullable") && !nameSet.contains(key)) {
                 throw new RepositoryException(
-                    "A json object to persist to repository[name=" + repositoryName + "] does not contain a key[" + key + "]");
+                        "A json object to persist to repository[name=" + repositoryName + "] does not contain a key[" + key + "]");
             }
 
             // TODO: 88250, type and length validation
             /*
              * final String type = keyDescription.optString("type"); final
              * Object value = jsonObject.opt(key);
-             * 
+             *
              * if (("String".equals(type) && !(value instanceof String)) ||
              * ("int".equals(type) && !(value instanceof Integer)) ||
              * ("long".equals(type) && !(value instanceof Long)) ||
@@ -210,7 +209,7 @@ public final class Repositories {
              * "a wrong value type[definedType={1}, currentType={2}] with key["
              * + key + "]", new Object[]{repositoryName, type,
              * value.getClass()});
-             * 
+             *
              * return true; }
              */
         }
@@ -221,14 +220,14 @@ public final class Repositories {
 
             if (!keySet.contains(name)) {
                 throw new RepositoryException(
-                    "A json object to persist to repository[name=" + repositoryName + "] contains an redundant key[" + name + "]");
+                        "A json object to persist to repository[name=" + repositoryName + "] contains an redundant key[" + name + "]");
             }
         }
     }
 
     /**
      * Gets the keys description of an repository specified by the given repository name.
-     * 
+     *
      * @param repositoryName the given repository name (maybe with table name prefix)
      * @return keys description, returns {@code null} if not found
      */
@@ -252,12 +251,12 @@ public final class Repositories {
         }
 
         throw new RuntimeException(
-            "Not found the repository[name=" + repositoryName + "] description, please define it in repositories.json");
+                "Not found the repository[name=" + repositoryName + "] description, please define it in repositories.json");
     }
 
     /**
      * Gets the key names of an repository specified by the given repository name.
-     * 
+     *
      * @param repositoryName the given repository name
      * @return a set of key names, returns an empty set if not found
      */
@@ -283,7 +282,7 @@ public final class Repositories {
 
         if (null == keys) {
             throw new RuntimeException(
-                "Not found the repository[name=" + repositoryName + "] description, please define it in repositories.json");
+                    "Not found the repository[name=" + repositoryName + "] description, please define it in repositories.json");
         }
 
         final Set<String> ret = new HashSet<String>();
@@ -300,7 +299,7 @@ public final class Repositories {
 
     /**
      * Gets a repository with the specified repository name.
-     * 
+     *
      * @param repositoryName the specified repository name
      * @return repository, returns {@code null} if not found
      */
@@ -310,7 +309,7 @@ public final class Repositories {
 
     /**
      * Adds the specified repository.
-     * 
+     *
      * @param repository the specified repository
      */
     public static void addRepository(final Repository repository) {
@@ -335,14 +334,14 @@ public final class Repositories {
         try {
             final String description = IOUtils.toString(inputStream);
 
-            LOGGER.log(Level.DEBUG, "{0}{1}", new Object[] {Strings.LINE_SEPARATOR, description});
+            LOGGER.log(Level.DEBUG, "{0}{1}", new Object[]{Strings.LINE_SEPARATOR, description});
 
             repositoriesDescription = new JSONObject(description);
 
             // Repository name prefix
             final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
-                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_"
-                : "";
+                    ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_"
+                    : "";
 
             final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
 
@@ -366,5 +365,6 @@ public final class Repositories {
     /**
      * Private constructor.
      */
-    private Repositories() {}
+    private Repositories() {
+    }
 }

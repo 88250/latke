@@ -15,9 +15,7 @@
  */
 package org.b3log.latke.repository;
 
-
 import org.b3log.latke.util.Ids;
-
 
 /**
  * Key generator with time millisecond.
@@ -32,5 +30,5 @@ public final class TimeMillisKeyGenerator implements KeyGenerator<String> {
     public String gen() {
         return Ids.genTimeMillisId();
     }
-    
+
 }

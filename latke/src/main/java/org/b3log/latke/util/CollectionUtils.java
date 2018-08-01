@@ -15,16 +15,9 @@
  */
 package org.b3log.latke.util;
 
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.json.JSONArray;
 
+import java.util.*;
 
 /**
  * Collection utilities.
@@ -37,15 +30,16 @@ public final class CollectionUtils {
     /**
      * Private default constructor.
      */
-    private CollectionUtils() {}
+    private CollectionUtils() {
+    }
 
     /**
      * Gets a list of integers(size specified by the given size) between the
      * specified start(inclusion) and end(inclusion) randomly.
      *
      * @param start the specified start
-     * @param end the specified end
-     * @param size the given size
+     * @param end   the specified end
+     * @param size  the given size
      * @return a list of integers
      */
     public static List<Integer> getRandomIntegers(final int start, final int end, final int size) {
@@ -76,7 +70,7 @@ public final class CollectionUtils {
      * specified end(inclusion).
      *
      * @param start the specified start
-     * @param end the specified end
+     * @param end   the specified end
      * @return a list of integers
      */
     public static List<Integer> genIntegers(final int start, final int end) {
@@ -92,7 +86,7 @@ public final class CollectionUtils {
     /**
      * Converts the specified array to a set.
      *
-     * @param <T> the type of elements maintained by the specified array
+     * @param <T>   the type of elements maintained by the specified array
      * @param array the specified array
      * @return a hash set
      */
@@ -116,7 +110,7 @@ public final class CollectionUtils {
      * Converts the specified {@link List list} to a
      * {@link JSONArray JSON array}.
      *
-     * @param <T> the type of elements maintained by the specified list
+     * @param <T>  the type of elements maintained by the specified list
      * @param list the specified list
      * @return a {@link JSONArray JSON array}
      */
@@ -133,11 +127,11 @@ public final class CollectionUtils {
 
         return ret;
     }
-    
+
     /**
      * Converts the specified {@link Collection collection} to a {@link JSONArray JSON array}.
      *
-     * @param <T> the type of elements maintained by the specified collection
+     * @param <T>        the type of elements maintained by the specified collection
      * @param collection the specified collection
      * @return a {@link JSONArray JSON array}
      */
@@ -159,7 +153,7 @@ public final class CollectionUtils {
      * Converts the specified {@link JSONArray JSON array} to a
      * {@link List list}.
      *
-     * @param <T> the type of elements maintained by the specified json array
+     * @param <T>       the type of elements maintained by the specified json array
      * @param jsonArray the specified json array
      * @return an {@link ArrayList array list}
      */
@@ -182,7 +176,7 @@ public final class CollectionUtils {
      * Converts the specified {@link JSONArray JSON array} to a
      * {@link List list}.
      *
-     * @param <T> the type of elements maintained by the specified json array
+     * @param <T>       the type of elements maintained by the specified json array
      * @param jsonArray the specified json array
      * @return an {@link ArrayList array list}
      */
@@ -204,15 +198,15 @@ public final class CollectionUtils {
     /**
      * Converts the specified {@link JSONArray JSON array} to an array.
      *
-     * @param <T> the type of elements maintained by the specified json array
+     * @param <T>       the type of elements maintained by the specified json array
      * @param jsonArray the specified json array
-     * @param newType the class of the copy to be returned
+     * @param newType   the class of the copy to be returned
      * @return an array
      */
     @SuppressWarnings("unchecked")
     public static <T> T[] jsonArrayToArray(final JSONArray jsonArray, final Class<? extends T[]> newType) {
         if (null == jsonArray) {
-            return (T[]) new Object[] {};
+            return (T[]) new Object[]{};
         }
 
         final int newLength = jsonArray.length();

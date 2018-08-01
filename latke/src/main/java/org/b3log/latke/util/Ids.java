@@ -15,10 +15,8 @@
  */
 package org.b3log.latke.util;
 
-
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 
 /**
  * Id utilities.
@@ -41,19 +39,20 @@ public final class Ids {
     /**
      * Private default constructor.
      */
-    private Ids() {}
+    private Ids() {
+    }
 
     /**
      * Gets current date time string.
      *
      * <p>
-     *   <b>Note</b>: This method is not safe in cluster environment.
+     * <b>Note</b>: This method is not safe in cluster environment.
      * </p>
      *
      * @return a time millis string
      */
     public static synchronized String genTimeMillisId() {
-        String ret = null;
+        String ret;
 
         ID_GEN_LOCK.lock();
         try {

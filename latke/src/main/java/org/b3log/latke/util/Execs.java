@@ -15,16 +15,12 @@
  */
 package org.b3log.latke.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+
+import java.io.*;
+import java.util.Arrays;
 
 /**
  * Command execution utilities.

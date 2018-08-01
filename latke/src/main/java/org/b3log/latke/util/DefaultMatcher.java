@@ -15,15 +15,13 @@
  */
 package org.b3log.latke.util;
 
-
 import org.weborganic.furi.URIPattern;
 import org.weborganic.furi.URIResolveResult;
 import org.weborganic.furi.URIResolver;
 
-
 /**
  * the url-match util.
- * 
+ * <p>
  * using https://code.google.com/p/wo-furi/ which is Deprecated.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
@@ -48,5 +46,6 @@ public final class DefaultMatcher {
     /**
      * Private constructor.
      */
-    private DefaultMatcher() {}
+    private DefaultMatcher() {
+    }
 }

@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository;
 
-
 /**
  * A {@link Filter filter } on a single property.
  *
@@ -52,9 +51,9 @@ public final class PropertyFilter implements Filter {
     /**
      * Constructor with the specified parameters.
      *
-     * @param key the specified key
+     * @param key      the specified key
      * @param operator the specified operator
-     * @param value the specified value
+     * @param value    the specified value
      */
     public PropertyFilter(final String key, final FilterOperator operator, final Object value) {
         this.key = key;

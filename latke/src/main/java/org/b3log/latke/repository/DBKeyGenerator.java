@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.repository;
 
-
 /**
  * A dummy key generator.
  *
