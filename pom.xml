@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.19, May 14, 2018
+    Version: 1.2.2.20, Aug 1, 2018
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -48,6 +48,7 @@
         <javax.mail.version>1.4.7</javax.mail.version>
         <commons-io.version>2.6</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
+        <commons-codec.version>1.11</commons-codec.version>
         <javassist.version>3.21.0-GA</javassist.version>
         <slf4j.version>1.7.7</slf4j.version>
 
