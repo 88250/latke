@@ -172,7 +172,9 @@
                         org/b3log/latke/ioc/**/*.java,
                         org/b3log/latke/util/Reflections.java,
                         org/b3log/latke/util/Execs.java,
-                        org/b3log/latke/util/Crypts.java
+                        org/b3log/latke/util/Crypts.java,
+                        org/b3log/latke/util/Times.java,
+                        org/b3log/latke/util/TimeZones.java
                     </excludes>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>

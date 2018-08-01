@@ -184,9 +184,9 @@ public final class Times {
         final Calendar start = Calendar.getInstance();
 
         start.setTimeInMillis(time);
-        int year = start.get(Calendar.YEAR);
-        int month = start.get(Calendar.MONTH);
-        int day = start.get(Calendar.DATE);
+        final int year = start.get(Calendar.YEAR);
+        final int month = start.get(Calendar.MONTH);
+        final int day = start.get(Calendar.DATE);
         start.set(year, month, day, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
 
@@ -203,9 +203,9 @@ public final class Times {
         final Calendar end = Calendar.getInstance();
 
         end.setTimeInMillis(time);
-        int year = end.get(Calendar.YEAR);
-        int month = end.get(Calendar.MONTH);
-        int day = end.get(Calendar.DATE);
+        final int year = end.get(Calendar.YEAR);
+        final int month = end.get(Calendar.MONTH);
+        final int day = end.get(Calendar.DATE);
         end.set(year, month, day, 23, 59, 59);
         end.set(Calendar.MILLISECOND, 999);
 
@@ -281,8 +281,8 @@ public final class Times {
         final Calendar start = Calendar.getInstance();
 
         start.setTimeInMillis(time);
-        int year = start.get(Calendar.YEAR);
-        int month = start.get(Calendar.MONTH);
+        final int year = start.get(Calendar.YEAR);
+        final int month = start.get(Calendar.MONTH);
         start.set(year, month, 1, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
 
