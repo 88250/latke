@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.3.0, Jun 10, 2018
+ * @version 1.1.3.1, Aug 1, 2018
  */
 public final class Strings {
 
@@ -99,13 +99,28 @@ public final class Strings {
      * Checks whether the specified string is numeric.
      *
      * @param string the specified string
-     * @return {@code true} if the specified string is numeric, returns
-     * returns {@code false} otherwise
+     * @return {@code true} if the specified string is numeric, returns {@code false} otherwise
      */
     public static boolean isNumeric(final String string) {
         try {
             Double.parseDouble(string);
-        } catch (final NumberFormatException nfe) {
+        } catch (final Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks whether the specified string is an integer.
+     *
+     * @param string the specified string
+     * @return {@code true} if the specified string is an integer, returns {@code false} otherwise
+     */
+    public static boolean isInteger(final String string) {
+        try {
+            Integer.parseInt(string);
+        } catch (final Exception e) {
             return false;
         }
 
