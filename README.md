@@ -66,5 +66,6 @@ Latke 的诞生离不开以下开源项目：
 * [FreeMarker](https://github.com/apache/freemarker)：使用广泛的 Java 模版引擎
 * [Commons Lang](https://github.com/apache/commons-lang)：Java 语言相关工具库
 * [Commons IO](https://github.com/apache/commons-io)：Java IO 相关工具库
+* [Commons Codec](https://github.com/apache/commons-codec)：Java 编解码库
 * [Javassist](https://github.com/jboss-javassist/javassist)：Java 字节码处理工具库
 * [SLF4j](https://github.com/qos-ch/slf4j)：Java 日志门户
