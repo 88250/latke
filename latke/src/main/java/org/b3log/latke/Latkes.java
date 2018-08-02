@@ -55,11 +55,6 @@ import java.util.concurrent.Executors;
 public final class Latkes {
 
     /**
-     * Latke version.
-     */
-    public static final String VERSION = "2.4.5";
-
-    /**
      * Executor service.
      */
     public static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
