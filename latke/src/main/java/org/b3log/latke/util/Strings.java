@@ -22,13 +22,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.3.1, Aug 1, 2018
+ * @version 1.2.0.0, Aug 2, 2018
  */
 public final class Strings {
 
@@ -65,6 +66,24 @@ public final class Strings {
     }
 
     /**
+     * Is IPv4.
+     *
+     * @param ip ip
+     * @return {@code true} if it is, returns {@code false} otherwise
+     */
+    public static boolean isIPv4(final String ip) {
+        if (isEmptyOrNull(ip)) {
+            return false;
+        }
+
+        final String regex = "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        final Pattern pattern = Pattern.compile(regex);
+        final Matcher matcher = pattern.matcher(ip);
+
+        return matcher.matches();
+    }
+
+    /**
      * Converts the specified string into a string list line by line.
      *
      * @param string the specified string
@@ -78,11 +97,10 @@ public final class Strings {
         }
 
         final BufferedReader bufferedReader = new BufferedReader(new StringReader(string));
-        final List<String> ret = new ArrayList<String>();
+        final List<String> ret = new ArrayList<>();
 
         try {
             String line = bufferedReader.readLine();
-
             while (null != line) {
                 ret.add(line);
 
