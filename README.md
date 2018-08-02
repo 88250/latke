@@ -3,7 +3,7 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 
 ## 简介
 
-[Latke](https://github.com/b3log/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC/AOP、事件通知、ORM、插件等组件，也包含了一些应用开发时需要的基本服务（例如缓存、定时任务、邮件、HTTP 客户端等）。
+[Latke](https://github.com/b3log/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC/AOP、事件通知、ORM、插件等组件。
 
 在实体模型上使用 JSON 贯穿前后端，使应用开发更加快捷。这是 Latke 不同于其他框架的地方，非常适合小型应用的快速开发。
 
@@ -16,7 +16,6 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 * 定时任务
 * 事件机制
 * Javamail 客户端
-* HTTP 客户端
 * 多语言支持
 * 插件机制
 
@@ -46,15 +45,7 @@ Latke 每个版本都会发布到 Maven 中央库，可在 pom.xml 中直接引�
 * [Latke 源码解析（一）Servlet 部分](https://hacpai.com/article/1493267456529)
 * [Latke 源码解析（二）IOC 部分](https://hacpai.com/article/1493620909167)
 
-## 贡献
-
-### 作者
-
-Solo 的主要作者是 [Daniel](https://github.com/88250) 与 [MainLove](https://github.com/mainlove)，所有贡献者可以在[这里](https://github.com/b3log/solo/graphs/contributors)看到。
-
-我们非常期待你加入到这个项目中，无论是使用反馈还是代码补丁，都是对 Latke 一份满满的爱 :heart:
-
-### 讨论区
+## 讨论区
 
 * 到 Latke 官方[讨论区](https://hacpai.com/tag/Latke)发帖（推荐做法）
 * 来一发 [issue](https://github.com/b3log/latke/issues/new)
