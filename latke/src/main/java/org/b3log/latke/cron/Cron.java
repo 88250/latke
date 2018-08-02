@@ -19,6 +19,8 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.TimerTask;
@@ -27,7 +29,7 @@ import java.util.TimerTask;
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.1.1, Aug 2, 2018
+ * @version 2.0.2.0, Aug 2, 2018
  */
 public final class Cron extends TimerTask {
 
@@ -101,10 +103,18 @@ public final class Cron extends TimerTask {
 
         try {
             final HttpURLConnection conn = (HttpURLConnection) new URL(this.url).openConnection();
-            conn.connect();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(120000);
+            final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+            final StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
             conn.disconnect();
 
-            LOGGER.log(Level.DEBUG, "Executed scheduled task[url={0}]", this.url);
+            LOGGER.log(Level.DEBUG, "Executed scheduled task [url=" + url + ", response=" + content + "]");
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Scheduled task execute failed", e);
 
