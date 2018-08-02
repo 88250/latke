@@ -15,21 +15,19 @@
  */
 package org.b3log.latke.cron;
 
-import java.net.URL;
-import java.util.TimerTask;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestMethod;
-import org.b3log.latke.urlfetch.HTTPRequest;
-import org.b3log.latke.urlfetch.URLFetchService;
-import org.b3log.latke.urlfetch.URLFetchServiceFactory;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.TimerTask;
 
 /**
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.1.0, Dec 23, 2015
+ * @version 2.0.1.1, Aug 2, 2018
  */
 public final class Cron extends TimerTask {
 
@@ -85,9 +83,9 @@ public final class Cron extends TimerTask {
     /**
      * Constructs a cron job with the specified URL, description and schedule.
      *
-     * @param url the specified URL
+     * @param url         the specified URL
      * @param description the specified description
-     * @param schedule the specified schedule
+     * @param schedule    the specified schedule
      */
     public Cron(final String url, final String description, final String schedule) {
         this.url = url;
@@ -101,16 +99,12 @@ public final class Cron extends TimerTask {
     public void run() {
         LOGGER.debug("Executing scheduled task....");
 
-        final URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-
-        final HTTPRequest request = new HTTPRequest();
-
         try {
-            request.setURL(new URL(url));
-            request.setRequestMethod(HTTPRequestMethod.GET);
-            urlFetchService.fetchAsync(request);
+            final HttpURLConnection conn = (HttpURLConnection) new URL(this.url).openConnection();
+            conn.connect();
+            conn.disconnect();
 
-            LOGGER.log(Level.DEBUG, "Executed scheduled task[url={0}]", url);
+            LOGGER.log(Level.DEBUG, "Executed scheduled task[url={0}]", this.url);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Scheduled task execute failed", e);
 
