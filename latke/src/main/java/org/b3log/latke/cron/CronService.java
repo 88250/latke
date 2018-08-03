@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.0, May 14, 2018
+ * @version 2.0.2.1, Aug 3, 2018
  */
 public final class CronService {
 
@@ -72,9 +72,10 @@ public final class CronService {
      */
     public static void start() {
         new Thread(() -> {
-            LOGGER.info("Constructing cron service....");
-
             try {
+                Thread.sleep(10000);
+                LOGGER.info("Constructing cron service....");
+
                 loadCronXML();
 
                 for (final Cron cron : CRONS) {
