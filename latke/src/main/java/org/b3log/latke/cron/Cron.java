@@ -29,7 +29,7 @@ import java.util.TimerTask;
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.0, Aug 2, 2018
+ * @version 2.0.2.1, Aug 3, 2018
  */
 public final class Cron extends TimerTask {
 
@@ -83,16 +83,23 @@ public final class Cron extends TimerTask {
     private long period;
 
     /**
-     * Constructs a cron job with the specified URL, description and schedule.
+     * Timeout of this cron job executing.
+     */
+    private int timeout;
+
+    /**
+     * Constructs a cron job with the specified URL, description, schedule and timeout.
      *
      * @param url         the specified URL
      * @param description the specified description
      * @param schedule    the specified schedule
+     * @param timeout     the specified timeout
      */
-    public Cron(final String url, final String description, final String schedule) {
+    public Cron(final String url, final String description, final String schedule, final int timeout) {
         this.url = url;
         this.description = description;
         this.schedule = schedule;
+        this.timeout = timeout;
 
         parse(schedule);
     }
@@ -103,8 +110,8 @@ public final class Cron extends TimerTask {
 
         try {
             final HttpURLConnection conn = (HttpURLConnection) new URL(this.url).openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(120000);
+            conn.setConnectTimeout(timeout);
+            conn.setReadTimeout(timeout);
             final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
             final StringBuilder content = new StringBuilder();

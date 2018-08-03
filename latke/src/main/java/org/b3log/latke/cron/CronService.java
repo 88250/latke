@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.1, Aug 3, 2018
+ * @version 2.0.2.2, Aug 3, 2018
  */
 public final class CronService {
 
@@ -143,15 +143,20 @@ public final class CronService {
                 final Element urlElement = (Element) cronElement.getElementsByTagName("url").item(0);
                 final Element descriptionElement = (Element) cronElement.getElementsByTagName("description").item(0);
                 final Element scheduleElement = (Element) cronElement.getElementsByTagName("schedule").item(0);
+                final Element timeoutElement = (Element) cronElement.getElementsByTagName("timeout").item(0);
 
                 final String url = urlElement.getTextContent();
                 final String description = descriptionElement.getTextContent();
                 final String schedule = scheduleElement.getTextContent();
-
-                CRONS.add(new Cron(url, description, schedule));
+                String timeout = "120000";
+                if (null != timeoutElement) {
+                    timeout = timeoutElement.getTextContent();
+                }
+                CRONS.add(new Cron(url, description, schedule, Integer.valueOf(timeout)));
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Reads cron.xml failed", e);
+
             throw new RuntimeException(e);
         }
     }
