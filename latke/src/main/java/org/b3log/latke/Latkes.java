@@ -46,7 +46,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.7.9.19, Aug 1, 2018
+ * @version 2.7.9.20, Aug 5, 2018
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -174,46 +174,55 @@ public final class Latkes {
     private static org.h2.tools.Server h2;
 
     static {
-        LOGGER.debug("Loading latke.properties");
-
         try {
-            final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/latke.properties");
+            InputStream resourceAsStream;
+            final String latkePropsEnv = System.getenv("LATKE_PROPS");
+            if (StringUtils.isNotBlank(latkePropsEnv)) {
+                LOGGER.debug("Loading latke.properties from env var [$LATKE_PROPS=" + latkePropsEnv + "]");
+                resourceAsStream = new FileInputStream(latkePropsEnv);
+            } else {
+                LOGGER.debug("Loading latke.properties from classpath [/latke.properties]");
+                resourceAsStream = Latkes.class.getResourceAsStream("/latke.properties");
+            }
+
             if (null != resourceAsStream) {
                 LATKE_PROPS.load(resourceAsStream);
-
                 LOGGER.debug("Loaded latke.properties");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Not found latke.properties");
+            LOGGER.log(Level.ERROR, "Loads latke.properties failed", e);
 
-            throw new RuntimeException("Not found latke.properties");
+            throw new RuntimeException("Loads latke.properties failed");
         }
 
-        LOGGER.debug("Loading local.properties");
         try {
-            final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/local.properties");
+            InputStream resourceAsStream;
+            final String localPropsEnv = System.getenv("LATKE_LOCAL_PROPS");
+            if (StringUtils.isNotBlank(localPropsEnv)) {
+                LOGGER.debug("Loading local.properties from env var [$LATKE_LOCAL_PROPS=" + localPropsEnv + "]");
+                resourceAsStream = new FileInputStream(localPropsEnv);
+            } else {
+                LOGGER.debug("Loading local.properties from classpath [/local.properties]");
+                resourceAsStream = Latkes.class.getResourceAsStream("/local.properties");
+            }
+
             if (null != resourceAsStream) {
                 LOCAL_PROPS.load(resourceAsStream);
-
                 LOGGER.debug("Loaded local.properties");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.DEBUG, "Not found local.properties");
-            // Ignored
+            LOGGER.log(Level.DEBUG, "Loads local.properties failed, ignored");
         }
 
         LOGGER.debug("Loading remote.properties");
         try {
             final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/remote.properties");
-
             if (null != resourceAsStream) {
                 REMOTE_PROPS.load(resourceAsStream);
-
                 LOGGER.debug("Loaded remote.properties");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.DEBUG, "Not found Latke remote.properties");
-            // Ignored
+            LOGGER.log(Level.DEBUG, "Not found Latke remote.properties, ignored");
         }
     }
 
