@@ -29,7 +29,7 @@ import java.util.TimerTask;
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.2, Aug 4, 2018
+ * @version 2.0.2.3, Aug 21, 2018
  */
 public final class Cron extends TimerTask {
 
@@ -112,6 +112,7 @@ public final class Cron extends TimerTask {
             final HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setConnectTimeout(timeout);
             conn.setReadTimeout(timeout);
+            conn.setRequestProperty("User-Agent", "B3log Latke https://github.com/b3log/latke");
             final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
             final StringBuilder content = new StringBuilder();
