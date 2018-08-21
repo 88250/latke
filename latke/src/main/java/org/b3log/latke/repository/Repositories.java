@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Repository utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.9, Apr 17, 2014
+ * @version 1.0.2.0, Aug 21, 2018
  */
 public final class Repositories {
 
@@ -64,6 +64,10 @@ public final class Repositories {
      * Whether all repositories is writable.
      */
     private static boolean repositoryiesWritable = true;
+
+    static {
+        loadRepositoryDescription();
+    }
 
     /**
      * Whether all repositories is writable.
@@ -130,10 +134,6 @@ public final class Repositories {
      */
     public static JSONObject getRepositoriesDescription() {
         return repositoriesDescription;
-    }
-
-    static {
-        loadRepositoryDescription();
     }
 
     /**
@@ -332,7 +332,7 @@ public final class Repositories {
         LOGGER.log(Level.INFO, "Parsing repository description....");
 
         try {
-            final String description = IOUtils.toString(inputStream);
+            final String description = IOUtils.toString(inputStream, "UTF-8");
 
             LOGGER.log(Level.DEBUG, "{0}{1}", new Object[]{Strings.LINE_SEPARATOR, description});
 
