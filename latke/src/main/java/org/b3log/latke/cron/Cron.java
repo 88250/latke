@@ -15,12 +15,12 @@
  */
 package org.b3log.latke.cron;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.TimerTask;
@@ -29,7 +29,7 @@ import java.util.TimerTask;
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.3, Aug 21, 2018
+ * @version 2.0.2.4, Aug 27, 2018
  */
 public final class Cron extends TimerTask {
 
@@ -37,21 +37,6 @@ public final class Cron extends TimerTask {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Cron.class);
-
-    /**
-     * Time unit constant - 10.
-     */
-    public static final int TEN = 10;
-
-    /**
-     * Time unit constant - 60.
-     */
-    public static final int SIXTY = 60;
-
-    /**
-     * Time unit constant - 1000.
-     */
-    public static final int THOUSAND = 1000;
 
     /**
      * The URL this cron job to invoke.
@@ -83,46 +68,57 @@ public final class Cron extends TimerTask {
     private long period;
 
     /**
-     * Timeout of this cron job executing.
+     * Timeout of this cron job executing in milliseconds.
      */
     private int timeout;
 
     /**
-     * Constructs a cron job with the specified URL, description, schedule and timeout.
-     *
-     * @param url         the specified URL
-     * @param description the specified description
-     * @param schedule    the specified schedule
-     * @param timeout     the specified timeout
+     * Delay of this cron job the first executing in milliseconds.
      */
-    public Cron(final String url, final String description, final String schedule, final int timeout) {
+    private long delay;
+
+    /**
+     * Logging level.
+     */
+    private Level loggingLevel;
+
+    /**
+     * Constructs a cron job with the specified URL, description, schedule, timeout, delay and logging level.
+     *
+     * @param url          the specified URL
+     * @param description  the specified description
+     * @param schedule     the specified schedule
+     * @param timeout      the specified timeout
+     * @param delay        the specified delay
+     * @param loggingLevel the specified logging level
+     */
+    public Cron(final String url, final String description, final String schedule, final int timeout, final long delay, final Level loggingLevel) {
         this.url = url;
         this.description = description;
         this.schedule = schedule;
         this.timeout = timeout;
+        this.delay = delay;
+        this.loggingLevel = loggingLevel;
 
         parse(schedule);
     }
 
     @Override
     public void run() {
-        LOGGER.debug("Executing scheduled task....");
-
         try {
+            LOGGER.log(loggingLevel, "Executing scheduled task....");
+
             final HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setConnectTimeout(timeout);
             conn.setReadTimeout(timeout);
             conn.setRequestProperty("User-Agent", "B3log Latke https://github.com/b3log/latke");
-            final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            final StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
+            String content = "";
+            try (final InputStream is = conn.getInputStream()) {
+                content = IOUtils.toString(is, "UTF-8");
             }
-            in.close();
             conn.disconnect();
 
-            LOGGER.log(Level.DEBUG, "Executed scheduled task [url=" + url + ", response=" + content + "]");
+            LOGGER.log(loggingLevel, "Executed scheduled task [url=" + url + ", response=" + content + "]");
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Scheduled task execute failed [" + url + "]", e);
         }
@@ -141,11 +137,11 @@ public final class Cron extends TimerTask {
                 new Object[]{schedule, num, timeUnit, description});
 
         if ("hours".equals(timeUnit)) {
-            period = num * SIXTY * SIXTY * THOUSAND;
+            period = num * 60 * 60 * 1000;
         } else if ("minutes".equals(timeUnit)) {
-            period = num * SIXTY * THOUSAND;
+            period = num * 60 * 1000;
         } else if ("seconds".equals(timeUnit)) {
-            period = num * THOUSAND;
+            period = num * 1000;
         }
     }
 
@@ -192,5 +188,41 @@ public final class Cron extends TimerTask {
      */
     public void setURL(final String url) {
         this.url = url;
+    }
+
+    /**
+     * Gets the timeout.
+     *
+     * @return timeout
+     */
+    public int getTimeout() {
+        return timeout;
+    }
+
+    /**
+     * Sets the timeout with the specified timeout.
+     *
+     * @param timeout the specified timeout
+     */
+    public void setTimeout(final int timeout) {
+        this.timeout = timeout;
+    }
+
+    /**
+     * Gets the delay.
+     *
+     * @return delay
+     */
+    public long getDelay() {
+        return delay;
+    }
+
+    /**
+     * Sets the delay with the specified delay.
+     *
+     * @param delay the specified delay
+     */
+    public void setDelay(final long delay) {
+        this.delay = delay;
     }
 }

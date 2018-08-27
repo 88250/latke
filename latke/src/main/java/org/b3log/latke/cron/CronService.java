@@ -28,7 +28,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Cron jobs service.
@@ -37,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.2, Aug 3, 2018
+ * @version 2.0.2.3, Aug 27, 2018
  */
 public final class CronService {
 
@@ -55,11 +54,6 @@ public final class CronService {
      * Timers.
      */
     private static final List<Timer> TIMERS = new ArrayList<>();
-
-    /**
-     * Cron setup interval in seconds.
-     */
-    private static final int SETUP_INTERVAL = 5;
 
     /**
      * Private default constructor.
@@ -83,11 +77,11 @@ public final class CronService {
                     TIMERS.add(timer);
 
                     cron.setURL(Latkes.getServePath() + cron.getURL());
-                    timer.scheduleAtFixedRate(cron, Cron.TEN * Cron.THOUSAND, cron.getPeriod());
+                    timer.scheduleAtFixedRate(cron, cron.getDelay(), cron.getPeriod());
 
                     LOGGER.log(Level.DEBUG, "Scheduled a cron job[url={0}]", cron.getURL());
 
-                    TimeUnit.SECONDS.sleep(SETUP_INTERVAL);
+                    Thread.sleep(5000);
                 }
 
                 LOGGER.log(Level.DEBUG, "[{0}] cron jobs totally", CRONS.size());
@@ -144,6 +138,8 @@ public final class CronService {
                 final Element descriptionElement = (Element) cronElement.getElementsByTagName("description").item(0);
                 final Element scheduleElement = (Element) cronElement.getElementsByTagName("schedule").item(0);
                 final Element timeoutElement = (Element) cronElement.getElementsByTagName("timeout").item(0);
+                final Element delayElement = (Element) cronElement.getElementsByTagName("delay").item(0);
+                final Element loggingLevelElement = (Element) cronElement.getElementsByTagName("loggingLevel").item(0);
 
                 final String url = urlElement.getTextContent();
                 final String description = descriptionElement.getTextContent();
@@ -152,7 +148,15 @@ public final class CronService {
                 if (null != timeoutElement) {
                     timeout = timeoutElement.getTextContent();
                 }
-                CRONS.add(new Cron(url, description, schedule, Integer.valueOf(timeout)));
+                String delay = "10000";
+                if (null != delayElement) {
+                    delay = delayElement.getTextContent();
+                }
+                Level loggingLevel = Level.DEBUG;
+                if (null != loggingLevelElement) {
+                    loggingLevel = Level.valueOf(loggingLevelElement.getTextContent());
+                }
+                CRONS.add(new Cron(url, description, schedule, Integer.valueOf(timeout), Long.valueOf(delay), loggingLevel));
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Reads cron.xml failed", e);
