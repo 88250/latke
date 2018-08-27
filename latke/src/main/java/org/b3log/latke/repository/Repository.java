@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.repository;
 
+import org.b3log.latke.Keys;
+import org.b3log.latke.util.CollectionUtils;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.Map;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.0, Mar 3, 2018
+ * @version 1.4.0.0, Aug 27, 2018
  */
 public interface Repository {
 
@@ -119,6 +121,19 @@ public interface Repository {
      * @throws RepositoryException repository exception
      */
     JSONObject get(final Query query) throws RepositoryException;
+
+    /**
+     * Gets json objects by the specified query. Calling this interface just returns result object list, no pagination info.
+     *
+     * @param query the specified query
+     * @return a list of result json object, returns an empty list if not found
+     * @throws RepositoryException repository exception
+     */
+    default List<JSONObject> getList(final Query query) throws RepositoryException {
+        final JSONObject result = get(query);
+
+        return CollectionUtils.jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+    }
 
     /**
      * Gets json objects by the specified query statement.
