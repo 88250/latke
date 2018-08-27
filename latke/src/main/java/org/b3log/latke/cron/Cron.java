@@ -15,12 +15,12 @@
  */
 package org.b3log.latke.cron;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.TimerTask;
@@ -78,43 +78,47 @@ public final class Cron extends TimerTask {
     private long delay;
 
     /**
-     * Constructs a cron job with the specified URL, description, schedule and timeout.
-     *
-     * @param url         the specified URL
-     * @param description the specified description
-     * @param schedule    the specified schedule
-     * @param timeout     the specified timeout
-     * @param delay the specified delay
+     * Logging level.
      */
-    public Cron(final String url, final String description, final String schedule, final int timeout, final long delay) {
+    private Level loggingLevel;
+
+    /**
+     * Constructs a cron job with the specified URL, description, schedule, timeout, delay and logging level.
+     *
+     * @param url          the specified URL
+     * @param description  the specified description
+     * @param schedule     the specified schedule
+     * @param timeout      the specified timeout
+     * @param delay        the specified delay
+     * @param loggingLevel the specified logging level
+     */
+    public Cron(final String url, final String description, final String schedule, final int timeout, final long delay, final Level loggingLevel) {
         this.url = url;
         this.description = description;
         this.schedule = schedule;
         this.timeout = timeout;
         this.delay = delay;
+        this.loggingLevel = loggingLevel;
 
         parse(schedule);
     }
 
     @Override
     public void run() {
-        LOGGER.debug("Executing scheduled task....");
-
         try {
+            LOGGER.log(loggingLevel, "Executing scheduled task....");
+
             final HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setConnectTimeout(timeout);
             conn.setReadTimeout(timeout);
             conn.setRequestProperty("User-Agent", "B3log Latke https://github.com/b3log/latke");
-            final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            final StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
+            String content = "";
+            try (final InputStream is = conn.getInputStream()) {
+                content = IOUtils.toString(is, "UTF-8");
             }
-            in.close();
             conn.disconnect();
 
-            LOGGER.log(Level.DEBUG, "Executed scheduled task [url=" + url + ", response=" + content + "]");
+            LOGGER.log(loggingLevel, "Executed scheduled task [url=" + url + ", response=" + content + "]");
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Scheduled task execute failed [" + url + "]", e);
         }

@@ -139,6 +139,7 @@ public final class CronService {
                 final Element scheduleElement = (Element) cronElement.getElementsByTagName("schedule").item(0);
                 final Element timeoutElement = (Element) cronElement.getElementsByTagName("timeout").item(0);
                 final Element delayElement = (Element) cronElement.getElementsByTagName("delay").item(0);
+                final Element loggingLevelElement = (Element) cronElement.getElementsByTagName("loggingLevel").item(0);
 
                 final String url = urlElement.getTextContent();
                 final String description = descriptionElement.getTextContent();
@@ -151,7 +152,11 @@ public final class CronService {
                 if (null != delayElement) {
                     delay = delayElement.getTextContent();
                 }
-                CRONS.add(new Cron(url, description, schedule, Integer.valueOf(timeout), Long.valueOf(delay)));
+                Level loggingLevel = Level.DEBUG;
+                if (null != loggingLevelElement) {
+                    loggingLevel = Level.valueOf(loggingLevelElement.getTextContent());
+                }
+                CRONS.add(new Cron(url, description, schedule, Integer.valueOf(timeout), Long.valueOf(delay), loggingLevel));
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Reads cron.xml failed", e);
