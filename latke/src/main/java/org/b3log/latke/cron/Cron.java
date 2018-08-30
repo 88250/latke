@@ -29,7 +29,7 @@ import java.util.TimerTask;
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.4, Aug 27, 2018
+ * @version 2.0.2.5, Aug 30, 2018
  */
 public final class Cron extends TimerTask {
 
@@ -120,7 +120,7 @@ public final class Cron extends TimerTask {
 
             LOGGER.log(loggingLevel, "Executed scheduled task [url=" + url + ", response=" + content + "]");
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Scheduled task execute failed [" + url + "]", e);
+            LOGGER.log(Level.ERROR, "Scheduled task execute failed [" + url + ", timeout=" + timeout + "]", e);
         }
     }
 
