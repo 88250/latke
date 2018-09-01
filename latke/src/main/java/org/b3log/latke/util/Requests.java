@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+import org.apache.commons.io.IOUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -36,7 +37,7 @@ import java.util.regex.Pattern;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 1.1.4.2, Apr 1, 2018
+ * @version 1.1.4.3, Sep 1, 2018
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -462,36 +463,25 @@ public final class Requests {
     public static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response) {
         response.setContentType("application/json");
 
-        final StringBuilder sb = new StringBuilder();
-        BufferedReader reader;
-
         final String errMsg = "Can not parse request[requestURI=" + request.getRequestURI() + ", method=" + request.getMethod()
                 + "], returns an empty json object";
 
         try {
+            BufferedReader reader;
             try {
                 reader = request.getReader();
             } catch (final IllegalStateException illegalStateException) {
                 reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
             }
 
-            String line = reader.readLine();
-
-            while (null != line) {
-                sb.append(line);
-                line = reader.readLine();
-            }
-            reader.close();
-
-            String tmp = sb.toString();
-
+            String tmp = IOUtils.toString(reader);
             if (Strings.isEmptyOrNull(tmp)) {
                 tmp = "{}";
             }
 
             return new JSONObject(tmp);
-        } catch (final Exception ex) {
-            LOGGER.log(Level.ERROR, errMsg, ex);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Parses request JSON object failed: " + e.getMessage());
 
             return new JSONObject();
         }
