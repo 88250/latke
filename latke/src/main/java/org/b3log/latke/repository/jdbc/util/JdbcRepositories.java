@@ -39,7 +39,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Jun 28, 2018
+ * @version 2.0.0.2, Sep 1, 2018
  */
 public final class JdbcRepositories {
 
@@ -289,10 +289,11 @@ public final class JdbcRepositories {
     /**
      * Generates repository.json from databases.
      *
-     * @param tableNames the specified table names for generation
-     * @param destPath   the specified path of repository.json file to generate
+     * @param tablePrefix the specified table prefix, for example "symphony_". An empty string {@code ""} means no table prefix
+     * @param tableNames  the specified table names for generation
+     * @param destPath    the specified path of repository.json file to generate
      */
-    public static void initRepositoryJSON(final Set<String> tableNames, final String destPath) {
+    public static void initRepositoryJSON(final String tablePrefix, final Set<String> tableNames, final String destPath) {
         Connection connection;
         FileWriter writer = null;
 
@@ -315,26 +316,26 @@ public final class JdbcRepositories {
             repositoryJSON.put("repositories", repositories);
 
             while (resultSet.next()) {
-                final String tableName = resultSet.getString("TABLE_NAME");
-
+                final String fullTableName = resultSet.getString("TABLE_NAME");
+                final String tableName = StringUtils.substringAfter(fullTableName, tablePrefix);
                 if (!tableNames.contains(tableName)) {
                     continue;
                 }
 
                 final JSONObject repository = new JSONObject();
-
                 repositories.put(repository);
-
                 repository.put("name", tableName);
+                String remarks = resultSet.getString("REMARKS");
+                if (!Strings.isEmptyOrNull(remarks)) {
+                    repository.put("description", remarks);
+                }
                 final JSONArray keys = new JSONArray();
-
                 repository.put("keys", keys);
 
-                final ResultSet rs = databaseMetaData.getColumns(null, "%", tableName, "%");
-
+                final ResultSet rs = databaseMetaData.getColumns(null, "%", fullTableName, "%");
                 while (rs.next()) {
                     final String columnName = rs.getString("COLUMN_NAME");
-                    final String remarks = rs.getString("REMARKS");
+                    remarks = rs.getString("REMARKS");
                     final int dataType = rs.getInt("DATA_TYPE");
                     final int length = rs.getInt("COLUMN_SIZE");
                     final int nullable = rs.getInt("NULLABLE");
@@ -345,7 +346,10 @@ public final class JdbcRepositories {
                     if (!Strings.isEmptyOrNull(remarks)) {
                         key.put("description", remarks);
                     }
-                    key.put("nullable", 0 == nullable ? false : true);
+                    if (0 != nullable) {
+                        key.put("nullable", true);
+                    }
+
                     switch (dataType) {
                         case Types.CHAR:
                         case Types.LONGNVARCHAR:
@@ -357,12 +361,15 @@ public final class JdbcRepositories {
 
                             break;
                         case Types.BIGINT:
+                            key.put("type", "long");
+
+                            break;
                         case Types.INTEGER:
                         case Types.SMALLINT:
                         case Types.TINYINT:
                             key.put("type", "int");
-                            break;
 
+                            break;
                         case Types.DATE:
                             key.put("type", "Date");
 
@@ -390,6 +397,10 @@ public final class JdbcRepositories {
                             key.put("type", "Blob");
 
                             break;
+                        case Types.DOUBLE:
+                            key.put("type", "double");
+
+                            break;
                         default:
                             throw new IllegalStateException("Unsupported type [" + dataType + ']');
                     }
@@ -400,7 +411,7 @@ public final class JdbcRepositories {
 
             FileUtils.deleteQuietly(file);
             writer = new FileWriter(file);
-            final String content = repositoryJSON.toString(Integer.valueOf("4"));
+            final String content = repositoryJSON.toString(Integer.valueOf("2"));
             IOUtils.write(content, writer);
 
             LOGGER.log(Level.INFO, "Generated repository definition file [" + destPath + "]");
