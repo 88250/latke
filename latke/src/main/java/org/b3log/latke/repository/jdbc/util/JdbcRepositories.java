@@ -22,7 +22,6 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.Repositories;
 import org.b3log.latke.repository.jdbc.JdbcFactory;
-import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -326,7 +325,7 @@ public final class JdbcRepositories {
                 repositories.put(repository);
                 repository.put("name", tableName);
                 String remarks = resultSet.getString("REMARKS");
-                if (!Strings.isEmptyOrNull(remarks)) {
+                if (StringUtils.isNotBlank(remarks)) {
                     repository.put("description", remarks);
                 }
                 final JSONArray keys = new JSONArray();
@@ -343,7 +342,7 @@ public final class JdbcRepositories {
                     final JSONObject key = new JSONObject();
                     keys.put(key);
                     key.put("name", columnName);
-                    if (!Strings.isEmptyOrNull(remarks)) {
+                    if (StringUtils.isNotBlank(remarks)) {
                         key.put("description", remarks);
                     }
                     if (0 != nullable) {

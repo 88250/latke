@@ -15,12 +15,6 @@
  */
 package org.b3log.latke.remote;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -29,21 +23,23 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
-import org.b3log.latke.repository.AbstractRepository;
-import org.b3log.latke.repository.Query;
-import org.b3log.latke.repository.Repositories;
-import org.b3log.latke.repository.Repository;
-import org.b3log.latke.repository.Transaction;
+import org.b3log.latke.repository.*;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
-import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.Locale;
 
 /**
  * Accesses repository via HTTP protocol.
@@ -78,13 +74,13 @@ public class RepositoryAccessor {
      * </pre>
      * </p>
      *
-     * @param context the specified HTTP request context
-     * @param request the specified HTTP servlet request
+     * @param context  the specified HTTP request context
+     * @param request  the specified HTTP servlet request
      * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.GET)
     public void getRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
-            final HttpServletResponse response) {
+                                        final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
 
         context.setRenderer(renderer);
@@ -122,13 +118,13 @@ public class RepositoryAccessor {
      * </pre>
      * </p>
      *
-     * @param context the specified HTTP request context
-     * @param request the specified HTTP servlet request
+     * @param context  the specified HTTP request context
+     * @param request  the specified HTTP servlet request
      * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repositories/writable", method = HTTPRequestMethod.PUT)
     public void setRepositoriesWritable(final HTTPRequestContext context, final HttpServletRequest request,
-            final HttpServletResponse response) {
+                                        final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
 
         context.setRenderer(renderer);
@@ -177,13 +173,13 @@ public class RepositoryAccessor {
      * </pre>
      * </p>
      *
-     * @param context the specified HTTP request context
-     * @param request the specified HTTP servlet request
+     * @param context  the specified HTTP request context
+     * @param request  the specified HTTP servlet request
      * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repository/names", method = HTTPRequestMethod.GET)
     public void getRepositoryNames(final HTTPRequestContext context, final HttpServletRequest request,
-            final HttpServletResponse response) {
+                                   final HttpServletResponse response) {
         final JSONRenderer renderer = new JSONRenderer();
 
         context.setRenderer(renderer);
@@ -225,8 +221,8 @@ public class RepositoryAccessor {
      * </pre>
      * </p>
      *
-     * @param context the specified HTTP request context
-     * @param request the specified HTTP servlet request
+     * @param context  the specified HTTP request context
+     * @param request  the specified HTTP servlet request
      * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repository/data", method = HTTPRequestMethod.GET)
@@ -296,8 +292,8 @@ public class RepositoryAccessor {
      * </pre>
      * </p>
      *
-     * @param context the specified HTTP request context
-     * @param request the specified HTTP servlet request
+     * @param context  the specified HTTP request context
+     * @param request  the specified HTTP servlet request
      * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repository/data", method = HTTPRequestMethod.POST)
@@ -403,8 +399,8 @@ public class RepositoryAccessor {
      * </pre>
      * </p>
      *
-     * @param context the specified HTTP request context
-     * @param request the specified HTTP servlet request
+     * @param context  the specified HTTP request context
+     * @param request  the specified HTTP servlet request
      * @param response the specified HTTP servlet response
      */
     @RequestProcessing(value = "/latke/remote/repository/tables", method = HTTPRequestMethod.PUT)
@@ -435,7 +431,7 @@ public class RepositoryAccessor {
      * specified json object to render.
      * </p>
      *
-     * @param request the specified request
+     * @param request    the specified request
      * @param jsonObject the specified json object
      * @return {@code true} if authenticated, returns {@code false} otherwise
      */
@@ -449,13 +445,13 @@ public class RepositoryAccessor {
         final String userName = request.getParameter("userName");
         final String password = request.getParameter("password");
 
-        if (Strings.isEmptyOrNull(userName)) {
+        if (StringUtils.isBlank(userName)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[userName]");
             return false;
         }
 
-        if (Strings.isEmptyOrNull(password)) {
+        if (StringUtils.isBlank(password)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[password]");
             return false;
@@ -482,7 +478,7 @@ public class RepositoryAccessor {
      * json object to render.
      * </p>
      *
-     * @param request the specified request
+     * @param request    the specified request
      * @param jsonObject the specified jsonObject
      * @return {@code true} if it is bad, returns {@code false} otherwise
      */
@@ -491,19 +487,19 @@ public class RepositoryAccessor {
         final String pageNumString = request.getParameter("pageNum");
         final String pageSizeString = request.getParameter("pageSize");
 
-        if (Strings.isEmptyOrNull(repositoryName)) {
+        if (StringUtils.isBlank(repositoryName)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[repositoryName]");
             return true;
         }
 
-        if (Strings.isEmptyOrNull(pageNumString)) {
+        if (StringUtils.isBlank(pageNumString)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[pageNum]");
             return true;
         }
 
-        if (Strings.isEmptyOrNull(pageSizeString)) {
+        if (StringUtils.isBlank(pageSizeString)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[pageSize]");
             return true;
@@ -536,16 +532,16 @@ public class RepositoryAccessor {
      * json object to render.
      * </p>
      *
-     * @param request the specified request
-     * @param jsonObject the specified jsonObject
+     * @param request     the specified request
+     * @param jsonObject  the specified jsonObject
      * @param dataBuilder the specified data builder
      * @return {@code true} if it is bad, returns {@code false} otherwise
      */
     private boolean badPutDataRequest(final HttpServletRequest request, final JSONObject jsonObject,
-            final StringBuilder dataBuilder) {
+                                      final StringBuilder dataBuilder) {
         final String repositoryName = request.getParameter("repositoryName");
 
-        if (Strings.isEmptyOrNull(repositoryName)) {
+        if (StringUtils.isBlank(repositoryName)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[repositoryName]");
             return true;
@@ -553,7 +549,7 @@ public class RepositoryAccessor {
 
         String dataContent = request.getParameter("data");
 
-        if (Strings.isEmptyOrNull(dataContent)) {
+        if (StringUtils.isBlank(dataContent)) {
             try {
                 final BufferedReader reader = request.getReader();
 
@@ -566,7 +562,7 @@ public class RepositoryAccessor {
             }
         }
 
-        if (Strings.isEmptyOrNull(dataContent)) {
+        if (StringUtils.isBlank(dataContent)) {
             jsonObject.put(Keys.STATUS_CODE, HttpServletResponse.SC_BAD_REQUEST);
             jsonObject.put(Keys.MSG, "Requires parameter[data]");
             return true;

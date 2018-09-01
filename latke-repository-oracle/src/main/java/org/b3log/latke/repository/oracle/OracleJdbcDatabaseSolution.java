@@ -24,7 +24,6 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 import org.b3log.latke.repository.oracle.mapping.*;
-import org.b3log.latke.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,7 @@ SELECT * FROM
 WHERE r__ >= (((pageNumber-1) * pageSize) + 1)
          */
         final StringBuilder sql = new StringBuilder();
-        final String orderBy = Strings.isEmptyOrNull(orderBySql) ? " order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
+        final String orderBy = StringUtils.isBlank(orderBySql) ? " order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
 
         sql.append(selectSql).append(" from (select a.*, rownum r__ from (select * from ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {

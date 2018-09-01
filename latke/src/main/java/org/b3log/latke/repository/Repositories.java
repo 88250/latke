@@ -232,7 +232,7 @@ public final class Repositories {
      * @return keys description, returns {@code null} if not found
      */
     public static JSONArray getRepositoryKeysDescription(final String repositoryName) {
-        if (Strings.isEmptyOrNull(repositoryName)) {
+        if (StringUtils.isBlank(repositoryName)) {
             return null;
         }
 
@@ -261,7 +261,7 @@ public final class Repositories {
      * @return a set of key names, returns an empty set if not found
      */
     public static Set<String> getKeyNames(final String repositoryName) {
-        if (Strings.isEmptyOrNull(repositoryName)) {
+        if (StringUtils.isBlank(repositoryName)) {
             return Collections.emptySet();
         }
 

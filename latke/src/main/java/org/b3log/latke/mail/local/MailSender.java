@@ -15,20 +15,17 @@
  */
 package org.b3log.latke.mail.local;
 
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.Set;
-import javax.mail.Authenticator;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.mail.MailService.Message;
+
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.internet.MimeUtility;
-import org.b3log.latke.mail.MailService.Message;
-import org.b3log.latke.util.Strings;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Email sender.
@@ -102,7 +99,7 @@ final class MailSender {
             return null;
         }
 
-        if (Strings.isEmptyOrNull(message.getFrom())) {
+        if (StringUtils.isBlank(message.getFrom())) {
             throw new MessagingException("Null from");
         }
 

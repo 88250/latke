@@ -30,7 +30,6 @@ import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.util.Stopwatchs;
-import org.b3log.latke.util.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -303,7 +302,7 @@ public class PluginManager {
         final String[] eventListenerClassArray = eventListenerClasses.split(",");
 
         for (final String eventListenerClassName : eventListenerClassArray) {
-            if (Strings.isEmptyOrNull(eventListenerClassName)) {
+            if (StringUtils.isBlank(eventListenerClassName)) {
                 LOGGER.log(Level.INFO, "No event listener to load for plugin[name={0}]", plugin.getName());
                 return;
             }

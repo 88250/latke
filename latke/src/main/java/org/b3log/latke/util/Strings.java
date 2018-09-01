@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -29,7 +31,7 @@ import java.util.regex.Pattern;
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, Aug 2, 2018
+ * @version 2.0.0.0, Sep 1, 2018
  */
 public final class Strings {
 
@@ -72,7 +74,7 @@ public final class Strings {
      * @return {@code true} if it is, returns {@code false} otherwise
      */
     public static boolean isIPv4(final String ip) {
-        if (isEmptyOrNull(ip)) {
+        if (StringUtils.isBlank(ip)) {
             return false;
         }
 
@@ -153,7 +155,7 @@ public final class Strings {
      * returns {@code false} otherwise
      */
     public static boolean isEmail(final String string) {
-        if (isEmptyOrNull(string)) {
+        if (StringUtils.isBlank(string)) {
             return false;
         }
 
@@ -180,17 +182,6 @@ public final class Strings {
         }
 
         return EMAIL_PATTERN.matcher(string).matches();
-    }
-
-    /**
-     * Determines whether the specified string is {@code ""} or {@code null}.
-     *
-     * @param string the specified string
-     * @return {@code true} if the specified string is {@code ""} or
-     * {@code null}, returns {@code false} otherwise
-     */
-    public static boolean isEmptyOrNull(final String string) {
-        return string == null || string.length() == 0;
     }
 
     /**

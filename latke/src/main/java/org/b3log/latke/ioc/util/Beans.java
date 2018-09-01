@@ -16,6 +16,7 @@
 package org.b3log.latke.ioc.util;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.ioc.inject.*;
 import org.b3log.latke.util.Reflections;
 import java.lang.annotation.Annotation;
@@ -185,7 +186,7 @@ public final class Beans {
 
             LOGGER.log(Level.TRACE, "Class [name={0}, simpleName={1}]", clazz.getName(), className);
 
-            if (Strings.isEmptyOrNull(className)) {
+            if (StringUtils.isBlank(className)) {
                 return null;
             }
 

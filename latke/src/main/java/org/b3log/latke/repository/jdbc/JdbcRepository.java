@@ -26,7 +26,6 @@ import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.jdbc.util.JdbcUtil;
 import org.b3log.latke.util.CollectionUtils;
-import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +71,7 @@ public final class JdbcRepository implements Repository {
 
     static {
         final String value = Latkes.getLocalProperty("keyGen");
-        if (Strings.isEmptyOrNull(value) || "org.b3log.latke.repository.TimeMillisKeyGenerator".equals(value)) {
+        if (StringUtils.isBlank(value) || "org.b3log.latke.repository.TimeMillisKeyGenerator".equals(value)) {
             KEY_GEN = new TimeMillisKeyGenerator();
         } else if ("DB".equals(value)) {
             KEY_GEN = new DBKeyGenerator();
@@ -227,7 +226,7 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public void update(final String id, final JSONObject jsonObject) throws RepositoryException {
-        if (Strings.isEmptyOrNull(id)) {
+        if (StringUtils.isBlank(id)) {
             return;
         }
 
@@ -250,7 +249,7 @@ public final class JdbcRepository implements Repository {
             JdbcUtil.fromOracleClobEmpty(jsonObject);
 
             final String sql = sqlBuilder.toString();
-            if (Strings.isEmptyOrNull(sql)) {
+            if (StringUtils.isBlank(sql)) {
                 return;
             }
 
@@ -350,7 +349,7 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public void remove(final String id) throws RepositoryException {
-        if (Strings.isEmptyOrNull(id)) {
+        if (StringUtils.isBlank(id)) {
             return;
         }
 

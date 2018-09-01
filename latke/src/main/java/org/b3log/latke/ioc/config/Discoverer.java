@@ -15,11 +15,11 @@
  */
 package org.b3log.latke.ioc.config;
 
-
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -29,7 +29,6 @@ import org.b3log.latke.servlet.ClassPathResolver;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.ArrayUtils;
-import org.b3log.latke.util.Strings;
 
 import java.io.DataInputStream;
 import java.net.URL;
@@ -37,7 +36,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 
 /**
  * Bean discoverer.
@@ -55,29 +53,30 @@ public final class Discoverer {
     /**
      * Built-in component packages.
      */
-    private static final String[] BUILT_IN_COMPONENT_PKGS = new String[] {"org.b3log.latke.remote"};
+    private static final String[] BUILT_IN_COMPONENT_PKGS = new String[]{"org.b3log.latke.remote"};
 
     /**
      * Private constructor.
      */
-    private Discoverer() {}
+    private Discoverer() {
+    }
 
     /**
      * Scans classpath to discover bean classes.
-     * 
-     * @param scanPath the paths to scan, using ',' as the separator. There are two types of the scanPath: 
-     * <ul>
-     *   <li>package: org.b3log.process</li>
-     *   <li>ant-style classpath: org/b3log/** /*process.class</li>
-     * </ul>
+     *
+     * @param scanPath the paths to scan, using ',' as the separator. There are two types of the scanPath:
+     *                 <ul>
+     *                 <li>package: org.b3log.process</li>
+     *                 <li>ant-style classpath: org/b3log/** /*process.class</li>
+     *                 </ul>
      * @return discovered classes
      * @throws Exception exception
      */
     public static Collection<Class<?>> discover(final String scanPath) throws Exception {
-        if (Strings.isEmptyOrNull(scanPath)) {
+        if (StringUtils.isBlank(scanPath)) {
             throw new IllegalStateException("Please specify the [scanPath]");
         }
-        
+
         LOGGER.debug("scanPath[" + scanPath + "]");
 
         // See issue #17 (https://github.com/b3log/latke/issues/17) for more details
@@ -140,20 +139,20 @@ public final class Discoverer {
                 }
 
                 if (annotation.getTypeName().equals(Service.class.getName())
-                    || (annotation.getTypeName()).equals(Repository.class.getName())) {
+                        || (annotation.getTypeName()).equals(Repository.class.getName())) {
                     // Service and Repository is singleton scoped by default
                     maybeBeanClass = true;
 
                     break;
                 }
-                
+
                 if (annotation.getTypeName().equals(Named.class.getName())) {
                     // Annoatated with Named maybe a bean class
                     maybeBeanClass = true;
-                    
+
                     break;
                 }
-                
+
                 // Others will not load
             }
 

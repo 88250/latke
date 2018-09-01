@@ -16,6 +16,7 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -188,11 +189,11 @@ public final class Requests {
     public static String getRemoteAddr(final HttpServletRequest request) {
         String ret = request.getHeader("X-forwarded-for");
 
-        if (Strings.isEmptyOrNull(ret)) {
+        if (StringUtils.isBlank(ret)) {
             ret = request.getHeader("X-Real-IP");
         }
 
-        if (Strings.isEmptyOrNull(ret)) {
+        if (StringUtils.isBlank(ret)) {
             return request.getRemoteAddr();
         }
 
@@ -238,7 +239,7 @@ public final class Requests {
     public static boolean searchEngineBotRequest(final HttpServletRequest request) {
         final String userAgent = request.getHeader("User-Agent");
 
-        if (Strings.isEmptyOrNull(userAgent)) {
+        if (StringUtils.isBlank(userAgent)) {
             return false;
         }
 
@@ -336,7 +337,7 @@ public final class Requests {
     public static boolean mobileRequest(final HttpServletRequest request) {
         final String userAgent = request.getHeader("User-Agent");
 
-        if (Strings.isEmptyOrNull(userAgent)) {
+        if (StringUtils.isBlank(userAgent)) {
             return false;
         }
 
@@ -382,7 +383,7 @@ public final class Requests {
     public static int getCurrentPageNum(final String path) {
         LOGGER.log(Level.TRACE, "Getting current page number[path={0}]", path);
 
-        if (Strings.isEmptyOrNull(path) || path.equals("/")) {
+        if (StringUtils.isBlank(path) || path.equals("/")) {
             return 1;
         }
 
@@ -405,7 +406,7 @@ public final class Requests {
     public static int getPageSize(final String path) {
         LOGGER.log(Level.TRACE, "Page number[string={0}]", path);
 
-        if (Strings.isEmptyOrNull(path)) {
+        if (StringUtils.isBlank(path)) {
             return DEFAULT_PAGE_SIZE;
         }
 
@@ -434,7 +435,7 @@ public final class Requests {
     public static int getWindowSize(final String path) {
         LOGGER.log(Level.TRACE, "Page number[string={0}]", path);
 
-        if (Strings.isEmptyOrNull(path)) {
+        if (StringUtils.isBlank(path)) {
             return DEFAULT_WINDOW_SIZE;
         }
 
@@ -475,7 +476,7 @@ public final class Requests {
             }
 
             String tmp = IOUtils.toString(reader);
-            if (Strings.isEmptyOrNull(tmp)) {
+            if (StringUtils.isBlank(tmp)) {
                 tmp = "{}";
             }
 

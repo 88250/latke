@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.handler;
 
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.LatkeBeanManager;
@@ -30,7 +31,6 @@ import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.util.AntPathMatcher;
 import org.b3log.latke.util.DefaultMatcher;
 import org.b3log.latke.util.RegexPathMatcher;
-import org.b3log.latke.util.Strings;
 import org.weborganic.furi.URIResolveResult;
 
 import javax.servlet.http.HttpServletRequest;
@@ -188,7 +188,7 @@ public class RequestDispatchHandler implements Handler {
     private String getHTTPMethod(final HttpServletRequest request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
 
-        if (Strings.isEmptyOrNull(ret)) {
+        if (StringUtils.isBlank(ret)) {
             ret = request.getMethod();
         }
 
@@ -204,7 +204,7 @@ public class RequestDispatchHandler implements Handler {
     private String getRequestURI(final HttpServletRequest request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_URI);
 
-        if (Strings.isEmptyOrNull(ret)) {
+        if (StringUtils.isBlank(ret)) {
             ret = request.getRequestURI();
         }
 

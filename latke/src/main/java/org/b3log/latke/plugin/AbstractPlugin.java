@@ -18,20 +18,6 @@ package org.b3log.latke.plugin;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import javax.servlet.ServletContext;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
@@ -43,9 +29,15 @@ import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.servlet.HTTPRequestContext;
-import org.b3log.latke.util.Strings;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.Serializable;
+import java.io.StringWriter;
+import java.util.*;
 
 
 /**
@@ -153,7 +145,8 @@ public abstract class AbstractPlugin implements Serializable {
     /**
      * Unplugs.
      */
-    public void unplug() {}
+    public void unplug() {
+    }
 
     /**
      * Gets the directory name of this plugin.
@@ -193,8 +186,7 @@ public abstract class AbstractPlugin implements Serializable {
     public void readLangs() {
         final ServletContext servletContext = AbstractServletListener.getServletContext();
 
-        @SuppressWarnings("unchecked")
-        final Set<String> resourcePaths = servletContext.getResourcePaths("/plugins/" + dirName);
+        @SuppressWarnings("unchecked") final Set<String> resourcePaths = servletContext.getResourcePaths("/plugins/" + dirName);
 
         for (final String resourcePath : resourcePaths) {
             if (resourcePath.contains("lang_") && resourcePath.endsWith(".properties")) {
@@ -211,7 +203,7 @@ public abstract class AbstractPlugin implements Serializable {
                     langs.put(key, props);
                 } catch (final Exception e) {
                     Logger.getLogger(getClass().getName()).log(Level.ERROR, "Get plugin[name=" + name + "]'s language configuration failed",
-                        e);
+                            e);
                 }
             }
         }
@@ -221,7 +213,7 @@ public abstract class AbstractPlugin implements Serializable {
      * Gets language label with the specified locale and key.
      *
      * @param locale the specified locale
-     * @param key the specified key
+     * @param key    the specified key
      * @return language label
      */
     public String getLang(final Locale locale, final String key) {
@@ -232,7 +224,7 @@ public abstract class AbstractPlugin implements Serializable {
      * prePlug after the real method be invoked.
      *
      * @param context context
-     * @param args args
+     * @param args    args
      */
     public abstract void prePlug(final HTTPRequestContext context, final Map<String, Object> args);
 
@@ -240,8 +232,8 @@ public abstract class AbstractPlugin implements Serializable {
      * postPlug after the dataModel of the main-view be generated.
      *
      * @param dataModel dataModel
-     * @param context context
-     * @param ret ret
+     * @param context   context
+     * @param ret       ret
      */
     public abstract void postPlug(Map<String, Object> dataModel, HTTPRequestContext context, Object ret);
 
@@ -280,8 +272,8 @@ public abstract class AbstractPlugin implements Serializable {
      * Plugs with the specified data model and the args from request.
      *
      * @param dataModel dataModel
-     * @param context context
-     * @param ret ret
+     * @param context   context
+     * @param ret       ret
      */
     public void plug(final Map<String, Object> dataModel, final HTTPRequestContext context, final Object ret) {
         String content = (String) dataModel.get(Plugin.PLUGINS);
@@ -321,10 +313,10 @@ public abstract class AbstractPlugin implements Serializable {
 
         final StringBuilder keyBuilder = new StringBuilder(language);
 
-        if (!Strings.isEmptyOrNull(country)) {
+        if (StringUtils.isNotBlank(country)) {
             keyBuilder.append("_").append(country);
         }
-        if (!Strings.isEmptyOrNull(variant)) {
+        if (StringUtils.isNotBlank(variant)) {
             keyBuilder.append("_").append(variant);
         }
 
@@ -400,7 +392,6 @@ public abstract class AbstractPlugin implements Serializable {
      *     "status": "" // Enumeration name of {@link PluginStatus}
      * }
      * </pre>
-     *
      * @throws JSONException if can not convert
      */
     public JSONObject toJSONObject() throws JSONException {
@@ -590,19 +581,18 @@ public abstract class AbstractPlugin implements Serializable {
      * to enable :start()
      * to disable :stop()
      * </p>
-     *
      */
     public void changeStatus() {
 
         switch (status) {
-        case ENABLED:
-            start();
-            break;
+            case ENABLED:
+                start();
+                break;
 
-        case DISABLED:
-            stop();
+            case DISABLED:
+                stop();
 
-        default:
+            default:
         }
     }
 

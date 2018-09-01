@@ -28,7 +28,6 @@ import org.b3log.latke.repository.sqlserver.mapping.DateMapping;
 import org.b3log.latke.repository.sqlserver.mapping.DatetimeMapping;
 import org.b3log.latke.repository.sqlserver.mapping.DecimalMapping;
 import org.b3log.latke.repository.sqlserver.mapping.StringMapping;
-import org.b3log.latke.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          ) a 
          where rownum>10000 and rownum<10501
          */
-        final String over = Strings.isEmptyOrNull(orderBySql) ? "order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
+        final String over = StringUtils.isBlank(orderBySql) ? "order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
 
         sql.append(selectSql).append(" from (select top 100 percent ROW_NUMBER() over(").append(over).append(") rownum, * from ").append(
                 tableName);

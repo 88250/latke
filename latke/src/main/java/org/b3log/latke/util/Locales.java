@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
@@ -102,7 +103,7 @@ public final class Locales {
             String language = "zh";
             String country = "CN";
 
-            if (!Strings.isEmptyOrNull(languageHeader)) {
+            if (StringUtils.isNotBlank(languageHeader)) {
                 language = getLanguage(languageHeader);
                 country = getCountry(languageHeader);
             }

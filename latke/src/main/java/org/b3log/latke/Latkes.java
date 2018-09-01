@@ -24,7 +24,6 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.servlet.AbstractServletListener;
-import org.b3log.latke.util.Strings;
 import org.b3log.latke.util.freemarker.Templates;
 
 import javax.servlet.ServletContext;
@@ -352,7 +351,7 @@ public final class Latkes {
         if (null == server) {
             final StringBuilder serverBuilder = new StringBuilder(getServerScheme()).append("://").append(getServerHost());
             final String port = getServerPort();
-            if (!Strings.isEmptyOrNull(port) && !port.equals("80")) {
+            if (StringUtils.isNotBlank(port) && !port.equals("80")) {
                 serverBuilder.append(':').append(port);
             }
 
@@ -472,7 +471,7 @@ public final class Latkes {
             final StringBuilder staticServerBuilder = new StringBuilder(getStaticServerScheme()).append("://").append(getStaticServerHost());
 
             final String port = getStaticServerPort();
-            if (!Strings.isEmptyOrNull(port) && !port.equals("80")) {
+            if (StringUtils.isNotBlank(port) && !port.equals("80")) {
                 staticServerBuilder.append(':').append(port);
             }
 
@@ -604,7 +603,7 @@ public final class Latkes {
 
                 final String jdbcURL = getLocalProperty("jdbc.URL");
 
-                if (Strings.isEmptyOrNull(jdbcURL)) {
+                if (StringUtils.isBlank(jdbcURL)) {
                     throw new IllegalStateException("The jdbc.URL in local.properties is required");
                 }
 
