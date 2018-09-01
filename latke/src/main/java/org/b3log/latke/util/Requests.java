@@ -481,7 +481,7 @@ public final class Requests {
 
             return new JSONObject(tmp);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Parses request JSON object failed: " + e.getMessage());
+            LOGGER.log(Level.ERROR, "Parses request JSON object failed [" + e.getMessage() + "], returns an empty json object");
 
             return new JSONObject();
         }
