@@ -45,10 +45,11 @@ Latke 每个版本都会发布到 Maven 中央库，可在 pom.xml 中直接引�
 * [Latke 源码解析（一）Servlet 部分](https://hacpai.com/article/1493267456529)
 * [Latke 源码解析（二）IOC 部分](https://hacpai.com/article/1493620909167)
 
-## 讨论区
+## 社区
 
-* 到 Latke 官方[讨论区](https://hacpai.com/tag/Latke)发帖（推荐做法）
-* 来一发 [issue](https://github.com/b3log/latke/issues/new)
+* [讨论区](https://hacpai.com/tag/latke)
+* [报告问题](https://github.com/b3log/latke/issues/new/choose)
+* [Q 群 17370164](https://shang.qq.com/wpa/qunwpa?idkey=0bb80e452d38d5113c7bb2534cefc8155589d0bdce81c7d2e6d91930bcb6e2d7)
 
 ## 鸣谢
 
