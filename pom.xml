@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
     <name>Latke Parent</name>
     <url>https://github.com/b3log/latke</url>
-    <description>Yet another simple web framework based on Java servlet technology.</description>
+    <description>A Spring-like, JSON based Java Web Framework . 一个类似 Spring 但以 JSON 为主的 Java Web 框架。</description>
     <inceptionYear>2009</inceptionYear>
 
     <parent>
