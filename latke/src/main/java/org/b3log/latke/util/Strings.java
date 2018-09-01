@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +32,7 @@ import java.util.regex.Pattern;
  * String utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Sep 1, 2018
+ * @version 2.0.0.1, Sep 1, 2018
  */
 public final class Strings {
 
@@ -98,18 +99,14 @@ public final class Strings {
             return null;
         }
 
-        final BufferedReader bufferedReader = new BufferedReader(new StringReader(string));
         final List<String> ret = new ArrayList<>();
-
-        try {
+        try (final BufferedReader bufferedReader = new BufferedReader(new StringReader(string))) {
             String line = bufferedReader.readLine();
             while (null != line) {
                 ret.add(line);
 
                 line = bufferedReader.readLine();
             }
-        } finally {
-            bufferedReader.close();
         }
 
         return ret;
@@ -196,13 +193,7 @@ public final class Strings {
             return null;
         }
 
-        final String[] ret = new String[strings.length];
-
-        for (int i = 0; i < strings.length; i++) {
-            ret[i] = strings[i].trim();
-        }
-
-        return ret;
+        return Arrays.stream(strings).map(StringUtils::trim).toArray(size -> new String[size]);
     }
 
     /**
@@ -218,21 +209,7 @@ public final class Strings {
             return false;
         }
 
-        for (final String str : strings) {
-            if (null == str && null == string) {
-                return true;
-            }
-
-            if (null == string || null == str) {
-                continue;
-            }
-
-            if (string.equalsIgnoreCase(str)) {
-                return true;
-            }
-        }
-
-        return false;
+        return Arrays.stream(strings).anyMatch(str -> StringUtils.equalsIgnoreCase(string, str));
     }
 
     /**
@@ -247,21 +224,7 @@ public final class Strings {
             return false;
         }
 
-        for (final String str : strings) {
-            if (null == str && null == string) {
-                return true;
-            }
-
-            if (null == string || null == str) {
-                continue;
-            }
-
-            if (string.equals(str)) {
-                return true;
-            }
-        }
-
-        return false;
+        return Arrays.stream(strings).anyMatch(str -> StringUtils.equals(string, str));
     }
 
     /**
