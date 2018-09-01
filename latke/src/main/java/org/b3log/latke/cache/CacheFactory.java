@@ -42,7 +42,7 @@ public final class CacheFactory {
     private static final Map<String, Cache> CACHES = Collections.synchronizedMap(new HashMap<String, Cache>());
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private CacheFactory() {
     }

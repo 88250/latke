@@ -80,7 +80,7 @@ public final class Role {
     public static final String ROLE_USER_ID = "roleUserId";
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Role() {}
 }

@@ -66,7 +66,7 @@ public final class Locales {
     private static final int COUNTRY_END = 5;
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Locales() {
     }

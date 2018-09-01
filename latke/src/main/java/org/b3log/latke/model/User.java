@@ -76,7 +76,7 @@ public final class User {
     // End of Relations ////////////////////////////////////////////////////////
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private User() {}
 }

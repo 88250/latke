@@ -81,7 +81,7 @@ public final class Serializer {
     }
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Serializer() {}
 }

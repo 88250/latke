@@ -56,7 +56,7 @@ public final class CronService {
     private static final List<Timer> TIMERS = new ArrayList<>();
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private CronService() {
     }

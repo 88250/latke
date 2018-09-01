@@ -54,7 +54,7 @@ public final class Templates {
     }
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Templates() {
     }

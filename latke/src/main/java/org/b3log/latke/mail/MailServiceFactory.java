@@ -50,7 +50,7 @@ public final class MailServiceFactory {
     }
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private MailServiceFactory() {
     }

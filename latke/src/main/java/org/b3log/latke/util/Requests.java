@@ -95,7 +95,7 @@ public final class Requests {
     private static final int COOKIE_EXPIRY = 60 * 60 * 24; // 24 hours
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Requests() {
     }

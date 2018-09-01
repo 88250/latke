@@ -45,7 +45,7 @@ public final class Label {
     public static final String HTML_TITLE = "htmlTitle";
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Label() {}
 }

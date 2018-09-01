@@ -37,7 +37,7 @@ public final class Ids {
     private static final long ID_GEN_SLEEP_MILLIS = 50;
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Ids() {
     }

@@ -80,7 +80,7 @@ public final class Plugin {
     public static final String PLUGIN_STATUS = "status";
     
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Plugin() {}
 }

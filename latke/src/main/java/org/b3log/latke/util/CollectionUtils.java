@@ -28,7 +28,7 @@ import java.util.*;
 public final class CollectionUtils {
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private CollectionUtils() {
     }

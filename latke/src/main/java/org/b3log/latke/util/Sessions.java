@@ -79,7 +79,7 @@ public final class Sessions {
     }
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Sessions() {
     }

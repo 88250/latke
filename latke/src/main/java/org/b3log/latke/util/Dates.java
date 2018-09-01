@@ -48,7 +48,7 @@ public final class Dates {
     }
 
     /**
-     * Private default constructor.
+     * Private constructor.
      */
     private Dates() {
     }
