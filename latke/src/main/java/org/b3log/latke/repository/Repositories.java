@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Repository utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.0, Aug 21, 2018
+ * @version 1.0.2.1, Sep 5, 2018
  */
 public final class Repositories {
 
@@ -159,30 +159,25 @@ public final class Repositories {
     public static void check(final String repositoryName, final JSONObject jsonObject, final String... ignoredKeys)
             throws RepositoryException {
         if (null == jsonObject) {
-            throw new RepositoryException("Null to persist to repository[" + repositoryName + "]");
+            throw new RepositoryException("Null to persist to repository [" + repositoryName + "]");
         }
 
         final boolean needIgnoreKeys = null != ignoredKeys && 0 < ignoredKeys.length;
-
         final JSONArray names = jsonObject.names();
         final Set<Object> nameSet = CollectionUtils.jsonArrayToSet(names);
 
         final JSONArray keysDescription = getRepositoryKeysDescription(repositoryName);
-
-        if (null == keysDescription) { // Not found repository description
-            // Skips the checks
+        if (null == keysDescription) {
             return;
         }
 
-        final Set<String> keySet = new HashSet<String>();
+        final Set<String> keySet = new HashSet<>();
 
-        // Checks whether the specified json object has all keys defined,
-        // and whether the type of its value is appropriate
+        // Checks whether the specified json object has all keys defined, and whether the type of its value is appropriate
         for (int i = 0; i < keysDescription.length(); i++) {
             final JSONObject keyDescription = keysDescription.optJSONObject(i);
 
             final String key = keyDescription.optString("name");
-
             keySet.add(key);
 
             if (needIgnoreKeys && Strings.containsIgnoreCase(key, ignoredKeys)) {
@@ -190,8 +185,7 @@ public final class Repositories {
             }
 
             if (!keyDescription.optBoolean("nullable") && !nameSet.contains(key)) {
-                throw new RepositoryException(
-                        "A json object to persist to repository[name=" + repositoryName + "] does not contain a key[" + key + "]");
+                throw new RepositoryException("A json object to persist to repository [name=" + repositoryName + "] does not contain a key [" + key + "]");
             }
 
             // TODO: 88250, type and length validation
@@ -217,10 +211,8 @@ public final class Repositories {
         // Checks whether the specified json object has an redundant (undefined) key
         for (int i = 0; i < names.length(); i++) {
             final String name = names.optString(i);
-
             if (!keySet.contains(name)) {
-                throw new RepositoryException(
-                        "A json object to persist to repository[name=" + repositoryName + "] contains an redundant key[" + name + "]");
+                throw new RepositoryException("A json object to persist to repository [name=" + repositoryName + "] contains an redundant key [" + name + "]");
             }
         }
     }
@@ -241,17 +233,14 @@ public final class Repositories {
         }
 
         final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
-
         for (int i = 0; i < repositories.length(); i++) {
             final JSONObject repository = repositories.optJSONObject(i);
-
             if (repositoryName.equals(repository.optString("name"))) {
                 return repository.optJSONArray("keys");
             }
         }
 
-        throw new RuntimeException(
-                "Not found the repository[name=" + repositoryName + "] description, please define it in repositories.json");
+        throw new RuntimeException("Not found the repository [name=" + repositoryName + "] description, please define it in repositories.json");
     }
 
     /**
@@ -281,12 +270,10 @@ public final class Repositories {
         }
 
         if (null == keys) {
-            throw new RuntimeException(
-                    "Not found the repository[name=" + repositoryName + "] description, please define it in repositories.json");
+            throw new RuntimeException("Not found the repository [name=" + repositoryName + "] description, please define it in repositories.json");
         }
 
-        final Set<String> ret = new HashSet<String>();
-
+        final Set<String> ret = new HashSet<>();
         for (int i = 0; i < keys.length(); i++) {
             final JSONObject keyDescription = keys.optJSONObject(i);
             final String key = keyDescription.optString("name");
@@ -325,7 +312,7 @@ public final class Repositories {
         final InputStream inputStream = AbstractRepository.class.getResourceAsStream("/repository.json");
 
         if (null == inputStream) {
-            LOGGER.log(Level.INFO, "Not found repository description[repository.json] file under classpath");
+            LOGGER.log(Level.INFO, "Not found repository description [repository.json] file under classpath");
             return;
         }
 
