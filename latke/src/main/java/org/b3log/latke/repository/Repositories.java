@@ -27,7 +27,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Repository utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.1, Sep 5, 2018
+ * @version 1.1.0.0, Sep 5, 2018
  */
 public final class Repositories {
 
@@ -53,7 +52,7 @@ public final class Repositories {
      * &lt;repositoryName, {@link Repository repository}&gt;
      * <p>
      */
-    private static final Map<String, Repository> REPOS_HOLDER = new ConcurrentHashMap<String, Repository>();
+    private static final Map<String, Repository> REPOS_HOLDER = new ConcurrentHashMap<>();
 
     /**
      * Repositories description (repository.json).
@@ -162,20 +161,25 @@ public final class Repositories {
             throw new RepositoryException("Null to persist to repository [" + repositoryName + "]");
         }
 
+        final JSONObject repositoryDef = getRepositoryDef(repositoryName);
+        if (!repositoryDef.optBoolean("fieldcheck")) { // https://github.com/b3log/latke/issues/103
+            return;
+        }
+
         final boolean needIgnoreKeys = null != ignoredKeys && 0 < ignoredKeys.length;
         final JSONArray names = jsonObject.names();
         final Set<Object> nameSet = CollectionUtils.jsonArrayToSet(names);
 
-        final JSONArray keysDescription = getRepositoryKeysDescription(repositoryName);
-        if (null == keysDescription) {
+        final JSONArray keysDef = repositoryDef.optJSONArray("keys");
+        if (null == keysDef) {
             return;
         }
 
         final Set<String> keySet = new HashSet<>();
 
         // Checks whether the specified json object has all keys defined, and whether the type of its value is appropriate
-        for (int i = 0; i < keysDescription.length(); i++) {
-            final JSONObject keyDescription = keysDescription.optJSONObject(i);
+        for (int i = 0; i < keysDef.length(); i++) {
+            final JSONObject keyDescription = keysDef.optJSONObject(i);
 
             final String key = keyDescription.optString("name");
             keySet.add(key);
@@ -218,12 +222,38 @@ public final class Repositories {
     }
 
     /**
-     * Gets the keys description of an repository specified by the given repository name.
+     * Gets the repository definition of an repository specified by the given repository name.
      *
      * @param repositoryName the given repository name (maybe with table name prefix)
-     * @return keys description, returns {@code null} if not found
+     * @return repository definition, returns {@code null} if not found
      */
-    public static JSONArray getRepositoryKeysDescription(final String repositoryName) {
+    public static JSONObject getRepositoryDef(final String repositoryName) {
+        if (StringUtils.isBlank(repositoryName)) {
+            return null;
+        }
+
+        if (null == repositoriesDescription) {
+            return null;
+        }
+
+        final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
+        for (int i = 0; i < repositories.length(); i++) {
+            final JSONObject repository = repositories.optJSONObject(i);
+            if (repositoryName.equals(repository.optString("name"))) {
+                return repository;
+            }
+        }
+
+        throw new RuntimeException("Not found the repository [name=" + repositoryName + "] definition, please define it in repositories.json");
+    }
+
+    /**
+     * Gets the keys definition of an repository specified by the given repository name.
+     *
+     * @param repositoryName the given repository name (maybe with table name prefix)
+     * @return keys definition, returns {@code null} if not found
+     */
+    public static JSONArray getRepositoryKeysDef(final String repositoryName) {
         if (StringUtils.isBlank(repositoryName)) {
             return null;
         }
@@ -240,48 +270,7 @@ public final class Repositories {
             }
         }
 
-        throw new RuntimeException("Not found the repository [name=" + repositoryName + "] description, please define it in repositories.json");
-    }
-
-    /**
-     * Gets the key names of an repository specified by the given repository name.
-     *
-     * @param repositoryName the given repository name
-     * @return a set of key names, returns an empty set if not found
-     */
-    public static Set<String> getKeyNames(final String repositoryName) {
-        if (StringUtils.isBlank(repositoryName)) {
-            return Collections.emptySet();
-        }
-
-        if (null == repositoriesDescription) {
-            return null;
-        }
-
-        final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
-        JSONArray keys = null;
-
-        for (int i = 0; i < repositories.length(); i++) {
-            final JSONObject repository = repositories.optJSONObject(i);
-
-            if (repositoryName.equals(repository.optString("name"))) {
-                keys = repository.optJSONArray("keys");
-            }
-        }
-
-        if (null == keys) {
-            throw new RuntimeException("Not found the repository [name=" + repositoryName + "] description, please define it in repositories.json");
-        }
-
-        final Set<String> ret = new HashSet<>();
-        for (int i = 0; i < keys.length(); i++) {
-            final JSONObject keyDescription = keys.optJSONObject(i);
-            final String key = keyDescription.optString("name");
-
-            ret.add(key);
-        }
-
-        return ret;
+        throw new RuntimeException("Not found the repository [name=" + repositoryName + "] definition, please define it in repositories.json");
     }
 
     /**

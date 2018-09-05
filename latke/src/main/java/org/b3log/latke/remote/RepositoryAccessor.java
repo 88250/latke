@@ -45,7 +45,7 @@ import java.util.Locale;
  * Accesses repository via HTTP protocol.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.1.5, Jan 8, 2016
+ * @version 2.0.1.6, Sep 5, 2018
  */
 @RequestProcessor
 public class RepositoryAccessor {
@@ -338,8 +338,8 @@ public class RepositoryAccessor {
                 final JSONObject record = data.getJSONObject(i);
 
                 // Date type fixing
-                final JSONArray keysDescription = Repositories.getRepositoryKeysDescription(repositoryName);
-
+                final JSONObject repositoryDef = Repositories.getRepositoryDef(repositoryName);
+                final JSONArray keysDescription = repositoryDef.optJSONArray("keys");
                 for (int j = 0; j < keysDescription.length(); j++) {
                     final JSONObject keyDescription = keysDescription.optJSONObject(j);
                     final String key = keyDescription.optString("name");
