@@ -39,6 +39,7 @@ Latke 每个版本都会发布到 Maven 中央库，可在 pom.xml 中直接引�
 
 ## 文档
 
+* [《提问的智慧》精读注解版](https://hacpai.com/article/1536377163156)
 * [为什么又要造一个叫 Latke 的轮子](https://hacpai.com/article/1403847528022)
 * [Latke 快速上手指南](https://hacpai.com/article/1466870492857)
 * [Latke 配置剖析](https://hacpai.com/article/1474087427032)
