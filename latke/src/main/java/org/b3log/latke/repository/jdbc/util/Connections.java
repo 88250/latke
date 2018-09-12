@@ -30,13 +30,13 @@ import java.util.Properties;
 /**
  * JDBC connection utilities.
  * <p>
- * Uses <a href="https://github.com/alibaba/druid">Druid</a> or <a href="http://www.h2database.com">H2</a> as the underlying connection pool.
+ * Uses <a href="https://github.com/alibaba/druid">Druid</a> as the underlying connection pool.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.2.3.5, Sep 12, 2018
+ * @version 1.3.0.0, Sep 12, 2018
  */
 public final class Connections {
 
@@ -54,11 +54,6 @@ public final class Connections {
      * Connection pool - Druid.
      */
     private static DruidDataSource druid;
-
-    /**
-     * Transaction isolation.
-     */
-    private static String transactionIsolation;
 
     /**
      * Transaction isolation integer value.
@@ -92,7 +87,7 @@ public final class Connections {
                 final int minConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.minConnCnt"));
                 final int maxConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.maxConnCnt"));
 
-                transactionIsolation = Latkes.getLocalProperty("jdbc.transactionIsolation");
+                final String transactionIsolation = Latkes.getLocalProperty("jdbc.transactionIsolation");
                 if ("NONE".equals(transactionIsolation)) {
                     transactionIsolationInt = Connection.TRANSACTION_NONE;
                 } else if ("READ_COMMITTED".equals(transactionIsolation)) {
@@ -142,6 +137,32 @@ public final class Connections {
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Can not initialize database connection pool", e);
         }
+    }
+
+    /**
+     * Gets the max connection count.
+     *
+     * @return max connection count
+     */
+    public static int getMaxConnectionCount() {
+        if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
+            return -1;
+        }
+
+        return druid.getMaxActive();
+    }
+
+    /**
+     * Gets the active connection count.
+     *
+     * @return active connection count
+     */
+    public static int getActiveConnectionCount() {
+        if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
+            return -1;
+        }
+
+        return druid.getActiveCount();
     }
 
     /**
