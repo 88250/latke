@@ -21,11 +21,9 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Callstacks;
-import org.h2.jdbcx.JdbcConnectionPool;
 
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -38,7 +36,7 @@ import java.util.Properties;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.2.3.4, Oct 16, 2017
+ * @version 1.2.3.5, Sep 12, 2018
  */
 public final class Connections {
 
@@ -48,19 +46,9 @@ public final class Connections {
     private static final Logger LOGGER = Logger.getLogger(Connections.class);
 
     /**
-     * Pool type.
-     */
-    private static String poolType;
-
-    /**
      * Get connection timeout.
      */
     private static final int CONN_TIMEOUT = 5000;
-
-    /**
-     * Connection pool - H2.
-     */
-    private static JdbcConnectionPool h2;
 
     /**
      * Connection pool - Druid.
@@ -96,10 +84,7 @@ public final class Connections {
         try {
             if (Latkes.RuntimeDatabase.NONE != Latkes.getRuntimeDatabase()) {
                 final String driver = Latkes.getLocalProperty("jdbc.driver");
-
                 Class.forName(driver);
-
-                poolType = Latkes.getLocalProperty("jdbc.pool");
 
                 url = Latkes.getLocalProperty("jdbc.URL");
                 userName = Latkes.getLocalProperty("jdbc.username");
@@ -122,48 +107,40 @@ public final class Connections {
                     throw new IllegalStateException("Undefined transaction isolation [" + transactionIsolation + ']');
                 }
 
-                if ("h2".equals(poolType)) {
-                    LOGGER.log(Level.DEBUG, "Initialing database connection pool [h2]");
 
-                    h2 = JdbcConnectionPool.create(url, userName, password);
-                    h2.setMaxConnections(maxConnCnt);
-                } else if ("druid".equals(poolType)) {
-                    LOGGER.log(Level.DEBUG, "Initialing database connection pool [druid]");
-
-                    final Properties props = new Properties();
-                    final InputStream is = Connections.class.getResourceAsStream("/druid.properties");
-                    if (null != is) {
-                        props.load(is);
-                        druid = (DruidDataSource) DruidDataSourceFactory.createDataSource(props);
+                LOGGER.log(Level.DEBUG, "Initialing database connection pool [druid]");
+                final Properties props = new Properties();
+                final InputStream is = Connections.class.getResourceAsStream("/druid.properties");
+                if (null != is) {
+                    props.load(is);
+                    druid = (DruidDataSource) DruidDataSourceFactory.createDataSource(props);
+                    LOGGER.log(Level.DEBUG, "Created datasource with druid.properties");
+                } else {
+                    druid = new DruidDataSource();
+                    druid.setTestOnReturn(true);
+                    druid.setTestOnBorrow(false);
+                    druid.setTestWhileIdle(true);
+                    if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
+                        druid.setValidationQuery("SELECT 1 FROM DUAL");
                     } else {
-                        druid = new DruidDataSource();
-                        druid.setTestOnReturn(true);
-                        druid.setTestOnBorrow(false);
-                        druid.setTestWhileIdle(true);
-                        if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                            druid.setValidationQuery("SELECT 1 FROM DUAL");
-                        } else {
-                            druid.setValidationQuery("SELECT 1");
-                        }
-                        druid.setMaxWait(CONN_TIMEOUT);
-                        druid.setValidationQueryTimeout(CONN_TIMEOUT);
+                        druid.setValidationQuery("SELECT 1");
                     }
-
-                    druid.setUsername(userName);
-                    druid.setPassword(password);
-                    druid.setUrl(url);
-                    druid.setDriverClassName(driver);
-                    druid.setInitialSize(minConnCnt);
-                    druid.setMinIdle(minConnCnt);
-                    druid.setMaxActive(maxConnCnt);
-                } else if ("none".equals(poolType)) {
-                    LOGGER.info("Do not use database connection pool");
+                    druid.setMaxWait(CONN_TIMEOUT);
+                    druid.setValidationQueryTimeout(CONN_TIMEOUT);
                 }
 
-                LOGGER.info("Initialized connection pool [type=" + poolType + ']');
+                druid.setUsername(userName);
+                druid.setPassword(password);
+                druid.setUrl(url);
+                druid.setDriverClassName(driver);
+                druid.setInitialSize(minConnCnt);
+                druid.setMinIdle(minConnCnt);
+                druid.setMaxActive(maxConnCnt);
+
+                LOGGER.info("Initialized database connection pool [druid]");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Can not initialize database connection", e);
+            LOGGER.log(Level.ERROR, "Can not initialize database connection pool", e);
         }
     }
 
@@ -178,46 +155,22 @@ public final class Connections {
             Callstacks.printCallstack(Level.TRACE, new String[]{"org.b3log"}, null);
         }
 
-        if ("h2".equals(poolType)) {
-            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[]{h2.getActiveConnections()});
-            final Connection ret = h2.getConnection();
-
-            ret.setTransactionIsolation(transactionIsolationInt);
-            ret.setAutoCommit(false);
-
-            return ret;
-        } else if ("druid".equals(poolType)) {
-            LOGGER.log(Level.TRACE, "Connection pool[leasedConns={0}]", new Object[]{druid.getActiveConnections()});
-
-            final Connection ret = druid.getConnection();
-
-            ret.setTransactionIsolation(transactionIsolationInt);
-            ret.setAutoCommit(false);
-
-            return ret;
-        } else if ("none".equals(poolType)) {
-            final Connection ret = DriverManager.getConnection(url, userName, password);
-
-            ret.setTransactionIsolation(transactionIsolationInt);
-            ret.setAutoCommit(false);
-
-            return ret;
-        } else if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
+        if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
             return null;
         }
 
-        throw new IllegalStateException("Not found database connection pool [" + poolType + "]");
+        LOGGER.log(Level.TRACE, "Connection pool [leasedConns={0}]", new Object[]{druid.getActiveConnections()});
+        final Connection ret = druid.getConnection();
+        ret.setTransactionIsolation(transactionIsolationInt);
+        ret.setAutoCommit(false);
+
+        return ret;
     }
 
     /**
      * Shutdowns the connection pool.
      */
     public static void shutdownConnectionPool() {
-        if (null != h2) {
-            h2.dispose();
-            LOGGER.info("Closed [H2] database connection pool");
-        }
-
         if (null != druid) {
             druid.close();
             LOGGER.info("Closed [druid] database connection pool");
