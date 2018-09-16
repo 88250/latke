@@ -52,9 +52,8 @@ final class SynchronizedEventQueue extends AbstractEventQueue {
      * Fires the specified event.
      *
      * @param event the specified event
-     * @throws EventException event exception
      */
-    synchronized void fireEvent(final Event<?> event) throws EventException {
+    synchronized void fireEvent(final Event<?> event) {
         final String eventType = event.getType();
         List<Event<?>> events = synchronizedEvents.get(eventType);
         if (null == events) {
