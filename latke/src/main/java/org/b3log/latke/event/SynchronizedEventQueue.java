@@ -15,25 +15,23 @@
  */
 package org.b3log.latke.event;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Synchronized event queue.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Aug 16, 2010
+ * @version 1.0.0.2, Sep 16, 2018
  */
 final class SynchronizedEventQueue extends AbstractEventQueue {
-    
+
     /**
      * Synchronized event queue.
      */
-    private Map<String, List<Event<?>>> synchronizedEvents = new HashMap<String, List<Event<?>>>();
+    private Map<String, List<Event<?>>> synchronizedEvents = new HashMap<>();
 
     /**
      * Event manager.
@@ -59,9 +57,8 @@ final class SynchronizedEventQueue extends AbstractEventQueue {
     synchronized void fireEvent(final Event<?> event) throws EventException {
         final String eventType = event.getType();
         List<Event<?>> events = synchronizedEvents.get(eventType);
-
         if (null == events) {
-            events = new ArrayList<Event<?>>();
+            events = new ArrayList<>();
             synchronizedEvents.put(eventType, events);
         }
 
@@ -75,7 +72,7 @@ final class SynchronizedEventQueue extends AbstractEventQueue {
      *
      * @param event the specified event
      */
-    void removeEvent(final Event<?> event) {
+    synchronized void removeEvent(final Event<?> event) {
         synchronizedEvents.get(event.getType()).remove(event);
     }
 }

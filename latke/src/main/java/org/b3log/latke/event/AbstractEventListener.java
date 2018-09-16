@@ -15,18 +15,17 @@
  */
 package org.b3log.latke.event;
 
-
-import java.io.Serializable;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
+import java.io.Serializable;
 
 /**
  * Abstract event listener (Observer).
  *
  * @param <T> the type of event data
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.4, May 31, 2014
+ * @version 1.1.0.5, Sep 16, 2018
  */
 public abstract class AbstractEventListener<T> implements Serializable {
 
@@ -52,12 +51,10 @@ public abstract class AbstractEventListener<T> implements Serializable {
      * queue and event.
      *
      * @param eventQueue the specified event
-     * @param event the specified event
-     * @throws EventException event exception
+     * @param event      the specified event
      * @see #action(org.b3log.latke.event.Event)
      */
-    final void performAction(final AbstractEventQueue eventQueue, final Event<?> event) throws EventException {
-        @SuppressWarnings("unchecked")
+    final void performAction(final AbstractEventQueue eventQueue, final Event<?> event) {
         final Event<T> eventObject = (Event<T>) event;
 
         try {
