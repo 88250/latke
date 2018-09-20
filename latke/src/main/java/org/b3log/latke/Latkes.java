@@ -45,7 +45,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.7.9.20, Aug 5, 2018
+ * @version 2.7.9.21, Sep 20, 2018
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -590,7 +590,12 @@ public final class Latkes {
                 runtimeMode = RuntimeMode.PRODUCTION;
             }
         }
-        LOGGER.log(Level.INFO, "Runtime mode is [{0}]", getRuntimeMode());
+        if (Latkes.RuntimeMode.DEVELOPMENT == getRuntimeMode()) {
+            LOGGER.warn("!!!!Runtime mode is [" + Latkes.RuntimeMode.DEVELOPMENT + "], please make sure configured it with ["
+                    + Latkes.RuntimeMode.PRODUCTION + "] in latke.properties if deployed on production environment!!!!");
+        } else {
+            LOGGER.log(Level.INFO, "Runtime mode is [{0}]", getRuntimeMode());
+        }
 
         final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
         LOGGER.log(Level.INFO, "Runtime database is [{0}]", runtimeDatabase);
