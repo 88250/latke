@@ -21,6 +21,7 @@ import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.*;
 import org.b3log.latke.repository.jdbc.util.*;
 import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -38,7 +39,7 @@ import static org.testng.AssertJUnit.*;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Mar 15, 2018
+ * @version 2.0.0.1, Sep 24, 2018
  */
 public class JdbcRepositoryTestCase {
 
@@ -328,5 +329,32 @@ public class JdbcRepositoryTestCase {
 
         final int eCount = 4;
         assertEquals(eCount, ret.getJSONArray(Keys.RESULTS).length());
+    }
+
+    /**
+     * Select test.
+     *
+     * @param jsonObject jsonObject
+     * @throws Exception Exception
+     */
+    @Test(groups = "jdbc", dataProvider = "createJsonData")
+    public void selectTest(final JSONObject jsonObject) throws Exception {
+        if (!ifRun) {
+            return;
+        }
+
+        final Transaction transaction = jdbcRepository.beginTransaction();
+        final int im = 10;
+        for (int i = 0; i < im; i++) {
+            jdbcRepository.add(jsonObject);
+            jsonObject.remove(JdbcRepositories.getDefaultKeyName());
+        }
+        transaction.commit();
+
+        List<JSONObject> ret = jdbcRepository.select("SELECT * FROM " + jdbcRepository.getName());
+        Assert.assertFalse(ret.isEmpty());
+
+        ret = jdbcRepository.select("SELECT COUNT(*) AS cnt FROM " + jdbcRepository.getName());
+        Assert.assertFalse(ret.isEmpty());
     }
 }
