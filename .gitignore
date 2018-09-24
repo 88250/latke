@@ -12,4 +12,3 @@ release.properties
 
 .idea/
 *.iml
-latke/target/checkstyle-cachefile

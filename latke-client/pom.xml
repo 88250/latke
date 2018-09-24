@@ -24,7 +24,6 @@
         <commons-lang.version>2.5</commons-lang.version>
         <!-- Maven Plugin -->
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
-        <maven-checkstyle-plugin.version>2.6</maven-checkstyle-plugin.version>
         <maven-javadoc-plugin.version>2.7</maven-javadoc-plugin.version>
         <maven-cobertura-plugin.version>2.5.1</maven-cobertura-plugin.version>
         <!-- Unit Test -->

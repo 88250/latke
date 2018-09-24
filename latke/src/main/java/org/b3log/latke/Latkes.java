@@ -623,7 +623,7 @@ public final class Latkes {
                 }
 
                 final String[] parts = jdbcURL.split(":");
-                if (parts.length != Integer.valueOf("5")/* CheckStyle.... */) {
+                if (5 != parts.length) {
                     throw new IllegalStateException("jdbc.URL should like [jdbc:h2:tcp://localhost:8250/~/] (the port part is required)");
                 }
 
