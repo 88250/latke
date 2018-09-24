@@ -35,16 +35,6 @@
         </developer>
     </developers>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-                <version>2.0</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
     <properties>
         <ojdbc.version>6</ojdbc.version>
     </properties>
