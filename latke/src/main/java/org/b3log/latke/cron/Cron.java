@@ -30,7 +30,7 @@ import java.util.TimerTask;
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.6, Sep 24, 2018
+ * @version 2.1.0.0, Sep 24, 2018
  */
 public final class Cron extends TimerTask {
 
@@ -84,6 +84,16 @@ public final class Cron extends TimerTask {
     private Level loggingLevel;
 
     /**
+     * Count of executions.
+     */
+    private long execCount;
+
+    /**
+     * Count of successful executions.
+     */
+    private long execSuccCount;
+
+    /**
      * Constructs a cron job with the specified URL, description, schedule, timeout, delay and logging level.
      *
      * @param url          the specified URL
@@ -113,15 +123,20 @@ public final class Cron extends TimerTask {
             conn.setConnectTimeout(timeout);
             conn.setReadTimeout(timeout);
             conn.setRequestProperty("User-Agent", Latkes.USER_AGENT);
-            String content = "";
+            String content;
             try (final InputStream is = conn.getInputStream()) {
                 content = IOUtils.toString(is, "UTF-8");
             }
             conn.disconnect();
 
             LOGGER.log(loggingLevel, "Executed scheduled task [url=" + url + ", response=" + content + "]");
+            execSuccCount++;
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Scheduled task execute failed [" + url + ", timeout=" + timeout + "]", e);
+            if (1 < execCount) {
+                LOGGER.log(Level.ERROR, "Scheduled task execute failed [" + url + ", timeout=" + timeout + "]", e);
+            }
+        } finally {
+            execCount++;
         }
     }
 
@@ -225,5 +240,23 @@ public final class Cron extends TimerTask {
      */
     public void setDelay(final long delay) {
         this.delay = delay;
+    }
+
+    /**
+     * Gets the count of executions.
+     *
+     * @return count of executions
+     */
+    public long getExecCount() {
+        return execCount;
+    }
+
+    /**
+     * Gets the count of successful executions.
+     *
+     * @return count of successful executions
+     */
+    public long getExecSuccCount() {
+        return execSuccCount;
     }
 }
