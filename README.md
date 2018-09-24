@@ -22,8 +22,8 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 ## 案例
 
 * [Demos](https://github.com/b3log/latke-demo)：简单的 Latke 应用示例
-* [Solo](https://github.com/b3log/solo)：一个用 Java 实现的博客系统，为你或你的团队创建个博客吧！
-* [Symphony](https://github.com/b3log/symphony)：一个用 Java 实现的现代化社区（论坛/BBS/社交网络/博客）平台。
+* [Solo](https://github.com/b3log/solo)：一款小而美的 Java 博客系统
+* [Symphony](https://github.com/b3log/symphony)：一个用 Java 实现的现代化社区（论坛/BBS/社交网络/博客）平台
 
 ## 安装
 
