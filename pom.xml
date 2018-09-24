@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.20, Aug 1, 2018
+    Version: 1.2.2.21, Sep 24, 2018
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
     <name>Latke Parent</name>
     <url>https://github.com/b3log/latke</url>
-    <description>A Spring-like, JSON based Java Web Framework . 一个类似 Spring 但以 JSON 为主的 Java Web 框架。</description>
+    <description>一个类似 Spring 但以 JSON 为主的 Java Web 框架。</description>
     <inceptionYear>2009</inceptionYear>
 
     <parent>
@@ -58,10 +58,10 @@
         <!-- Unit Test -->
         <testng.version>6.1.1</testng.version>
         <!-- JDBC Drivers -->
-        <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.12</mysql-connector-java.version>
         <!-- JDBC Connection Pool -->
-        <h2.version>1.4.190</h2.version>
-        <druid.version>1.0.29</druid.version>
+        <h2.version>1.4.197</h2.version>
+        <druid.version>1.1.11</druid.version>
         <!-- Redis -->
         <jedis.version>2.9.0</jedis.version>
 
