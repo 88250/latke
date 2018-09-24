@@ -17,6 +17,7 @@ package org.b3log.latke.cron;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -29,7 +30,7 @@ import java.util.TimerTask;
  * A cron job is a scheduled task, it will invoke {@link #url a URL} via an HTTP GET request, at a given time of day.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.5, Aug 30, 2018
+ * @version 2.0.2.6, Sep 24, 2018
  */
 public final class Cron extends TimerTask {
 
@@ -111,7 +112,7 @@ public final class Cron extends TimerTask {
             final HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setConnectTimeout(timeout);
             conn.setReadTimeout(timeout);
-            conn.setRequestProperty("User-Agent", "B3log Latke https://github.com/b3log/latke");
+            conn.setRequestProperty("User-Agent", Latkes.USER_AGENT);
             String content = "";
             try (final InputStream is = conn.getInputStream()) {
                 content = IOUtils.toString(is, "UTF-8");

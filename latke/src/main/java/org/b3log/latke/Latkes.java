@@ -45,7 +45,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.7.9.21, Sep 20, 2018
+ * @version 2.8.0.0, Sep 24, 2018
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -57,6 +57,16 @@ public final class Latkes {
      * Executor service.
      */
     public static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
+
+    /**
+     * Version.
+     */
+    public static final String VERSION = "2.4.14";
+
+    /**
+     * User Agent.
+     */
+    public static String USER_AGENT = "Latke/" + VERSION + "; +https://github.com/b3log/latke";
 
     /**
      * Logger.
