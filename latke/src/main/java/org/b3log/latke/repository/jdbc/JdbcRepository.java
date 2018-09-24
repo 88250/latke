@@ -45,11 +45,6 @@ import java.util.*;
 public final class JdbcRepository implements Repository {
 
     /**
-     * Repository cache name.
-     */
-    public static final String REPOSITORY_CACHE_NAME = "repositoryCache";
-
-    /**
      * The current transaction.
      */
     public static final ThreadLocal<JdbcTransaction> TX = new InheritableThreadLocal<>();
