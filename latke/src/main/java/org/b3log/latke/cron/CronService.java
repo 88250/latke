@@ -36,7 +36,7 @@ import java.util.Timer;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.3, Aug 27, 2018
+ * @version 2.0.2.4, Sep 24, 2018
  */
 public final class CronService {
 
@@ -56,6 +56,11 @@ public final class CronService {
     private static final List<Timer> TIMERS = new ArrayList<>();
 
     /**
+     * Init delay in milliseconds.
+     */
+    public static long DELAY_INIT = 10000;
+
+    /**
      * Private constructor.
      */
     private CronService() {
@@ -67,7 +72,7 @@ public final class CronService {
     public static void start() {
         new Thread(() -> {
             try {
-                Thread.sleep(10000);
+                Thread.sleep(DELAY_INIT);
                 LOGGER.info("Constructing cron service....");
 
                 loadCronXML();
