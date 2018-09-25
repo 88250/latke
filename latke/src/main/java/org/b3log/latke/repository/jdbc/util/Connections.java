@@ -36,7 +36,7 @@ import java.util.Properties;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 2.0.0.0, Sep 25, 2018
+ * @version 2.0.0.1, Sep 25, 2018
  */
 public final class Connections {
 
@@ -134,6 +134,19 @@ public final class Connections {
     }
 
     /**
+     * Gets the total connection count.
+     *
+     * @return total connection count
+     */
+    public static int getTotalConnectionCount() {
+        if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
+            return -1;
+        }
+
+        return hikari.getHikariPoolMXBean().getTotalConnections();
+    }
+
+    /**
      * Gets the max connection count.
      *
      * @return max connection count
@@ -143,7 +156,7 @@ public final class Connections {
             return -1;
         }
 
-        return hikari.getHikariPoolMXBean().getTotalConnections();
+        return hikari.getMaximumPoolSize();
     }
 
     /**
