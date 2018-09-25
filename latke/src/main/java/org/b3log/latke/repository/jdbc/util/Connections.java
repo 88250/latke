@@ -15,8 +15,8 @@
  */
 package org.b3log.latke.repository.jdbc.util;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -30,13 +30,13 @@ import java.util.Properties;
 /**
  * JDBC connection utilities.
  * <p>
- * Uses <a href="https://github.com/alibaba/druid">Druid</a> as the underlying connection pool.
+ * Uses <a href="https://github.com/brettwooldridge/HikariCP">HikariCP</a> as the underlying connection pool.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 1.3.0.0, Sep 12, 2018
+ * @version 2.0.0.0, Sep 25, 2018
  */
 public final class Connections {
 
@@ -46,14 +46,9 @@ public final class Connections {
     private static final Logger LOGGER = Logger.getLogger(Connections.class);
 
     /**
-     * Get connection timeout.
+     * Connection pool - HikariCP.
      */
-    private static final int CONN_TIMEOUT = 5000;
-
-    /**
-     * Connection pool - Druid.
-     */
-    private static DruidDataSource druid;
+    private static HikariDataSource hikari;
 
     /**
      * Transaction isolation integer value.
@@ -103,36 +98,35 @@ public final class Connections {
                 }
 
 
-                LOGGER.log(Level.DEBUG, "Initialing database connection pool [druid]");
+                LOGGER.log(Level.DEBUG, "Initialing database connection pool [hikari]");
                 final Properties props = new Properties();
-                final InputStream is = Connections.class.getResourceAsStream("/druid.properties");
+                final InputStream is = Connections.class.getResourceAsStream("/hikari.properties");
                 if (null != is) {
                     props.load(is);
-                    druid = (DruidDataSource) DruidDataSourceFactory.createDataSource(props);
-                    LOGGER.log(Level.DEBUG, "Created datasource with druid.properties");
+                    final HikariConfig hikariConfig = new HikariConfig();
+                    hikari = new HikariDataSource(hikariConfig);
+                    LOGGER.log(Level.DEBUG, "Created datasource with hikari.properties");
                 } else {
-                    druid = new DruidDataSource();
-                    druid.setTestOnReturn(true);
-                    druid.setTestOnBorrow(false);
-                    druid.setTestWhileIdle(true);
+                    hikari = new HikariDataSource();
                     if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                        druid.setValidationQuery("SELECT 1 FROM DUAL");
+                        hikari.setConnectionTestQuery("SELECT 1 FROM DUAL");
                     } else {
-                        druid.setValidationQuery("SELECT 1");
+                        hikari.setConnectionTestQuery("SELECT 1");
                     }
-                    druid.setMaxWait(CONN_TIMEOUT);
-                    druid.setValidationQueryTimeout(CONN_TIMEOUT);
+
+                    hikari.setValidationTimeout(2000);
+                    hikari.setConnectionTimeout(2000);
+                    hikari.setLeakDetectionThreshold(300000);
                 }
 
-                druid.setUsername(userName);
-                druid.setPassword(password);
-                druid.setUrl(url);
-                druid.setDriverClassName(driver);
-                druid.setInitialSize(minConnCnt);
-                druid.setMinIdle(minConnCnt);
-                druid.setMaxActive(maxConnCnt);
+                hikari.setUsername(userName);
+                hikari.setPassword(password);
+                hikari.setJdbcUrl(url);
+                hikari.setDriverClassName(driver);
+                hikari.setMinimumIdle(minConnCnt);
+                hikari.setMaximumPoolSize(maxConnCnt);
 
-                LOGGER.info("Initialized database connection pool [druid]");
+                LOGGER.info("Initialized database connection pool [hikari]");
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Can not initialize database connection pool", e);
@@ -149,7 +143,7 @@ public final class Connections {
             return -1;
         }
 
-        return druid.getMaxActive();
+        return hikari.getHikariPoolMXBean().getTotalConnections();
     }
 
     /**
@@ -162,7 +156,7 @@ public final class Connections {
             return -1;
         }
 
-        return druid.getActiveCount();
+        return hikari.getHikariPoolMXBean().getActiveConnections();
     }
 
     /**
@@ -180,8 +174,7 @@ public final class Connections {
             return null;
         }
 
-        LOGGER.log(Level.TRACE, "Connection pool [leasedConns={0}]", new Object[]{druid.getActiveConnections()});
-        final Connection ret = druid.getConnection();
+        final Connection ret = hikari.getConnection();
         ret.setTransactionIsolation(transactionIsolationInt);
         ret.setAutoCommit(false);
 
@@ -192,9 +185,9 @@ public final class Connections {
      * Shutdowns the connection pool.
      */
     public static void shutdownConnectionPool() {
-        if (null != druid) {
-            druid.close();
-            LOGGER.info("Closed [druid] database connection pool");
+        if (null != hikari) {
+            hikari.close();
+            LOGGER.info("Closed database connection pool");
         }
     }
 
