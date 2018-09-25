@@ -105,7 +105,7 @@ public final class Connections {
                     props.load(is);
                     final HikariConfig hikariConfig = new HikariConfig();
                     hikari = new HikariDataSource(hikariConfig);
-                    LOGGER.log(Level.DEBUG, "Created datasource with hikari.properties");
+                    LOGGER.log(Level.INFO, "Created datasource with hikari.properties");
                 } else {
                     hikari = new HikariDataSource();
                     if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
