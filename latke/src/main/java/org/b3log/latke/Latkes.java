@@ -24,7 +24,6 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.servlet.AbstractServletListener;
-import org.b3log.latke.util.Templates;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -37,7 +36,6 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -45,7 +43,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.8.0.2, Sep 25, 2018
+ * @version 2.8.0.3, Sep 27, 2018
  * @see #initRuntimeEnv()
  * @see #shutdown()
  * @see #getServePath()
@@ -61,7 +59,7 @@ public final class Latkes {
     /**
      * Version.
      */
-    public static final String VERSION = "2.4.16";
+    public static final String VERSION = "2.4.17";
 
     /**
      * User Agent.
