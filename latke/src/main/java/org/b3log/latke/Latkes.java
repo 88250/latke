@@ -833,32 +833,6 @@ public final class Latkes {
     }
 
     /**
-     * Sets time zone by the specified time zone id.
-     *
-     * @param timeZoneId the specified time zone id
-     */
-    public static void setTimeZone(final String timeZoneId) {
-        final TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
-
-        Templates.MAIN_CFG.setTimeZone(timeZone);
-    }
-
-    /**
-     * Loads skin with the specified directory name.
-     *
-     * @param skinDirName the specified directory name
-     */
-    public static void loadSkin(final String skinDirName) {
-        LOGGER.debug("Loading skin [dirName=" + skinDirName + ']');
-
-        final ServletContext servletContext = AbstractServletListener.getServletContext();
-        Templates.MAIN_CFG.setServletContextForTemplateLoading(servletContext, "skins/" + skinDirName);
-        setTimeZone("Asia/Shanghai");
-
-        LOGGER.info("Loaded skins....");
-    }
-
-    /**
      * Gets the skin name for the specified skin directory name. The skin name was configured in skin.properties
      * file({@code name} as the key) under skin directory specified by the given skin directory name.
      *

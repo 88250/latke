@@ -16,12 +16,10 @@
 package org.b3log.latke.util;
 
 import freemarker.core.TemplateElement;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-import java.io.IOException;
 import java.util.Enumeration;
 
 /**
@@ -36,15 +34,6 @@ public final class Templates {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Templates.class);
-
-    /**
-     * Main template {@link Configuration configuration}.
-     */
-    public static final Configuration MAIN_CFG = new Configuration();
-
-    static {
-        MAIN_CFG.setDefaultEncoding("UTF-8");
-    }
 
     /**
      * Private constructor.
