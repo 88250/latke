@@ -22,7 +22,7 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.util.freemarker.Templates;
+import org.b3log.latke.util.Templates;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +36,7 @@ import java.util.Map;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.12, Aug 11, 2017
+ * @version 1.0.0.13, Sep 26, 2018
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {
 
@@ -53,17 +53,22 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     /**
      * Data model.
      */
-    private Map<String, Object> dataModel = new HashMap<String, Object>();
+    private Map<String, Object> dataModel = new HashMap<>();
 
     /**
      * Gets a template with the specified template directory name and template name.
      *
-     * @param templateDirName the specified template directory name
-     * @param templateName    the specified template name
+     * @param templateName the specified template name
      * @return template
      */
-    protected Template getTemplate(final String templateDirName, final String templateName) {
-        return Templates.getTemplate(templateDirName, templateName);
+    protected Template getTemplate(final String templateName) {
+        try {
+            return Templates.MAIN_CFG.getTemplate(templateName);
+        } catch (final IOException e) {
+            LOGGER.log(Level.WARN, "Gets template[name={0}] failed: [{1}]", new Object[]{templateName, e.getMessage()});
+
+            return null;
+        }
     }
 
     /**
@@ -110,7 +115,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
         }
 
         final HttpServletRequest request = context.getRequest();
-        final Template template = getTemplate((String) request.getAttribute(Keys.TEMAPLTE_DIR_NAME), templateName);
+        final Template template = getTemplate(templateName);
 
         if (null == template) {
             LOGGER.log(Level.ERROR, "Not found template[{0}]", templateName);

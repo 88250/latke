@@ -24,7 +24,7 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.servlet.AbstractServletListener;
-import org.b3log.latke.util.freemarker.Templates;
+import org.b3log.latke.util.Templates;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -841,7 +841,6 @@ public final class Latkes {
         final TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
 
         Templates.MAIN_CFG.setTimeZone(timeZone);
-        Templates.MOBILE_CFG.setTimeZone(timeZone);
     }
 
     /**
