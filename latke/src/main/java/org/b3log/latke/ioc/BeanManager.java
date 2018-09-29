@@ -173,18 +173,6 @@ public class BeanManager {
         return ret;
     }
 
-    public Set<Bean<?>> getBeans(final String name) {
-        final Set<Bean<?>> ret = new HashSet<>();
-
-        for (final Bean<?> bean : beans) {
-            if (bean.getName().equals(name)) {
-                ret.add(bean);
-            }
-        }
-
-        return ret;
-    }
-
     public void addContext(final Context context) {
         final Class<? extends Annotation> scope = context.getScope();
         Set<Context> contextSet = contexts.get(scope);
@@ -224,7 +212,7 @@ public class BeanManager {
         contexts.clear();
     }
 
-    public Bean<?> getBean(final Type beanType) {
+    private Bean<?> getBean(final Type beanType) {
         for (final Bean<?> bean : beans) {
             if (Reflections.isConcrete(beanType)) {
                 if (bean.getBeanClass().equals(beanType)) {
@@ -234,24 +222,6 @@ public class BeanManager {
         }
 
         throw new RuntimeException("Not found bean [beanType=" + beanType + "]");
-    }
-
-    public Bean<?> getBean(final String name) {
-        final Set<Bean<?>> ret = getBeans(name);
-
-        if (null == ret) {
-            return null;
-        }
-
-        if (0 == ret.size()) {
-            return null;
-        }
-
-        if (1 == ret.size()) {
-            return (Bean<?>) ret.iterator().next();
-        }
-
-        throw new RuntimeException("Ambiguous resolution by name!");
     }
 
     public Object getReference(final Bean<?> bean, final CreationalContext<?> creationalContext) {

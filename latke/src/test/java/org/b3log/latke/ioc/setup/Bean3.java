@@ -26,6 +26,7 @@ public class Bean3 {
 
     @Inject
     public Bean1 bean1;
+
     @Inject
     public Bean2 bean2;
 

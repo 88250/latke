@@ -421,7 +421,7 @@ public final class ClassPathResolver {
         private final Set<URL> resources = new LinkedHashSet<URL>();
 
         /**
-         * the main constructor.
+         * the simplest constructor.
          *
          * @param rootPath rootPath
          * @param subPattern subPattern

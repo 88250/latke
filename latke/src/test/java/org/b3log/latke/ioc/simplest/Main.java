@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.main;
+package org.b3log.latke.ioc.simplest;
 
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Lifecycle;
@@ -39,7 +39,6 @@ public class Main {
         Lifecycle.startApplication(packageClasses);
 
         final BeanManager beanManager = BeanManager.getInstance();
-
         final Bean bean = beanManager.getBean(Main.class);
         final Main main = (Main) beanManager.getReference(bean);
 

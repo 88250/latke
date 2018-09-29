@@ -229,7 +229,7 @@ public abstract class AbstractPlugin implements Serializable {
     public abstract void prePlug(final HTTPRequestContext context, final Map<String, Object> args);
 
     /**
-     * postPlug after the dataModel of the main-view be generated.
+     * postPlug after the dataModel of the simplest-view be generated.
      *
      * @param dataModel dataModel
      * @param context   context

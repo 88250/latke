@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
@@ -55,8 +56,9 @@ final public class SetupUnitTest {
         beanClasses.add(Bean3.class);
         Lifecycle.startApplication(beanClasses);
 
-        final Bean<?> bean = beanManager.getBean("bean3");
+        final Bean<?> bean = beanManager.getBean(Bean3.class);
         bean3 = (Bean3) beanManager.getReference(bean);
+        assertNotNull(bean3);
     }
 
     /**

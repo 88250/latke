@@ -47,18 +47,18 @@ public final class EventManagerTestCase {
         eventManager.fireEventSynchronously(new Event<JSONObject>("Test sync listener2", eventData));
 
         eventManager.<String>fireEventAsynchronously(new Event<JSONObject>("Test async listener1", eventData));
-        System.out.println("Doing somthing in main thread....");
+        System.out.println("Doing somthing in simplest thread....");
         final long sleepTime = 101;
         final long loopCnt = 40;
         try {
             for (int i = 0; i < loopCnt; i++) {
-                System.out.println("In main thread: " + i);
+                System.out.println("In simplest thread: " + i);
                 Thread.sleep(sleepTime);
             }
         } catch (final InterruptedException e) {
             throw new EventException(e);
         }
-        System.out.println("Done in main thread");
+        System.out.println("Done in simplest thread");
     }
 
     /**

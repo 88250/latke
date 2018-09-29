@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.main;
+package org.b3log.latke.ioc.simplest;
 
 import org.b3log.latke.ioc.inject.Singleton;
 
@@ -21,5 +21,6 @@ import org.b3log.latke.ioc.inject.Singleton;
 public class DependencyA {
 
     public void method1() {
+        System.out.println(DependencyA.class.getName() + "#method1");
     }
 }
