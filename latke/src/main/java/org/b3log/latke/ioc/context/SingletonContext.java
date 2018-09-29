@@ -80,7 +80,7 @@ public final class SingletonContext implements Context {
             return ret;
         }
 
-        throw new RuntimeException("Can't create reference for bean[" + bean + "]");
+        throw new RuntimeException("Can't create reference for bean [" + bean + "]");
     }
 
     /**

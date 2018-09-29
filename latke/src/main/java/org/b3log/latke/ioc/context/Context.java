@@ -46,9 +46,8 @@ public interface Context {
      * @param contextual        the contextual type
      * @param creationalContext the context in which the new instance will be created
      * @return the contextual instance
-     * @throws ContextNotActiveException if the context is not active
      */
-    public <T> T get(Bean<T> contextual, CreationalContext<T> creationalContext);
+    <T> T get(Bean<T> contextual, CreationalContext<T> creationalContext);
 
     /**
      * Return an existing instance of a certain contextual type or a null value.
@@ -56,9 +55,8 @@ public interface Context {
      * @param <T>        the type of the contextual type
      * @param contextual the contextual type
      * @return the contextual instance, or a null value
-     * @throws ContextNotActiveException if the context is not active
      */
-    public <T> T get(Bean<T> contextual);
+    <T> T get(Bean<T> contextual);
 
     /**
      * Adds the specified bean and reference.

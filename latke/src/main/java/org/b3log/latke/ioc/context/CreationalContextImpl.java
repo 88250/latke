@@ -46,25 +46,13 @@ public class CreationalContextImpl<T> implements CreationalContext<T> {
 
     /**
      * Constructs a creational context with the specified bean.
-     * 
+     *
      * @param bean the specified bean
      */
     public CreationalContextImpl(final Bean<T> bean) {
-        this.incompleteInstances = new HashMap<Bean<?>, Object>();
+        this.incompleteInstances = new HashMap<>();
         this.bean = bean;
         this.outer = true;
-    }
-
-    /**
-     * Constructs a creational context with the specified bean and incomplete instances.
-     * 
-     * @param bean the specified bean
-     * @param incompleteInstances the specified incomplete instances
-     */
-    private CreationalContextImpl(final Bean<T> bean, final Map<Bean<?>, Object> incompleteInstances) {
-        this.incompleteInstances = incompleteInstances;
-        this.bean = bean;
-        this.outer = false;
     }
 
     @Override
@@ -72,48 +60,7 @@ public class CreationalContextImpl<T> implements CreationalContext<T> {
         incompleteInstances.put(bean, incompleteInstance);
     }
 
-    /**
-     * Gets a creational context with the specified bean.
-     * 
-     * @param <S> the type of incomplete bean
-     * @param bean the specified bean
-     * @return creational context
-     */
-    public <S> CreationalContextImpl<S> getCreationalContext(final Bean<S> bean) {
-        return new CreationalContextImpl<S>(bean, new HashMap<Bean<?>, Object>(incompleteInstances));
-    }
-
-    /**
-     * Gets incomplete instance of the specified bean.
-     * 
-     * @param <S> the type of incomplete bean
-     * @param bean the specified bean
-     * @return incomplete instance
-     */
-    public <S> S getIncompleteInstance(final Bean<S> bean) {
-        return (S) incompleteInstances.get(bean);
-    }
-
-    /**
-     * Determines whether contains the incomplete instance of the specified bean.
-     * 
-     * @param bean the specified bean
-     * @return {@code true} if contains, returns {@code false} otherwise
-     */
-    public boolean containsIncompleteInstance(final Bean<?> bean) {
-        return incompleteInstances.containsKey(bean);
-    }
-
-    /**
-     * Determines whether the bean is outer.
-     * 
-     * @return {@code true} if it is outer, returns {@code false} otherwise
-     */
-    public boolean isOuter() {
-        return outer;
-    }
-
     @Override
-    public void release() {// TODO: CreationalContextImpl.release();
+    public void release() {
     }
 }
