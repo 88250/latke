@@ -30,7 +30,7 @@ import java.util.Set;
  * @version 1.0.1.9, Sep 29, 2018
  * @since 2.4.18
  */
-public final class SingletonContext implements Context {
+public final class SingletonContext {
 
     /**
      * Bean reference in this context.
@@ -44,7 +44,6 @@ public final class SingletonContext implements Context {
         beanReferences = new HashMap<>();
     }
 
-    @Override
     public <T> void add(final Bean<T> bean, final T reference) {
         beanReferences.put(bean, reference);
     }
@@ -81,18 +80,6 @@ public final class SingletonContext implements Context {
         }
 
         throw new RuntimeException("Can't create reference for bean [" + bean + "]");
-    }
-
-    /**
-     * Removes the specified bean.
-     *
-     * @param <T>  the type of contextual
-     * @param bean the specified bean
-     */
-    public <T> void remove(final Contextual<T> bean) {
-        if (null != beanReferences.get(bean)) {
-            beanReferences.remove(bean);
-        }
     }
 
     /**

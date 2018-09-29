@@ -16,15 +16,15 @@
 package org.b3log.latke.plugin;
 
 
-import java.util.Map;
-import java.util.Set;
 import org.b3log.latke.Keys;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
-import org.b3log.latke.event.EventException;
-import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -46,30 +46,29 @@ public final class ViewLoadEventHandler extends AbstractEventListener<ViewLoadEv
     }
 
     @Override
-    public void action(final Event<ViewLoadEventData> event) throws EventException {
+    public void action(final Event<ViewLoadEventData> event) {
         final ViewLoadEventData data = event.getData();
         final String viewName = data.getViewName();
         final Map<String, Object> dataModel = data.getDataModel();
-        
-        final PluginManager pluginManager = Lifecycle.getBeanManager().getReference(PluginManager.class);
+
+        final PluginManager pluginManager = BeanManager.getInstance().getReference(PluginManager.class);
         final Set<AbstractPlugin> plugins = pluginManager.getPlugins(viewName);
 
-        LOGGER.log(Level.DEBUG, "Plugin count[{0}] of view[name={1}]", new Object[] {plugins.size(), viewName});
+        LOGGER.log(Level.DEBUG, "Plugin count[{0}] of view[name={1}]", plugins.size(), viewName);
         for (final AbstractPlugin plugin : plugins) {
             switch (plugin.getStatus()) {
-            case ENABLED:
-                plugin.plug(dataModel);
-                LOGGER.log(Level.DEBUG, "Plugged[name={0}]", plugin.getName());
-                break;
+                case ENABLED:
+                    plugin.plug(dataModel);
+                    LOGGER.log(Level.DEBUG, "Plugged[name={0}]", plugin.getName());
 
-            case DISABLED:
-                plugin.unplug();
-                LOGGER.log(Level.DEBUG, "Unplugged[name={0}]", plugin.getName());
-                break;
+                    break;
+                case DISABLED:
+                    plugin.unplug();
+                    LOGGER.log(Level.DEBUG, "Unplugged[name={0}]", plugin.getName());
 
-            default:
-                throw new AssertionError(
-                    "Plugin state error, this is a bug! Please report " + "this bug (https://github.com/b3log/b3log-solo/issues/new)!");
+                    break;
+                default:
+                    throw new AssertionError("Plugin state error, this is a bug! Please report this bug (https://github.com/b3log/latke/issues/new)!");
             }
         }
     }

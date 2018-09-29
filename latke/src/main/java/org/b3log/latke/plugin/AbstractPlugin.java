@@ -23,7 +23,7 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
@@ -241,8 +241,7 @@ public abstract class AbstractPlugin implements Serializable {
      * The lifecycle pointcut for the plugin to start(enable status).
      */
     protected void start() {
-        final EventManager eventManager = Lifecycle.getBeanManager().getReference(EventManager.class);
-
+        final EventManager eventManager = BeanManager.getInstance().getReference(EventManager.class);
         for (final AbstractEventListener<?> eventListener : eventListeners) {
             eventManager.registerListener(eventListener);
         }
@@ -252,8 +251,7 @@ public abstract class AbstractPlugin implements Serializable {
      * The lifecycle pointcut for the plugin to close(disable status).
      */
     protected void stop() {
-        final EventManager eventManager = Lifecycle.getBeanManager().getReference(EventManager.class);
-
+        final EventManager eventManager = BeanManager.getInstance().getReference(EventManager.class);
         for (final AbstractEventListener<?> eventListener : eventListeners) {
             eventManager.unregisterListener(eventListener);
         }

@@ -17,7 +17,6 @@ package org.b3log.latke.servlet.handler;
 
 
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
@@ -52,7 +51,7 @@ public class MethodInvokeHandler implements Handler {
 
         // get class instance
         final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
-        final BeanManager beanManager = Lifecycle.getBeanManager();
+        final BeanManager beanManager = BeanManager.getInstance();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
 
         final Object ret = invokeHolder.invoke(classHolder, args.values().toArray());

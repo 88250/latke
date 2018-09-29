@@ -17,7 +17,6 @@ package org.b3log.latke.ioc.setup;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.bean.Bean;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -54,7 +53,7 @@ final public class SetupUnitTest {
         beanClasses.add(Bean1.class);
         beanClasses.add(Bean2.class);
         beanClasses.add(Bean3.class);
-        Lifecycle.startApplication(beanClasses);
+        BeanManager.start(beanClasses);
 
         final Bean<?> bean = beanManager.getBean(Bean3.class);
         bean3 = (Bean3) beanManager.getReference(bean);
@@ -67,7 +66,7 @@ final public class SetupUnitTest {
     @AfterTest
     public void afterTest() {
         System.out.println("afterTest SetupUnitTest");
-        Lifecycle.endApplication();
+        BeanManager.close();
     }
 
     @Test

@@ -17,7 +17,6 @@ package org.b3log.latke.intercept;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.Lifecycle;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -47,7 +46,7 @@ final public class BeforeMethodTestCase {
 
         Latkes.initRuntimeEnv();
         beanManager = BeanManager.getInstance();
-        Lifecycle.startApplication(packageClasses);
+        BeanManager.start(packageClasses);
         final A a = beanManager.getReference(A.class);
         assertNotNull(a);
 
@@ -61,7 +60,7 @@ final public class BeforeMethodTestCase {
     @AfterTest
     public void afterTest() {
         System.out.println("afterTest BeforeMethodTestCase");
-        Lifecycle.endApplication();
+        BeanManager.close();
     }
 
     @Test

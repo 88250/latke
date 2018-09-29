@@ -19,7 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -65,30 +64,24 @@ public class RequestDispatchHandler implements Handler {
     private final List<ProcessorInfo> processorInfos = new ArrayList<>();
 
     /**
-     * constructor.
+     * Public constructor..
      */
     public RequestDispatchHandler() {
-
-        final BeanManager beanManager = Lifecycle.getBeanManager();
+        final BeanManager beanManager = BeanManager.getInstance();
         final Set<Bean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
-
-        // do scan in  beanManager
         genInfo(processBeans);
     }
 
     @Override
-    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) {
         final HttpServletRequest request = context.getRequest();
-
         final String requestURI = getRequestURI(request);
         final String httpMethod = getHTTPMethod(request);
 
-        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", new Object[]{requestURI, httpMethod});
+        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", requestURI, httpMethod);
 
         final MatchResult result = doMatch(requestURI, httpMethod);
-
         if (result != null) {
-            // do logger
             httpControl.data(MATCH_RESULT, result);
             httpControl.nextHandler();
         }
@@ -104,9 +97,7 @@ public class RequestDispatchHandler implements Handler {
     // XXX: Performance Issue 
     private MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret = null;
-
         final String contextPath = Latkes.getContextPath();
-
         for (ProcessorInfo processorInfo : processorInfos) {
             for (HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
                 if (httpMethod.equals(httpRequestMethod.toString())) {
@@ -136,7 +127,6 @@ public class RequestDispatchHandler implements Handler {
      * @return MatchResult
      */
     private MatchResult getResult(final String uriPattern, final ProcessorInfo processorInfo, final String requestURI, final String method) {
-
         if (requestURI.equals(uriPattern)) {
             return new MatchResult(processorInfo, requestURI, method, uriPattern);
         }
@@ -187,7 +177,6 @@ public class RequestDispatchHandler implements Handler {
      */
     private String getHTTPMethod(final HttpServletRequest request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
-
         if (StringUtils.isBlank(ret)) {
             ret = request.getMethod();
         }
@@ -203,7 +192,6 @@ public class RequestDispatchHandler implements Handler {
      */
     private String getRequestURI(final HttpServletRequest request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_URI);
-
         if (StringUtils.isBlank(ret)) {
             ret = request.getRequestURI();
         }
@@ -212,25 +200,22 @@ public class RequestDispatchHandler implements Handler {
     }
 
     /**
-     * scan beans to get the processor info.
+     * Scan beans to get the processor info.
      *
      * @param processBeans processBeans which contains {@link RequestProcessor}
      */
     private void genInfo(final Set<Bean<?>> processBeans) {
         for (final Bean<?> latkeBean : processBeans) {
             final Class<?> clz = latkeBean.getBeanClass();
-
             final Method[] declaredMethods = clz.getDeclaredMethods();
             for (int i = 0; i < declaredMethods.length; i++) {
                 final Method mthd = declaredMethods[i];
                 final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);
-
                 if (null == requestProcessingMethodAnn) {
                     continue;
                 }
 
-                LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]",
-                        new Object[]{clz.getCanonicalName(), mthd.getName()});
+                LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]", clz.getCanonicalName(), mthd.getName());
 
                 addProcessorInfo(requestProcessingMethodAnn, mthd);
             }
@@ -244,10 +229,7 @@ public class RequestDispatchHandler implements Handler {
      * @param mthd                       the invoke method
      */
     private void addProcessorInfo(final RequestProcessing requestProcessingMethodAnn, final Method mthd) {
-
-        // anotation to bean
         final ProcessorInfo processorInfo = new ProcessorInfo();
-
         processorInfo.setPattern(requestProcessingMethodAnn.value());
         processorInfo.setUriPatternMode(requestProcessingMethodAnn.uriPatternsMode());
         processorInfo.setHttpMethod(requestProcessingMethodAnn.method());
@@ -255,6 +237,5 @@ public class RequestDispatchHandler implements Handler {
         processorInfo.setInvokeHolder(mthd);
 
         processorInfos.add(processorInfo);
-
     }
 }

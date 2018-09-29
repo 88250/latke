@@ -17,7 +17,7 @@ package org.b3log.latke.servlet;
 
 import junit.framework.Assert;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.mock.TestBeforeAdvice;
 import org.b3log.latke.servlet.mock.TestRequestProcessor;
@@ -60,7 +60,7 @@ public class RequestDispachTestCase {
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
 
-        Lifecycle.startApplication(classes);
+        BeanManager.start(classes);
 
         handlerList.add(new RequestDispatchHandler());
         handlerList.add(new ArgsHandler());
@@ -71,7 +71,7 @@ public class RequestDispachTestCase {
     @AfterTest
     public void afterTest() {
         System.out.println("afterTest SpeakerUnitTest");
-        Lifecycle.endApplication();
+        BeanManager.close();
     }
 
     @Test

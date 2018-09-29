@@ -19,7 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cache.redis.RedisCache;
 import org.b3log.latke.cron.CronService;
-import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
@@ -814,7 +814,7 @@ public final class Latkes {
             LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
         }
 
-        Lifecycle.endApplication();
+        BeanManager.close();
 
         // Manually unregister JDBC driver, which prevents Tomcat from complaining about memory leaks
         final Enumeration<Driver> drivers = DriverManager.getDrivers();

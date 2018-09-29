@@ -17,6 +17,7 @@ package org.b3log.latke.servlet.renderer;
 
 
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.plugin.AbstractPlugin;
 import org.b3log.latke.plugin.PluginManager;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -24,7 +25,6 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.b3log.latke.ioc.Lifecycle;
 
 
 /**
@@ -32,7 +32,8 @@ import org.b3log.latke.ioc.Lifecycle;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Jan 22, 2013
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 public abstract class AbstractHTTPResponseRenderer implements HTTPResponseRenderer {
 
@@ -43,6 +44,7 @@ public abstract class AbstractHTTPResponseRenderer implements HTTPResponseRender
 
     /**
      * setRendererId.
+     *
      * @param rendererId rendererId
      */
     public void setRendererId(final String rendererId) {
@@ -58,12 +60,10 @@ public abstract class AbstractHTTPResponseRenderer implements HTTPResponseRender
             return;
         }
 
-        final Set<AbstractPlugin> pSet = Lifecycle.getBeanManager().getReference(PluginManager.class).getPlugins(rendererId);
-
+        final Set<AbstractPlugin> pSet = BeanManager.getInstance().getReference(PluginManager.class).getPlugins(rendererId);
         for (AbstractPlugin plugin : pSet) {
             plugin.prePlug(context, args);
         }
-
     }
 
     @Override
@@ -73,8 +73,7 @@ public abstract class AbstractHTTPResponseRenderer implements HTTPResponseRender
             return;
         }
 
-        final Set<AbstractPlugin> pSet = Lifecycle.getBeanManager().getReference(PluginManager.class).getPlugins(rendererId);
-
+        final Set<AbstractPlugin> pSet = BeanManager.getInstance().getReference(PluginManager.class).getPlugins(rendererId);
         for (AbstractPlugin plugin : pSet) {
             plugin.plug(getRenderDataModel(), context, ret);
         }
@@ -82,6 +81,7 @@ public abstract class AbstractHTTPResponseRenderer implements HTTPResponseRender
 
     /**
      * getRenderDataModel.
+     *
      * @return map
      */
     public Map<String, Object> getRenderDataModel() {

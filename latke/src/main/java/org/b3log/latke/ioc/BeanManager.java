@@ -18,7 +18,9 @@ package org.b3log.latke.ioc;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.config.Configurator;
-import org.b3log.latke.ioc.context.*;
+import org.b3log.latke.ioc.context.CreationalContext;
+import org.b3log.latke.ioc.context.CreationalContextImpl;
+import org.b3log.latke.ioc.context.SingletonContext;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.ioc.point.InjectionPoint;
 import org.b3log.latke.logging.Level;
@@ -76,7 +78,7 @@ public class BeanManager {
     /**
      * Context.
      */
-    private Context context;
+    private SingletonContext context;
 
     /**
      * Constructs a Latke bean manager.
@@ -103,20 +105,36 @@ public class BeanManager {
         LOGGER.log(Level.DEBUG, "Created Latke bean manager");
     }
 
+    /**
+     * Starts the application with the specified bean class and bean modules.
+     *
+     * @param classes the specified bean class, nullable
+     */
+    public static void start(final Collection<Class<?>> classes) {
+        LOGGER.log(Level.DEBUG, "Initializing Latke IoC container");
+
+        final Configurator configurator = getInstance().getConfigurator();
+        if (null != classes && !classes.isEmpty()) {
+            configurator.createBeans(classes);
+        }
+
+        LOGGER.log(Level.DEBUG, "Initialized Latke IoC container");
+    }
+
+    /**
+     * Ends the application.
+     */
+    public static void close() {
+        LOGGER.log(Level.DEBUG, "Closed Latke IoC container");
+    }
+
     public static BeanManager getInstance() {
         return BeanManagerHolder.instance;
     }
 
-
     public void addBean(final Bean<?> bean) {
         beans.add(bean);
     }
-
-
-    public Set<Bean<?>> getBeans() {
-        return beans;
-    }
-
 
     public Set<Bean<?>> getBeans(final Class<? extends Annotation> stereoType) {
         final Set<Bean<?>> ret = new HashSet<>();

@@ -17,7 +17,7 @@ package org.b3log.latke.servlet;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cron.CronService;
-import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.config.Discoverer;
 import org.b3log.latke.ioc.mock.MockServletContext;
 import org.b3log.latke.logging.Level;
@@ -85,8 +85,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
         try {
             final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
-
-            Lifecycle.startApplication(beanClasses); // Starts Latke IoC container
+            BeanManager.start(beanClasses);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Initializes request processors failed", e);
 

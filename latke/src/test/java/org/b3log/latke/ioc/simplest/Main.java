@@ -16,7 +16,6 @@
 package org.b3log.latke.ioc.simplest;
 
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.ioc.inject.Singleton;
@@ -36,7 +35,7 @@ public class Main {
     public static final List<Class<?>> packageClasses = Arrays.asList(Main.class, DependencyA.class);
 
     public static final void main(String[] args) {
-        Lifecycle.startApplication(packageClasses);
+        BeanManager.start(packageClasses);
 
         final BeanManager beanManager = BeanManager.getInstance();
         final Bean bean = beanManager.getBean(Main.class);
