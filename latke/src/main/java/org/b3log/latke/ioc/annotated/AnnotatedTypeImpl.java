@@ -67,31 +67,19 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
      * Builds the annotated fields of this annotated type.
      */
     private void initAnnotatedFields() {
-        final Set<Field> inheritedFields = Reflections.getInheritedFields(beanClass);
         final Set<Field> hiddenFields = Reflections.getHiddenFields(beanClass);
+        inject(hiddenFields);
+
+        final Set<Field> inheritedFields = Reflections.getInheritedFields(beanClass);
+        inject(inheritedFields);
+
         final Set<Field> ownFields = Reflections.getOwnFields(beanClass);
+        inject(ownFields);
+    }
 
-        for (final Field field : hiddenFields) {
-            final boolean isNeedToBeInjected = field.isAnnotationPresent(Inject.class);
-            if (isNeedToBeInjected) {
-                final AnnotatedField<T> annotatedField = new AnnotatedFieldImpl<>(field);
-                field.setAccessible(true);
-                annotatedFields.add(annotatedField);
-            }
-        }
-
-        for (final Field field : inheritedFields) {
-            final boolean isNeedToBeInjected = field.isAnnotationPresent(Inject.class);
-            if (isNeedToBeInjected) {
-                final AnnotatedField<T> annotatedField = new AnnotatedFieldImpl<>(field);
-                field.setAccessible(true);
-                annotatedFields.add(annotatedField);
-            }
-        }
-
-        for (final Field field : ownFields) {
-            final boolean isNeedToBeInjected = field.isAnnotationPresent(Inject.class);
-            if (isNeedToBeInjected) {
+    private void inject(Set<Field> fields) {
+        for (final Field field : fields) {
+            if (field.isAnnotationPresent(Inject.class)) {
                 final AnnotatedField<T> annotatedField = new AnnotatedFieldImpl<>(field);
                 field.setAccessible(true);
                 annotatedFields.add(annotatedField);
@@ -102,23 +90,5 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
     @Override
     public Type getBaseType() {
         return beanClass;
-    }
-
-    /**
-     * Initializes an interceptor with the specified method.
-     *
-     * @param method the specified method
-     * @see InterceptorHolder
-     */
-    private void initInterceptor(final Method method) {
-        final BeforeMethod beforeMethod = method.getAnnotation(BeforeMethod.class);
-        if (null != beforeMethod) {
-            InterceptorHolder.addInterceptor(new Interceptor(method, beforeMethod), BeforeMethod.class);
-        }
-
-        final AfterMethod afterMethod = method.getAnnotation(AfterMethod.class);
-        if (null != afterMethod) {
-            InterceptorHolder.addInterceptor(new Interceptor(method, afterMethod), AfterMethod.class);
-        }
     }
 }

@@ -30,9 +30,10 @@ import static org.testng.Assert.assertNotNull;
 
 /**
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Jun 20, 2013
+ * @version 1.0.0.2, Sep 29, 2018
+ * @since 2.4.18
  */
-final public class SetupUnitTest {
+public final class SetupUnitTest {
 
     /**
      * Bean manager.

@@ -54,13 +54,8 @@ public class AnnotatedFieldImpl<T> implements AnnotatedField {
     }
 
     @Override
-    public boolean isStatic() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public Field getJavaMember() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return field;
     }
 
     @Override

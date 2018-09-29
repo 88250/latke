@@ -26,13 +26,6 @@ import java.lang.reflect.Field;
 public interface AnnotatedField<X> extends AnnotatedType<X> {
 
     /**
-     * Determines if the member is static.
-     *
-     * @return <tt>true</tt> if the member is static
-     */
-    boolean isStatic();
-
-    /**
      * Get the underlying {@link Field}.
      *
      * @return the {@link Field}
