@@ -19,10 +19,8 @@ import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.*;
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.ioc.point.InjectionPoint;
-import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
@@ -42,7 +40,6 @@ import java.util.*;
  * @version 2.0.0.0, Sep 29, 2018
  * @since 2.4.18
  */
-@Named
 @Singleton
 public class BeanManager {
 
@@ -164,8 +161,7 @@ public class BeanManager {
 
     public Object getInjectableReference(final InjectionPoint ij, final CreationalContext<?> ctx) {
         final Type baseType = ij.getAnnotated().getBaseType();
-        final Set<Annotation> requiredQualifiers = ij.getQualifiers();
-        final Bean<?> bean = getBean(baseType, requiredQualifiers);
+        final Bean<?> bean = getBean(baseType);
         Object ret;
 
         if (bean.getScope() != Singleton.class) {
@@ -228,40 +224,16 @@ public class BeanManager {
         contexts.clear();
     }
 
-    public Bean<?> getBean(final Type beanType, final Set<Annotation> qualifiers) {
+    public Bean<?> getBean(final Type beanType) {
         for (final Bean<?> bean : beans) {
-            if (Reflections.isConcrete(beanType) && qualifiers.isEmpty()) {
+            if (Reflections.isConcrete(beanType)) {
                 if (bean.getBeanClass().equals(beanType)) {
                     return bean;
                 }
             }
-
-            if (bean.getTypes().contains(beanType)) {
-                final Set<Annotation> beanQualifiers = bean.getQualifiers();
-                final Annotation named = Beans.selectNamedQualifier(qualifiers);
-
-                if (named == null) {
-                    if (beanQualifiers.containsAll(qualifiers)) {
-                        return bean;
-                    }
-                } else {
-                    final Annotation beanNamed = Beans.selectNamedQualifier(beanQualifiers);
-
-                    if (qualifiers.size() == 1) {
-                        if (beanNamed.equals(named)) {
-                            return bean;
-
-                        }
-                    } else {
-                        if (beanQualifiers.equals(qualifiers)) {
-                            return bean;
-                        }
-                    }
-                }
-            }
         }
 
-        throw new RuntimeException("Not found bean[beanType=" + beanType + "]");
+        throw new RuntimeException("Not found bean [beanType=" + beanType + "]");
     }
 
     public Bean<?> getBean(final String name) {

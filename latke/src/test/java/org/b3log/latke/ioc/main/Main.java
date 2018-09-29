@@ -19,12 +19,12 @@ import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.inject.Inject;
-import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Singleton;
 
 import java.util.Arrays;
 import java.util.List;
 
-@Named("Main")
+@Singleton
 public class Main {
 
     @Inject

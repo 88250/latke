@@ -15,23 +15,24 @@
  */
 package org.b3log.latke.servlet.advice;
 
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 /**
  * BeforeRequestProcessAdvice.
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Oct 14, 2012
+ * @version 1.0.0.2, Sep 29, 2018
  */
-@Named("LatkeBuiltInAfterRequestProcessAdvice")
 @Singleton
 public class AfterRequestProcessAdvice implements RequestProcessAdvice {
 
     /**
-     * doAdvice.
+     * Do advice.
+     *
      * @param context {@link HTTPRequestContext}
-     * @param ret  the invoke ret
+     * @param ret     the invoke ret
      */
-    public void doAdvice(final HTTPRequestContext context, final Object ret) {}
+    public void doAdvice(final HTTPRequestContext context, final Object ret) {
+    }
 }

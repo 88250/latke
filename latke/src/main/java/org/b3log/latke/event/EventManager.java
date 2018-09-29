@@ -16,7 +16,6 @@
 package org.b3log.latke.event;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 
@@ -30,7 +29,6 @@ import java.util.concurrent.FutureTask;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.1.2.5, Jun 14, 2017
  */
-@Named("LatkeBuiltInEventManager")
 @Singleton
 public class EventManager {
 

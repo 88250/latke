@@ -16,15 +16,11 @@
 package org.b3log.latke.ioc.point;
 
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.b3log.latke.ioc.annotated.Annotated;
 import org.b3log.latke.ioc.bean.Bean;
-import org.b3log.latke.ioc.util.Beans;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 
 /**
@@ -47,7 +43,7 @@ public abstract class AbstractInjectionPoint implements InjectionPoint {
 
     /**
      * Constructs a injection point with the specified arguments.
-     * 
+     *
      * @param ownerBean the specified owner bean
      * @param annotated the specified annotated element
      */
@@ -67,14 +63,6 @@ public abstract class AbstractInjectionPoint implements InjectionPoint {
         } else {
             return baseType;
         }
-    }
-
-    @Override
-    public Set<Annotation> getQualifiers() {
-        final Set<Annotation> annotations = annotated.getAnnotations();
-        final Set<Annotation> ret = Beans.selectQualifiers(annotations);
-
-        return ret == null ? new HashSet<Annotation>() : ret;
     }
 
     @Override

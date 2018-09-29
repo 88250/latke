@@ -23,7 +23,6 @@ import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.inject.Inject;
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -48,7 +47,6 @@ import java.util.*;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.3, Sep 8, 2017
  */
-@Named("LatkeBuiltInPluginManager")
 @Singleton
 public class PluginManager {
 

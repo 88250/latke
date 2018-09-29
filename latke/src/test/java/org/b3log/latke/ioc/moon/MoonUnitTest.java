@@ -19,26 +19,18 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.ioc.bean.Bean;
-import org.b3log.latke.ioc.literal.NamedLiteral;
-import org.b3log.latke.ioc.moon.annotation.ArtificalLiteral;
-import org.b3log.latke.ioc.moon.annotation.WaterLiteral;
-import org.b3log.latke.ioc.moon.water.WaterMoon;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
 
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 /**
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.4, Sep 29, 2018
+ * @since 2.4.18
  */
 final public class MoonUnitTest {
 
@@ -47,43 +39,21 @@ final public class MoonUnitTest {
      */
     private BeanManager beanManager;
 
-    public static final List<Class<?>> moonPackageClasses = Arrays.asList(Moon.class, ArtificalMoon.class, WaterMoon.class);
+    public static final List<Class<?>> moonPackageClasses = Arrays.asList(Moon.class);
 
     private static Moon moon;
 
-    private static ArtificalMoon artificalMoon;
-
-    private static WaterMoon waterMoon;
-
     @BeforeTest
-    @SuppressWarnings("unchecked")
     public void beforeTest() {
         System.out.println("before MoonUnitTest");
 
         Latkes.initRuntimeEnv();
-
         beanManager = BeanManager.getInstance();
-
         Lifecycle.startApplication(moonPackageClasses);
 
-        final Set<Annotation> moonQualifiers = new HashSet<>();
-        moonQualifiers.add(new NamedLiteral("moon"));
-        final Bean<?> moonBean = beanManager.getBean(Moon.class, moonQualifiers);
+        final Bean<?> moonBean = beanManager.getBean(Moon.class);
         moon = (Moon) beanManager.getReference(moonBean);
         assertNotNull(moon);
-
-        final Set<Annotation> artificalMoonQualifiers = new HashSet<>();
-        artificalMoonQualifiers.add(new ArtificalLiteral());
-        final Bean<?> artificalMoonBean = beanManager.getBean(ArtificalMoon.class, artificalMoonQualifiers);
-        artificalMoon = (ArtificalMoon) beanManager.getReference(artificalMoonBean);
-        assertNotNull(artificalMoon);
-
-        final Set<Annotation> waterMoonQualifiers = new HashSet<>();
-        waterMoonQualifiers.add(new ArtificalLiteral());
-        waterMoonQualifiers.add(new WaterLiteral());
-        final Bean<?> waterMoonBean = beanManager.getBean(WaterMoon.class, waterMoonQualifiers);
-        waterMoon = (WaterMoon) beanManager.getReference(waterMoonBean);
-        assertNotNull(waterMoon);
     }
 
     /**
@@ -93,30 +63,5 @@ final public class MoonUnitTest {
     public void afterTest() {
         System.out.println("afterTest MoonUnitTest");
         Lifecycle.endApplication();
-    }
-
-    @Test
-    public void initDescription() {
-        System.out.println("initMoonDescription");
-        assertEquals(moon.description, "real");
-//        assertEquals(artificalMoon.description, "artifical");
-        assertEquals(((Moon) artificalMoon).description, "default description of moon");
-    }
-
-    //@Test
-    public void initWeight() {
-        System.out.println("initWeight");
-        assertEquals(moon.weight, 1);
-        assertEquals(artificalMoon.weight, 0);
-        assertEquals(waterMoon.weight, -1);
-        assertEquals(((ArtificalMoon) waterMoon).weight, 0);
-        assertEquals(((Moon) waterMoon).weight, 0);
-    }
-
-    //@Test
-    public void initName() {
-        System.out.println("initName");
-        assertEquals(moon.name, "Moon");
-        assertEquals(artificalMoon.name, "Moon");
     }
 }

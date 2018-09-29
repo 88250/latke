@@ -17,7 +17,6 @@ package org.b3log.latke.ioc.config;
 
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.bean.Bean;
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -52,11 +51,6 @@ public class Configurator {
     private Map<Type, Set<Class<?>>> typeClasses;
 
     /**
-     * &lt;BeanClass, Qualifiers&gt;.
-     */
-    private Map<Class<?>, Set<Annotation>> classQualifiers;
-
-    /**
      * &lt;Qualifier, BeanClasses&gt;.
      */
     private Map<Annotation, Set<Class<?>>> qualifierClasses;
@@ -70,7 +64,6 @@ public class Configurator {
         this.beanManager = beanManager;
 
         typeClasses = new HashMap<>();
-        classQualifiers = new HashMap<>();
         qualifierClasses = new HashMap<>();
     }
 
@@ -97,33 +90,8 @@ public class Configurator {
         qualifierClasses.put(qualifier, beanClasses);
     }
 
-    public void addClassQualifierBinding(final Class<?> beanClass, final Annotation qualifier) {
-        Set<Annotation> qualifiers = classQualifiers.get(beanClass);
-
-        if (null == qualifiers) {
-            qualifiers = new HashSet<>();
-        }
-
-        if (qualifier.annotationType().equals(Named.class)) {
-            final Iterator<Annotation> iterator = qualifiers.iterator();
-
-            while (iterator.hasNext()) {
-                if (iterator.next().annotationType().equals(Named.class)) {
-                    iterator.remove(); // remove the old one
-                }
-            }
-        }
-
-        qualifiers.add(qualifier);
-        classQualifiers.put(beanClass, qualifiers);
-    }
-
     public Set<Class<?>> getBindedBeanClasses(final Type beanType) {
         return typeClasses.get(beanType);
-    }
-
-    public Set<Annotation> getBindedQualifiers(final Class<?> beanClass) {
-        return classQualifiers.get(beanClass);
     }
 
     public void validate() {
@@ -154,7 +122,6 @@ public class Configurator {
             return null;
         }
 
-        final Set<Annotation> qualifiers = Beans.getQualifiers(beanClass, name);
         final Class<? extends Annotation> scope = Beans.getScope(beanClass);
         final Set<Type> beanTypes = Beans.getBeanTypes(beanClass);
         final Set<Class<? extends Annotation>> stereotypes = Beans.getStereotypes(beanClass);
@@ -162,17 +129,12 @@ public class Configurator {
         LOGGER.log(Level.DEBUG, "Adding a bean[name={0}, scope={1}, class={2}] to the bean manager....",
                 name, scope.getName(), beanClass.getName());
 
-        final Bean<T> ret = new Bean<T>(beanManager, name, scope, qualifiers, beanClass, beanTypes, stereotypes);
+        final Bean<T> ret = new Bean<T>(beanManager, name, scope, beanClass, beanTypes, stereotypes);
 
         beanManager.addBean(ret);
 
         for (final Type beanType : beanTypes) {
             addTypeClassBinding(beanType, beanClass);
-        }
-
-        for (final Annotation qualifier : qualifiers) {
-            addClassQualifierBinding(beanClass, qualifier);
-            addQualifierClassBinding(qualifier, beanClass);
         }
 
         return ret;

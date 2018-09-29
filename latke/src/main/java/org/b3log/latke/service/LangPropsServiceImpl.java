@@ -15,28 +15,23 @@
  */
 package org.b3log.latke.service;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Locales;
 
+import java.util.*;
+
 /**
  * Language service implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.1, Oct 27, 2016
+ * @version 1.2.1.2, Sep 29, 2018
+ * @since 2.4.18
  */
-@Named
 @Singleton
 public class LangPropsServiceImpl implements LangPropsService {
 
@@ -100,11 +95,11 @@ public class LangPropsServiceImpl implements LangPropsService {
      * baseName_(locale).properties configurations, using {@link Latkes#getLocale()} instead.
      *
      * @param baseName base name of resource bundle, options as the following:
-     * <ul>
-     * <li>{@link Keys#LANGUAGE}</li>
-     * </ul>
-     * @param key the specified key
-     * @param locale the specified locale
+     *                 <ul>
+     *                 <li>{@link Keys#LANGUAGE}</li>
+     *                 </ul>
+     * @param key      the specified key
+     * @param locale   the specified locale
      * @return the value of the specified key
      */
     private String get(final String baseName, final String key, final Locale locale) {

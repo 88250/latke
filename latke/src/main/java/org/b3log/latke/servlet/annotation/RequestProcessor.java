@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.annotation;
 
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.ioc.inject.Stereotype;
 
@@ -23,20 +22,21 @@ import java.lang.annotation.*;
 
 /**
  * Indicates that an annotated type for HTTP servlet request processing.
- * 
+ *
  * <p>
- * A request processor is the C (controller) of MVC pattern, which has some methods for requests processing, see {@link RequestProcessing} 
+ * A request processor is the C (controller) of MVC pattern, which has some methods for requests processing, see {@link RequestProcessing}
  * for more details.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 17, 2011
+ * @version 1.0.0.1, Sep 29, 2018
  * @see RequestProcessing
+ * @since 2.4.18
  */
 @Singleton
-@Named
 @Stereotype
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RequestProcessor {}
+public @interface RequestProcessor {
+}

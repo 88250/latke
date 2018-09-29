@@ -15,27 +15,25 @@
  */
 package org.b3log.latke.ioc.util;
 
-
-import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.ioc.inject.*;
+import org.b3log.latke.ioc.inject.Scope;
+import org.b3log.latke.ioc.inject.Singleton;
+import org.b3log.latke.ioc.inject.Stereotype;
+import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Reflections;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-import org.b3log.latke.ioc.literal.NamedLiteral;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
-import org.b3log.latke.util.CollectionUtils;
-import org.b3log.latke.util.Strings;
-
 
 /**
  * Bean utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.6, Mar 31, 2010
+ * @version 1.0.0.7, Sep 29, 2018
+ * @since 2.4.18
  */
 public final class Beans {
 
@@ -47,84 +45,12 @@ public final class Beans {
     /**
      * Private constructor.
      */
-    private Beans() {}
-
-    /**
-     * Gets qualifiers of the specified class. If no qualifiers, 
-     * 
-     * @param clazz the specified class
-     * @param beanName the specified bean name
-     * @return qualifier annotations
-     */
-    public static Set<Annotation> getQualifiers(final Class<?> clazz, final String beanName) {
-        final Annotation[] annotations = clazz.getAnnotations();
-        final Set<Annotation> qualifierAnnotations = CollectionUtils.arrayToSet(annotations);
-
-        Set<Annotation> ret = selectQualifiers(qualifierAnnotations);
-
-        if (ret == null) {
-            ret = new HashSet<Annotation>();
-        }
-
-        if (!hasNamedQualifier(clazz)) {
-            ret.add(new NamedLiteral(beanName));
-        }
-
-        return ret;
-    }
-
-    /**
-     * Gets named qualifier from the specified annotations.
-     * 
-     * @param annotations the specified annotations
-     * @return annotation is a named qualifier, returns {@code null} if not found
-     */
-    public static Annotation selectNamedQualifier(final Set<Annotation> annotations) {
-        for (final Annotation annotation : annotations) {
-            if (annotation.annotationType().equals(Named.class)) {
-                return annotation;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets selectQualifiers.
-     * 
-     * @param annotations
-     * @return selectQualifiers
-     */
-    public static Set<Annotation> selectQualifiers(final Set<Annotation> annotations) {
-        final Set<Annotation> ret = getAnnotations(annotations, Qualifier.class);
-        Annotation named = selectNamedQualifier(annotations);
-
-        if (ret.isEmpty()) {
-            if (named != null) {
-                ret.add(named);
-            } else {
-                return null;
-            }
-        } else if (named != null) {
-            ret.add(named);
-        }
-
-        return ret;
-    }
-
-    public static final boolean containNamed(final Set<Annotation> qualifiers) {
-        for (final Annotation qualifier : qualifiers) {
-            if (qualifier.annotationType().equals(Named.class)) {
-                return true;
-            }
-        }
-
-        return false;
+    private Beans() {
     }
 
     /**
      * Gets scope of the specified class.
-     * 
+     *
      * @param clazz the specified class
      * @return scope of the specified class, returns {@link Singleton} class as the default scope of the specified class
      */
@@ -141,7 +67,7 @@ public final class Beans {
 
     /**
      * Gets stereo types of the specified class.
-     * 
+     *
      * @param clazz the specified class
      * @return stereo types of the specified class
      */
@@ -161,44 +87,15 @@ public final class Beans {
         return ret;
     }
 
-    public static final boolean hasNamedQualifier(final Class<?> clazz) {
-        final Set<Annotation> annotations = CollectionUtils.arrayToSet(clazz.getAnnotations());
-        final Set<Annotation> qualifiers = selectQualifiers(annotations);
-
-        if (qualifiers == null) {
-            return false;
-        } else {
-            if (containNamed(qualifiers)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
     public static final String getBeanName(final Class<?> clazz) {
-        String ret;
+        final String className = clazz.getName();
 
-        if (clazz.isAnnotationPresent(Named.class)) {
-            ret = clazz.getAnnotation(Named.class).value();
-        } else {
-            final String className = clazz.getSimpleName();
-
-            LOGGER.log(Level.TRACE, "Class [name={0}, simpleName={1}]", clazz.getName(), className);
-
-            if (StringUtils.isBlank(className)) {
-                return null;
-            }
-
-            ret = className.substring(0, 1).toLowerCase() + className.substring(1);
-        }
-
-        return ret;
+        return className.substring(0, 1).toLowerCase() + className.substring(1);
     }
 
     /**
      * Determines whether the specified could create bean.
-     * 
+     *
      * @param clazz the specified class
      * @return {@code true} if it could create bean, returns {@code false} otherwise
      */
@@ -206,7 +103,7 @@ public final class Beans {
         if (Reflections.isAbstract(clazz) || Reflections.isInterface(clazz)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -232,7 +129,7 @@ public final class Beans {
             if (genericSuperclass != Object.class) {
                 ret.add(genericSuperclass);
             }
-            
+
             if (null != genericInterfaces && 0 != genericInterfaces.length) {
                 for (final Type genericInterface : genericInterfaces) {
                     ret.add(genericInterface);
@@ -272,13 +169,13 @@ public final class Beans {
 
     /**
      * Gets annotations match the needed annotation type from the specified annotation.
-     * 
-     * @param annotations the specified annotations
+     *
+     * @param annotations          the specified annotations
      * @param neededAnnotationType the needed annotation type
      * @return annotation set, returns an empty set if not found
      */
     private static Set<Annotation> getAnnotations(final Set<Annotation> annotations,
-        final Class<? extends Annotation> neededAnnotationType) {
+                                                  final Class<? extends Annotation> neededAnnotationType) {
         final Set<Annotation> ret = new HashSet<Annotation>();
 
         for (final Annotation annotation : annotations) {

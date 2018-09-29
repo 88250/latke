@@ -15,24 +15,20 @@
  */
 package org.b3log.latke.servlet.mock;
 
-import java.util.Map;
-
-
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 
-@Named
+import java.util.Map;
+
 @Singleton
-public class TestBeforeAdvice extends BeforeRequestProcessAdvice{
+public class TestBeforeAdvice extends BeforeRequestProcessAdvice {
 
-	@Override
-	public void doAdvice(HTTPRequestContext context, Map<String, Object> args) throws RequestProcessAdviceException {
-		
-		Integer id = (Integer)args.get("id");
-		args.put("id", id+1);
-	}
-	
+    @Override
+    public void doAdvice(HTTPRequestContext context, Map<String, Object> args) {
+
+        Integer id = (Integer) args.get("id");
+        args.put("id", id + 1);
+    }
+
 }

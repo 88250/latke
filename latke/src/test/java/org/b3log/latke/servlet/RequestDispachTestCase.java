@@ -15,13 +15,10 @@
  */
 package org.b3log.latke.servlet;
 
-import java.text.SimpleDateFormat;
+import junit.framework.Assert;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.servlet.handler.AdviceHandler;
-import org.b3log.latke.servlet.handler.Handler;
-import org.b3log.latke.servlet.handler.MethodInvokeHandler;
-import org.b3log.latke.servlet.handler.ArgsHandler;
-import org.b3log.latke.servlet.handler.RequestDispatchHandler;
+import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.mock.TestBeforeAdvice;
 import org.b3log.latke.servlet.mock.TestRequestProcessor;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
@@ -34,16 +31,11 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import junit.framework.Assert;
-import org.b3log.latke.Latkes;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Processor test.
@@ -54,7 +46,7 @@ import static org.mockito.Mockito.*;
  */
 public class RequestDispachTestCase {
 
-    private final List<Handler> handlerList = new ArrayList<Handler>();
+    private final List<Handler> handlerList = new ArrayList<>();
 
     static {
         Latkes.initRuntimeEnv();
@@ -62,9 +54,9 @@ public class RequestDispachTestCase {
 
     @BeforeTest
     @SuppressWarnings("unchecked")
-    public void beforeTest() throws Exception {
+    public void beforeTest() {
         System.out.println("Request Processors Test");
-        final List<Class<?>> classes = new ArrayList<Class<?>>();
+        final List<Class<?>> classes = new ArrayList<>();
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
 

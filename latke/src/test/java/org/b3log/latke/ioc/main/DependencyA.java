@@ -15,9 +15,9 @@
  */
 package org.b3log.latke.ioc.main;
 
-import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Singleton;
 
-@Named("dependencyA")
+@Singleton
 public class DependencyA {
 
     public void method1() {

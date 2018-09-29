@@ -70,7 +70,7 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
  * forgot to configure the scope in the injector. A conservative injector
  * would generate an error rather than not apply a scope.
  *
- * @see javax.inject.Singleton @Singleton
+ * @see Singleton @Singleton
  */
 @Target(ANNOTATION_TYPE)
 @Retention(RUNTIME)

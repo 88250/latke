@@ -40,13 +40,6 @@ public interface InjectionPoint
     public Type getType();
 
     /**
-     * Get the required qualifiers of the injection point.
-     *
-     * @return the required qualifiers
-     */
-    public Set<Annotation> getQualifiers();
-
-    /**
      * Get the {@link javax.enterprise.inject.spi.Bean} object representing the
      * bean that defines the injection point. If the injection point does not
      * belong to a bean, return a null value.

@@ -23,8 +23,6 @@ import org.b3log.latke.ioc.annotated.AnnotatedType;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.CreationalContext;
 import org.b3log.latke.ioc.inject.Inject;
-import org.b3log.latke.ioc.inject.Named;
-import org.b3log.latke.ioc.literal.NamedLiteral;
 import org.b3log.latke.ioc.point.FieldInjectionPoint;
 import org.b3log.latke.ioc.point.InjectionPoint;
 import org.b3log.latke.ioc.point.ParameterInjectionPoint;
@@ -75,12 +73,6 @@ public class Bean<T> {
      * Bean scope.
      */
     private Class<? extends Annotation> scope;
-
-    /**
-     * Bean qualifiers.
-     */
-    private Set<Annotation> qualifiers;
-
     /**
      * Bean class.
      */
@@ -127,18 +119,15 @@ public class Bean<T> {
      * @param beanManager the specified bean manager
      * @param name        the specified bean name
      * @param scope       the specified bean scope
-     * @param qualifiers  the specified bean qualifiers
      * @param beanClass   the specified bean class
      * @param types       the specified bean types
      * @param stereotypes the specified stereo types
      */
-    public Bean(final BeanManager beanManager, final String name, final Class<? extends Annotation> scope,
-                final Set<Annotation> qualifiers, final Class<T> beanClass, final Set<Type> types,
+    public Bean(final BeanManager beanManager, final String name, final Class<? extends Annotation> scope, final Class<T> beanClass, final Set<Type> types,
                 final Set<Class<? extends Annotation>> stereotypes) {
         this.beanManager = beanManager;
         this.name = name;
         this.scope = scope;
-        this.qualifiers = qualifiers;
         this.beanClass = beanClass;
         this.types = types;
         this.stereotypes = stereotypes;
@@ -422,10 +411,6 @@ public class Bean<T> {
         return name;
     }
 
-    public Set<Annotation> getQualifiers() {
-        return qualifiers;
-    }
-
     public Class<? extends Annotation> getScope() {
         return scope;
     }
@@ -457,22 +442,6 @@ public class Bean<T> {
         return ret;
     }
 
-    public Bean<T> named(final String name) {
-        final Named namedQualifier = new NamedLiteral(name);
-
-        addQualifier(namedQualifier);
-        return this;
-    }
-
-    public Bean<T> qualified(final Annotation qualifier, final Annotation... qualifiers) {
-        addQualifier(qualifier);
-        for (final Annotation q : qualifiers) {
-            addQualifier(q);
-        }
-
-        return this;
-    }
-
     public Bean<T> scoped(final Class<? extends Annotation> scope) {
         this.setScope(scope);
 
@@ -481,8 +450,7 @@ public class Bean<T> {
 
     @Override
     public String toString() {
-        return "[name=" + name + ", scope=" + scope.getName() + ", qualifiers=" + qualifiers + ", class=" + beanClass.getName() + ", types="
-                + types + "]";
+        return "[name=" + name + ", scope=" + scope.getName() + ", class=" + beanClass.getName() + ", types=" + types + "]";
     }
 
     /**
@@ -536,56 +504,6 @@ public class Bean<T> {
             final FieldInjectionPoint fieldInjectionPoint = new FieldInjectionPoint(this, annotatedField);
 
             fieldInjectionPoints.add(fieldInjectionPoint);
-        }
-    }
-
-    /**
-     * Adds a qualifier with the specified qualifier.
-     *
-     * @param qualifier the specified qualifier
-     */
-    private void addQualifier(final Annotation qualifier) {
-        if (qualifier.getClass().equals(NamedLiteral.class)) {
-            final NamedLiteral namedQualifier = (NamedLiteral) getNamedQualifier();
-            final NamedLiteral newNamedQualifier = (NamedLiteral) qualifier;
-
-            if (!namedQualifier.value().equals(newNamedQualifier.value())) {
-                setNamedQualifier(newNamedQualifier);
-            }
-        } else {
-            qualifiers.add(qualifier);
-        }
-
-        configurator.addClassQualifierBinding(beanClass, qualifier);
-    }
-
-    /**
-     * Gets the named qualifier.
-     *
-     * @return named aualifier
-     */
-    private Annotation getNamedQualifier() {
-        for (final Annotation qualifier : qualifiers) {
-            if (qualifier.annotationType().equals(Named.class)) {
-                return qualifier;
-            }
-        }
-
-        throw new RuntimeException("A bean has one qualifier(Named) at least!");
-    }
-
-    /**
-     * Sets the named qualifier with the specified named qualifier.
-     *
-     * @param namedQualifier the specified named qualifier
-     */
-    private void setNamedQualifier(final Annotation namedQualifier) {
-        for (final Annotation qualifier : qualifiers) {
-            if (qualifier.annotationType().equals(Named.class)) {
-                qualifiers.remove(qualifier);
-                qualifiers.add(namedQualifier);
-                name = ((Named) namedQualifier).value();
-            }
         }
     }
 }

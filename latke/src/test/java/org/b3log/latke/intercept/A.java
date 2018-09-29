@@ -16,9 +16,9 @@
 package org.b3log.latke.intercept;
 
 import org.b3log.latke.intercept.annotation.BeforeMethod;
-import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.inject.Singleton;
 
-@Named
+@Singleton
 public class A {
 
     // invoking method

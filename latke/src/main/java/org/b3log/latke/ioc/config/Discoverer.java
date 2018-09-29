@@ -20,7 +20,6 @@ import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.annotation.Repository;
@@ -41,7 +40,8 @@ import java.util.Set;
  * Bean discoverer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Mar 30, 2010
+ * @version 1.0.0.5, Sep 29, 2018
+ * @since 2.4.18
  */
 public final class Discoverer {
 
@@ -141,13 +141,6 @@ public final class Discoverer {
                 if (annotation.getTypeName().equals(Service.class.getName())
                         || (annotation.getTypeName()).equals(Repository.class.getName())) {
                     // Service and Repository is singleton scoped by default
-                    maybeBeanClass = true;
-
-                    break;
-                }
-
-                if (annotation.getTypeName().equals(Named.class.getName())) {
-                    // Annoatated with Named maybe a bean class
                     maybeBeanClass = true;
 
                     break;

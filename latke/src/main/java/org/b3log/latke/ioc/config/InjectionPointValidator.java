@@ -19,7 +19,6 @@ import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.inject.AmbiguousResolutionException;
 import org.b3log.latke.ioc.inject.UnsatisfiedResolutionException;
 import org.b3log.latke.ioc.point.InjectionPoint;
-import org.b3log.latke.util.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -77,46 +76,14 @@ public final class InjectionPointValidator {
     public static <T> void checkDependency(final Bean<T> bean, final Configurator configurator) {
         for (final InjectionPoint injectionPoint : bean.getInjectionPoints()) {
             final Type requiredType = injectionPoint.getType();
-            final Set<Annotation> requiredQualifiers = injectionPoint.getQualifiers();
-            Set<Annotation> bindedQualifiers;
-
-            if (Reflections.isConcrete(requiredType)) {
-                bindedQualifiers = configurator.getBindedQualifiers((Class<?>) requiredType);
-                if (bindedQualifiers.containsAll(requiredQualifiers)) {
-                    continue;
-                }
-            }
-
             final Set<Class<?>> bindedBeanClasses = configurator.getBindedBeanClasses(requiredType);
 
             if (bindedBeanClasses == null) {
-                throw new UnsatisfiedResolutionException("Has no eligible bean[type=" + requiredType.toString()
-                        + "] for injection point[" + injectionPoint + "]");
-            } else if (bindedBeanClasses.size() == 1) {
-                final Class<?> eligibleClass = bindedBeanClasses.iterator().next();
-
-                bindedQualifiers = configurator.getBindedQualifiers(eligibleClass);
-                if (!bindedQualifiers.containsAll(requiredQualifiers)) {
-                    throw new UnsatisfiedResolutionException("Has no eligible bean[type=" + requiredType.toString()
-                            + ", qualifiers=]" + requiredQualifiers + "] for injection point[" + injectionPoint + "]");
-                }
+                throw new UnsatisfiedResolutionException("Has no eligible bean [type=" + requiredType.toString()
+                        + "] for injection point [" + injectionPoint + "]");
             } else if (bindedBeanClasses.size() > 1) {
-                final Set<Class<?>> eligibleClasses = new HashSet<Class<?>>();
-
-                for (final Class<?> beanClass : bindedBeanClasses) {
-                    bindedQualifiers = configurator.getBindedQualifiers(beanClass);
-                    if (bindedQualifiers.containsAll(requiredQualifiers)) {
-                        eligibleClasses.add(beanClass);
-                    }
-                }
-
-                if (eligibleClasses.isEmpty()) {
-                    throw new UnsatisfiedResolutionException("Has no eligible bean[type=" + requiredType.toString()
-                            + ", qualifiers=" + requiredQualifiers + "] for injection point[" + injectionPoint + "]");
-                } else if (eligibleClasses.size() > 1) {
-                    throw new AmbiguousResolutionException("Has more than one eligible bean[type=" + requiredType.toString()
-                            + ", qualifiers=" + requiredQualifiers + "] for injection point[" + injectionPoint + "]");
-                }
+                throw new AmbiguousResolutionException("Has more than one eligible bean[type=" + requiredType.toString()
+                        + "] for injection point[" + injectionPoint + "]");
             }
         }
     }
