@@ -37,62 +37,62 @@ public final class NoneRepository implements Repository {
     }
 
     @Override
-    public String add(final JSONObject jsonObject) throws RepositoryException {
+    public String add(final JSONObject jsonObject) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void update(final String id, final JSONObject jsonObject) throws RepositoryException {
+    public void update(final String id, final JSONObject jsonObject) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void remove(final String id) throws RepositoryException {
+    public void remove(final String id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void remove(final Query query) throws RepositoryException {
+    public void remove(final Query query) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public JSONObject get(final String id) throws RepositoryException {
+    public JSONObject get(final String id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Map<String, JSONObject> get(final Iterable<String> ids) throws RepositoryException {
+    public Map<String, JSONObject> get(final Iterable<String> ids) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean has(final String id) throws RepositoryException {
+    public boolean has(final String id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public JSONObject get(final Query query) throws RepositoryException {
+    public JSONObject get(final Query query) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<JSONObject> select(final String statement, final Object... params) throws RepositoryException {
+    public List<JSONObject> select(final String statement, final Object... params) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<JSONObject> getRandomly(final int fetchSize) throws RepositoryException {
+    public List<JSONObject> getRandomly(final int fetchSize) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public long count() throws RepositoryException {
+    public long count() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public long count(final Query query) throws RepositoryException {
+    public long count(final Query query) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -19,8 +19,9 @@ package org.b3log.latke.ioc.context;
  * Provides operations that are used by the {@link Contextual} implementation during
  * instance creation and destruction.
  *
- * @author Gavin King
- * @author Pete Muir
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 public interface CreationalContext<T> {
 
@@ -38,5 +39,4 @@ public interface CreationalContext<T> {
      * by passing each dependent object to {@link Contextual#destroy(Object, CreationalContext)}.
      */
     void release();
-
 }

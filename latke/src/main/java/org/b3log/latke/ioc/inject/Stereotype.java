@@ -48,6 +48,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * developer to identify such a role and declare some common metadata
  * for beans with that role in a central place.
  * </p>
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 @Retention(RUNTIME)
 @Target(ANNOTATION_TYPE)

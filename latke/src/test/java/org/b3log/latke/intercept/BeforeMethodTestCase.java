@@ -29,6 +29,7 @@ import static org.testng.Assert.assertNotNull;
 /**
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 final public class BeforeMethodTestCase {
 
@@ -40,7 +41,6 @@ final public class BeforeMethodTestCase {
     public static final List<Class<?>> packageClasses = Arrays.asList(A.class, B.class);
 
     @BeforeTest
-    @SuppressWarnings("unchecked")
     public void beforeTest() {
         System.out.println("before BeforeMethodTestCase");
 

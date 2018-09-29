@@ -20,7 +20,9 @@ import java.lang.reflect.Type;
 /**
  * Represents a Java program element that can be annotated.
  *
- * @see java.lang.reflect.AnnotatedElement
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 public interface Annotated {
 

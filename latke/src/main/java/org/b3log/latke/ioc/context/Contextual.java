@@ -18,18 +18,16 @@ package org.b3log.latke.ioc.context;
 import org.b3log.latke.ioc.bean.Bean;
 
 /**
- * <p>Defines operations to create and destroy contextual instances of a
+ * Defines operations to create and destroy contextual instances of a
  * certain type. Any implementation of {@code Contextual} is called a
- * contextual type. In particular, all beans are contextual types.</p>
+ * contextual type. In particular, all beans are contextual types.
  *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Sep 29, 2018
  * @see Bean
- *
- * @author Gavin King
- * @author Nicklas Karlsson
- * @author Pete Muir
+ * @since 2.4.18
  */
-public interface Contextual<T>
-{
+public interface Contextual<T> {
     /**
      * Create a new instance of the contextual type. Instances should
      * use the given {@link CreationalContext}
@@ -40,8 +38,7 @@ public interface Contextual<T>
      * between instantiation and injection to help the container minimize the
      * use of client proxy objects.
      *
-     * @param creationalContext
-     *            the context in which this instance is being created
+     * @param creationalContext the context in which this instance is being created
      * @return the contextual instance
      */
     public T create(CreationalContext<T> creationalContext);
@@ -52,10 +49,8 @@ public interface Contextual<T>
      * to allow the container to destroy dependent objects of the contextual
      * instance.
      *
-     * @param instance
-     *           the contextual instance to destroy
-     * @param creationalContext
-     *           the context in which this instance was created
+     * @param instance          the contextual instance to destroy
+     * @param creationalContext the context in which this instance was created
      */
     public void destroy(T instance, CreationalContext<T> creationalContext);
 }

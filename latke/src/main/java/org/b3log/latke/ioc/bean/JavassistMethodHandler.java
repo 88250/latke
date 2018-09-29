@@ -36,7 +36,8 @@ import java.util.Set;
  * Javassist method handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.4, Jul 5, 2017
+ * @version 1.0.1.5, Sep 29, 2018
+ * @since 2.4.18
  */
 public final class JavassistMethodHandler implements MethodHandler {
 
@@ -53,13 +54,10 @@ public final class JavassistMethodHandler implements MethodHandler {
     /**
      * Method filter.
      */
-    private MethodFilter methodFilter = new MethodFilter() {
-        @Override
-        public boolean isHandled(final Method method) {
-            final String name = method.getName();
+    private MethodFilter methodFilter = method -> {
+        final String name = method.getName();
 
-            return !"beginTransaction".equals(name) && !"hasTransactionBegun".equals(name);
-        }
+        return !"beginTransaction".equals(name) && !"hasTransactionBegun".equals(name);
     };
 
     /**
@@ -67,7 +65,7 @@ public final class JavassistMethodHandler implements MethodHandler {
      *
      * @param beanManager the specified bean manager
      */
-    public JavassistMethodHandler(final BeanManager beanManager) {
+    JavassistMethodHandler(final BeanManager beanManager) {
         this.beanManager = beanManager;
     }
 
@@ -114,7 +112,7 @@ public final class JavassistMethodHandler implements MethodHandler {
             //LOGGER.log(Level.WARN, errMsg);
 
             if (needHandleTrans) {
-                if (null != transaction && transaction.isActive()) {
+                if (transaction.isActive()) {
                     transaction.rollback();
                 }
             }

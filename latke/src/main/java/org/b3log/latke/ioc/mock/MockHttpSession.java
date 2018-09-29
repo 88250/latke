@@ -15,16 +15,14 @@
  */
 package org.b3log.latke.ioc.mock;
 
-
-import java.util.Enumeration;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
-
+import java.util.Enumeration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A mock HTTP session for test mainly. 
+ * A mock HTTP session for test mainly.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, May 21, 2009

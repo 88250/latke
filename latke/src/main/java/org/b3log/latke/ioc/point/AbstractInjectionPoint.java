@@ -22,7 +22,8 @@ import org.b3log.latke.ioc.bean.Bean;
  * Abstract injection point.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Nov 16, 2009
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 public abstract class AbstractInjectionPoint implements InjectionPoint {
 

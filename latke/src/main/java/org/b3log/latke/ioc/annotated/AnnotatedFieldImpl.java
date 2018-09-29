@@ -60,6 +60,6 @@ public class AnnotatedFieldImpl<T> implements AnnotatedField {
 
     @Override
     public Set<AnnotatedField> getFields() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 }

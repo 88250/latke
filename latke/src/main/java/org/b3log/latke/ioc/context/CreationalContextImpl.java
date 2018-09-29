@@ -25,7 +25,8 @@ import java.util.Map;
  *
  * @param <T> the type of incomplete instance
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Jun 8, 2009
+ * @version 1.0.0.3, Sep 29, 2018
+ * @since 2.4.18
  */
 public class CreationalContextImpl<T> implements CreationalContext<T> {
 

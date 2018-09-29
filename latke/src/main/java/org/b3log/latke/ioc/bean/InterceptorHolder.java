@@ -15,44 +15,41 @@
  */
 package org.b3log.latke.ioc.bean;
 
-
-import java.lang.annotation.Annotation;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import org.b3log.latke.intercept.annotation.AfterMethod;
 import org.b3log.latke.intercept.annotation.BeforeMethod;
 
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * Interceptor holder.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 29, 2013
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 public final class InterceptorHolder {
 
     /**
      * &lt;invokingMethodName, interceptors&gt;.
      */
-    private static final Map<String, Set<Interceptor>> BEFORE_METHOD_HOLDER = new HashMap<String, Set<Interceptor>>();
+    private static final Map<String, Set<Interceptor>> BEFORE_METHOD_HOLDER = new HashMap<>();
 
     /**
      * &lt;invokingMethodName, interceptors&gt;.
      */
-    private static final Map<String, Set<Interceptor>> AFTER_METHOD_HOLDER = new HashMap<String, Set<Interceptor>>();
+    private static final Map<String, Set<Interceptor>> AFTER_METHOD_HOLDER = new HashMap<>();
 
     /**
      * Private constructor.
      */
-    private InterceptorHolder() {}
+    private InterceptorHolder() {
+    }
 
     /**
      * Adds the specified interceptor with the specified intercept annotation class.
-     * 
-     * @param interceptor the specified interceptor
+     *
+     * @param interceptor       the specified interceptor
      * @param interceptAnnClass the specified intercept annotation class
      */
     public static void addInterceptor(final Interceptor interceptor, final Class<? extends Annotation> interceptAnnClass) {
@@ -62,7 +59,7 @@ public final class InterceptorHolder {
             Set<Interceptor> interceptors = BEFORE_METHOD_HOLDER.get(invokingMethodName);
 
             if (null == interceptors) {
-                interceptors = new HashSet<Interceptor>();
+                interceptors = new HashSet<>();
                 BEFORE_METHOD_HOLDER.put(invokingMethodName, interceptors);
             }
 
@@ -73,7 +70,7 @@ public final class InterceptorHolder {
             Set<Interceptor> interceptors = AFTER_METHOD_HOLDER.get(invokingMethodName);
 
             if (null == interceptors) {
-                interceptors = new HashSet<Interceptor>();
+                interceptors = new HashSet<>();
                 AFTER_METHOD_HOLDER.put(invokingMethodName, interceptors);
             }
 
@@ -83,9 +80,9 @@ public final class InterceptorHolder {
 
     /**
      * Gets interceptors specified with the given invoking method name and intercept annotation class.
-     * 
+     *
      * @param invokingMethodName the given invoking method name
-     * @param interceptAnnClass the specified intercept annotation class
+     * @param interceptAnnClass  the specified intercept annotation class
      * @return interceptors, returns an empty list if not found
      */
     static Set<Interceptor> getInterceptors(final String invokingMethodName, final Class<? extends Annotation> interceptAnnClass) {

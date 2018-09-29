@@ -21,7 +21,9 @@ import java.lang.reflect.Field;
  * Represents a field of a Java class.
  *
  * @param <X> the declaring type
- * @see Field
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 public interface AnnotatedField<X> extends AnnotatedType<X> {
 

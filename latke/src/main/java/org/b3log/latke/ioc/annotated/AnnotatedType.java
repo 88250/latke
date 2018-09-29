@@ -21,7 +21,9 @@ import java.util.Set;
  * Represents a Java class or interface.
  *
  * @param <X> the type
- * @see java.lang.Class
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 public interface AnnotatedType<X> extends Annotated {
 

@@ -15,24 +15,24 @@
  */
 package org.b3log.latke.ioc.bean;
 
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import org.b3log.latke.intercept.annotation.AfterMethod;
 import org.b3log.latke.intercept.annotation.BeforeMethod;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * An interceptor is a Java method that annotated with {@link BeforeMethod} or {@link AfterMethod}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 29, 2013
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
  */
 public final class Interceptor {
 
     /**
-     * Intercept annotation. 
-     * 
+     * Intercept annotation.
+     *
      * <p>
      * For example, {@link BeforeMethod}.
      * </p>
@@ -41,7 +41,7 @@ public final class Interceptor {
 
     /**
      * The name of original method be invoking in application code.
-     * 
+     *
      * <p>
      * For example, {@code org.b3log.A#oneMethod}.
      * </p>
@@ -55,8 +55,8 @@ public final class Interceptor {
 
     /**
      * Constructs an interceptor with the specified intercept method and intercept annotation.
-     * 
-     * @param interceptMethod the specified intercept method
+     *
+     * @param interceptMethod     the specified intercept method
      * @param interceptAnnotation the specified intercept annotation
      */
     public Interceptor(final Method interceptMethod, final Annotation interceptAnnotation) {
@@ -77,7 +77,7 @@ public final class Interceptor {
 
     /**
      * Gets intercept method.
-     * 
+     *
      * @return intercept method
      */
     public Method getInterceptMethod() {
@@ -86,7 +86,7 @@ public final class Interceptor {
 
     /**
      * Gets invoking method name.
-     * 
+     *
      * @return invoking method name
      */
     public String getInvokingMethodName() {
