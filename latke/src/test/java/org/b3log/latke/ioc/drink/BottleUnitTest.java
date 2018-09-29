@@ -15,51 +15,51 @@
  */
 package org.b3log.latke.ioc.drink;
 
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.config.Configurator;
+import org.b3log.latke.ioc.drink.annotation.OddLiteral;
 import org.b3log.latke.ioc.drink.juice.Juice;
 import org.b3log.latke.ioc.drink.juice.JuiceBottle;
 import org.b3log.latke.ioc.drink.mix.Mix;
 import org.b3log.latke.ioc.drink.mix.MixBottle;
-import org.b3log.latke.ioc.bean.LatkeBean;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.LatkeBeanManagerImpl;
-import org.b3log.latke.ioc.config.Configurator;
-import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.drink.annotation.OddLiteral;
 import org.b3log.latke.ioc.drink.wine.Spirit;
 import org.b3log.latke.ioc.drink.wine.WineBottle;
 import org.b3log.latke.ioc.inject.Singleton;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
-import org.testng.annotations.AfterTest;
+
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.testng.Assert.assertNotNull;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 28, 2009
+ * @version 1.0.0.2, Sep 29, 2018
  */
 final public class BottleUnitTest {
 
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     /**
      * Classes package.
      */
     public static final List<Class<?>> drinkPackageClasses =
-            Arrays.<Class<?>>asList(Juice.class,
-            Spirit.class,
-            Mix.class,
-            WineBottle.class,
-            JuiceBottle.class,
-            MixBottle.class);
+            Arrays.asList(Juice.class,
+                    Spirit.class,
+                    Mix.class,
+                    WineBottle.class,
+                    JuiceBottle.class,
+                    MixBottle.class);
 
     /**
      * Wine bottle.
@@ -78,33 +78,33 @@ final public class BottleUnitTest {
 
     @BeforeTest
     @SuppressWarnings("unchecked")
-    public void beforeTest() throws Exception {
+    public void beforeTest() {
         System.out.println("before BottleUnitTest");
-        
+
         Latkes.initRuntimeEnv();
         Lifecycle.startApplication(drinkPackageClasses);
 
-        beanManager = LatkeBeanManagerImpl.getInstance();
-        
+        beanManager = BeanManager.getInstance();
+
         // Creates bean by APIs
         final Configurator configurator = beanManager.getConfigurator();
         configurator.createBean(Mix.class).named("spiritMix").
                 scoped(Singleton.class).
                 qualified(new OddLiteral());
-        
+
         configurator.validate(); // Validate after bean configuration
 
-        final LatkeBean<?> wineBottleBean = beanManager.getBean(WineBottle.class);
+        final Bean<?> wineBottleBean = beanManager.getBean(WineBottle.class);
         assertNotNull(wineBottleBean);
         wineBottle = (WineBottle) beanManager.getReference(wineBottleBean);
         assertNotNull(wineBottle);
 
-        final LatkeBean<?> juiceBottleBean = beanManager.getBean(JuiceBottle.class);
+        final Bean<?> juiceBottleBean = beanManager.getBean(JuiceBottle.class);
         assertNotNull(juiceBottleBean);
         juiceBottle = (JuiceBottle) beanManager.getReference(juiceBottleBean);
         assertNotNull(juiceBottle);
 
-        final LatkeBean<?> mixBottleBean = beanManager.getBean(MixBottle.class, new HashSet<Annotation>());
+        final Bean<?> mixBottleBean = beanManager.getBean(MixBottle.class, new HashSet<Annotation>());
         mixBottle = (MixBottle) beanManager.getReference(mixBottleBean);
         assertNotNull(mixBottle);
     }

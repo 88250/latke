@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.ioc.context;
 
+import org.b3log.latke.ioc.bean.Bean;
+
 import java.lang.annotation.Annotation;
 
 /**
@@ -56,7 +58,7 @@ public interface Context {
      * @return the contextual instance
      * @throws ContextNotActiveException if the context is not active
      */
-    public <T> T get(Contextual<T> contextual, CreationalContext<T> creationalContext);
+    public <T> T get(Bean<T> contextual, CreationalContext<T> creationalContext);
 
     /**
      * Return an existing instance of a certain contextual type or a null value.
@@ -66,7 +68,7 @@ public interface Context {
      * @return the contextual instance, or a null value
      * @throws ContextNotActiveException if the context is not active
      */
-    public <T> T get(Contextual<T> contextual);
+    public <T> T get(Bean<T> contextual);
 
     /**
      * Determines if the context object is active.

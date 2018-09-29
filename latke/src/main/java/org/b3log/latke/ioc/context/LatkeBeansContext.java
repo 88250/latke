@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.ioc.context;
 
+import org.b3log.latke.ioc.bean.Bean;
+
 /**
  * Latke beans context.
  *
@@ -37,5 +39,5 @@ public interface LatkeBeansContext extends Context {
      * @param bean      the specified bean
      * @param reference the specified reference
      */
-    <T> void add(final Contextual<T> bean, final T reference);
+    <T> void add(final Bean<T> bean, final T reference);
 }

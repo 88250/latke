@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.ioc.provider;
 
-import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.annotated.AnnotatedField;
 
 /**
@@ -33,7 +33,7 @@ public final class FieldProvider<T> extends AbstractProvider<T> {
      * @param beanManager the specified bean manager
      * @param annotatedField the specified annotated field
      */
-    public FieldProvider(final LatkeBeanManager beanManager, final AnnotatedField<?> annotatedField) {
+    public FieldProvider(final BeanManager beanManager, final AnnotatedField<?> annotatedField) {
         super(beanManager, annotatedField);
     }
 

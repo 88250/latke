@@ -19,7 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Set;
-import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.annotated.Annotated;
 import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.config.Configurator;
@@ -40,7 +40,7 @@ public abstract class AbstractProvider<T> implements Provider<T> {
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     /**
      * Bean configurator.
@@ -63,7 +63,7 @@ public abstract class AbstractProvider<T> implements Provider<T> {
      * @param beanManager the specified bean manager
      * @param annotated the specified annotated element
      */
-    public AbstractProvider(final LatkeBeanManager beanManager, final Annotated annotated) {
+    public AbstractProvider(final BeanManager beanManager, final Annotated annotated) {
         this.beanManager = beanManager;
         this.annotated = annotated;
 

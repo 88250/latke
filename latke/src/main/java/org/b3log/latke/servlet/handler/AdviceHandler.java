@@ -17,7 +17,7 @@ package org.b3log.latke.servlet.handler;
 
 
 import org.b3log.latke.Keys;
-import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -66,7 +66,7 @@ public class AdviceHandler implements Handler {
         final Class<?> processorClass = invokeHolder.getDeclaringClass();
         final List<AbstractHTTPResponseRenderer> rendererList = result.getRendererList();
 
-        final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+        final BeanManager beanManager = Lifecycle.getBeanManager();
 
         final List<Class<? extends BeforeRequestProcessAdvice>> beforeAdviceClassList = getBeforeList(invokeHolder, processorClass);
 

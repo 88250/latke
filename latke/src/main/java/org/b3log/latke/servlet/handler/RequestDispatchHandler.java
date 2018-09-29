@@ -18,9 +18,9 @@ package org.b3log.latke.servlet.handler;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.bean.LatkeBean;
+import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -69,8 +69,8 @@ public class RequestDispatchHandler implements Handler {
      */
     public RequestDispatchHandler() {
 
-        final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
-        final Set<LatkeBean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
+        final BeanManager beanManager = Lifecycle.getBeanManager();
+        final Set<Bean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
 
         // do scan in  beanManager
         genInfo(processBeans);
@@ -216,13 +216,11 @@ public class RequestDispatchHandler implements Handler {
      *
      * @param processBeans processBeans which contains {@link RequestProcessor}
      */
-    private void genInfo(final Set<LatkeBean<?>> processBeans) {
-
-        for (final LatkeBean<?> latkeBean : processBeans) {
+    private void genInfo(final Set<Bean<?>> processBeans) {
+        for (final Bean<?> latkeBean : processBeans) {
             final Class<?> clz = latkeBean.getBeanClass();
 
             final Method[] declaredMethods = clz.getDeclaredMethods();
-
             for (int i = 0; i < declaredMethods.length; i++) {
                 final Method mthd = declaredMethods[i];
                 final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);

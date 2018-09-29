@@ -15,49 +15,49 @@
  */
 package org.b3log.latke.ioc.config;
 
+import org.b3log.latke.ioc.bean.Bean;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Set;
-import org.b3log.latke.ioc.bean.LatkeBean;
-
 
 /**
  * Bean configurator.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Mar 30, 2010
+ * @version 1.0.0.5, Sep 29, 2018
+ * @since 2.4.18
  */
 public interface Configurator {
 
     /**
      * Creates a bean with the specified bean class.
-     * 
-     * @param <T> the declaring type
+     *
+     * @param <T>       the declaring type
      * @param beanClass the specified bean class
      * @return bean
      */
-    <T> LatkeBean<T> createBean(final Class<T> beanClass);
+    <T> Bean<T> createBean(final Class<T> beanClass);
 
     /**
      * Creates beans with the specified bean classes.
-     * 
+     *
      * @param classes the specified bean classes
      */
     void createBeans(final Collection<Class<?>> classes);
 
     /**
      * Adds the &lt;bean type class - bean class&gt; binding.
-     * 
-     * @param beanType the specified bean type
+     *
+     * @param beanType  the specified bean type
      * @param beanClass the specified bean class
      */
     void addTypeClassBinding(final Type beanType, final Class<?> beanClass);
 
     /**
      * Adds the &lt;bean class - qualifier&gt; binding.
-     * 
+     *
      * @param beanClass the specified bean class
      * @param qualifier the specified qualifier
      */
@@ -65,7 +65,7 @@ public interface Configurator {
 
     /**
      * Adds the &lt;qualifier - bean class&gt; binding.
-     * 
+     *
      * @param qualifier the specified qualifier
      * @param beanClass the specified bean class
      */
@@ -78,7 +78,7 @@ public interface Configurator {
 
     /**
      * Gets the binded bean classes of the specified bean type.
-     * 
+     *
      * @param beanType the specified bean type
      * @return binded bean classes
      */
@@ -86,15 +86,15 @@ public interface Configurator {
 
     /**
      * Gets the binded qualifiers of the specified bean class.
-     * 
+     *
      * @param beanClass the specified bean class
-     * @return binded qualifiers 
+     * @return binded qualifiers
      */
     Set<Annotation> getBindedQualifiers(final Class<?> beanClass);
 
     /**
      * Adds the specified module.
-     * 
+     *
      * @param module the specified module
      */
     void addModule(final BeanModule module);

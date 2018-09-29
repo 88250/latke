@@ -15,8 +15,7 @@
  */
 package org.b3log.latke.util;
 
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.LatkeBeanManagerImpl;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.LangPropsServiceImpl;
 
@@ -29,7 +28,7 @@ import java.util.Map;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Aug 1, 2018
+ * @version 1.0.0.1, Sep 29, 2018
  * @since 2.4.4
  */
 public final class Times {
@@ -72,7 +71,7 @@ public final class Times {
      * @return time ago format text
      */
     public static String getTimeAgo(final long time, final Locale locale) {
-        final LatkeBeanManager beanManager = LatkeBeanManagerImpl.getInstance();
+        final BeanManager beanManager = BeanManager.getInstance();
         final LangPropsService langService = beanManager.getReference(LangPropsServiceImpl.class);
         final Map<String, String> langs = langService.getAll(locale);
 

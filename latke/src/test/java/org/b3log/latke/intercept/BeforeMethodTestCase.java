@@ -15,42 +15,39 @@
  */
 package org.b3log.latke.intercept;
 
-import java.util.Arrays;
-import java.util.List;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.LatkeBeanManagerImpl;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Lifecycle;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
-import org.testng.annotations.AfterTest;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.testng.Assert.assertNotNull;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 29, 2013
+ * @version 1.0.0.1, Sep 29, 2018
  */
 final public class BeforeMethodTestCase {
 
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
-    public static final List<Class<?>> packageClasses = Arrays.<Class<?>>asList(A.class, B.class);
+    public static final List<Class<?>> packageClasses = Arrays.asList(A.class, B.class);
 
     @BeforeTest
     @SuppressWarnings("unchecked")
-    public void beforeTest() throws Exception {
+    public void beforeTest() {
         System.out.println("before BeforeMethodTestCase");
 
         Latkes.initRuntimeEnv();
-        
-        beanManager = LatkeBeanManagerImpl.getInstance();
-
+        beanManager = BeanManager.getInstance();
         Lifecycle.startApplication(packageClasses);
-
         final A a = beanManager.getReference(A.class);
         assertNotNull(a);
 
@@ -71,7 +68,7 @@ final public class BeforeMethodTestCase {
     public void beforeMethod0() {
         System.out.println("beforeMethod0");
         final A a = beanManager.getReference(A.class);
-        
+
         a.oneMethod("TestArg");
     }
 }

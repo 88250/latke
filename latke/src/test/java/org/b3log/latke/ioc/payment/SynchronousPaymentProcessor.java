@@ -15,20 +15,17 @@
  */
 package org.b3log.latke.ioc.payment;
 
-import java.io.Serializable;
-
-import org.b3log.latke.ioc.context.SessionScoped;
 import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.payment.annotation.Synchronous;
 
+import java.io.Serializable;
+
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Sep 3, 2009
+ * @version 1.0.0.4, Sep 29, 2018
  */
 @Named("synchronousPaymentProcessor")
 @Synchronous
-@SessionScoped
 public class SynchronousPaymentProcessor implements PaymentProcessor, Serializable {
 
     @Override

@@ -20,7 +20,7 @@ package org.b3log.latke.ioc.context;
  * certain type. Any implementation of {@code Contextual} is called a
  * contextual type. In particular, all beans are contextual types.</p>
  *
- * @see javax.enterprise.inject.spi.Bean
+ * @see Bean
  *
  * @author Gavin King
  * @author Nicklas Karlsson
@@ -41,8 +41,6 @@ public interface Contextual<T>
      * @param creationalContext
      *            the context in which this instance is being created
      * @return the contextual instance
-     * @throws CreationException
-     *            if a checked exception occurs while creating the instance
      */
     public T create(CreationalContext<T> creationalContext);
 

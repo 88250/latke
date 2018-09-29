@@ -16,27 +16,20 @@
 package org.b3log.latke.ioc.config.impl;
 
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.bean.Bean;
-import org.b3log.latke.ioc.bean.BeanImpl;
-import org.b3log.latke.ioc.bean.LatkeBean;
-import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.config.InjectionPointValidator;
 import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.util.Beans;
-import org.b3log.latke.util.Reflections;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.Reflections;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.*;
 
 
 /**
@@ -55,7 +48,7 @@ public final class ConfiguratorImpl implements Configurator {
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     /**
      * Modules.
@@ -79,10 +72,10 @@ public final class ConfiguratorImpl implements Configurator {
 
     /**
      * Constructs a configurator with the specified bean manager.
-     * 
+     *
      * @param beanManager the specified bean manager
      */
-    public ConfiguratorImpl(final LatkeBeanManager beanManager) {
+    public ConfiguratorImpl(final BeanManager beanManager) {
         this.beanManager = beanManager;
 
         typeClasses = new HashMap<Type, Set<Class<?>>>();
@@ -106,7 +99,7 @@ public final class ConfiguratorImpl implements Configurator {
 
     @Override
     public void addQualifierClassBinding(final Annotation qualifier,
-        final Class<?> beanClass) {
+                                         final Class<?> beanClass) {
         Set<Class<?>> beanClasses = qualifierClasses.get(qualifier);
 
         if (beanClasses == null) {
@@ -119,7 +112,7 @@ public final class ConfiguratorImpl implements Configurator {
 
     @Override
     public void addClassQualifierBinding(final Class<?> beanClass,
-        final Annotation qualifier) {
+                                         final Annotation qualifier) {
         Set<Annotation> qualifiers = classQualifiers.get(beanClass);
 
         if (null == qualifiers) {
@@ -159,17 +152,17 @@ public final class ConfiguratorImpl implements Configurator {
     }
 
     @Override
-    public <T> LatkeBean<T> createBean(final Class<T> beanClass) {
+    public <T> Bean<T> createBean(final Class<T> beanClass) {
         try {
-            return (LatkeBean<T>) beanManager.getBean(beanClass);
+            return (Bean<T>) beanManager.getBean(beanClass);
         } catch (final Exception e) {
             LOGGER.log(Level.TRACE, "Not found bean [beanClass={0}], so to create it", beanClass);
         }
 
         if (!Beans.checkClass(beanClass)) {
             throw new IllegalStateException(
-                "Can't create bean for class[" + beanClass.getName()
-                + "] caused by it is an interface or an abstract class, or it dose not implement any interface");
+                    "Can't create bean for class[" + beanClass.getName()
+                            + "] caused by it is an interface or an abstract class, or it dose not implement any interface");
         }
 
         final String name = Beans.getBeanName(beanClass);
@@ -186,9 +179,9 @@ public final class ConfiguratorImpl implements Configurator {
         final Set<Class<? extends Annotation>> stereotypes = Beans.getStereotypes(beanClass);
 
         LOGGER.log(Level.DEBUG, "Adding a bean[name={0}, scope={1}, class={2}] to the bean manager....",
-            new Object[] {name, scope.getName(), beanClass.getName()});
+                new Object[]{name, scope.getName(), beanClass.getName()});
 
-        final LatkeBean<T> ret = new BeanImpl<T>(beanManager, name, scope, qualifiers, beanClass, beanTypes, stereotypes);
+        final Bean<T> ret = new Bean<T>(beanManager, name, scope, qualifiers, beanClass, beanTypes, stereotypes);
 
         beanManager.addBean(ret);
 
@@ -209,7 +202,7 @@ public final class ConfiguratorImpl implements Configurator {
         if (null == classes || classes.isEmpty()) {
             return;
         }
-        
+
         filterClasses(classes);
 
         for (final Class<?> clazz : classes) {
@@ -231,15 +224,15 @@ public final class ConfiguratorImpl implements Configurator {
     }
 
     /**
-     * Filters no-bean classes with the specified classes. 
-     * 
+     * Filters no-bean classes with the specified classes.
+     * <p>
      * A valid bean is <b>NOT</b>:
      * <ul>
-     *   <li>an annotation</li>
-     *   <li>interface</li>
-     *   <li>abstract</li>
+     * <li>an annotation</li>
+     * <li>interface</li>
+     * <li>abstract</li>
      * </ul>
-     * 
+     *
      * @param classes the specified classes to filter
      */
     private static void filterClasses(final Collection<Class<?>> classes) {

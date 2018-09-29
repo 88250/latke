@@ -19,7 +19,7 @@ import javassist.util.proxy.MethodFilter;
 import javassist.util.proxy.MethodHandler;
 import org.b3log.latke.intercept.annotation.AfterMethod;
 import org.b3log.latke.intercept.annotation.BeforeMethod;
-import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.annotation.Transactional;
@@ -48,7 +48,7 @@ public final class JavassistMethodHandler implements MethodHandler {
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     /**
      * Method filter.
@@ -67,7 +67,7 @@ public final class JavassistMethodHandler implements MethodHandler {
      *
      * @param beanManager the specified bean manager
      */
-    public JavassistMethodHandler(final LatkeBeanManager beanManager) {
+    public JavassistMethodHandler(final BeanManager beanManager) {
         this.beanManager = beanManager;
     }
 

@@ -15,47 +15,46 @@
  */
 package org.b3log.latke.ioc.payment;
 
+import org.b3log.latke.Latkes;
+import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.payment.annotation.ConsoleLiteral;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
-import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.bean.LatkeBean;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.LatkeBeanManagerImpl;
-import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.payment.annotation.ConsoleLiteral;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-import static org.testng.Assert.*;
-import org.testng.annotations.AfterTest;
+
+import static org.testng.Assert.assertNotNull;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Nov 14, 2009
+ * @version 1.0.0.4, Sep 29, 2018
  */
 final public class PrinterUnitTest {
 
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     private static Printer printer;
 
     @BeforeTest
-    @SuppressWarnings("unchecked")
-    public void beforeTest() throws Exception {
+    public void beforeTest() {
         System.out.println("before PrinterUnitTest");
 
         Latkes.initRuntimeEnv();
-        beanManager = LatkeBeanManagerImpl.getInstance();
+        beanManager = BeanManager.getInstance();
 
         Lifecycle.startApplication(PaymentServiceUnitTest.paymentPackageClasses);
 
-        final Set<Annotation> printerQualifiers = new HashSet<Annotation>();
+        final Set<Annotation> printerQualifiers = new HashSet<>();
         printerQualifiers.add(new ConsoleLiteral());
-        final LatkeBean<?> bean = beanManager.getBean(Printer.class, printerQualifiers);
+        final Bean<?> bean = beanManager.getBean(Printer.class, printerQualifiers);
         printer = (Printer) beanManager.getReference(bean);
         assertNotNull(printer);
     }

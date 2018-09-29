@@ -15,24 +15,25 @@
  */
 package org.b3log.latke.ioc.payment;
 
+import org.b3log.latke.Latkes;
+import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.payment.annotation.PayLiteral;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.bean.LatkeBean;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.LatkeBeanManagerImpl;
-import org.b3log.latke.ioc.Lifecycle;
-import org.b3log.latke.ioc.payment.annotation.PayLiteral;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-import static org.testng.Assert.*;
-import org.testng.annotations.AfterTest;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.0, Nov 14, 2009
  */
@@ -41,30 +42,30 @@ final public class PaymentServiceUnitTest {
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     public static final List<Class<?>> paymentPackageClasses =
-            Arrays.<Class<?>>asList(AsynchronousPaymentProcessor.class,
-            PaymentService.class,
-            Printer.class,
-            SynchronousPaymentProcessor.class,
-            UserService.class);
+            Arrays.asList(AsynchronousPaymentProcessor.class,
+                    PaymentService.class,
+                    Printer.class,
+                    SynchronousPaymentProcessor.class,
+                    UserService.class);
 
     private static PaymentService paymentService;
 
     @BeforeTest
     @SuppressWarnings("unchecked")
-    public void beforeTest() throws Exception {
+    public void beforeTest() {
         System.out.println("before PaymentServiceUnitTest");
 
         Latkes.initRuntimeEnv();
         Lifecycle.startApplication(paymentPackageClasses);
-        
-        beanManager = LatkeBeanManagerImpl.getInstance();
 
-        final Set<Annotation> paymentServiceQualifiers = new HashSet<Annotation>();
+        beanManager = BeanManager.getInstance();
+
+        final Set<Annotation> paymentServiceQualifiers = new HashSet<>();
         paymentServiceQualifiers.add(new PayLiteral());
-        final LatkeBean<?> bean = beanManager.getBean(PaymentService.class, paymentServiceQualifiers);
+        final Bean<?> bean = beanManager.getBean(PaymentService.class, paymentServiceQualifiers);
         paymentService = (PaymentService) beanManager.getReference(bean);
 
         assertNotNull(paymentService);
@@ -95,7 +96,7 @@ final public class PaymentServiceUnitTest {
         assertEquals(userService.getAdminName(), "Admin");
 
         // check whether the references are the same
-        final LatkeBean<?> userSvcBean = beanManager.getBean("userService");
+        final Bean<?> userSvcBean = beanManager.getBean("userService");
         final UserService userSvc = (UserService) beanManager.getReference(userSvcBean);
         assertEquals(userService, userSvc);
     }

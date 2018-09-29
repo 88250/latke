@@ -15,21 +15,21 @@
  */
 package org.b3log.latke.ioc.setup;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.bean.LatkeBean;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.LatkeBeanManagerImpl;
-import org.b3log.latke.ioc.config.BeanModule;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.config.BeanModule;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
-import org.testng.annotations.AfterTest;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.testng.Assert.assertEquals;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Jun 20, 2013
  */
@@ -38,27 +38,26 @@ final public class SetupUnitTest {
     /**
      * Bean manager.
      */
-    private LatkeBeanManager beanManager;
+    private BeanManager beanManager;
 
     private Bean3 bean3;
 
     @BeforeTest
-    @SuppressWarnings("unchecked")
-    public void beforeTest() throws Exception {
+    public void beforeTest() {
         System.out.println("before SetupUnitTest");
 
         Latkes.initRuntimeEnv();
 
-        beanManager = LatkeBeanManagerImpl.getInstance();
+        beanManager = BeanManager.getInstance();
 
-        final Set<Class<?>> beanClasses = new HashSet<Class<?>>();
+        final Set<Class<?>> beanClasses = new HashSet<>();
         beanClasses.add(Bean1.class);
         beanClasses.add(Bean2.class);
         beanClasses.add(Bean3.class);
         final BeanModule setupModule = new BeanModule("SetupModule", beanClasses);
         Lifecycle.startApplication(null, setupModule);
 
-        final LatkeBean<?> bean = beanManager.getBean("bean3");
+        final Bean<?> bean = beanManager.getBean("bean3");
         bean3 = (Bean3) beanManager.getReference(bean);
     }
 

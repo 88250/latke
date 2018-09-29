@@ -45,7 +45,7 @@ public abstract class AbstractContext implements LatkeBeansContext {
     /**
      * Bean reference in this context.
      */
-    private Map<Contextual<?>, Object> beanReferences;
+    private Map<Bean<?>, Object> beanReferences;
 
     /**
      * Constructs a context with the specified scope type.
@@ -55,7 +55,7 @@ public abstract class AbstractContext implements LatkeBeansContext {
     public AbstractContext(final Class<? extends Annotation> scopeType) {
         this.scopeType = scopeType;
 
-        beanReferences = new HashMap<Contextual<?>, Object>();
+        beanReferences = new HashMap<>();
     }
 
     @Override
@@ -69,18 +69,15 @@ public abstract class AbstractContext implements LatkeBeansContext {
     }
 
     @Override
-    public <T> void add(final Contextual<T> bean, final T reference) {
+    public <T> void add(final Bean<T> bean, final T reference) {
         beanReferences.put(bean, reference);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T get(final Contextual<T> bean) {
+    public <T> T get(final Bean<T> bean) {
         return getReference(bean, null);
     }
 
-    @Override
-    public <T> T get(final Contextual<T> bean, final CreationalContext<T> creationalContext) {
+    public <T> T get(final Bean<T> bean, final CreationalContext<T> creationalContext) {
         return getReference(bean, creationalContext);
     }
 
@@ -92,7 +89,7 @@ public abstract class AbstractContext implements LatkeBeansContext {
      * @param creationalContext the specified creational context
      * @return reference
      */
-    private <T> T getReference(final Contextual<T> bean, final CreationalContext<T> creationalContext) {
+    private <T> T getReference(final Bean<T> bean, final CreationalContext<T> creationalContext) {
         T ret = (T) beanReferences.get(bean);
 
         if (null != ret) {
@@ -127,13 +124,10 @@ public abstract class AbstractContext implements LatkeBeansContext {
      *
      * @param <T> the type of contextual
      */
-    @SuppressWarnings("unchecked")
     public <T> void destroy() {
-        final Set<Entry<Contextual<?>, Object>> beanSet = beanReferences.entrySet();
-        final Iterator<Entry<Contextual<?>, Object>> i = beanSet.iterator();
-
-        Contextual<?> bean = null;
-
+        final Set<Entry<Bean<?>, Object>> beanSet = beanReferences.entrySet();
+        final Iterator<Entry<Bean<?>, Object>> i = beanSet.iterator();
+        Bean<?> bean;
         while (i.hasNext()) {
             bean = i.next().getKey();
             final T instance = (T) beanReferences.get(bean);

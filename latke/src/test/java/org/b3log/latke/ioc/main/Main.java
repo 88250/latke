@@ -15,14 +15,14 @@
  */
 package org.b3log.latke.ioc.main;
 
-import java.util.Arrays;
-import java.util.List;
-import org.b3log.latke.ioc.bean.LatkeBean;
-import org.b3log.latke.ioc.LatkeBeanManager;
-import org.b3log.latke.ioc.LatkeBeanManagerImpl;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Lifecycle;
+import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.ioc.inject.Named;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Named("Main")
 public class Main {
@@ -33,15 +33,14 @@ public class Main {
     /**
      * Classes package.
      */
-    public static final List<Class<?>> packageClasses =
-            Arrays.<Class<?>>asList(Main.class, DependencyA.class);
+    public static final List<Class<?>> packageClasses = Arrays.asList(Main.class, DependencyA.class);
 
     public static final void main(String[] args) {
         Lifecycle.startApplication(packageClasses);
 
-        final LatkeBeanManager beanManager = LatkeBeanManagerImpl.getInstance();
+        final BeanManager beanManager = BeanManager.getInstance();
 
-        final LatkeBean bean = beanManager.getBean(Main.class);
+        final Bean bean = beanManager.getBean(Main.class);
         final Main main = (Main) beanManager.getReference(bean);
 
         main.dependencyA.method1();

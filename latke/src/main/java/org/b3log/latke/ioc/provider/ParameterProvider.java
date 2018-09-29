@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.ioc.provider;
 
-import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.annotated.AnnotatedParameter;
 
 /**
@@ -33,7 +33,7 @@ public final class ParameterProvider<T> extends AbstractProvider<T> {
      * @param beanManager the specified bean manager
      * @param annotatedParameter the specified annotated parameter
      */
-    public ParameterProvider(final LatkeBeanManager beanManager, final AnnotatedParameter<?> annotatedParameter) {
+    public ParameterProvider(final BeanManager beanManager, final AnnotatedParameter<?> annotatedParameter) {
         super(beanManager, annotatedParameter);
     }
 
