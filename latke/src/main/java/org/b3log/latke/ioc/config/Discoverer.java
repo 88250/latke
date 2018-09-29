@@ -20,6 +20,7 @@ import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.cache.annotation.Cache;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -116,9 +117,15 @@ public final class Discoverer {
             boolean maybeBeanClass = false;
             for (final Annotation annotation : annotations) {
                 final String typeName = annotation.getTypeName();
-                if (typeName.equals(Singleton.class.getName()) ||
-                        typeName.equals(RequestProcessor.class.getName()) || typeName.equals(Service.class.getName()) || typeName.equals(Repository.class.getName())) {
-                    final Annotation singletonAnnotation = new Annotation("org.b3log.latke.ioc.inject.Singleton", constPool);
+                if (typeName.equals(Singleton.class.getName())) {
+                    maybeBeanClass = true;
+
+                    break;
+                }
+
+                if (typeName.equals(RequestProcessor.class.getName()) || typeName.equals(Service.class.getName()) ||
+                        typeName.equals(Repository.class.getName()) || typeName.equals(Cache.class.getName())) {
+                    final Annotation singletonAnnotation = new Annotation(Singleton.class.getName(), constPool);
                     annotationsAttribute.addAnnotation(singletonAnnotation);
                     classFile.addAttribute(annotationsAttribute);
                     classFile.setVersionToJava5();
