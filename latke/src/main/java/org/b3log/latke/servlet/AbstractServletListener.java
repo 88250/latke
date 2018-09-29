@@ -18,7 +18,7 @@ package org.b3log.latke.servlet;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.config.Discoverer;
+import org.b3log.latke.ioc.Discoverer;
 import org.b3log.latke.ioc.mock.MockServletContext;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;

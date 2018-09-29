@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.bean;
+package org.b3log.latke.ioc;
 
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
-import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.annotated.AnnotatedField;
 import org.b3log.latke.ioc.annotated.AnnotatedType;
 import org.b3log.latke.ioc.annotated.AnnotatedTypeImpl;
-import org.b3log.latke.ioc.config.Configurator;
-import org.b3log.latke.ioc.context.CreationalContext;
 import org.b3log.latke.ioc.inject.Inject;
-import org.b3log.latke.ioc.point.FieldInjectionPoint;
+import org.b3log.latke.ioc.inject.FieldInjectionPoint;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Reflections;
@@ -167,7 +164,7 @@ public class Bean<T> {
      */
     private void resolveCurrentclassFieldDependencies(final Object reference) {
         for (final FieldInjectionPoint injectionPoint : fieldInjectionPoints) {
-            final Object injection = beanManager.getInjectableReference(injectionPoint, null);
+            final Object injection = beanManager.getInjectableReference(injectionPoint);
             final Field field = injectionPoint.getAnnotated().getJavaMember();
 
             try {
@@ -213,7 +210,7 @@ public class Bean<T> {
         final Set<FieldInjectionPoint> injectionPoints = bean.fieldInjectionPoints;
 
         for (final FieldInjectionPoint injectionPoint : injectionPoints) {
-            final Object injection = beanManager.getInjectableReference(injectionPoint, null);
+            final Object injection = beanManager.getInjectableReference(injectionPoint);
             final Field field = injectionPoint.getAnnotated().getJavaMember();
 
             try {
@@ -237,8 +234,8 @@ public class Bean<T> {
         return stereotypes;
     }
 
-    public void destroy(final T instance, final CreationalContext<T> creationalContext) {
-        LOGGER.log(Level.DEBUG, "Destroy bean [name={0}]", name);
+    public void destroy(final T instance) {
+        LOGGER.log(Level.DEBUG, "Destroyed bean [name={0}]", name);
     }
 
     public Class<?> getBeanClass() {
@@ -253,15 +250,13 @@ public class Bean<T> {
         return types;
     }
 
-    public T create(final CreationalContext<T> creationalContext) {
+    public T create() {
         T ret = null;
-
         try {
             ret = instantiateReference();
-
             resolveDependencies(ret);
-        } catch (final Exception ex) {
-            LOGGER.log(Level.ERROR, ex.getMessage(), ex);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Creates bean [name=" + name + "] failed", e);
         }
 
         return ret;

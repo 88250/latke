@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.bean;
+package org.b3log.latke.ioc;
 
 import javassist.util.proxy.MethodFilter;
 import javassist.util.proxy.MethodHandler;
 import org.b3log.latke.intercept.annotation.AfterMethod;
 import org.b3log.latke.intercept.annotation.BeforeMethod;
-import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.annotation.Transactional;

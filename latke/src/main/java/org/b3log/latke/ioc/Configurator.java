@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.config;
+package org.b3log.latke.ioc;
 
-import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.bean.Bean;
-import org.b3log.latke.ioc.util.Beans;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Reflections;

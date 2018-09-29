@@ -15,15 +15,10 @@
  */
 package org.b3log.latke.ioc.annotated;
 
-import org.b3log.latke.intercept.annotation.AfterMethod;
-import org.b3log.latke.intercept.annotation.BeforeMethod;
-import org.b3log.latke.ioc.bean.Interceptor;
-import org.b3log.latke.ioc.bean.InterceptorHolder;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.util.Reflections;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;

@@ -13,36 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.point;
+package org.b3log.latke.ioc.inject;
 
 import org.b3log.latke.ioc.annotated.Annotated;
-import org.b3log.latke.ioc.annotated.AnnotatedField;
-import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.Bean;
 
 /**
- * Injection Point.
+ * Abstract injection point.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Sep 29, 2018
  * @since 2.4.18
  */
-public interface InjectionPoint {
+public abstract class AbstractInjectionPoint implements InjectionPoint {
 
     /**
-     * Get the {@link Bean} object representing the
-     * bean that defines the injection point. If the injection point does not
-     * belong to a bean, return a null value.
-     *
-     * @return the {@link Bean} object representing
-     * bean that defines the injection point, of null if the injection
-     * point does not belong to a bean
+     * Annotated element.
      */
-    Bean<?> getBean();
+    private Annotated annotated;
 
     /**
-     * Obtain an instance of {@link AnnotatedField}.
-     *
-     * @return an {@code AnnotatedField}
+     * Owner bean.
      */
-    Annotated getAnnotated();
+    private Bean<?> ownerBean;
+
+    /**
+     * Constructs a injection point with the specified arguments.
+     *
+     * @param ownerBean the specified owner bean
+     * @param annotated the specified annotated element
+     */
+    public AbstractInjectionPoint(final Bean<?> ownerBean, final Annotated annotated) {
+        this.ownerBean = ownerBean;
+        this.annotated = annotated;
+    }
+
+    @Override
+    public Bean<?> getBean() {
+        return ownerBean;
+    }
+
+    @Override
+    public Annotated getAnnotated() {
+        return annotated;
+    }
 }

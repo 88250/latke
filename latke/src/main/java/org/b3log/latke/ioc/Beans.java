@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.util;
+package org.b3log.latke.ioc;
 
 import org.b3log.latke.ioc.inject.Stereotype;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Reflections;
 
 import java.lang.annotation.Annotation;
@@ -55,7 +54,7 @@ public final class Beans {
     public static Set<Class<? extends Annotation>> getStereotypes(final Class<?> clazz) {
         final Set<Class<? extends Annotation>> ret = new HashSet<>();
 
-        final Set<Annotation> annotations = getAnnotations(CollectionUtils.arrayToSet(clazz.getAnnotations()), Stereotype.class);
+        final Set<Annotation> annotations = getAnnotations(clazz.getAnnotations(), Stereotype.class);
         if (annotations.isEmpty()) {
             return ret;
         }
@@ -144,13 +143,12 @@ public final class Beans {
      * @param neededAnnotationType the needed annotation type
      * @return annotation set, returns an empty set if not found
      */
-    private static Set<Annotation> getAnnotations(final Set<Annotation> annotations, final Class<? extends Annotation> neededAnnotationType) {
+    private static Set<Annotation> getAnnotations(final Annotation[] annotations, final Class<? extends Annotation> neededAnnotationType) {
         final Set<Annotation> ret = new HashSet<>();
 
         for (final Annotation annotation : annotations) {
             annotation.annotationType().getAnnotations();
             final Annotation[] metaAnnotations = annotation.annotationType().getAnnotations();
-
             for (final Annotation metaAnnotation : metaAnnotations) {
                 if (metaAnnotation.annotationType().equals(neededAnnotationType)) {
                     ret.add(annotation);

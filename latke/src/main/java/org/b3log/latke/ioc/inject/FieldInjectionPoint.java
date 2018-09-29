@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.point;
+package org.b3log.latke.ioc.inject;
 
 import org.b3log.latke.ioc.annotated.AnnotatedField;
-import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.Bean;
 
 /**
  * Field injection point.

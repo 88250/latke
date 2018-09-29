@@ -16,13 +16,8 @@
 package org.b3log.latke.ioc;
 
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.ioc.bean.Bean;
-import org.b3log.latke.ioc.config.Configurator;
-import org.b3log.latke.ioc.context.CreationalContext;
-import org.b3log.latke.ioc.context.CreationalContextImpl;
-import org.b3log.latke.ioc.context.SingletonContext;
 import org.b3log.latke.ioc.inject.Singleton;
-import org.b3log.latke.ioc.point.InjectionPoint;
+import org.b3log.latke.ioc.inject.InjectionPoint;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
@@ -95,7 +90,7 @@ public class BeanManager {
         for (final Class<?> builtInBeanClass : builtInBeanClasses) {
             final Bean<?> builtInBean = configurator.createBean(builtInBeanClass);
             builtInBeans.add(builtInBean);
-            context.get(builtInBean, new CreationalContextImpl(builtInBean));
+            context.get(builtInBean);
         }
 
         beans.addAll(builtInBeans);
@@ -162,15 +157,15 @@ public class BeanManager {
         return configurator;
     }
 
-    public Object getReference(final Bean bean, final CreationalContext ctx) {
-        return context.get(bean, ctx);
+    public <T> T getReference(final Bean<T> bean) {
+        return context.get(bean);
     }
 
-    public Object getInjectableReference(final InjectionPoint ij, final CreationalContext<?> ctx) {
+    public Object getInjectableReference(final InjectionPoint ij) {
         final Type baseType = ij.getAnnotated().getBaseType();
         final Bean<?> bean = getBean(baseType);
 
-        return getReference(bean, ctx);
+        return getReference(bean);
     }
 
     private Bean<?> getBean(final Type beanType) {
@@ -183,10 +178,6 @@ public class BeanManager {
         }
 
         throw new RuntimeException("Not found bean [beanType=" + beanType + "]");
-    }
-
-    public <T> T getReference(final Bean<T> bean) {
-        return (T) getReference(bean, new CreationalContextImpl(bean));
     }
 
     public <T> T getReference(final Class<T> beanClass) {

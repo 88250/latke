@@ -13,30 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.context;
+package org.b3log.latke.ioc.inject;
+
+import org.b3log.latke.ioc.annotated.Annotated;
+import org.b3log.latke.ioc.annotated.AnnotatedField;
+import org.b3log.latke.ioc.Bean;
 
 /**
- * Provides operations that are used by the {@link Contextual} implementation during
- * instance creation and destruction.
+ * Injection Point.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Sep 29, 2018
  * @since 2.4.18
  */
-public interface CreationalContext<T> {
+public interface InjectionPoint {
 
     /**
-     * Registers an incompletely initialized contextual instance the with the
-     * container. A contextual instance is considered incompletely initialized
-     * until it is returned by {@link Contextual#create(CreationalContext)}.
+     * Get the {@link Bean} object representing the
+     * bean that defines the injection point. If the injection point does not
+     * belong to a bean, return a null value.
      *
-     * @param incompleteInstance the incompletely initialized instance
+     * @return the {@link Bean} object representing
+     * bean that defines the injection point, of null if the injection
+     * point does not belong to a bean
      */
-    void push(T incompleteInstance);
+    Bean<?> getBean();
 
     /**
-     * Destroys all dependent objects of the instance which is being destroyed,
-     * by passing each dependent object to {@link Contextual#destroy(Object, CreationalContext)}.
+     * Obtain an instance of {@link AnnotatedField}.
+     *
+     * @return an {@code AnnotatedField}
      */
-    void release();
+    Annotated getAnnotated();
 }

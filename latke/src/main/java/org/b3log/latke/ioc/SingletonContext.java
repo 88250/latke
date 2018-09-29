@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.context;
-
-import org.b3log.latke.ioc.bean.Bean;
+package org.b3log.latke.ioc;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,29 +47,24 @@ public final class SingletonContext {
     }
 
     public <T> T get(final Bean<T> bean) {
-        return getReference(bean, null);
-    }
-
-    public <T> T get(final Bean<T> bean, final CreationalContext<T> creationalContext) {
-        return getReference(bean, creationalContext);
+        return getReference(bean);
     }
 
     /**
      * Gets reference of the specified bean and creational context.
      *
-     * @param <T>               the type of contextual
-     * @param bean              the specified bean
-     * @param creationalContext the specified creational context
+     * @param <T>  the type of contextual
+     * @param bean the specified bean
      * @return reference
      */
-    private <T> T getReference(final Bean<T> bean, final CreationalContext<T> creationalContext) {
+    private <T> T getReference(final Bean<T> bean) {
         T ret = (T) beanReferences.get(bean);
 
         if (null != ret) {
             return ret;
         }
 
-        ret = bean.create(creationalContext);
+        ret = bean.create();
 
         if (null != ret) {
             beanReferences.put(bean, ret);
@@ -109,6 +102,6 @@ public final class SingletonContext {
      * @param beanInstance the specified bean's instance
      */
     private <T> void destroyReference(final Bean<T> bean, final T beanInstance) {
-        bean.destroy(beanInstance, null);
+        bean.destroy(beanInstance);
     }
 }
