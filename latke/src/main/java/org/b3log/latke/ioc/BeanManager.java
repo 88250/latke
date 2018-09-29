@@ -74,35 +74,28 @@ public class BeanManager {
     private Set<Bean<?>> beans;
 
     /**
-     * Contexts.
+     * Context.
      */
-    private Map<Class<? extends Annotation>, Set<Context>> contexts;
+    private Context context;
 
     /**
      * Constructs a Latke bean manager.
      */
     private BeanManager() {
-        LOGGER.log(Level.DEBUG, "Creating Latke bean manager");
+        LOGGER.log(Level.DEBUG, "Creating bean manager");
 
         beans = new HashSet<>();
-        contexts = new HashMap<>();
+        context = new SingletonContext();
         builtInBeans = new HashSet<>();
         configurator = new Configurator(this);
 
-        // Init Singleton context
-        final SingletonContext singletonContext = new SingletonContext();
-        final Bean<BeanManager> beanManagerBean = configurator.createBean(BeanManager.class);
+        configurator.createBean(BeanManager.class);
 
-        singletonContext.add(beanManagerBean, this);
-        singletonContext.setActive(true);
-        addContext(singletonContext);
-
-        // Constructs the built-in beans with singleton
         for (final Class<?> builtInBeanClass : builtInBeanClasses) {
             final Bean<?> builtInBean = configurator.createBean(builtInBeanClass);
 
             builtInBeans.add(builtInBean);
-            singletonContext.get(builtInBean, new CreationalContextImpl(builtInBean));
+            context.get(builtInBean, new CreationalContextImpl(builtInBean));
         }
 
         beans.addAll(builtInBeans);
@@ -153,63 +146,15 @@ public class BeanManager {
         return configurator;
     }
 
-    public Object getReference(final Bean bean, final Type beanType, final CreationalContext ctx) {
-        final Context activeContext = getContext(bean.getScope());
-
-        return activeContext.get(bean, ctx);
+    public Object getReference(final Bean bean, final CreationalContext ctx) {
+        return context.get(bean, ctx);
     }
 
     public Object getInjectableReference(final InjectionPoint ij, final CreationalContext<?> ctx) {
         final Type baseType = ij.getAnnotated().getBaseType();
         final Bean<?> bean = getBean(baseType);
-        Object ret;
 
-        if (bean.getScope() != Singleton.class) {
-            ret = bean.create(null);
-        } else {
-            ret = getReference(bean, baseType, ctx);
-        }
-
-        return ret;
-    }
-
-    public void addContext(final Context context) {
-        final Class<? extends Annotation> scope = context.getScope();
-        Set<Context> contextSet = contexts.get(scope);
-
-        if (contextSet == null) {
-            contextSet = new HashSet<>();
-        }
-        contextSet.add(context);
-
-        contexts.put(scope, contextSet);
-    }
-
-    public Context getContext(final Class<? extends Annotation> scopeType) {
-        final Set<Context> contextSet = contexts.get(scopeType);
-        final Set<Context> ret = new HashSet<>();
-
-        if (contextSet != null) {
-            for (final Context context : contextSet) {
-                if (context.isActive()) {
-                    ret.add(context);
-                }
-            }
-        }
-
-        if (ret.isEmpty()) {
-            throw new ContextNotActiveException("Has no active context for scope[name=" + scopeType.getName() + "]");
-        }
-
-        if (ret.size() > 1) {
-            throw new IllegalArgumentException("There is more than one active context object for the given scope[name=" + scopeType.getName() + "]");
-        }
-
-        return ret.iterator().next();
-    }
-
-    public void clearContexts() {
-        contexts.clear();
+        return getReference(bean, ctx);
     }
 
     private Bean<?> getBean(final Type beanType) {
@@ -222,10 +167,6 @@ public class BeanManager {
         }
 
         throw new RuntimeException("Not found bean [beanType=" + beanType + "]");
-    }
-
-    public Object getReference(final Bean<?> bean, final CreationalContext<?> creationalContext) {
-        return getReference(bean, null, creationalContext);
     }
 
     public <T> T getReference(final Bean<T> bean) {

@@ -15,34 +15,113 @@
  */
 package org.b3log.latke.ioc.context;
 
+import org.b3log.latke.ioc.bean.Bean;
 
-import org.b3log.latke.ioc.context.AbstractContext;
-import org.b3log.latke.ioc.inject.Singleton;
-
-import java.lang.annotation.Annotation;
-
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
- * Singleton context.
+ * Abstract context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Nov 27, 2009
+ * @version 1.0.1.9, Sep 29, 2018
+ * @since 2.4.18
  */
-public final class SingletonContext extends AbstractContext {
+public final class SingletonContext implements Context {
 
     /**
-     * Constructs an singleton context.
+     * Bean reference in this context.
+     */
+    private Map<Bean<?>, Object> beanReferences;
+
+    /**
+     * Constructs a context.
      */
     public SingletonContext() {
-        this(Singleton.class);
+        beanReferences = new HashMap<>();
+    }
+
+    @Override
+    public <T> void add(final Bean<T> bean, final T reference) {
+        beanReferences.put(bean, reference);
+    }
+
+    public <T> T get(final Bean<T> bean) {
+        return getReference(bean, null);
+    }
+
+    public <T> T get(final Bean<T> bean, final CreationalContext<T> creationalContext) {
+        return getReference(bean, creationalContext);
     }
 
     /**
-     * Constructs an singleton context with the specified scope type.
+     * Gets reference of the specified bean and creational context.
      *
-     * @param scopeType the specified scope type
+     * @param <T>               the type of contextual
+     * @param bean              the specified bean
+     * @param creationalContext the specified creational context
+     * @return reference
      */
-    private SingletonContext(final Class<? extends Annotation> scopeType) {
-        super(scopeType);
+    private <T> T getReference(final Bean<T> bean, final CreationalContext<T> creationalContext) {
+        T ret = (T) beanReferences.get(bean);
+
+        if (null != ret) {
+            return ret;
+        }
+
+        ret = bean.create(creationalContext);
+
+        if (null != ret) {
+            beanReferences.put(bean, ret);
+
+            return ret;
+        }
+
+        throw new RuntimeException("Can't create reference for bean[" + bean + "]");
+    }
+
+    /**
+     * Removes the specified bean.
+     *
+     * @param <T>  the type of contextual
+     * @param bean the specified bean
+     */
+    public <T> void remove(final Contextual<T> bean) {
+        if (null != beanReferences.get(bean)) {
+            beanReferences.remove(bean);
+        }
+    }
+
+    /**
+     * Destroys this context, clears all bean's references (instances).
+     *
+     * @param <T> the type of contextual
+     */
+    public <T> void destroy() {
+        final Set<Entry<Bean<?>, Object>> beanSet = beanReferences.entrySet();
+        final Iterator<Entry<Bean<?>, Object>> i = beanSet.iterator();
+        Bean<?> bean;
+        while (i.hasNext()) {
+            bean = i.next().getKey();
+            final T instance = (T) beanReferences.get(bean);
+
+            destroyReference((Bean<T>) bean, instance);
+        }
+
+        beanReferences.clear();
+    }
+
+    /**
+     * Destroys the specified bean's instance.
+     *
+     * @param <T>          the type of contextual
+     * @param bean         the specified bean
+     * @param beanInstance the specified bean's instance
+     */
+    private <T> void destroyReference(final Bean<T> bean, final T beanInstance) {
+        bean.destroy(beanInstance, null);
     }
 }

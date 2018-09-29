@@ -16,7 +16,6 @@
 package org.b3log.latke.ioc;
 
 import org.b3log.latke.ioc.config.Configurator;
-import org.b3log.latke.ioc.context.ApplicationContext;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -42,11 +41,6 @@ public final class Lifecycle {
     private static BeanManager beanManager;
 
     /**
-     * Application context.
-     */
-    private static ApplicationContext applicationContext = new ApplicationContext();
-
-    /**
      * Private constructor.
      */
     private Lifecycle() {
@@ -61,8 +55,6 @@ public final class Lifecycle {
         LOGGER.log(Level.DEBUG, "Initializing Latke IoC container");
 
         beanManager = BeanManager.getInstance();
-        applicationContext.setActive(true);
-        beanManager.addContext(applicationContext);
         final Configurator configurator = beanManager.getConfigurator();
         if (null != classes && !classes.isEmpty()) {
             configurator.createBeans(classes);
@@ -75,20 +67,7 @@ public final class Lifecycle {
      * Ends the application.
      */
     public static void endApplication() {
-        final ApplicationContext applicationCxt = getApplicationContext();
-        applicationCxt.destroy();
-        beanManager.clearContexts();
-
         LOGGER.log(Level.DEBUG, "Latke IoC container ended");
-    }
-
-    /**
-     * Gets the application context.
-     *
-     * @return application context
-     */
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
     }
 
     /**

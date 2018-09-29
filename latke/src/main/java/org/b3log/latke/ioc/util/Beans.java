@@ -15,8 +15,6 @@
  */
 package org.b3log.latke.ioc.util;
 
-import org.b3log.latke.ioc.inject.Scope;
-import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.ioc.inject.Stereotype;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.CollectionUtils;
@@ -49,33 +47,15 @@ public final class Beans {
     }
 
     /**
-     * Gets scope of the specified class.
-     *
-     * @param clazz the specified class
-     * @return scope of the specified class, returns {@link Singleton} class as the default scope of the specified class
-     */
-    public static Class<? extends Annotation> getScope(final Class<?> clazz) {
-        final Set<Annotation> annotations = CollectionUtils.arrayToSet(clazz.getAnnotations());
-        final Set<Annotation> ret = getAnnotations(annotations, Scope.class);
-
-        if (!ret.isEmpty() && ret.size() != 1) {
-            throw new RuntimeException("A bean class can only has one scope!");
-        }
-
-        return ret.isEmpty() ? Singleton.class : ret.iterator().next().annotationType();
-    }
-
-    /**
      * Gets stereo types of the specified class.
      *
      * @param clazz the specified class
      * @return stereo types of the specified class
      */
     public static Set<Class<? extends Annotation>> getStereotypes(final Class<?> clazz) {
-        final Set<Class<? extends Annotation>> ret = new HashSet<Class<? extends Annotation>>();
+        final Set<Class<? extends Annotation>> ret = new HashSet<>();
 
         final Set<Annotation> annotations = getAnnotations(CollectionUtils.arrayToSet(clazz.getAnnotations()), Stereotype.class);
-
         if (annotations.isEmpty()) {
             return ret;
         }
@@ -108,7 +88,7 @@ public final class Beans {
     }
 
     public static final <T> Set<Type> getBeanTypes(final Class<T> beanClass) {
-        final Set<Type> ret = new HashSet<Type>();
+        final Set<Type> ret = new HashSet<>();
 
         ret.add(beanClass);
         Type genericSuperclass = beanClass;
@@ -142,7 +122,7 @@ public final class Beans {
     }
 
     private static final <T> Set<Type> getInterfaces(final Class<T> interfaceClass) {
-        final Set<Type> ret = new HashSet<Type>();
+        final Set<Type> ret = new HashSet<>();
         final Class<?>[] interfaces = interfaceClass.getInterfaces();
 
         if (interfaces.length == 0) {
@@ -157,16 +137,6 @@ public final class Beans {
         }
     }
 
-    public static final Set<Class<? extends Annotation>> toAnnotationTypes(final Set<Annotation> annotations) {
-        final Set<Class<? extends Annotation>> ret = new HashSet<Class<? extends Annotation>>();
-
-        for (final Annotation beanQualifier : annotations) {
-            ret.add(beanQualifier.annotationType());
-        }
-
-        return ret.isEmpty() ? null : ret;
-    }
-
     /**
      * Gets annotations match the needed annotation type from the specified annotation.
      *
@@ -174,9 +144,8 @@ public final class Beans {
      * @param neededAnnotationType the needed annotation type
      * @return annotation set, returns an empty set if not found
      */
-    private static Set<Annotation> getAnnotations(final Set<Annotation> annotations,
-                                                  final Class<? extends Annotation> neededAnnotationType) {
-        final Set<Annotation> ret = new HashSet<Annotation>();
+    private static Set<Annotation> getAnnotations(final Set<Annotation> annotations, final Class<? extends Annotation> neededAnnotationType) {
+        final Set<Annotation> ret = new HashSet<>();
 
         for (final Annotation annotation : annotations) {
             annotation.annotationType().getAnnotations();

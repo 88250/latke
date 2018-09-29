@@ -70,10 +70,6 @@ public class Bean<T> {
     private String name;
 
     /**
-     * Bean scope.
-     */
-    private Class<? extends Annotation> scope;
-    /**
      * Bean class.
      */
     private Class<T> beanClass;
@@ -118,16 +114,14 @@ public class Bean<T> {
      *
      * @param beanManager the specified bean manager
      * @param name        the specified bean name
-     * @param scope       the specified bean scope
      * @param beanClass   the specified bean class
      * @param types       the specified bean types
      * @param stereotypes the specified stereo types
      */
-    public Bean(final BeanManager beanManager, final String name, final Class<? extends Annotation> scope, final Class<T> beanClass, final Set<Type> types,
+    public Bean(final BeanManager beanManager, final String name, final Class<T> beanClass, final Set<Type> types,
                 final Set<Class<? extends Annotation>> stereotypes) {
         this.beanManager = beanManager;
         this.name = name;
-        this.scope = scope;
         this.beanClass = beanClass;
         this.types = types;
         this.stereotypes = stereotypes;
@@ -411,19 +405,6 @@ public class Bean<T> {
         return name;
     }
 
-    public Class<? extends Annotation> getScope() {
-        return scope;
-    }
-
-    /**
-     * Sets the scope with the specified scope.
-     *
-     * @param scope the specified scope
-     */
-    private void setScope(final Class<? extends Annotation> scope) {
-        this.scope = scope;
-    }
-
     public Set<Type> getTypes() {
         return types;
     }
@@ -442,15 +423,9 @@ public class Bean<T> {
         return ret;
     }
 
-    public Bean<T> scoped(final Class<? extends Annotation> scope) {
-        this.setScope(scope);
-
-        return this;
-    }
-
     @Override
     public String toString() {
-        return "[name=" + name + ", scope=" + scope.getName() + ", class=" + beanClass.getName() + ", types=" + types + "]";
+        return "[name=" + name + ", class=" + beanClass.getName() + ", types=" + types + "]";
     }
 
     /**

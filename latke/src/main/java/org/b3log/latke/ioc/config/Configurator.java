@@ -51,20 +51,13 @@ public class Configurator {
     private Map<Type, Set<Class<?>>> typeClasses;
 
     /**
-     * &lt;Qualifier, BeanClasses&gt;.
-     */
-    private Map<Annotation, Set<Class<?>>> qualifierClasses;
-
-    /**
      * Constructs a configurator with the specified bean manager.
      *
      * @param beanManager the specified bean manager
      */
     public Configurator(final BeanManager beanManager) {
         this.beanManager = beanManager;
-
         typeClasses = new HashMap<>();
-        qualifierClasses = new HashMap<>();
     }
 
     public void addTypeClassBinding(final Type beanType, final Class<?> beanClass) {
@@ -79,26 +72,8 @@ public class Configurator {
         typeClasses.put(beanType, beanClasses);
     }
 
-    public void addQualifierClassBinding(final Annotation qualifier, final Class<?> beanClass) {
-        Set<Class<?>> beanClasses = qualifierClasses.get(qualifier);
-
-        if (beanClasses == null) {
-            beanClasses = new HashSet<>();
-        }
-        beanClasses.add(beanClass);
-
-        qualifierClasses.put(qualifier, beanClasses);
-    }
-
     public Set<Class<?>> getBindedBeanClasses(final Type beanType) {
         return typeClasses.get(beanType);
-    }
-
-    public void validate() {
-        for (final Bean<?> bean : beanManager.getBeans()) {
-            InjectionPointValidator.checkValidity(bean);
-            InjectionPointValidator.checkDependency(bean, this);
-        }
     }
 
     public <T> Bean<T> createBean(final Class<T> beanClass) {
@@ -109,28 +84,22 @@ public class Configurator {
         }
 
         if (!Beans.checkClass(beanClass)) {
-            throw new IllegalStateException(
-                    "Can't create bean for class[" + beanClass.getName()
-                            + "] caused by it is an interface or an abstract class, or it dose not implement any interface");
+            throw new IllegalStateException("Can't create bean for class [" + beanClass.getName() + "] caused by it is an interface or an abstract class, or it dose not implement any interface");
         }
 
         final String name = Beans.getBeanName(beanClass);
-
         if (null == name) {
-            LOGGER.log(Level.DEBUG, "Class[beanClass={0}] can't be created as bean caused by it has no bean name.", beanClass);
+            LOGGER.log(Level.DEBUG, "Class [beanClass={0}] can't be created as bean caused by it has no bean name.", beanClass);
 
             return null;
         }
 
-        final Class<? extends Annotation> scope = Beans.getScope(beanClass);
         final Set<Type> beanTypes = Beans.getBeanTypes(beanClass);
         final Set<Class<? extends Annotation>> stereotypes = Beans.getStereotypes(beanClass);
 
-        LOGGER.log(Level.DEBUG, "Adding a bean[name={0}, scope={1}, class={2}] to the bean manager....",
-                name, scope.getName(), beanClass.getName());
+        LOGGER.log(Level.DEBUG, "Adding a bean [name={0}, class={1}] to the bean manager", name, beanClass.getName());
 
-        final Bean<T> ret = new Bean<T>(beanManager, name, scope, beanClass, beanTypes, stereotypes);
-
+        final Bean<T> ret = new Bean<T>(beanManager, name, beanClass, beanTypes, stereotypes);
         beanManager.addBean(ret);
 
         for (final Type beanType : beanTypes) {

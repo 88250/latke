@@ -17,14 +17,13 @@ package org.b3log.latke.ioc.inject;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
+
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Identifies a type that the injector only instantiates once. Not inherited.
- *
- * @see Scope @Scope
  */
-@Scope
 @Documented
 @Retention(RUNTIME)
-public @interface Singleton {}
+public @interface Singleton {
+}
