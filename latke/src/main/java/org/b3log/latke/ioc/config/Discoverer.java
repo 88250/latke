@@ -20,6 +20,7 @@ import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.annotation.Repository;
@@ -79,22 +80,16 @@ public final class Discoverer {
 
         LOGGER.debug("scanPath[" + scanPath + "]");
 
-        // See issue #17 (https://github.com/b3log/latke/issues/17) for more details
-
         final Collection<Class<?>> ret = new HashSet<>();
-
         final String[] splitPaths = scanPath.split(",");
 
         // Adds some built-in components
         final String[] paths = ArrayUtils.concatenate(splitPaths, BUILT_IN_COMPONENT_PKGS);
-
         final Set<URL> urls = new LinkedHashSet<>();
-
         for (String path : paths) {
-
             /*
              * the being two types of the scanPath.
-             *  1 package: org.b3log.process
+             *  1 package: org.b3log.xxx
              *  2 ant-style classpath: org/b3log/** /*process.class
              */
             if (!AntPathMatcher.isPattern(path)) {
@@ -104,58 +99,41 @@ public final class Discoverer {
             urls.addAll(ClassPathResolver.getResources(path));
         }
 
-        for (URL url : urls) {
+        for (final URL url : urls) {
             final DataInputStream classInputStream = new DataInputStream(url.openStream());
-
             final ClassFile classFile = new ClassFile(classInputStream);
             final String className = classFile.getName();
 
             final AnnotationsAttribute annotationsAttribute = (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
-
             if (null == annotationsAttribute) {
-                LOGGER.log(Level.TRACE, "The class[name={0}] is not a bean", className);
+                LOGGER.log(Level.TRACE, "The class [name={0}] is not a bean", className);
 
                 continue;
             }
 
             final ConstPool constPool = classFile.getConstPool();
-
             final Annotation[] annotations = annotationsAttribute.getAnnotations();
-
             boolean maybeBeanClass = false;
-
             for (final Annotation annotation : annotations) {
-                if (annotation.getTypeName().equals(RequestProcessor.class.getName())) {
-                    // Request Processor is singleton scoped
-                    final Annotation singletonAnnotation = new Annotation("javax.inject.Singleton", constPool);
-
+                final String typeName = annotation.getTypeName();
+                if (typeName.equals(Singleton.class.getName()) ||
+                        typeName.equals(RequestProcessor.class.getName()) || typeName.equals(Service.class.getName()) || typeName.equals(Repository.class.getName())) {
+                    final Annotation singletonAnnotation = new Annotation("org.b3log.latke.ioc.inject.Singleton", constPool);
                     annotationsAttribute.addAnnotation(singletonAnnotation);
                     classFile.addAttribute(annotationsAttribute);
                     classFile.setVersionToJava5();
-
                     maybeBeanClass = true;
 
                     break;
                 }
-
-                if (annotation.getTypeName().equals(Service.class.getName())
-                        || (annotation.getTypeName()).equals(Repository.class.getName())) {
-                    // Service and Repository is singleton scoped by default
-                    maybeBeanClass = true;
-
-                    break;
-                }
-
-                // Others will not load
             }
 
             if (maybeBeanClass) {
                 Class<?> clz = null;
-
                 try {
                     clz = Thread.currentThread().getContextClassLoader().loadClass(className);
                 } catch (final ClassNotFoundException e) {
-                    LOGGER.log(Level.ERROR, "some error to load the class[" + className + "]", e);
+                    LOGGER.log(Level.ERROR, "Loads class [" + className + "] failed", e);
                 }
 
                 ret.add(clz);

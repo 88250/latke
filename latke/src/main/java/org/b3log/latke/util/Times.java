@@ -17,7 +17,6 @@ package org.b3log.latke.util;
 
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.service.LangPropsService;
-import org.b3log.latke.service.LangPropsServiceImpl;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -72,7 +71,7 @@ public final class Times {
      */
     public static String getTimeAgo(final long time, final Locale locale) {
         final BeanManager beanManager = BeanManager.getInstance();
-        final LangPropsService langService = beanManager.getReference(LangPropsServiceImpl.class);
+        final LangPropsService langService = beanManager.getReference(LangPropsService.class);
         final Map<String, String> langs = langService.getAll(locale);
 
         final long diff = System.currentTimeMillis() - time;
