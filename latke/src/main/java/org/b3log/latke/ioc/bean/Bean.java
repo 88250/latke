@@ -18,20 +18,23 @@ package org.b3log.latke.ioc.bean;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.annotated.*;
+import org.b3log.latke.ioc.annotated.AnnotatedField;
 import org.b3log.latke.ioc.annotated.AnnotatedType;
+import org.b3log.latke.ioc.annotated.AnnotatedTypeImpl;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.CreationalContext;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.ioc.point.FieldInjectionPoint;
-import org.b3log.latke.ioc.point.ParameterInjectionPoint;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Reflections;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Latke bean implementation.
@@ -99,16 +102,6 @@ public class Bean<T> {
     private Set<FieldInjectionPoint> fieldInjectionPoints;
 
     /**
-     * Constructor parameter injection points.
-     */
-    private Map<AnnotatedConstructor<T>, List<ParameterInjectionPoint>> constructorParameterInjectionPoints;
-
-    /**
-     * Method parameter injection points.
-     */
-    private Map<AnnotatedMethod<?>, List<ParameterInjectionPoint>> methodParameterInjectionPoints;
-
-    /**
      * Constructs a Latke bean.
      *
      * @param beanManager the specified bean manager
@@ -135,29 +128,21 @@ public class Bean<T> {
         proxyClass = (Class<T>) proxyFactory.createClass();
 
         annotatedType = new AnnotatedTypeImpl<T>(beanClass);
-
-        constructorParameterInjectionPoints = new HashMap<>();
-        methodParameterInjectionPoints = new HashMap<>();
         fieldInjectionPoints = new HashSet<>();
 
         initFieldInjectionPoints();
-        initConstructorInjectionPoints();
-        initMethodInjectionPoints();
     }
 
     /**
      * Resolves dependencies for the specified reference.
      *
      * @param reference the specified reference
-     * @throws Exception exception
      */
-    private void resolveDependencies(final Object reference) throws Exception {
+    private void resolveDependencies(final Object reference) {
         final Class<?> superclass = reference.getClass().getSuperclass().getSuperclass(); // Proxy -> Orig -> Super
 
         resolveSuperclassFieldDependencies(reference, superclass);
-        resolveSuperclassMethodDependencies(reference, superclass);
         resolveCurrentclassFieldDependencies(reference);
-        resolveCurrentclassMethodDependencies(reference);
     }
 
     /**
@@ -167,31 +152,10 @@ public class Bean<T> {
      * @throws Exception exception
      */
     private T instantiateReference() throws Exception {
-        T ret;
-
-        if (constructorParameterInjectionPoints.size() == 1) {
-            // only one constructor allow to be annotated with @Inject
-            // instantiate an instance by the constructor annotated with @Inject
-            final AnnotatedConstructor<T> annotatedConstructor = constructorParameterInjectionPoints.keySet().iterator().next();
-            final List<ParameterInjectionPoint> paraInjectionPoints = constructorParameterInjectionPoints.get(annotatedConstructor);
-            final Object[] args = new Object[paraInjectionPoints.size()];
-            int i = 0;
-
-            for (final ParameterInjectionPoint paraInjectionPoint : paraInjectionPoints) {
-                final Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
-                args[i++] = arg;
-            }
-
-            final Constructor<T> oriBeanConstructor = annotatedConstructor.getJavaMember();
-            final Constructor<T> constructor = proxyClass.getConstructor(oriBeanConstructor.getParameterTypes());
-
-            ret = constructor.newInstance(args);
-        } else {
-            ret = proxyClass.newInstance();
-        }
-
+        final T ret = proxyClass.newInstance();
         ((ProxyObject) ret).setHandler(javassistMethodHandler);
-        LOGGER.log(Level.TRACE, "Uses Javassist method handler for bean[class={0}]", beanClass.getName());
+
+        LOGGER.log(Level.TRACE, "Uses Javassist method handler for bean [class={0}]", beanClass.getName());
 
         return ret;
     }
@@ -227,53 +191,12 @@ public class Bean<T> {
     }
 
     /**
-     * Resolves current class method dependencies for the specified reference.
-     *
-     * @param reference the specified reference
-     */
-    private void resolveCurrentclassMethodDependencies(final Object reference) {
-        for (final Map.Entry<AnnotatedMethod<?>, List<ParameterInjectionPoint>> methodParameterInjectionPoint
-                : methodParameterInjectionPoints.entrySet()) {
-            final List<ParameterInjectionPoint> paraSet = methodParameterInjectionPoint.getValue();
-            final Object[] args = new Object[paraSet.size()];
-            int i = 0;
-
-            for (final ParameterInjectionPoint paraInjectionPoint : paraSet) {
-                final Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
-                args[i++] = arg;
-            }
-
-            final AnnotatedMethod<?> annotatedMethod = methodParameterInjectionPoint.getKey();
-            final Method method = annotatedMethod.getJavaMember();
-
-            try {
-                final Method declaredMethod = proxyClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
-
-                try {
-                    declaredMethod.setAccessible(true);
-                    declaredMethod.invoke(reference, args);
-                } catch (final Exception e) {
-                    throw new RuntimeException(e);
-                }
-            } catch (final NoSuchMethodException ex) {
-                try {
-                    method.setAccessible(true);
-                    method.invoke(reference, args);
-                } catch (final Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
-    /**
      * Resolves super class field dependencies for the specified reference.
      *
      * @param reference the specified reference
      * @param clazz     the super class of the specified reference
-     * @throws Exception exception
      */
-    private void resolveSuperclassFieldDependencies(final Object reference, final Class<?> clazz) throws Exception {
+    private void resolveSuperclassFieldDependencies(final Object reference, final Class<?> clazz) {
         if (clazz.equals(Object.class)) {
             return;
         }
@@ -286,7 +209,7 @@ public class Bean<T> {
             return;
         }
 
-        final Bean<?> bean = (Bean<?>) beanManager.getBean(clazz);
+        final Bean<?> bean = beanManager.getBean(clazz);
         final Set<FieldInjectionPoint> injectionPoints = bean.fieldInjectionPoints;
 
         for (final FieldInjectionPoint injectionPoint : injectionPoints) {
@@ -306,56 +229,6 @@ public class Bean<T> {
             } catch (final NoSuchFieldException ex) {
                 throw new RuntimeException(ex);
 
-            }
-        }
-    }
-
-    /**
-     * Resolves super class method dependencies for the specified reference.
-     *
-     * @param reference the specified reference
-     * @param clazz     the super class of the specified reference
-     * @throws Exception exception
-     */
-    private void resolveSuperclassMethodDependencies(final Object reference, final Class<?> clazz) throws Exception {
-        if (clazz.equals(Object.class)) {
-            return;
-        }
-
-        final Class<?> superclass = clazz.getSuperclass();
-
-        resolveSuperclassMethodDependencies(reference, superclass);
-
-        if (Modifier.isAbstract(clazz.getModifiers()) || Modifier.isInterface(clazz.getModifiers())) {
-            return;
-        }
-
-        final Bean<?> superBean = beanManager.getBean(clazz);
-
-        for (final Map.Entry<AnnotatedMethod<?>, List<ParameterInjectionPoint>> methodParameterInjectionPoint
-                : superBean.methodParameterInjectionPoints.entrySet()) {
-            final List<ParameterInjectionPoint> paraSet = methodParameterInjectionPoint.getValue();
-            final Object[] args = new Object[paraSet.size()];
-            int i = 0;
-
-            for (final ParameterInjectionPoint paraInjectionPoint : paraSet) {
-                final Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
-                args[i++] = arg;
-            }
-
-            final AnnotatedMethod<?> superAnnotatedMethod = methodParameterInjectionPoint.getKey();
-
-            final Method superMethod = superAnnotatedMethod.getJavaMember();
-            final Method overrideMethod = Reflections.getOverrideMethod(superMethod, proxyClass);
-
-            if (superMethod.equals(overrideMethod)) {
-                try {
-                    superMethod.invoke(reference, args);
-                } catch (final Exception e) {
-                    throw new RuntimeException(e);
-                }
-
-                return;
             }
         }
     }
@@ -397,47 +270,6 @@ public class Bean<T> {
     @Override
     public String toString() {
         return "[name=" + name + ", class=" + beanClass.getName() + ", types=" + types + "]";
-    }
-
-    /**
-     * Initializes constructor injection points.
-     */
-    private void initConstructorInjectionPoints() {
-        final Set<AnnotatedConstructor<T>> annotatedConstructors = annotatedType.getConstructors();
-
-        for (final AnnotatedConstructor annotatedConstructor : annotatedConstructors) {
-            final List<AnnotatedParameter<?>> parameters = annotatedConstructor.getParameters();
-            final List<ParameterInjectionPoint> paraInjectionPointArrayList = new ArrayList<>();
-
-            for (final AnnotatedParameter<?> annotatedParameter : parameters) {
-                final ParameterInjectionPoint parameterInjectionPoint = new ParameterInjectionPoint(this, annotatedParameter);
-
-                paraInjectionPointArrayList.add(parameterInjectionPoint);
-            }
-
-            constructorParameterInjectionPoints.put(annotatedConstructor, paraInjectionPointArrayList);
-        }
-    }
-
-    /**
-     * Initializes method injection points.
-     */
-    @SuppressWarnings("unchecked")
-    private void initMethodInjectionPoints() {
-        final Set<AnnotatedMethod<? super T>> annotatedMethods = annotatedType.getMethods();
-
-        for (final AnnotatedMethod annotatedMethod : annotatedMethods) {
-            final List<AnnotatedParameter<?>> parameters = annotatedMethod.getParameters();
-            final List<ParameterInjectionPoint> paraInjectionPointArrayList = new ArrayList<>();
-
-            for (final AnnotatedParameter<?> annotatedParameter : parameters) {
-                final ParameterInjectionPoint parameterInjectionPoint = new ParameterInjectionPoint(this, annotatedParameter);
-
-                paraInjectionPointArrayList.add(parameterInjectionPoint);
-            }
-
-            methodParameterInjectionPoints.put(annotatedMethod, paraInjectionPointArrayList);
-        }
     }
 
     /**

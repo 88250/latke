@@ -26,29 +26,6 @@ import java.util.Set;
 public interface AnnotatedType<X> extends Annotated {
 
     /**
-     * Get the underlying {@link java.lang.Class}.
-     *
-     * @return the {@link java.lang.Class}
-     */
-    Class<X> getJavaClass();
-
-    /**
-     * Get the {@linkplain AnnotatedConstructor constructors} of the type.
-     * If an empty set is returned, a default constructor with no parameters
-     * will be assumed.
-     *
-     * @return the constructors, or an empty set if none are defined
-     */
-    Set<AnnotatedConstructor<X>> getConstructors();
-
-    /**
-     * Get the {@linkplain AnnotatedMethod methods} of the type.
-     *
-     * @return the methods, or an empty set if none are defined
-     */
-    Set<AnnotatedMethod<? super X>> getMethods();
-
-    /**
      * Get the {@linkplain AnnotatedField fields} of the type.
      *
      * @return the fields, or an empty set if none are defined

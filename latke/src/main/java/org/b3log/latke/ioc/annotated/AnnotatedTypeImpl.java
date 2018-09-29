@@ -22,7 +22,6 @@ import org.b3log.latke.ioc.bean.InterceptorHolder;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.util.Reflections;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -45,16 +44,6 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
     private Class<T> beanClass;
 
     /**
-     * Annotated constructors.
-     */
-    private Set<AnnotatedConstructor<T>> annotatedConstructors = new HashSet<>();
-
-    /**
-     * Annotated methods.
-     */
-    private Set<AnnotatedMethod<? super T>> annotatedMethods = new HashSet<>();
-
-    /**
      * Annotated fields.
      */
     private Set<AnnotatedField<? super T>> annotatedFields = new HashSet<>();
@@ -66,45 +55,12 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
      */
     public AnnotatedTypeImpl(final Class<T> beanClass) {
         this.beanClass = beanClass;
-        initAnnotatedConstructor();
         initAnnotatedFields();
-        initAnnotatedMethods();
-    }
-
-    @Override
-    public Class<T> getJavaClass() {
-        return beanClass;
-    }
-
-    @Override
-    public Set<AnnotatedConstructor<T>> getConstructors() {
-        return annotatedConstructors;
-    }
-
-    @Override
-    public Set<AnnotatedMethod<? super T>> getMethods() {
-        return annotatedMethods;
     }
 
     @Override
     public Set<AnnotatedField<? super T>> getFields() {
         return annotatedFields;
-    }
-
-    /**
-     * Builds the annotated constructor of this annotated type.
-     */
-    private void initAnnotatedConstructor() {
-        for (final Constructor constructor : beanClass.getDeclaredConstructors()) {
-            final boolean isNeedToBeInjected = constructor.isAnnotationPresent(Inject.class);
-
-            if (isNeedToBeInjected) {
-                @SuppressWarnings("unchecked") final AnnotatedConstructor<T> annotatedConstructor = new AnnotatedConstructorImpl<T>(constructor);
-
-                constructor.setAccessible(true);
-                annotatedConstructors.add(annotatedConstructor);
-            }
-        }
     }
 
     /**
@@ -140,49 +96,6 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
                 field.setAccessible(true);
                 annotatedFields.add(annotatedField);
             }
-        }
-    }
-
-    /**
-     * Builds the annotated methods of this annotated type.
-     */
-    private void initAnnotatedMethods() {
-        final Set<Method> inheritedMethods = Reflections.getInheritedMethods(beanClass);
-        final Set<Method> overriddenMethods = Reflections.getOverriddenMethods(beanClass);
-        final Set<Method> ownMethods = Reflections.getOwnMethods(beanClass);
-
-        for (final Method method : overriddenMethods) {
-            final boolean isNeedToBeInjected = method.isAnnotationPresent(Inject.class);
-            if (isNeedToBeInjected) {
-                final AnnotatedMethod<T> annotatedMethod = new AnnotatedMethodImpl<>(method);
-                method.setAccessible(true);
-                annotatedMethods.add(annotatedMethod);
-            }
-
-            initInterceptor(method);
-        }
-
-        for (final Method method : inheritedMethods) {
-            final boolean isNeedToBeInjected = method.isAnnotationPresent(Inject.class);
-            if (isNeedToBeInjected) {
-                final AnnotatedMethod<T> annotatedMethod = new AnnotatedMethodImpl<>(method);
-                method.setAccessible(true);
-                annotatedMethods.add(annotatedMethod);
-            }
-
-            initInterceptor(method);
-        }
-
-        for (final Method method : ownMethods) {
-            final boolean isNeedToBeInjected = method.isAnnotationPresent(Inject.class);
-            if (isNeedToBeInjected) {
-                final AnnotatedMethod<T> annotatedMethod = new AnnotatedMethodImpl<>(method);
-
-                method.setAccessible(true);
-                annotatedMethods.add(annotatedMethod);
-            }
-
-            initInterceptor(method);
         }
     }
 

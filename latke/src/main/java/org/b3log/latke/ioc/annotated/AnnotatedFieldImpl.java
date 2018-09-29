@@ -16,17 +16,18 @@
 package org.b3log.latke.ioc.annotated;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.Set;
 
 /**
  * An annotated field.
  *
  * @param <T> the declaring type
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.6, Mar 30, 2010
+ * @version 1.0.0.7, Sep 29, 2018
+ * @since 2.4.18
  */
-public class AnnotatedFieldImpl<T> implements AnnotatedField<T> {
+public class AnnotatedFieldImpl<T> implements AnnotatedField {
 
     /**
      * Field.
@@ -43,16 +44,6 @@ public class AnnotatedFieldImpl<T> implements AnnotatedField<T> {
     }
 
     @Override
-    public Field getJavaMember() {
-        return field;
-    }
-
-    @Override
-    public boolean isStatic() {
-        return Modifier.isStatic(field.getModifiers());
-    }
-
-    @Override
     public Type getBaseType() {
         return field.getGenericType();
     }
@@ -60,5 +51,20 @@ public class AnnotatedFieldImpl<T> implements AnnotatedField<T> {
     @Override
     public String toString() {
         return field.getName();
+    }
+
+    @Override
+    public boolean isStatic() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Field getJavaMember() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Set<AnnotatedField> getFields() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

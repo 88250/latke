@@ -23,7 +23,14 @@ import java.lang.reflect.Field;
  * @param <X> the declaring type
  * @see Field
  */
-public interface AnnotatedField<X> extends AnnotatedMember<X> {
+public interface AnnotatedField<X> extends AnnotatedType<X> {
+
+    /**
+     * Determines if the member is static.
+     *
+     * @return <tt>true</tt> if the member is static
+     */
+    boolean isStatic();
 
     /**
      * Get the underlying {@link Field}.

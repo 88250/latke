@@ -17,7 +17,6 @@ package org.b3log.latke.ioc.point;
 
 import org.b3log.latke.ioc.annotated.Annotated;
 import org.b3log.latke.ioc.annotated.AnnotatedField;
-import org.b3log.latke.ioc.annotated.AnnotatedParameter;
 import org.b3log.latke.ioc.bean.Bean;
 
 import java.lang.reflect.Member;
@@ -39,21 +38,9 @@ public interface InjectionPoint {
     Bean<?> getBean();
 
     /**
-     * Get the {@link java.lang.reflect.Field} object in the case of field
-     * injection, the {@link java.lang.reflect.Method} object in
-     * the case of method parameter injection or the
-     * {@link java.lang.reflect.Constructor} object in the case of constructor
-     * parameter injection.
+     * Obtain an instance of {@link AnnotatedField}.
      *
-     * @return the member
-     */
-    Member getMember();
-
-    /**
-     * Obtain an instance of {@link AnnotatedField} or {@link AnnotatedParameter}, depending upon
-     * whether the injection point is an injected field or a constructor/method parameter.
-     *
-     * @return an {@code AnnotatedField} or {@code AnnotatedParameter}
+     * @return an {@code AnnotatedField}
      */
     Annotated getAnnotated();
 }
