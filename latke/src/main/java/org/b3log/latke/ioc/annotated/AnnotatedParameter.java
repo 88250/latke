@@ -16,7 +16,7 @@
 package org.b3log.latke.ioc.annotated;
 
 /**
- * <p>Represents a parameter of a method or constructor.</p>
+ * Represents a parameter of a method or constructor.
  *
  * @param <X> the type that declares the method or constructor
  * @author Gavin King
@@ -25,19 +25,9 @@ package org.b3log.latke.ioc.annotated;
 public interface AnnotatedParameter<X> extends Annotated {
 
     /**
-     * <p>Get the position of the parameter in the method or
-     * constructor argument list.</p>
-     *
-     * @return the position of the parameter
-     */
-    public int getPosition();
-
-    /**
-     * <p>Get the declaring {@linkplain AnnotatedCallable method or
-     * constructor}.</p>
+     * Get the declaring {@linkplain AnnotatedCallable method or constructor}.
      *
      * @return the declaring callable
      */
-    public AnnotatedCallable<X> getDeclaringCallable();
-
+    AnnotatedCallable<X> getDeclaringCallable();
 }

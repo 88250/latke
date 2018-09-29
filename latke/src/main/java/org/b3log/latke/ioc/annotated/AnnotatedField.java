@@ -18,21 +18,17 @@ package org.b3log.latke.ioc.annotated;
 import java.lang.reflect.Field;
 
 /**
- * <p>Represents a field of a Java class.</p>
- * 
- * @author Gavin King
- * @author Pete Muir
+ * Represents a field of a Java class.
  *
  * @param <X> the declaring type
  * @see Field
  */
 public interface AnnotatedField<X> extends AnnotatedMember<X> {
 
-   /**
-    * <p>Get the underlying {@link Field}.</p>
-    * 
-    * @return the {@link Field}
-    */
-   public Field getJavaMember();
-
+    /**
+     * Get the underlying {@link Field}.
+     *
+     * @return the {@link Field}
+     */
+    Field getJavaMember();
 }

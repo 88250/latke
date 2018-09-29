@@ -24,7 +24,6 @@ import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.CreationalContext;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.ioc.point.FieldInjectionPoint;
-import org.b3log.latke.ioc.point.InjectionPoint;
 import org.b3log.latke.ioc.point.ParameterInjectionPoint;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -365,40 +364,12 @@ public class Bean<T> {
         return stereotypes;
     }
 
-    public boolean isAlternative() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean isNullable() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public void destroy(final T instance, final CreationalContext<T> creationalContext) {
         LOGGER.log(Level.DEBUG, "Destroy bean [name={0}]", name);
     }
 
-    public BeanManager getBeanManager() {
-        return beanManager;
-    }
-
     public Class<?> getBeanClass() {
         return beanClass;
-    }
-
-    public Set<InjectionPoint> getInjectionPoints() {
-        final Set<InjectionPoint> ret = new HashSet<InjectionPoint>();
-
-        for (final List<ParameterInjectionPoint> constructorParameterInjectionPointList : constructorParameterInjectionPoints.values()) {
-            ret.addAll(constructorParameterInjectionPointList);
-        }
-
-        ret.addAll(fieldInjectionPoints);
-
-        for (final List<ParameterInjectionPoint> methodParameterInjectionPointList : methodParameterInjectionPoints.values()) {
-            ret.addAll(methodParameterInjectionPointList);
-        }
-
-        return ret;
     }
 
     public String getName() {

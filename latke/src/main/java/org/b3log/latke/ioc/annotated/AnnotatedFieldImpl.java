@@ -15,14 +15,9 @@
  */
 package org.b3log.latke.ioc.annotated;
 
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * An annotated field.
@@ -40,7 +35,7 @@ public class AnnotatedFieldImpl<T> implements AnnotatedField<T> {
 
     /**
      * Constructs an annotated field with the specified field.
-     * 
+     *
      * @param field the specified field
      */
     public AnnotatedFieldImpl(final Field field) {
@@ -50,11 +45,6 @@ public class AnnotatedFieldImpl<T> implements AnnotatedField<T> {
     @Override
     public Field getJavaMember() {
         return field;
-    }
-
-    @Override
-    public AnnotatedType<T> getDeclaringType() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -68,29 +58,7 @@ public class AnnotatedFieldImpl<T> implements AnnotatedField<T> {
     }
 
     @Override
-    public <T extends Annotation> T getAnnotation(final Class<T> annotationType) {
-        return field.getAnnotation(annotationType);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Set<Annotation> getAnnotations() {
-        return new HashSet<Annotation>(Arrays.asList(field.getAnnotations()));
-    }
-
-    @Override
-    public boolean isAnnotationPresent(
-        final Class<? extends Annotation> annotationType) {
-        return field.isAnnotationPresent(annotationType);
-    }
-
-    @Override
     public String toString() {
         return field.getName();
-    }
-
-    @Override
-    public Set<Type> getTypeClosure() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

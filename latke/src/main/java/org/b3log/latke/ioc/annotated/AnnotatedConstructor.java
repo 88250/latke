@@ -18,20 +18,17 @@ package org.b3log.latke.ioc.annotated;
 import java.lang.reflect.Constructor;
 
 /**
- * <p>Represents a constructor of a Java class.</p>
+ * Represents a constructor of a Java class.
  *
  * @param <X> the declaring class
- * @author Gavin King
- * @author Pete Muir
  * @see Constructor
  */
 public interface AnnotatedConstructor<X> extends AnnotatedCallable<X> {
 
     /**
-     * <p>Get the underlying {@link Constructor}.</p>
+     * Get the underlying {@link Constructor}.
      *
      * @return the constructor
      */
-    public Constructor<X> getJavaMember();
-
+    Constructor<X> getJavaMember();
 }

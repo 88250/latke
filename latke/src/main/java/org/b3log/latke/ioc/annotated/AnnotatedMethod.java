@@ -20,7 +20,7 @@ import org.b3log.latke.ioc.annotated.AnnotatedCallable;
 import java.lang.reflect.Method;
 
 /**
- * <p>Represents a method of a Java type.</p>
+ * Represents a method of a Java type.
  *
  * @param <X> the declaring type
  * @author Gavin King

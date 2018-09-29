@@ -67,7 +67,7 @@ public final class Beans {
         return ret;
     }
 
-    public static final String getBeanName(final Class<?> clazz) {
+    public static String getBeanName(final Class<?> clazz) {
         final String className = clazz.getName();
 
         return className.substring(0, 1).toLowerCase() + className.substring(1);
@@ -87,7 +87,7 @@ public final class Beans {
         return true;
     }
 
-    public static final <T> Set<Type> getBeanTypes(final Class<T> beanClass) {
+    public static <T> Set<Type> getBeanTypes(final Class<T> beanClass) {
         final Set<Type> ret = new HashSet<>();
 
         ret.add(beanClass);
@@ -121,20 +121,20 @@ public final class Beans {
         return ret;
     }
 
-    private static final <T> Set<Type> getInterfaces(final Class<T> interfaceClass) {
+    private static <T> Set<Type> getInterfaces(final Class<T> interfaceClass) {
         final Set<Type> ret = new HashSet<>();
         final Class<?>[] interfaces = interfaceClass.getInterfaces();
 
-        if (interfaces.length == 0) {
-            return ret;
-        } else {
-            for (final Class<?> i : interfaces) {
-                ret.add(i);
-                ret.addAll(getInterfaces(i));
-            }
-
+        if (0 == interfaces.length) {
             return ret;
         }
+
+        for (final Class<?> i : interfaces) {
+            ret.add(i);
+            ret.addAll(getInterfaces(i));
+        }
+
+        return ret;
     }
 
     /**

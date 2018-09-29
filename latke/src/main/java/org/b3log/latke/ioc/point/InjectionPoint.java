@@ -16,39 +16,27 @@
 package org.b3log.latke.ioc.point;
 
 import org.b3log.latke.ioc.annotated.Annotated;
+import org.b3log.latke.ioc.annotated.AnnotatedField;
+import org.b3log.latke.ioc.annotated.AnnotatedParameter;
 import org.b3log.latke.ioc.bean.Bean;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
-import java.lang.reflect.Type;
-import java.util.Set;
 
 /**
- * JSR-299 SPI.
- *
- * @author Gavin King
- * @author Pete Muir
+ * Injection Point.
  */
-public interface InjectionPoint
-{
+public interface InjectionPoint {
 
     /**
-     * Get the required type of injection point.
-     *
-     * @return the required type
-     */
-    public Type getType();
-
-    /**
-     * Get the {@link javax.enterprise.inject.spi.Bean} object representing the
+     * Get the {@link Bean} object representing the
      * bean that defines the injection point. If the injection point does not
      * belong to a bean, return a null value.
      *
-     * @return the {@link javax.enterprise.inject.spi.Bean} object representing
-     *         bean that defines the injection point, of null if the injection
-     *         point does not belong to a bean
+     * @return the {@link Bean} object representing
+     * bean that defines the injection point, of null if the injection
+     * point does not belong to a bean
      */
-    public Bean<?> getBean();
+    Bean<?> getBean();
 
     /**
      * Get the {@link java.lang.reflect.Field} object in the case of field
@@ -59,30 +47,13 @@ public interface InjectionPoint
      *
      * @return the member
      */
-    public Member getMember();
+    Member getMember();
 
     /**
-     * Obtain an instance of {@link javax.enterprise.inject.spi.AnnotatedField}
-     * or {@link javax.enterprise.inject.spi.AnnotatedParameter}, depending upon
+     * Obtain an instance of {@link AnnotatedField} or {@link AnnotatedParameter}, depending upon
      * whether the injection point is an injected field or a constructor/method parameter.
      *
      * @return an {@code AnnotatedField} or {@code AnnotatedParameter}
      */
-    public Annotated getAnnotated();
-
-    /**
-     * Determines if the injection point is a decorator delegate injection point.
-     *
-     * @return <tt>true</tt> if the injection point is a decorator delegate injection point,
-     * and <tt>false</tt> otherwise
-     */
-    public boolean isDelegate();
-
-    /**
-     * Determines if the injection is a transient field.
-     *
-     * @return <tt>true</tt> if the injection point is a transient field, and <tt>false</tt>
-     * otherwise
-     */
-    public boolean isTransient();
+    Annotated getAnnotated();
 }

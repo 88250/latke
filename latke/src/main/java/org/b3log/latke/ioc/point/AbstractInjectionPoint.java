@@ -15,13 +15,8 @@
  */
 package org.b3log.latke.ioc.point;
 
-
 import org.b3log.latke.ioc.annotated.Annotated;
 import org.b3log.latke.ioc.bean.Bean;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
 
 /**
  * Abstract injection point.
@@ -53,19 +48,6 @@ public abstract class AbstractInjectionPoint implements InjectionPoint {
     }
 
     @Override
-    public Type getType() {
-        final Type baseType = annotated.getBaseType();
-
-        if (baseType instanceof ParameterizedType) {
-            final ParameterizedType parameterizedType = (ParameterizedType) baseType;
-
-            return parameterizedType.getActualTypeArguments()[0];
-        } else {
-            return baseType;
-        }
-    }
-
-    @Override
     public Bean<?> getBean() {
         return ownerBean;
     }
@@ -73,15 +55,5 @@ public abstract class AbstractInjectionPoint implements InjectionPoint {
     @Override
     public Annotated getAnnotated() {
         return annotated;
-    }
-
-    @Override
-    public boolean isDelegate() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isTransient() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

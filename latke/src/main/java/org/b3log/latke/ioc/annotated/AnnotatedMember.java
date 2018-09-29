@@ -18,35 +18,25 @@ package org.b3log.latke.ioc.annotated;
 import java.lang.reflect.Member;
 
 /**
- * <p>Represents a member of a Java type.</p>
+ * Represents a member of a Java type.
  *
  * @param <X> the declaring type
- * @author Gavin King
- * @author Pete Muir
  * @see Member
  */
 public interface AnnotatedMember<X> extends Annotated {
 
     /**
-     * <p>Get the underlying {@link Member}.</p>
+     * Get the underlying {@link Member}.
      *
      * @return the {@link Member}
      */
-    public Member getJavaMember();
+    Member getJavaMember();
 
     /**
-     * <p>Determines if the member is static.</p>
+     * Determines if the member is static.
      *
      * @return <tt>true</tt> if the member is static
      */
-    public boolean isStatic();
-
-    /**
-     * <p>Get the {@linkplain AnnotatedType type} which declares this
-     * member.</p>
-     *
-     * @return the type which declares this member
-     */
-    public AnnotatedType<X> getDeclaringType();
+    boolean isStatic();
 }
 

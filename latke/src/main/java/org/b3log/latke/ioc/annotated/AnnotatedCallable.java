@@ -18,21 +18,16 @@ package org.b3log.latke.ioc.annotated;
 import java.util.List;
 
 /**
- * <p>Represents a callable member of a Java type.</p>
- *
- * @author Gavin King
- * @author Pete Muir
+ * Represents a callable member of a Java type.
  *
  * @param <X> the declaring type
  */
-public interface AnnotatedCallable<X> extends AnnotatedMember<X>
-{
+public interface AnnotatedCallable<X> extends AnnotatedMember<X> {
 
     /**
-     * <p>Get the parameters of the callable member.</p>
+     * Get the parameters of the callable member.
      *
      * @return the parameters
      */
-    public List<AnnotatedParameter<X>> getParameters();
-
+    List<AnnotatedParameter<X>> getParameters();
 }

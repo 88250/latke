@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.ioc.annotated;
 
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -51,24 +50,19 @@ public class AnnotatedParameterImpl<T> implements AnnotatedParameter<T> {
 
     /**
      * Constructs an annotated parameter with arguments.
-     * 
+     *
      * @param annotatedCallable the specified annotated callable
-     * @param parameter the specified parameter
-     * @param position the specified position
-     * @param annotations the specified annotations
+     * @param parameter         the specified parameter
+     * @param position          the specified position
+     * @param annotations       the specified annotations
      */
     public AnnotatedParameterImpl(final AnnotatedCallable<T> annotatedCallable,
-        final Type parameter, final int position,
-        final Set<Annotation> annotations) {
+                                  final Type parameter, final int position,
+                                  final Set<Annotation> annotations) {
         this.parameter = parameter;
         this.position = position;
         this.annotations = annotations;
         this.annotatedCallable = annotatedCallable;
-    }
-
-    @Override
-    public int getPosition() {
-        return position;
     }
 
     @Override
@@ -83,27 +77,7 @@ public class AnnotatedParameterImpl<T> implements AnnotatedParameter<T> {
     }
 
     @Override
-    public <T extends Annotation> T getAnnotation(final Class<T> annotationType) {
-        return ((Class<T>) parameter).getAnnotation(annotationType);
-    }
-
-    @Override
-    public Set<Annotation> getAnnotations() {
-        return annotations;
-    }
-
-    @Override
-    public boolean isAnnotationPresent(final Class<? extends Annotation> annotationType) {
-        return ((Class<T>) parameter).isAnnotationPresent(annotationType);
-    }
-
-    @Override
     public String toString() {
         return parameter.toString() + ", position=" + position;
-    }
-
-    @Override
-    public Set<Type> getTypeClosure() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

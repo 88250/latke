@@ -90,12 +90,10 @@ public class BeanManager {
         context = new SingletonContext();
         builtInBeans = new HashSet<>();
         configurator = new Configurator(this);
-
         configurator.createBean(BeanManager.class);
 
         for (final Class<?> builtInBeanClass : builtInBeanClasses) {
             final Bean<?> builtInBean = configurator.createBean(builtInBeanClass);
-
             builtInBeans.add(builtInBean);
             context.get(builtInBean, new CreationalContextImpl(builtInBean));
         }

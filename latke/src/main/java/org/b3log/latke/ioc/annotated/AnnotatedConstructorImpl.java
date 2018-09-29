@@ -15,14 +15,8 @@
  */
 package org.b3log.latke.ioc.annotated;
 
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 
 /**
  * An annotated constructor.
@@ -31,8 +25,7 @@ import java.util.Set;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.3, Mar 30, 2010
  */
-public class AnnotatedConstructorImpl<T> extends AbstractAnnotatedCallableImpl<T> implements
-        AnnotatedConstructor<T> {
+public class AnnotatedConstructorImpl<T> extends AbstractAnnotatedCallableImpl<T> implements AnnotatedConstructor<T> {
 
     /**
      * Constructs an annotated constructor with the specified constructor.
@@ -49,27 +42,7 @@ public class AnnotatedConstructorImpl<T> extends AbstractAnnotatedCallableImpl<T
     }
 
     @Override
-    public <T extends Annotation> T getAnnotation(final Class<T> annotationType) {
-        return getJavaMember().getAnnotation(annotationType);
-    }
-
-    @Override
-    public Set<Annotation> getAnnotations() {
-        return new HashSet<Annotation>(Arrays.asList(getJavaMember().getAnnotations()));
-    }
-
-    @Override
-    public boolean isAnnotationPresent(final Class<? extends Annotation> annotationType) {
-        return getJavaMember().isAnnotationPresent(annotationType);
-    }
-
-    @Override
     public Type getBaseType() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Set<Type> getTypeClosure() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

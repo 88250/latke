@@ -16,10 +16,8 @@
 package org.b3log.latke.ioc.annotated;
 
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Set;
 
 /**
  * An annotated method.
@@ -32,7 +30,7 @@ public class AnnotatedMethodImpl<T> extends AbstractAnnotatedCallableImpl<T> imp
 
     /**
      * Constructs a annotated method with the specified method.
-     * 
+     *
      * @param method the specified method
      */
     public AnnotatedMethodImpl(final Method method) {
@@ -45,37 +43,12 @@ public class AnnotatedMethodImpl<T> extends AbstractAnnotatedCallableImpl<T> imp
     }
 
     @Override
-    public AnnotatedType<T> getDeclaringType() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public <T extends Annotation> T getAnnotation(final Class<T> annotationType) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Set<Annotation> getAnnotations() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isAnnotationPresent(final Class<? extends Annotation> annotationType) {
+    public Type getBaseType() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String toString() {
         return getJavaMember().getName();
-    }
-
-    @Override
-    public Type getBaseType() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Set<Type> getTypeClosure() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.ioc.annotated;
 
-
 import org.b3log.latke.util.CollectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -23,7 +22,6 @@ import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 
 /**
  * A callable java type.
@@ -46,12 +44,12 @@ public abstract class AbstractAnnotatedCallableImpl<T> implements AnnotatedCalla
 
     /**
      * Constructs a annotated callable java type with the specified member.
-     * 
+     *
      * @param member the specified member
      */
     public AbstractAnnotatedCallableImpl(final Member member) {
         this.member = member;
-        parameters = new ArrayList<AnnotatedParameter<T>>();
+        parameters = new ArrayList<>();
 
         Type[] parameterTypes = null;
         Annotation[][] parameterAnnotations = null;
@@ -77,11 +75,6 @@ public abstract class AbstractAnnotatedCallableImpl<T> implements AnnotatedCalla
     }
 
     @Override
-    public AnnotatedType<T> getDeclaringType() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public List<AnnotatedParameter<T>> getParameters() {
         return parameters;
     }
@@ -90,10 +83,10 @@ public abstract class AbstractAnnotatedCallableImpl<T> implements AnnotatedCalla
     public boolean isStatic() {
         return Modifier.isStatic(member.getModifiers());
     }
-    
+
     /**
      * Gets the member.
-     * 
+     *
      * @return member
      */
     public Member getMember() {

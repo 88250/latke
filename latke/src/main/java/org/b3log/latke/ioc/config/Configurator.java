@@ -88,12 +88,6 @@ public class Configurator {
         }
 
         final String name = Beans.getBeanName(beanClass);
-        if (null == name) {
-            LOGGER.log(Level.DEBUG, "Class [beanClass={0}] can't be created as bean caused by it has no bean name.", beanClass);
-
-            return null;
-        }
-
         final Set<Type> beanTypes = Beans.getBeanTypes(beanClass);
         final Set<Class<? extends Annotation>> stereotypes = Beans.getStereotypes(beanClass);
 
@@ -135,10 +129,8 @@ public class Configurator {
      */
     private static void filterClasses(final Collection<Class<?>> classes) {
         final Iterator<Class<?>> iterator = classes.iterator();
-
         while (iterator.hasNext()) {
             final Class<?> clazz = iterator.next();
-
             if (clazz.isAnnotation() || !Reflections.isConcrete(clazz)) {
                 iterator.remove();
             }
