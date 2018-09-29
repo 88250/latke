@@ -15,12 +15,17 @@
  */
 package org.b3log.latke.ioc.config;
 
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.bean.Bean;
+import org.b3log.latke.ioc.inject.Named;
+import org.b3log.latke.ioc.util.Beans;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Bean configurator.
@@ -29,73 +34,183 @@ import java.util.Set;
  * @version 1.0.0.5, Sep 29, 2018
  * @since 2.4.18
  */
-public interface Configurator {
+public class Configurator {
 
     /**
-     * Creates a bean with the specified bean class.
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(Configurator.class);
+
+    /**
+     * Bean manager.
+     */
+    private BeanManager beanManager;
+
+    /**
+     * &lt;BeanType, BeanClasses&gt;.
+     */
+    private Map<Type, Set<Class<?>>> typeClasses;
+
+    /**
+     * &lt;BeanClass, Qualifiers&gt;.
+     */
+    private Map<Class<?>, Set<Annotation>> classQualifiers;
+
+    /**
+     * &lt;Qualifier, BeanClasses&gt;.
+     */
+    private Map<Annotation, Set<Class<?>>> qualifierClasses;
+
+    /**
+     * Constructs a configurator with the specified bean manager.
      *
-     * @param <T>       the declaring type
-     * @param beanClass the specified bean class
-     * @return bean
+     * @param beanManager the specified bean manager
      */
-    <T> Bean<T> createBean(final Class<T> beanClass);
+    public Configurator(final BeanManager beanManager) {
+        this.beanManager = beanManager;
+
+        typeClasses = new HashMap<>();
+        classQualifiers = new HashMap<>();
+        qualifierClasses = new HashMap<>();
+    }
+
+    public void addTypeClassBinding(final Type beanType, final Class<?> beanClass) {
+        Set<Class<?>> beanClasses = typeClasses.get(beanType);
+
+        if (beanClasses == null) {
+            beanClasses = new HashSet<>();
+        }
+
+        beanClasses.add(beanClass);
+
+        typeClasses.put(beanType, beanClasses);
+    }
+
+    public void addQualifierClassBinding(final Annotation qualifier, final Class<?> beanClass) {
+        Set<Class<?>> beanClasses = qualifierClasses.get(qualifier);
+
+        if (beanClasses == null) {
+            beanClasses = new HashSet<>();
+        }
+        beanClasses.add(beanClass);
+
+        qualifierClasses.put(qualifier, beanClasses);
+    }
+
+    public void addClassQualifierBinding(final Class<?> beanClass, final Annotation qualifier) {
+        Set<Annotation> qualifiers = classQualifiers.get(beanClass);
+
+        if (null == qualifiers) {
+            qualifiers = new HashSet<>();
+        }
+
+        if (qualifier.annotationType().equals(Named.class)) {
+            final Iterator<Annotation> iterator = qualifiers.iterator();
+
+            while (iterator.hasNext()) {
+                if (iterator.next().annotationType().equals(Named.class)) {
+                    iterator.remove(); // remove the old one
+                }
+            }
+        }
+
+        qualifiers.add(qualifier);
+        classQualifiers.put(beanClass, qualifiers);
+    }
+
+    public Set<Class<?>> getBindedBeanClasses(final Type beanType) {
+        return typeClasses.get(beanType);
+    }
+
+    public Set<Annotation> getBindedQualifiers(final Class<?> beanClass) {
+        return classQualifiers.get(beanClass);
+    }
+
+    public void validate() {
+        for (final Bean<?> bean : beanManager.getBeans()) {
+            InjectionPointValidator.checkValidity(bean);
+            InjectionPointValidator.checkDependency(bean, this);
+        }
+    }
+
+    public <T> Bean<T> createBean(final Class<T> beanClass) {
+        try {
+            return beanManager.getBean(beanClass);
+        } catch (final Exception e) {
+            LOGGER.log(Level.TRACE, "Not found bean [beanClass={0}], so to create it", beanClass);
+        }
+
+        if (!Beans.checkClass(beanClass)) {
+            throw new IllegalStateException(
+                    "Can't create bean for class[" + beanClass.getName()
+                            + "] caused by it is an interface or an abstract class, or it dose not implement any interface");
+        }
+
+        final String name = Beans.getBeanName(beanClass);
+
+        if (null == name) {
+            LOGGER.log(Level.DEBUG, "Class[beanClass={0}] can't be created as bean caused by it has no bean name.", beanClass);
+
+            return null;
+        }
+
+        final Set<Annotation> qualifiers = Beans.getQualifiers(beanClass, name);
+        final Class<? extends Annotation> scope = Beans.getScope(beanClass);
+        final Set<Type> beanTypes = Beans.getBeanTypes(beanClass);
+        final Set<Class<? extends Annotation>> stereotypes = Beans.getStereotypes(beanClass);
+
+        LOGGER.log(Level.DEBUG, "Adding a bean[name={0}, scope={1}, class={2}] to the bean manager....",
+                name, scope.getName(), beanClass.getName());
+
+        final Bean<T> ret = new Bean<T>(beanManager, name, scope, qualifiers, beanClass, beanTypes, stereotypes);
+
+        beanManager.addBean(ret);
+
+        for (final Type beanType : beanTypes) {
+            addTypeClassBinding(beanType, beanClass);
+        }
+
+        for (final Annotation qualifier : qualifiers) {
+            addClassQualifierBinding(beanClass, qualifier);
+            addQualifierClassBinding(qualifier, beanClass);
+        }
+
+        return ret;
+    }
+
+    public void createBeans(final Collection<Class<?>> classes) {
+        if (null == classes || classes.isEmpty()) {
+            return;
+        }
+
+        filterClasses(classes);
+
+        for (final Class<?> clazz : classes) {
+            createBean(clazz);
+        }
+    }
 
     /**
-     * Creates beans with the specified bean classes.
+     * Filters no-bean classes with the specified classes.
+     * <p>
+     * A valid bean is <b>NOT</b>:
+     * <ul>
+     * <li>an annotation</li>
+     * <li>interface</li>
+     * <li>abstract</li>
+     * </ul>
      *
-     * @param classes the specified bean classes
+     * @param classes the specified classes to filter
      */
-    void createBeans(final Collection<Class<?>> classes);
+    private static void filterClasses(final Collection<Class<?>> classes) {
+        final Iterator<Class<?>> iterator = classes.iterator();
 
-    /**
-     * Adds the &lt;bean type class - bean class&gt; binding.
-     *
-     * @param beanType  the specified bean type
-     * @param beanClass the specified bean class
-     */
-    void addTypeClassBinding(final Type beanType, final Class<?> beanClass);
+        while (iterator.hasNext()) {
+            final Class<?> clazz = iterator.next();
 
-    /**
-     * Adds the &lt;bean class - qualifier&gt; binding.
-     *
-     * @param beanClass the specified bean class
-     * @param qualifier the specified qualifier
-     */
-    void addClassQualifierBinding(final Class<?> beanClass, final Annotation qualifier);
-
-    /**
-     * Adds the &lt;qualifier - bean class&gt; binding.
-     *
-     * @param qualifier the specified qualifier
-     * @param beanClass the specified bean class
-     */
-    void addQualifierClassBinding(final Annotation qualifier, final Class<?> beanClass);
-
-    /**
-     * Validates beans.
-     */
-    void validate();
-
-    /**
-     * Gets the binded bean classes of the specified bean type.
-     *
-     * @param beanType the specified bean type
-     * @return binded bean classes
-     */
-    Set<Class<?>> getBindedBeanClasses(final Type beanType);
-
-    /**
-     * Gets the binded qualifiers of the specified bean class.
-     *
-     * @param beanClass the specified bean class
-     * @return binded qualifiers
-     */
-    Set<Annotation> getBindedQualifiers(final Class<?> beanClass);
-
-    /**
-     * Adds the specified module.
-     *
-     * @param module the specified module
-     */
-    void addModule(final BeanModule module);
+            if (clazz.isAnnotation() || !Reflections.isConcrete(clazz)) {
+                iterator.remove();
+            }
+        }
+    }
 }

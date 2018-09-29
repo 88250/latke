@@ -19,7 +19,7 @@ package org.b3log.latke.ioc.context;
 /**
  * <p>Indicates that a context is not active.</p>
  * 
- * @see javax.enterprise.context.spi.Context
+ * @see Context
  * 
  * @author Pete Muir
  * @author Shane Bryzak

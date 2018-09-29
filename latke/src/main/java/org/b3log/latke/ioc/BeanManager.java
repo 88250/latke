@@ -18,7 +18,6 @@ package org.b3log.latke.ioc;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.config.Configurator;
-import org.b3log.latke.ioc.config.impl.ConfiguratorImpl;
 import org.b3log.latke.ioc.context.*;
 import org.b3log.latke.ioc.inject.Named;
 import org.b3log.latke.ioc.inject.Provider;
@@ -93,7 +92,7 @@ public class BeanManager {
         beans = new HashSet<>();
         contexts = new HashMap<>();
         builtInBeans = new HashSet<>();
-        configurator = new ConfiguratorImpl(this);
+        configurator = new Configurator(this);
 
         // Init Singleton context
         final SingletonContext singletonContext = new SingletonContext();

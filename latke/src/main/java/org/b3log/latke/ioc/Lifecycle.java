@@ -15,14 +15,11 @@
  */
 package org.b3log.latke.ioc;
 
-import org.b3log.latke.ioc.config.BeanModule;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.ApplicationContext;
-import org.b3log.latke.ioc.context.Context;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
@@ -58,10 +55,9 @@ public final class Lifecycle {
     /**
      * Starts the application with the specified bean class and bean modules.
      *
-     * @param classes    the specified bean class, nullable
-     * @param beanModule the specified bean modules
+     * @param classes the specified bean class, nullable
      */
-    public static void startApplication(final Collection<Class<?>> classes, final BeanModule... beanModule) {
+    public static void startApplication(final Collection<Class<?>> classes) {
         LOGGER.log(Level.DEBUG, "Initializing Latke IoC container");
 
         beanManager = BeanManager.getInstance();
@@ -70,12 +66,6 @@ public final class Lifecycle {
         final Configurator configurator = beanManager.getConfigurator();
         if (null != classes && !classes.isEmpty()) {
             configurator.createBeans(classes);
-        }
-
-        if (null != beanModule && 0 < beanModule.length) {
-            for (int i = 0; i < beanModule.length; i++) {
-                configurator.addModule(beanModule[i]);
-            }
         }
 
         LOGGER.log(Level.DEBUG, "Initialized Latke IoC container");

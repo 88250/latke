@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.ioc.context;
 
+import org.b3log.latke.ioc.bean.Bean;
+
 /**
  * <p>Defines operations to create and destroy contextual instances of a
  * certain type. Any implementation of {@code Contextual} is called a

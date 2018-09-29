@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.ioc.bean;
 
-
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 import org.b3log.latke.ioc.BeanManager;
@@ -39,7 +38,6 @@ import org.b3log.latke.util.Reflections;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
-
 
 /**
  * Latke bean implementation.

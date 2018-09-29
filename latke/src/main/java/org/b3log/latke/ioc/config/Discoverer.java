@@ -81,14 +81,14 @@ public final class Discoverer {
 
         // See issue #17 (https://github.com/b3log/latke/issues/17) for more details
 
-        final Collection<Class<?>> ret = new HashSet<Class<?>>();
+        final Collection<Class<?>> ret = new HashSet<>();
 
         final String[] splitPaths = scanPath.split(",");
 
         // Adds some built-in components
         final String[] paths = ArrayUtils.concatenate(splitPaths, BUILT_IN_COMPONENT_PKGS);
 
-        final Set<URL> urls = new LinkedHashSet<URL>();
+        final Set<URL> urls = new LinkedHashSet<>();
 
         for (String path : paths) {
 
