@@ -15,11 +15,6 @@
  */
 package org.b3log.latke.logging;
 
-import static org.b3log.latke.logging.Level.DEBUG;
-import static org.b3log.latke.logging.Level.ERROR;
-import static org.b3log.latke.logging.Level.INFO;
-import static org.b3log.latke.logging.Level.TRACE;
-import static org.b3log.latke.logging.Level.WARN;
 import org.slf4j.LoggerFactory;
 import org.slf4j.spi.LocationAwareLogger;
 

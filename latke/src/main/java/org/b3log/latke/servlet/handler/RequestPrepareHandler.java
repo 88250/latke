@@ -16,10 +16,11 @@
 package org.b3log.latke.servlet.handler;
 
 
-import javax.servlet.http.HttpServletRequest;
 import org.b3log.latke.Keys;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**

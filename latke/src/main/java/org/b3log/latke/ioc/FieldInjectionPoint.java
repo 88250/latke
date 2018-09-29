@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.inject;
+package org.b3log.latke.ioc;
 
-import org.b3log.latke.ioc.annotated.Annotated;
 import org.b3log.latke.ioc.annotated.AnnotatedField;
-import org.b3log.latke.ioc.Bean;
 
 /**
- * Injection Point.
+ * Field injection point.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Sep 29, 2018
+ * @version 1.0.1.2, Sep 29, 2018
  * @since 2.4.18
  */
-public interface InjectionPoint {
+public class FieldInjectionPoint extends AbstractInjectionPoint {
 
     /**
-     * Get the {@link Bean} object representing the
-     * bean that defines the injection point. If the injection point does not
-     * belong to a bean, return a null value.
+     * Constructs a field injection point.
      *
-     * @return the {@link Bean} object representing
-     * bean that defines the injection point, of null if the injection
-     * point does not belong to a bean
+     * @param ownerBean      the specified owner bean
+     * @param annotatedField the specified annotated field
      */
-    Bean<?> getBean();
+    public FieldInjectionPoint(final Bean<?> ownerBean, final AnnotatedField<?> annotatedField) {
+        super(ownerBean, annotatedField);
+    }
 
-    /**
-     * Obtain an instance of {@link AnnotatedField}.
-     *
-     * @return an {@code AnnotatedField}
-     */
-    Annotated getAnnotated();
+    @Override
+    public AnnotatedField<?> getAnnotated() {
+        return (AnnotatedField<?>) super.getAnnotated();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ", OwnerBean[name=" + getBean().getName() + ", AnnotatedField: " + getAnnotated() + "]";
+    }
 }

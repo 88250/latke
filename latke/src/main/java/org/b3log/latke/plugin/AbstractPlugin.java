@@ -551,7 +551,7 @@ public abstract class AbstractPlugin implements Serializable {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null) {
+        if (null == obj) {
             return false;
         }
         if (getClass() != obj.getClass()) {
@@ -559,7 +559,7 @@ public abstract class AbstractPlugin implements Serializable {
         }
         final AbstractPlugin other = (AbstractPlugin) obj;
 
-        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
+        if ((null == this.id) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }
         return true;

@@ -16,17 +16,15 @@
 package org.b3log.latke.servlet;
 
 
-import org.b3log.latke.servlet.handler.Handler;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.servlet.handler.Handler;
 import org.b3log.latke.util.Requests;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**

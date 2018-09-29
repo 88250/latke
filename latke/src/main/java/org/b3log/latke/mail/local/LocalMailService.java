@@ -16,10 +16,11 @@
 package org.b3log.latke.mail.local;
 
 
-import java.io.IOException;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.mail.MailService;
+
+import java.io.IOException;
 
 
 /**

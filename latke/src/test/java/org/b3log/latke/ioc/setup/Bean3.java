@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.ioc.setup;
 
-import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.Inject;
 
 /**
  *

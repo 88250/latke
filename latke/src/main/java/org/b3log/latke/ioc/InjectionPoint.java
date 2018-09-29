@@ -13,24 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.inject;
+package org.b3log.latke.ioc;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.b3log.latke.ioc.annotated.Annotated;
+import org.b3log.latke.ioc.annotated.AnnotatedField;
 
 /**
- * Identifies injectable fields.
+ * Injection Point.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Sep 29, 2018
  * @since 2.4.18
  */
-@Target({METHOD, CONSTRUCTOR, FIELD})
-@Retention(RUNTIME)
-@Documented
-public @interface Inject {
+public interface InjectionPoint {
+
+    /**
+     * Get the {@link Bean} object representing the
+     * bean that defines the injection point. If the injection point does not
+     * belong to a bean, return a null value.
+     *
+     * @return the {@link Bean} object representing
+     * bean that defines the injection point, of null if the injection
+     * point does not belong to a bean
+     */
+    Bean<?> getBean();
+
+    /**
+     * Obtain an instance of {@link AnnotatedField}.
+     *
+     * @return an {@code AnnotatedField}
+     */
+    Annotated getAnnotated();
 }

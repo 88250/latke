@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.servlet.advice;
 
-import org.b3log.latke.ioc.inject.Singleton;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.servlet.HTTPRequestContext;
 
 /**

@@ -25,16 +25,8 @@ import org.b3log.latke.util.AntPathMatcher;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.net.*;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 

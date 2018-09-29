@@ -74,7 +74,7 @@ public class Projection {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null) {
+        if (null == obj) {
             return false;
         }
 
@@ -84,11 +84,11 @@ public class Projection {
 
         final Projection other = (Projection) obj;
 
-        if ((this.key == null) ? (other.key != null) : !this.key.equals(other.key)) {
+        if ((null == this.key) ? (other.key != null) : !this.key.equals(other.key)) {
             return false;
         }
 
-        if (this.type != other.type && (this.type == null || !this.type.equals(other.type))) {
+        if (this.type != other.type && (null == this.type || !this.type.equals(other.type))) {
             return false;
         }
 

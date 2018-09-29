@@ -95,7 +95,7 @@ final class MailSender {
      * @throws Exception if converts error
      */
     public javax.mail.Message convert2JavaMailMsg(final Message message) throws Exception {
-        if (message == null) {
+        if (null == message) {
             return null;
         }
 

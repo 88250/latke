@@ -16,8 +16,6 @@
 package org.b3log.latke.ioc;
 
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.ioc.inject.Singleton;
-import org.b3log.latke.ioc.inject.InjectionPoint;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;

@@ -263,7 +263,7 @@ public final class Query {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null) {
+        if (null == obj) {
             return false;
         }
 
@@ -281,15 +281,15 @@ public final class Query {
             return false;
         }
 
-        if (this.sorts != other.sorts && (this.sorts == null || !this.sorts.equals(other.sorts))) {
+        if (this.sorts != other.sorts && (null == this.sorts || !this.sorts.equals(other.sorts))) {
             return false;
         }
 
-        if (this.filter != other.filter && (this.filter == null || !this.filter.equals(other.filter))) {
+        if (this.filter != other.filter && (null == this.filter || !this.filter.equals(other.filter))) {
             return false;
         }
 
-        if (this.projections != other.projections && (this.projections == null || !this.projections.equals(other.projections))) {
+        if (this.projections != other.projections && (null == this.projections || !this.projections.equals(other.projections))) {
             return false;
         }
 

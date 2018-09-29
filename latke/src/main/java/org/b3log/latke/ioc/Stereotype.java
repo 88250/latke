@@ -30,7 +30,7 @@
  * limitations under the License.
  */
 
-package org.b3log.latke.ioc.inject;
+package org.b3log.latke.ioc;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

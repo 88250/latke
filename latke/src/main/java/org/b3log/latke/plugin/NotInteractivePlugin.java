@@ -16,9 +16,9 @@
 package org.b3log.latke.plugin;
 
 
-import java.util.Map;
-
 import org.b3log.latke.servlet.HTTPRequestContext;
+
+import java.util.Map;
 
 
 /**

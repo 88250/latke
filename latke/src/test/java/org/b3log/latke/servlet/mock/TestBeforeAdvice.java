@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.servlet.mock;
 
-import org.b3log.latke.ioc.inject.Singleton;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 

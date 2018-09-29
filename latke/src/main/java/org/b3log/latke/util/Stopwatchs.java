@@ -15,13 +15,14 @@
  */
 package org.b3log.latke.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Stop watch utilities for timing of a thread of tasks.

@@ -16,7 +16,7 @@
 package org.b3log.latke.event;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.inject.Singleton;
+import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 
 import java.util.concurrent.Callable;

@@ -209,7 +209,7 @@ public final class JdbcUtil {
 
                 final FieldDefinition definition = dMap.get(columnName);
 
-                if (definition == null) { // COUNT(OID)
+                if (null == definition) { // COUNT(OID)
                     jsonObject.put(columnName, resultSet.getObject(columnName));
                 } else if ("boolean".equals(definition.getType())) {
                     jsonObject.put(definition.getName(), resultSet.getBoolean(columnName));

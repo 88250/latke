@@ -460,8 +460,7 @@ public final class AntPathMatcher {
      * @see java.lang.String#trim()
      */
     private static String[] tokenizeToStringArray(String str, String delimiters) {
-
-        if (str == null) {
+        if (null == str) {
             return null;
         }
         StringTokenizer st = new StringTokenizer(str, delimiters);
@@ -487,7 +486,7 @@ public final class AntPathMatcher {
      * Collection was <code>null</code>)
      */
     private static String[] toStringArray(Collection collection) {
-        if (collection == null) {
+        if (null == collection) {
             return null;
         }
         return (String[]) collection.toArray(new String[collection.size()]);

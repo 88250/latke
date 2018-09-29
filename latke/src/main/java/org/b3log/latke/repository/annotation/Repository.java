@@ -16,7 +16,8 @@
 package org.b3log.latke.repository.annotation;
 
 
-import org.b3log.latke.ioc.inject.Stereotype;
+import org.b3log.latke.ioc.Singleton;
+import org.b3log.latke.ioc.Stereotype;
 
 import java.lang.annotation.*;
 
@@ -25,7 +26,7 @@ import java.lang.annotation.*;
  * Indicates that an annotated type is a repository.
  *
  * <p>
- * In Latke IoC container, a repository is {@link org.b3log.latke.ioc.inject.Singleton singleton} scope by default.
+ * In Latke IoC container, a repository is {@link Singleton singleton} scope by default.
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>

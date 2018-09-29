@@ -73,7 +73,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
      * @return the value of the specified key, if not found, returns <code>null</code>
      */
     public synchronized V get(final K key) {
-        if (first == null) {
+        if (null == first) {
             return null;
         } else {
             DoubleLinkedMapNode<K, V> current = first;
@@ -93,7 +93,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
     /**
      * Adds a new value to the end of the linked map.
      *
-     * @param key the key of the new value
+     * @param key   the key of the new value
      * @param value the new value
      */
     public synchronized void addLast(final K key, final V value) {
@@ -109,7 +109,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
      * Throws {@link IllegalArgumentException} if the specified key is null
      * </p>
      *
-     * @param key the key of the new value
+     * @param key   the key of the new value
      * @param value the new value
      */
     public synchronized void addFirst(final K key, final V value) {
@@ -130,14 +130,14 @@ final class DoubleLinkedMap<K, V> implements Serializable {
     public synchronized void makeFirst(final K key) {
         final DoubleLinkedMapNode<K, V> node = getNode(key);
 
-        if (node.getPrev() == null) {
+        if (null == node.getPrev()) {
             // already the first node or not a node.
             return;
         }
 
         node.getPrev().setNext(node.getNext());
 
-        if (node.getNext() == null) {
+        if (null == node.getNext()) {
             // last but not the first.
             last = node.getPrev();
             last.setNext(null);
@@ -157,7 +157,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public synchronized void removeAll() {
-        for (DoubleLinkedMapNode<K, V> me = first; me != null;) {
+        for (DoubleLinkedMapNode<K, V> me = first; me != null; ) {
             if (me.getPrev() != null) {
                 me.setPrev(null);
             }
@@ -219,7 +219,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
      * @return a node of specified key, if not found, returns <code>null</code>
      */
     private synchronized DoubleLinkedMapNode<K, V> getNode(final K key) {
-        if (first == null) {
+        if (null == first) {
             return null;
         } else {
             DoubleLinkedMapNode<K, V> current = first;
@@ -242,8 +242,8 @@ final class DoubleLinkedMap<K, V> implements Serializable {
      * @param node the specified node to be removed
      */
     private synchronized void removeNode(final DoubleLinkedMapNode<K, V> node) {
-        if (node.getNext() == null) {
-            if (node.getPrev() == null) {
+        if (null == node.getNext()) {
+            if (null == node.getPrev()) {
                 // make sure it really is the only node before setting head and
                 // tail to null. It is possible that we will be passed a node
                 // which has already been removed from the map, in which case
@@ -260,7 +260,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
                 node.setPrev(null);
             }
 
-        } else if (node.getPrev() == null) {
+        } else if (null == node.getPrev()) {
             // first but not the last.
             first = node.getNext();
             first.setPrev(null);
@@ -282,7 +282,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
      * @param node the feature to be added to the end of the linked map
      */
     private synchronized void addLastNode(final DoubleLinkedMapNode<K, V> node) {
-        if (first == null) {
+        if (null == first) {
             // empty map.
             first = node;
         } else {
@@ -300,7 +300,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
      * @param node the feature to be added to the start of the linked map
      */
     private synchronized void addFirstNode(final DoubleLinkedMapNode<K, V> node) {
-        if (last == null) {
+        if (null == last) {
             // empty map.
             last = node;
         } else {
@@ -351,7 +351,7 @@ final class DoubleLinkedMapNode<K, V> implements Serializable {
     /**
      * Constructs a double linked map node with the specified key and value.
      *
-     * @param key the key of the specified node's content instance
+     * @param key   the key of the specified node's content instance
      * @param value the specified node's content instance
      */
     DoubleLinkedMapNode(final K key, final V value) {

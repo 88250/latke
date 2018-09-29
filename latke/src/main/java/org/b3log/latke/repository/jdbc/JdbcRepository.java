@@ -332,7 +332,7 @@ public final class JdbcRepository implements Repository {
         String key;
         while (keys.hasNext()) {
             key = keys.next();
-            if (jsonObject.get(key) == null && oldJsonObject.get(key) == null) {
+            if (null == jsonObject.get(key) && null == oldJsonObject.get(key)) {
                 needUpdateJsonObject.put(key, jsonObject.get(key));
             } else if (!jsonObject.optString(key).equals(oldJsonObject.optString(key))) {
                 needUpdateJsonObject.put(key, jsonObject.get(key));
@@ -588,7 +588,7 @@ public final class JdbcRepository implements Repository {
     private void getSelectSql(final StringBuilder selectSql, final Set<Projection> projections) {
         selectSql.append(" select ");
 
-        if (projections == null || projections.isEmpty()) {
+        if (null == projections || projections.isEmpty()) {
             selectSql.append(" * ");
             return;
         }

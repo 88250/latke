@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.intercept;
+package org.b3log.latke.ioc;
 
-import org.b3log.latke.intercept.annotation.BeforeMethod;
-import org.b3log.latke.ioc.Singleton;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-@Singleton
-public class B {
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-    // intercept method
-    @BeforeMethod("org.b3log.latke.intercept.A#oneMethod")
-    public void c(final String str) {
-        System.out.println("In B#c(" + str + ')');
-    }
+/**
+ * Identifies injectable fields.
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Sep 29, 2018
+ * @since 2.4.18
+ */
+@Target({METHOD, CONSTRUCTOR, FIELD})
+@Retention(RUNTIME)
+@Documented
+public @interface Inject {
 }

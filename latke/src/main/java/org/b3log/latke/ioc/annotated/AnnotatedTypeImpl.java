@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.ioc.annotated;
 
-import org.b3log.latke.ioc.inject.Inject;
+import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.util.Reflections;
 
 import java.lang.reflect.Field;

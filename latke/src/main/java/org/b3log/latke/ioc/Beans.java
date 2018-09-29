@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.ioc;
 
-import org.b3log.latke.ioc.inject.Stereotype;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Reflections;
 

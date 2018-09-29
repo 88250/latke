@@ -77,7 +77,7 @@ public final class CompositeFilter implements Filter {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null) {
+        if (null == obj) {
             return false;
         }
         if (getClass() != obj.getClass()) {
@@ -88,7 +88,7 @@ public final class CompositeFilter implements Filter {
         if (this.operator != other.operator) {
             return false;
         }
-        if (this.subFilters != other.subFilters && (this.subFilters == null || !this.subFilters.equals(other.subFilters))) {
+        if (this.subFilters != other.subFilters && (null == this.subFilters || !this.subFilters.equals(other.subFilters))) {
             return false;
         }
         return true;

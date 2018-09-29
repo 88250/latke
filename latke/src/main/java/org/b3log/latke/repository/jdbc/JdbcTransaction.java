@@ -16,11 +16,11 @@
 package org.b3log.latke.repository.jdbc;
 
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 
 /**

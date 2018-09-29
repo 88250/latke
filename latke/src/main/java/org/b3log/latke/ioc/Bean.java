@@ -20,8 +20,6 @@ import javassist.util.proxy.ProxyObject;
 import org.b3log.latke.ioc.annotated.AnnotatedField;
 import org.b3log.latke.ioc.annotated.AnnotatedType;
 import org.b3log.latke.ioc.annotated.AnnotatedTypeImpl;
-import org.b3log.latke.ioc.inject.Inject;
-import org.b3log.latke.ioc.inject.FieldInjectionPoint;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Reflections;

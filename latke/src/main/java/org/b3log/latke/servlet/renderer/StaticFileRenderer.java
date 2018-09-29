@@ -16,11 +16,11 @@
 package org.b3log.latke.servlet.renderer;
 
 
-import javax.servlet.RequestDispatcher;
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
+
+import javax.servlet.RequestDispatcher;
 
 
 /**

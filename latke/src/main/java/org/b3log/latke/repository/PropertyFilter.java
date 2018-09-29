@@ -90,7 +90,7 @@ public final class PropertyFilter implements Filter {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null) {
+        if (null == obj) {
             return false;
         }
 
@@ -100,7 +100,7 @@ public final class PropertyFilter implements Filter {
 
         final PropertyFilter other = (PropertyFilter) obj;
 
-        if ((this.key == null) ? (other.key != null) : !this.key.equals(other.key)) {
+        if ((null == this.key) ? (other.key != null) : !this.key.equals(other.key)) {
             return false;
         }
 
@@ -108,7 +108,7 @@ public final class PropertyFilter implements Filter {
             return false;
         }
 
-        if (this.value != other.value && (this.value == null || !this.value.equals(other.value))) {
+        if (this.value != other.value && (null == this.value || !this.value.equals(other.value))) {
             return false;
         }
 

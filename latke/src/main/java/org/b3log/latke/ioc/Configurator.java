@@ -59,18 +59,12 @@ public class Configurator {
 
     public void addTypeClassBinding(final Type beanType, final Class<?> beanClass) {
         Set<Class<?>> beanClasses = typeClasses.get(beanType);
-
-        if (beanClasses == null) {
+        if (null == beanClasses) {
             beanClasses = new HashSet<>();
         }
 
         beanClasses.add(beanClass);
-
         typeClasses.put(beanType, beanClasses);
-    }
-
-    public Set<Class<?>> getBindedBeanClasses(final Type beanType) {
-        return typeClasses.get(beanType);
     }
 
     public <T> Bean<T> createBean(final Class<T> beanClass) {
