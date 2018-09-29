@@ -40,7 +40,8 @@ import static org.testng.Assert.assertNotNull;
 
 /**
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Nov 17, 2009
+ * @version 1.0.0.4, Sep 29, 2018
+ * @since 2.4.18
  */
 final public class SpeakerUnitTest {
 
@@ -49,13 +50,11 @@ final public class SpeakerUnitTest {
      */
     private BeanManager beanManager;
 
-    public static final List<Class<?>> speakerPackageClasses = Arrays.asList(MorningSpeaker.class, SpeakerService.class);
+    public static final List<Class<?>> speakerPackageClasses = Arrays.asList(MorningSpeaker.class);
 
     private static Speaker helloSpeaker;
 
     private static Speaker morningSpeaker;
-
-    private static SpeakerService speakerProvider;
 
     @BeforeTest
     @SuppressWarnings("unchecked")
@@ -88,12 +87,6 @@ final public class SpeakerUnitTest {
         final Bean<?> morningSpeakerBean = beanManager.getBean(Speaker.class, morningSpeakerQualifiers);
         morningSpeaker = (MorningSpeaker) beanManager.getReference(morningSpeakerBean);
         assertNotNull(morningSpeaker);
-
-        final Set<Annotation> speakerQualifiers = new HashSet<>();
-        speakerQualifiers.add(new NamedLiteral("speakerService"));
-        final Bean<?> speakerProviderBean = beanManager.getBean(SpeakerService.class, speakerQualifiers);
-        speakerProvider = (SpeakerService) beanManager.getReference(speakerProviderBean);
-        assertNotNull(speakerProvider);
     }
 
     /**
@@ -115,32 +108,5 @@ final public class SpeakerUnitTest {
     public void morningSpeakerSay() {
         System.out.println("morningSpeakerSay");
         assertEquals(morningSpeaker.say(), "Morning!");
-    }
-
-    @Test
-    public void speakerProvider() {
-        System.out.println("nightSpeakerProvider");
-        // For MidnightSpeaker Providers
-        assertEquals(speakerProvider.midnightSpeakerProvider1.get().say(), "Midnight!");
-        assertEquals(speakerProvider.midnightSpeakerProvider2.get().say(), "Midnight!");
-        assertEquals(speakerProvider.midnightSpeakerProvider3.get().say(), "Midnight!");
-        assertEquals(speakerProvider.midnightSpeakerProvider4.get().say(), "Midnight!");
-        assertEquals(speakerProvider.midnightSpeakerProvider5.get().say(), "Midnight!");
-        assertEquals(speakerProvider.midnightSpeakerProvider6.get().say(), "Midnight!");
-        // For NightSpeaker Providers
-        assertEquals(speakerProvider.nightSpeakerProvider1.get().say(), "Night!");
-        assertEquals(speakerProvider.nightSpeakerProvider2.get().say(), "Night!");
-        assertEquals(speakerProvider.nightSpeakerProvider3.get().say(), "Night!");
-        assertEquals(speakerProvider.nightSpeakerProvider4.get().say(), "Night!");
-        // For MorningSpeaker Providers
-        assertEquals(speakerProvider.morningSpeakerProvider1.get().say(), "Morning!");
-        assertEquals(speakerProvider.morningSpeakerProvider2.get().say(), "Morning!");
-        // For HelloSpeaker Providers
-        assertEquals(speakerProvider.helloSpeakerProvider1.get().say(), "Hello!");
-        assertEquals(speakerProvider.helloSpeakerProvider2.get().say(), "Hello!");
-        assertEquals(speakerProvider.helloSpeakerProvider3.get().say(), "Hello!");
-        assertEquals(speakerProvider.helloSpeakerProvider4.get().say(), "Hello!");
-        assertEquals(speakerProvider.helloSpeakerProvider5.get().say(), "Hello!");
-        assertEquals(speakerProvider.helloSpeakerProvider6.get().say(), "Hello!");
     }
 }

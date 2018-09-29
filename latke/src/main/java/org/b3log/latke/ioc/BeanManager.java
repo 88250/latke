@@ -20,7 +20,6 @@ import org.b3log.latke.ioc.bean.Bean;
 import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.*;
 import org.b3log.latke.ioc.inject.Named;
-import org.b3log.latke.ioc.inject.Provider;
 import org.b3log.latke.ioc.inject.Singleton;
 import org.b3log.latke.ioc.point.InjectionPoint;
 import org.b3log.latke.ioc.util.Beans;
@@ -33,7 +32,6 @@ import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.util.Reflections;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -166,16 +164,6 @@ public class BeanManager {
 
     public Object getInjectableReference(final InjectionPoint ij, final CreationalContext<?> ctx) {
         final Type baseType = ij.getAnnotated().getBaseType();
-
-        if (baseType instanceof ParameterizedType) {
-            final ParameterizedType parameterizedType = (ParameterizedType) baseType;
-            final Type type = parameterizedType.getRawType();
-
-            if (type.equals(Provider.class)) {
-                return null;
-            }
-        }
-
         final Set<Annotation> requiredQualifiers = ij.getQualifiers();
         final Bean<?> bean = getBean(baseType, requiredQualifiers);
         Object ret;

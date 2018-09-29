@@ -15,39 +15,37 @@
  */
 package org.b3log.latke.ioc.drink.mix;
 
-import org.b3log.latke.ioc.drink.*;
+import org.b3log.latke.ioc.drink.Bottle;
+import org.b3log.latke.ioc.drink.Drink;
 import org.b3log.latke.ioc.drink.annotation.ErGuoTou;
 import org.b3log.latke.ioc.drink.annotation.Odd;
 import org.b3log.latke.ioc.drink.annotation.Orange;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.ioc.inject.Named;
-import org.b3log.latke.ioc.inject.Provider;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Nov 26, 2009
+ * @version 1.0.0.2, Sep 29, 2018
  */
 public class MixBottle implements Bottle {
 
-    public final Provider<Drink> wineProvider;
-    public final Provider<Drink> juiceProvider;
-    public final Provider<Mix> mixProvider;
+    public final Drink wine;
+    public final Drink juice;
+    public final Mix mix;
 
     @Inject
-    public MixBottle(final @ErGuoTou Provider<Drink> wineProvider,
-                     final @Orange Provider<Drink> juiceProvider,
-                     final @Named("spiritMix") @Odd Provider<Mix> mixProvider,
-                     final @Named("spiritMix") Provider<Mix> mixProvider2) {
-        this.wineProvider = wineProvider;
-        this.juiceProvider = juiceProvider;
-        this.mixProvider = mixProvider;
-        assert mixProvider2 != null;
-        assert mixProvider2.get() != null;
+    public MixBottle(final @ErGuoTou Drink wine,
+                     final @Orange Drink juice,
+                     final @Named("spiritMix") @Odd Mix mix,
+                     final @Named("spiritMix") Mix mix2) {
+        this.wine = wine;
+        this.juice = juice;
+        this.mix = mix;
+        assert mix2 != null;
     }
 
     @Override
     public Mix pour() {
-        return mixProvider.get();
+        return mix;
     }
 }

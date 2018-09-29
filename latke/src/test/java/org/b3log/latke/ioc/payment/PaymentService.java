@@ -18,13 +18,11 @@ package org.b3log.latke.ioc.payment;
 import org.b3log.latke.ioc.context.ApplicationScoped;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.ioc.inject.Named;
-import org.b3log.latke.ioc.inject.Provider;
 import org.b3log.latke.ioc.payment.annotation.Asynchronous;
 import org.b3log.latke.ioc.payment.annotation.Pay;
 import org.b3log.latke.ioc.payment.annotation.Synchronous;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.7, Sep 20, 2009
  */
@@ -44,19 +42,12 @@ public class PaymentService {
     @Asynchronous
     private PaymentProcessor applicationScopedAsynProcessor;
 
-    @Inject
-    private Provider<AsynchronousPaymentProcessor> asynProcessorProvider;
-
     public void pay() {
         applicationScopedAsynProcessor.process();
     }
 
     public UserService getUserService() {
         return userService;
-    }
-
-    public PaymentProcessor getAsynProcessor() {
-        return asynProcessorProvider.get();
     }
 
     public int getSum() {

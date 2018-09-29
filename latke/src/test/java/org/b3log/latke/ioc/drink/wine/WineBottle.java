@@ -18,24 +18,18 @@ package org.b3log.latke.ioc.drink.wine;
 
 import org.b3log.latke.ioc.drink.Bottle;
 import org.b3log.latke.ioc.inject.Inject;
-import org.b3log.latke.ioc.inject.Provider;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 27, 2009
+ * @version 1.0.0.1, Sep 29, 2018
  */
 public class WineBottle implements Bottle {
 
-    public final Provider<Spirit> wineProvider;
-
     @Inject
-    public WineBottle(final Provider<Spirit> wineProvider) {
-        this.wineProvider = wineProvider;
-    }
+    private Spirit wineProvider;
 
     @Override
     public Spirit pour() {
-        return wineProvider.get();
+        return wineProvider;
     }
 }

@@ -121,15 +121,4 @@ final public class PaymentServiceUnitTest {
 
         sessionScopedSynProcessor.process();
     }
-
-    /**
-     * Tests provider injection.
-     */
-    @Test
-    public void getAsynProcessor() {
-        System.out.println("getAsynProcessor");
-        final PaymentProcessor asynProcessor = paymentService.getAsynProcessor();
-        assertNotNull(asynProcessor);
-        asynProcessor.process();
-    }
 }

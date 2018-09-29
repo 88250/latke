@@ -24,13 +24,10 @@ import org.b3log.latke.ioc.config.Configurator;
 import org.b3log.latke.ioc.context.CreationalContext;
 import org.b3log.latke.ioc.inject.Inject;
 import org.b3log.latke.ioc.inject.Named;
-import org.b3log.latke.ioc.inject.Provider;
 import org.b3log.latke.ioc.literal.NamedLiteral;
 import org.b3log.latke.ioc.point.FieldInjectionPoint;
 import org.b3log.latke.ioc.point.InjectionPoint;
 import org.b3log.latke.ioc.point.ParameterInjectionPoint;
-import org.b3log.latke.ioc.provider.FieldProvider;
-import org.b3log.latke.ioc.provider.ParameterProvider;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Reflections;
@@ -125,21 +122,6 @@ public class Bean<T> {
     private Map<AnnotatedMethod<?>, List<ParameterInjectionPoint>> methodParameterInjectionPoints;
 
     /**
-     * Constructor parameter providers.
-     */
-    private List<ParameterProvider<?>> constructorParameterProviders;
-
-    /**
-     * Field provider.
-     */
-    private Set<FieldProvider<?>> fieldProviders;
-
-    /**
-     * Method parameter providers.
-     */
-    private Map<AnnotatedMethod<?>, List<ParameterProvider<?>>> methodParameterProviders;
-
-    /**
      * Constructs a Latke bean.
      *
      * @param beanManager the specified bean manager
@@ -173,11 +155,8 @@ public class Bean<T> {
         annotatedType = new AnnotatedTypeImpl<T>(beanClass);
 
         constructorParameterInjectionPoints = new HashMap<>();
-        constructorParameterProviders = new ArrayList<>();
         methodParameterInjectionPoints = new HashMap<>();
-        methodParameterProviders = new HashMap<>();
         fieldInjectionPoints = new HashSet<>();
-        fieldProviders = new HashSet<>();
 
         initFieldInjectionPoints();
         initConstructorInjectionPoints();
@@ -217,17 +196,7 @@ public class Bean<T> {
             int i = 0;
 
             for (final ParameterInjectionPoint paraInjectionPoint : paraInjectionPoints) {
-                Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
-
-                if (arg == null) {
-                    for (final ParameterProvider<?> provider : constructorParameterProviders) {
-                        if (provider.getAnnotated().equals(paraInjectionPoint.getAnnotated())) {
-                            arg = provider;
-                            break;
-                        }
-                    }
-                }
-
+                final Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
                 args[i++] = arg;
             }
 
@@ -252,17 +221,7 @@ public class Bean<T> {
      */
     private void resolveCurrentclassFieldDependencies(final Object reference) {
         for (final FieldInjectionPoint injectionPoint : fieldInjectionPoints) {
-            Object injection = beanManager.getInjectableReference(injectionPoint, null);
-
-            if (injection == null) {
-                for (final FieldProvider<?> provider : fieldProviders) {
-                    if (provider.getAnnotated().equals(injectionPoint.getAnnotated())) {
-                        injection = provider;
-                        break;
-                    }
-                }
-            }
-
+            final Object injection = beanManager.getInjectableReference(injectionPoint, null);
             final Field field = injectionPoint.getAnnotated().getJavaMember();
 
             try {
@@ -298,17 +257,7 @@ public class Bean<T> {
             int i = 0;
 
             for (final ParameterInjectionPoint paraInjectionPoint : paraSet) {
-                Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
-
-                if (arg == null) {
-                    for (final ParameterProvider<?> provider : methodParameterProviders.get(methodParameterInjectionPoint.getKey())) {
-                        if (provider.getAnnotated().equals(paraInjectionPoint.getAnnotated())) {
-                            arg = provider;
-                            break;
-                        }
-                    }
-                }
-
+                final Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
                 args[i++] = arg;
             }
 
@@ -359,17 +308,7 @@ public class Bean<T> {
         final Set<FieldInjectionPoint> injectionPoints = bean.fieldInjectionPoints;
 
         for (final FieldInjectionPoint injectionPoint : injectionPoints) {
-            Object injection = beanManager.getInjectableReference(injectionPoint, null);
-
-            if (injection == null) {
-                for (final FieldProvider<?> provider : bean.fieldProviders) {
-                    if (provider.getAnnotated().equals(injectionPoint.getAnnotated())) {
-                        injection = provider;
-                        break;
-                    }
-                }
-            }
-
+            final Object injection = beanManager.getInjectableReference(injectionPoint, null);
             final Field field = injectionPoint.getAnnotated().getJavaMember();
 
             try {
@@ -418,17 +357,7 @@ public class Bean<T> {
             int i = 0;
 
             for (final ParameterInjectionPoint paraInjectionPoint : paraSet) {
-                Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
-
-                if (arg == null) {
-                    for (final ParameterProvider<?> provider : superBean.methodParameterProviders.get(methodParameterInjectionPoint.getKey())) {
-                        if (provider.getAnnotated().equals(paraInjectionPoint.getAnnotated())) {
-                            arg = provider;
-                            break;
-                        }
-                    }
-                }
-
+                final Object arg = beanManager.getInjectableReference(paraInjectionPoint, null);
                 args[i++] = arg;
             }
 
@@ -567,18 +496,6 @@ public class Bean<T> {
             final List<ParameterInjectionPoint> paraInjectionPointArrayList = new ArrayList<>();
 
             for (final AnnotatedParameter<?> annotatedParameter : parameters) {
-                Type type = annotatedParameter.getBaseType();
-
-                if (type instanceof ParameterizedType) {
-                    type = ((ParameterizedType) type).getRawType();
-                }
-
-                if (type.equals(Provider.class)) {
-                    final ParameterProvider<T> provider = new ParameterProvider<T>(beanManager, annotatedParameter);
-
-                    constructorParameterProviders.add(provider);
-                }
-
                 final ParameterInjectionPoint parameterInjectionPoint = new ParameterInjectionPoint(this, annotatedParameter);
 
                 paraInjectionPointArrayList.add(parameterInjectionPoint);
@@ -598,27 +515,13 @@ public class Bean<T> {
         for (final AnnotatedMethod annotatedMethod : annotatedMethods) {
             final List<AnnotatedParameter<?>> parameters = annotatedMethod.getParameters();
             final List<ParameterInjectionPoint> paraInjectionPointArrayList = new ArrayList<>();
-            final List<ParameterProvider<?>> paraProviders = new ArrayList<>();
 
             for (final AnnotatedParameter<?> annotatedParameter : parameters) {
-                Type type = annotatedParameter.getBaseType();
-
-                if (type instanceof ParameterizedType) {
-                    type = ((ParameterizedType) type).getRawType();
-                }
-
-                if (type.equals(Provider.class)) {
-                    final ParameterProvider<T> provider = new ParameterProvider<T>(beanManager, annotatedParameter);
-
-                    paraProviders.add(provider);
-                }
-
                 final ParameterInjectionPoint parameterInjectionPoint = new ParameterInjectionPoint(this, annotatedParameter);
 
                 paraInjectionPointArrayList.add(parameterInjectionPoint);
             }
 
-            methodParameterProviders.put(annotatedMethod, paraProviders);
             methodParameterInjectionPoints.put(annotatedMethod, paraInjectionPointArrayList);
         }
     }
@@ -630,21 +533,9 @@ public class Bean<T> {
         final Set<AnnotatedField<? super T>> annotatedFields = annotatedType.getFields();
 
         for (final AnnotatedField<? super T> annotatedField : annotatedFields) {
-            final Field field = annotatedField.getJavaMember();
+            final FieldInjectionPoint fieldInjectionPoint = new FieldInjectionPoint(this, annotatedField);
 
-            if (field.getType().equals(Provider.class)) { // by provider
-                final FieldProvider<T> provider = new FieldProvider<T>(beanManager, annotatedField);
-
-                fieldProviders.add(provider);
-
-                final FieldInjectionPoint fieldInjectionPoint = new FieldInjectionPoint(this, annotatedField);
-
-                fieldInjectionPoints.add(fieldInjectionPoint);
-            } else { // by qualifier
-                final FieldInjectionPoint fieldInjectionPoint = new FieldInjectionPoint(this, annotatedField);
-
-                fieldInjectionPoints.add(fieldInjectionPoint);
-            }
+            fieldInjectionPoints.add(fieldInjectionPoint);
         }
     }
 
