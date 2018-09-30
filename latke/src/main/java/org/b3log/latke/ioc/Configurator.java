@@ -27,7 +27,7 @@ import java.util.*;
  * Bean configurator.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Sep 29, 2018
+ * @version 1.0.0.6, Sep 30, 2018
  * @since 2.4.18
  */
 public class Configurator {
@@ -74,13 +74,13 @@ public class Configurator {
             LOGGER.log(Level.TRACE, "Not found bean [beanClass={0}], so to create it", beanClass);
         }
 
-        if (!Beans.checkClass(beanClass)) {
+        if (!Reflections.checkClass(beanClass)) {
             throw new IllegalStateException("Can't create bean for class [" + beanClass.getName() + "] caused by it is an interface or an abstract class, or it dose not implement any interface");
         }
 
-        final String name = Beans.getBeanName(beanClass);
-        final Set<Type> beanTypes = Beans.getBeanTypes(beanClass);
-        final Set<Class<? extends Annotation>> stereotypes = Beans.getStereotypes(beanClass);
+        final String name = Reflections.getBeanName(beanClass);
+        final Set<Type> beanTypes = Reflections.getBeanTypes(beanClass);
+        final Set<Class<? extends Annotation>> stereotypes = Reflections.getStereotypes(beanClass);
 
         LOGGER.log(Level.DEBUG, "Adding a bean [name={0}, class={1}] to the bean manager", name, beanClass.getName());
 
