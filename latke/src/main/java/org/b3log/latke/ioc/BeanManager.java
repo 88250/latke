@@ -173,12 +173,6 @@ public class BeanManager {
             }
         }
 
-        for (final Bean<?> bean : beans) {
-            if (bean.getTypes().contains(beanType)) {
-                return (Bean<T>) bean;
-            }
-        }
-
         throw new RuntimeException("Not found bean [beanType=" + beanType + "]");
     }
 
