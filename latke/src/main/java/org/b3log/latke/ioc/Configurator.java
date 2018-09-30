@@ -74,11 +74,12 @@ public class Configurator {
             LOGGER.log(Level.TRACE, "Not found bean [beanClass={0}], so to create it", beanClass);
         }
 
-        if (!Reflections.checkClass(beanClass)) {
+        if (Reflections.isAbstract(beanClass) || Reflections.isInterface(beanClass)) {
             throw new IllegalStateException("Can't create bean for class [" + beanClass.getName() + "] caused by it is an interface or an abstract class, or it dose not implement any interface");
         }
 
-        final String name = Reflections.getBeanName(beanClass);
+        final String className = beanClass.getName();
+        final String name = className.substring(0, 1).toLowerCase() + className.substring(1);
         final Set<Type> beanTypes = Reflections.getBeanTypes(beanClass);
         final Set<Class<? extends Annotation>> stereotypes = Reflections.getStereotypes(beanClass);
 

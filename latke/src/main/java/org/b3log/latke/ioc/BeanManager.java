@@ -22,7 +22,6 @@ import org.b3log.latke.plugin.PluginManager;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
-import org.b3log.latke.util.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -141,15 +140,6 @@ public class BeanManager {
         return ret;
     }
 
-    public <T> Bean<T> getBean(final Class<T> beanClass) {
-        for (final Bean<?> bean : beans) {
-            if (bean.getBeanClass().equals(beanClass)) {
-                return (Bean<T>) bean;
-            }
-        }
-
-        throw new RuntimeException("Can not get bean with class [" + beanClass.getName() + ']');
-    }
 
     public Configurator getConfigurator() {
         return configurator;
@@ -166,17 +156,32 @@ public class BeanManager {
         return getReference(bean);
     }
 
-    private Bean<?> getBean(final Type beanType) {
+    public <T> Bean<T> getBean(final Class<T> beanClass) {
         for (final Bean<?> bean : beans) {
-            if (Reflections.isConcrete(beanType)) {
-                if (bean.getBeanClass().equals(beanType)) {
-                    return bean;
-                }
+            if (bean.getBeanClass().equals(beanClass)) {
+                return (Bean<T>) bean;
+            }
+        }
+
+        throw new RuntimeException("Not found bean [beanClass=" + beanClass.getName() + ']');
+    }
+
+    private <T> Bean<T> getBean(final Type beanType) {
+        for (final Bean<?> bean : beans) {
+            if (bean.getBeanClass().equals(beanType)) {
+                return (Bean<T>) bean;
+            }
+        }
+
+        for (final Bean<?> bean : beans) {
+            if (bean.getTypes().contains(beanType)) {
+                return (Bean<T>) bean;
             }
         }
 
         throw new RuntimeException("Not found bean [beanType=" + beanType + "]");
     }
+
 
     public <T> T getReference(final Class<T> beanClass) {
         final Bean<T> bean = getBean(beanClass);

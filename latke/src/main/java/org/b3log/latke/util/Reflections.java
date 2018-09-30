@@ -45,11 +45,6 @@ final public class Reflections {
     private static final Logger LOGGER = Logger.getLogger(Reflections.class);
 
     /**
-     * the maxFindLength to get the 'this' keyword when resolving the vaibleNames.
-     */
-    private static final Integer MAX_FIND_LENGTH = 99;
-
-    /**
      * Class pool.
      */
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
@@ -83,26 +78,6 @@ final public class Reflections {
         }
 
         return ret;
-    }
-
-    public static String getBeanName(final Class<?> clazz) {
-        final String className = clazz.getName();
-
-        return className.substring(0, 1).toLowerCase() + className.substring(1);
-    }
-
-    /**
-     * Determines whether the specified could create bean.
-     *
-     * @param clazz the specified class
-     * @return {@code true} if it could create bean, returns {@code false} otherwise
-     */
-    public static boolean checkClass(final Class<?> clazz) {
-        if (Reflections.isAbstract(clazz) || Reflections.isInterface(clazz)) {
-            return false;
-        }
-
-        return true;
     }
 
     public static <T> Set<Type> getBeanTypes(final Class<T> beanClass) {
@@ -142,7 +117,6 @@ final public class Reflections {
     private static <T> Set<Type> getInterfaces(final Class<T> interfaceClass) {
         final Set<Type> ret = new HashSet<>();
         final Class<?>[] interfaces = interfaceClass.getInterfaces();
-
         if (0 == interfaces.length) {
             return ret;
         }
@@ -230,7 +204,7 @@ final public class Reflections {
             j++;
             variableName = attr.variableName(j);
             // to prevent heap error when there being some unknown reasons to resolve the VariableNames
-            if (j > MAX_FIND_LENGTH) {
+            if (j > 99) {
                 LOGGER.log(Level.WARN,
                         "Maybe resolve to VariableNames error [class=" + clazz.getName() + ", targetMethodName=" + targetMethodName + ']');
                 ifkill = true;
@@ -296,16 +270,13 @@ final public class Reflections {
     public static Set<Field> getInheritedFields(final Class<?> clazz) {
         final Field[] fields = clazz.getDeclaredFields();
         final Set<Field> declaredFieldSet = CollectionUtils.arrayToSet(fields);
-        final Set<Field> ret = new HashSet<Field>(declaredFieldSet);
+        final Set<Field> ret = new HashSet<>(declaredFieldSet);
 
         Class<?> currentClass = clazz.getSuperclass();
-
         while (currentClass != null) {
             final Field[] superFields = currentClass.getDeclaredFields();
-
             for (Field superField : superFields) {
-                if (!Modifier.isPrivate(superField.getModifiers()) && !Modifier.isStatic(superField.getModifiers())
-                        && !containField(ret, superField)) {
+                if (!Modifier.isPrivate(superField.getModifiers()) && !Modifier.isStatic(superField.getModifiers()) && !containField(ret, superField)) {
                     ret.add(superField);
                 }
             }
@@ -320,13 +291,11 @@ final public class Reflections {
     public static Set<Field> getHiddenFields(final Class<?> clazz) {
         final Field[] fields = clazz.getDeclaredFields();
         final Set<Field> declaredFieldSet = CollectionUtils.arrayToSet(fields);
-        final Set<Field> ret = new HashSet<Field>();
+        final Set<Field> ret = new HashSet<>();
 
         Class<?> currentClass = clazz.getSuperclass();
-
         while (currentClass != null) {
             final Field[] superFields = currentClass.getDeclaredFields();
-
             for (Field superField : superFields) {
                 final Field match = getMatch(declaredFieldSet, superField);
 
@@ -343,10 +312,9 @@ final public class Reflections {
     public static Set<Field> getOwnFields(final Class<?> clazz) {
         final Field[] fields = clazz.getDeclaredFields();
         final Set<Field> declaredFieldSet = CollectionUtils.arrayToSet(fields);
-        final Set<Field> ret = new HashSet<Field>();
+        final Set<Field> ret = new HashSet<>();
         final Set<Field> inheritedFields = getInheritedFields(clazz);
         final Set<Field> overriddenFields = getHiddenFields(clazz);
-
         for (final Field declaredField : declaredFieldSet) {
             if (!containField(inheritedFields, declaredField) && !containField(overriddenFields, declaredField)) {
                 ret.add(declaredField);
@@ -359,10 +327,9 @@ final public class Reflections {
     public static Set<Method> getOwnMethods(final Class<?> clazz) {
         final Method[] methods = clazz.getDeclaredMethods();
         final Set<Method> declaredMethodSet = CollectionUtils.arrayToSet(methods);
-        final Set<Method> ret = new HashSet<Method>();
+        final Set<Method> ret = new HashSet<>();
         final Set<Method> inheritedMethods = getInheritedMethods(clazz);
         final Set<Method> overriddenMethods = getOverriddenMethods(clazz);
-
         for (final Method declaredMethod : declaredMethodSet) {
             if (!containMethod(inheritedMethods, declaredMethod) && !containMethod(overriddenMethods, declaredMethod)) {
                 ret.add(declaredMethod);
@@ -381,7 +348,6 @@ final public class Reflections {
 
         while (currentClass != null) {
             final Method[] superMethods = currentClass.getDeclaredMethods();
-
             for (Method superMethod : superMethods) {
                 if (!Modifier.isPrivate(superMethod.getModifiers()) && !Modifier.isStatic(superMethod.getModifiers())
                         && !containMethod(ret, superMethod)) {
@@ -399,13 +365,11 @@ final public class Reflections {
     public static Set<Method> getOverriddenMethods(final Class<?> clazz) {
         final Method[] methods = clazz.getDeclaredMethods();
         final Set<Method> declaredMethodSet = CollectionUtils.arrayToSet(methods);
-        final Set<Method> ret = new HashSet<Method>();
+        final Set<Method> ret = new HashSet<>();
 
         Class<?> currentClass = clazz.getSuperclass();
-
         while (currentClass != null) {
             final Method[] superclassMethods = currentClass.getDeclaredMethods();
-
             for (Method superclassMethod : superclassMethods) {
                 final Method match = getMatch(declaredMethodSet, superclassMethod, true);
 
@@ -419,8 +383,7 @@ final public class Reflections {
         return ret;
     }
 
-    public static boolean containField(final Set<Field> fields,
-                                       final Field field) {
+    public static boolean containField(final Set<Field> fields, final Field field) {
         for (final Field f : fields) {
             if (f.getName().equals(field.getName()) && f.getType().equals(field.getType())) {
                 return true;
@@ -430,8 +393,7 @@ final public class Reflections {
         return false;
     }
 
-    public static boolean containMethod(final Set<Method> methods,
-                                        final Method method) {
+    public static boolean containMethod(final Set<Method> methods, final Method method) {
         for (final Method m : methods) {
             if (matchSignature(m, method) && matchModifier(m, method)) {
                 return true;
@@ -451,9 +413,7 @@ final public class Reflections {
         return null;
     }
 
-    public static Method getMatch(final Set<Method> methods,
-                                  final Method maybeSuperclassMethod,
-                                  final boolean matchInheritance) {
+    public static Method getMatch(final Set<Method> methods, final Method maybeSuperclassMethod, final boolean matchInheritance) {
         for (final Method m : methods) {
             if (!matchInheritance) {
                 if (matchModifier(m, maybeSuperclassMethod) && matchSignature(m, maybeSuperclassMethod)) {
@@ -505,30 +465,19 @@ final public class Reflections {
         }
     }
 
-    public static boolean matchModifier(final Method method1,
-                                        final Method method2) {
-        if (method1.getModifiers() == method2.getModifiers()) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean matchModifier(final Method method1, final Method method2) {
+        return method1.getModifiers() == method2.getModifiers();
     }
 
-    public static boolean matchSignature(final Method method1,
-                                         final Method method2) {
-        if (method1.getName().equals(method2.getName()) && method1.getReturnType().equals(method2.getReturnType())
-                && hasSameParameterTypes(method1, method2)) {
-            return true;
-        } else {
-            return false;
-        }
+    public static boolean matchSignature(final Method method1, final Method method2) {
+        return method1.getName().equals(method2.getName())
+                && method1.getReturnType().equals(method2.getReturnType())
+                && hasSameParameterTypes(method1, method2);
     }
 
-    public static boolean hasSameParameterTypes(final Method method1,
-                                                final Method method2) {
+    public static boolean hasSameParameterTypes(final Method method1, final Method method2) {
         final Class<?>[] parameterTypes1 = method1.getParameterTypes();
         final Class<?>[] parameterTypes2 = method2.getParameterTypes();
-
         if (parameterTypes1.length == parameterTypes2.length) {
             for (int i = 0; i < parameterTypes1.length; i++) {
                 if (!parameterTypes1[i].equals(parameterTypes2[i])) {
@@ -537,13 +486,12 @@ final public class Reflections {
             }
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-    public static Field getHideField(final Field superclassField,
-                                     final Class<?> subclass) {
+    public static Field getHideField(final Field superclassField, final Class<?> subclass) {
         final Class<?> superclass = superclassField.getDeclaringClass();
         Class<?> currentClass = subclass;
 
