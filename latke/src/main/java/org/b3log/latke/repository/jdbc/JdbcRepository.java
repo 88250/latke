@@ -40,7 +40,7 @@ import java.util.*;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.1, Jun 5, 2018
+ * @version 1.3.0.2, Oct 3, 2018
  */
 public final class JdbcRepository implements Repository {
 
@@ -257,11 +257,11 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * update.
+     * Compares the specified old json object and new json object, updates it if need.
      *
      * @param id            id
-     * @param oldJsonObject oldJsonObject
-     * @param jsonObject    newJsonObject
+     * @param oldJsonObject the specified old json object
+     * @param jsonObject    the specified new json object
      * @param paramList     paramList
      * @param sql           sql
      * @throws JSONException JSONException
@@ -269,9 +269,8 @@ public final class JdbcRepository implements Repository {
     private void update(final String id, final JSONObject oldJsonObject, final JSONObject jsonObject,
                         final List<Object> paramList, final StringBuilder sql) throws JSONException {
         final JSONObject needUpdateJsonObject = getNeedUpdateJsonObject(oldJsonObject, jsonObject);
-
-        if (needUpdateJsonObject.length() == 0) {
-            LOGGER.log(Level.INFO, "nothing to update [{0}] for repository [{1}]", id, getName());
+        if (0 == needUpdateJsonObject.length()) {
+            LOGGER.log(Level.TRACE, "Nothing to update [{0}] for repository [{1}]", id, getName());
 
             return;
         }
@@ -315,11 +314,11 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * getNeedUpdateJsonObject.
+     * Compares the specified old json object and the new json object, returns diff object for updating.
      *
-     * @param oldJsonObject oldJsonObject
-     * @param jsonObject    newJsonObject
-     * @return JSONObject
+     * @param oldJsonObject the specified old json object
+     * @param jsonObject    the specified new json object
+     * @return diff object for updating
      * @throws JSONException jsonObject
      */
     private JSONObject getNeedUpdateJsonObject(final JSONObject oldJsonObject, final JSONObject jsonObject) throws JSONException {
@@ -327,19 +326,19 @@ public final class JdbcRepository implements Repository {
             return jsonObject;
         }
 
-        final JSONObject needUpdateJsonObject = new JSONObject();
+        final JSONObject ret = new JSONObject();
         final Iterator<String> keys = jsonObject.keys();
         String key;
         while (keys.hasNext()) {
             key = keys.next();
             if (null == jsonObject.get(key) && null == oldJsonObject.get(key)) {
-                needUpdateJsonObject.put(key, jsonObject.get(key));
+                ret.put(key, jsonObject.get(key));
             } else if (!jsonObject.optString(key).equals(oldJsonObject.optString(key))) {
-                needUpdateJsonObject.put(key, jsonObject.get(key));
+                ret.put(key, jsonObject.get(key));
             }
         }
 
-        return needUpdateJsonObject;
+        return ret;
     }
 
     @Override
