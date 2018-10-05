@@ -34,7 +34,7 @@ import java.io.StringWriter;
  * XML utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 5, 2018
+ * @version 1.0.0.1, Oct 5, 2018
  * @since 2.4.4
  */
 public final class XMLs {
@@ -63,7 +63,7 @@ public final class XMLs {
 
             return result.getWriter().toString();
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "format pretty XML failed", e);
+            LOGGER.log(Level.ERROR, "Formats pretty XML failed: " + e.getMessage());
 
             return xml;
         }
