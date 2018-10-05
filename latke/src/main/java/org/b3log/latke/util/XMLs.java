@@ -63,7 +63,7 @@ public final class XMLs {
 
             return result.getWriter().toString();
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Formats pretty XML failed: " + e.getMessage());
+            LOGGER.log(Level.WARN, "Formats pretty XML failed: " + e.getMessage());
 
             return xml;
         }
