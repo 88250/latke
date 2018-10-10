@@ -15,18 +15,16 @@
  */
 package org.b3log.latke.servlet.filter;
 
-
 import javax.servlet.*;
 import java.io.IOException;
 
-
 /**
  * General encoding filter.
- * 
+ *
  * <p>
  * Configured in web.xml filter. Init param requestEncoding & responseEncoding.
  * </p>
- * 
+ *
  * @author ArmstrongCN
  * @version 1.0.0.0, Aug 10, 2012
  */
@@ -49,23 +47,24 @@ public final class EncodingFilter implements Filter {
     }
 
     /**
-     * Sets the request and response encoding to a given charset. 
+     * Sets the request and response encoding to a given charset.
      *
-     * @param request the specified request
+     * @param request  the specified request
      * @param response the specified response
-     * @param chain filter chain
-     * @throws IOException io exception
+     * @param chain    filter chain
+     * @throws IOException      io exception
      * @throws ServletException servlet exception
      */
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         request.setCharacterEncoding(requestEncoding);
         response.setCharacterEncoding(responseEncoding);
-        
+
         chain.doFilter(request, response);
     }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 }

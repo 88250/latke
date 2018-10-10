@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.filter;
 
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.zip.GZIPOutputStream;
-
 
 /**
  * Abstract HTTP response GZIP filter.
@@ -43,20 +41,21 @@ public abstract class AbstractGZIPFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(AbstractGZIPFilter.class);
 
     @Override
-    public void init(final FilterConfig cfg) throws ServletException {}
+    public void init(final FilterConfig cfg) throws ServletException {
+    }
 
     /**
      * Wraps the http servlet response with GZIP if could.
      *
-     * @param request the specified request
+     * @param request  the specified request
      * @param response the specified response
-     * @param chain filter chain
-     * @throws IOException io exception
+     * @param chain    filter chain
+     * @throws IOException      io exception
      * @throws ServletException servlet exception
      */
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final String requestURI = httpServletRequest.getRequestURI();
 
@@ -92,8 +91,8 @@ public abstract class AbstractGZIPFilter implements Filter {
      * Determines whether the specified request URI should be skipped filter.
      *
      * <p>
-     *   <b>Note</b>: This method SHOULD be invoked for all filters with pattern
-     *   "/*".
+     * <b>Note</b>: This method SHOULD be invoked for all filters with pattern
+     * "/*".
      * </p>
      *
      * @param requestURI the specified request URI
@@ -102,7 +101,8 @@ public abstract class AbstractGZIPFilter implements Filter {
     public abstract boolean shouldSkip(final String requestURI);
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 
     /**
      * HTTP response wrapper for GZIP.
@@ -135,7 +135,7 @@ public abstract class AbstractGZIPFilter implements Filter {
          * @throws IOException io exception
          */
         GZIPServletResponseWrapper(final HttpServletResponse httpServletResponse)
-            throws IOException {
+                throws IOException {
             super(httpServletResponse);
         }
 
