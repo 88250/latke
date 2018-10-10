@@ -33,7 +33,7 @@ import javax.servlet.http.HttpSession;
  * Session utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.2, Aug 13, 2017
+ * @version 2.0.2.3, Oct 10, 2018
  */
 public final class Sessions {
 
@@ -112,7 +112,7 @@ public final class Sessions {
             cookieJSONObject.put(Keys.OBJECT_ID, user.optString(Keys.OBJECT_ID));
             cookieJSONObject.put(User.USER_PASSWORD, user.optString(User.USER_PASSWORD));
 
-            final String random = RandomStringUtils.random(16);
+            final String random = RandomStringUtils.randomAlphanumeric(16);
             cookieJSONObject.put(Keys.TOKEN, user.optString(User.USER_PASSWORD) + ":" + random);
 
             final String cookieValue = Crypts.encryptByAES(cookieJSONObject.toString(), COOKIE_SECRET);
@@ -149,71 +149,5 @@ public final class Sessions {
         }
 
         return false;
-    }
-
-    /**
-     * Gets the current user with the specified request.
-     *
-     * @param request the specified request
-     * @return the current user, returns {@code null} if not logged in
-     */
-    public static JSONObject currentUser(final HttpServletRequest request) {
-        final HttpSession session = request.getSession(false);
-        if (null != session) {
-            return (JSONObject) session.getAttribute(User.USER);
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets the current logged in user password with the specified request.
-     *
-     * @param request the specified request
-     * @return the current user password or {@code null}
-     */
-    public static String currentUserPwd(final HttpServletRequest request) {
-        final HttpSession session = request.getSession(false);
-        if (null != session) {
-            final JSONObject user = (JSONObject) session.getAttribute(User.USER);
-
-            return user.optString(User.USER_PASSWORD);
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets the current logged in user name with the specified request.
-     *
-     * @param request the specified request
-     * @return the current user name or {@code null}
-     */
-    public static String currentUserName(final HttpServletRequest request) {
-        final HttpSession session = request.getSession(false);
-        if (null != session) {
-            final JSONObject user = (JSONObject) session.getAttribute(User.USER);
-
-            return user.optString(User.USER_NAME);
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets the current logged in user email with the specified request.
-     *
-     * @param request the specified request
-     * @return the current user name or {@code null}
-     */
-    public static String currentUserEmail(final HttpServletRequest request) {
-        final HttpSession session = request.getSession(false);
-        if (null != session) {
-            final JSONObject user = (JSONObject) session.getAttribute(User.USER);
-
-            return user.optString(User.USER_EMAIL);
-        }
-
-        return null;
     }
 }
