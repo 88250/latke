@@ -22,10 +22,10 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 
 /**
- * This class defines framework (non-functional) keys.
+ * This class define framework keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.8, Aug 11, 2017
+ * @version 1.2.2.9, Oct 15, 2018
  */
 public final class Keys {
 
@@ -167,12 +167,17 @@ public final class Keys {
     }
 
     /**
-     * This class defines HTTP request keys.
+     * This class define HTTP request keys.
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.1, May 17, 2012
+     * @version 1.1.0.0, Oct 15, 2018
      */
     public static final class HttpRequest {
+
+        /**
+         * Key of is mobile device.
+         */
+        public static final String IS_MOBILE_BOT = "isMobileBot";
 
         /**
          * Key of is search engine bot.
@@ -212,7 +217,7 @@ public final class Keys {
     }
 
     /**
-     * This class defines server keys.
+     * This class define server keys.
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.0, May 4, 2012
@@ -287,7 +292,7 @@ public final class Keys {
     }
 
     /**
-     * This class defines runtime keys.
+     * This class define runtime keys.
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.1.0.0, Jul 5, 2015
