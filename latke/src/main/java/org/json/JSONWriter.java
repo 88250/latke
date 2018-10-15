@@ -1,33 +1,32 @@
 package org.json;
 
-
 import java.io.IOException;
-import java.io.Writer;
-
+import java.util.Collection;
+import java.util.Map;
 
 /*
- Copyright (c) 2006 JSON.org
+Copyright (c) 2006 JSON.org
 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
- The Software shall be used for Good, not Evil.
+The Software shall be used for Good, not Evil.
 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
- */
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 /**
  * JSONWriter provides a quick and convenient way of producing JSON text.
@@ -52,14 +51,14 @@ import java.io.Writer;
  * <p>
  * The first method called must be <code>array</code> or <code>object</code>.
  * There are no methods for adding commas or colons. JSONWriter adds them for
- * you. Objects and arrays can be nested up to 20 levels deep.
+ * you. Objects and arrays can be nested up to 200 levels deep.
  * <p>
  * This can sometimes be easier than using a JSONObject to build a string.
  * @author JSON.org
- * @version 2008-09-22
+ * @version 2016-08-08
  */
 public class JSONWriter {
-    private static final int maxdepth = 20;
+    private static final int maxdepth = 200;
 
     /**
      * The comma flag determines if a comma should be output before the next
@@ -80,7 +79,7 @@ public class JSONWriter {
     /**
      * The object/array stack.
      */
-    private JSONObject stack[];
+    private final JSONObject stack[];
 
     /**
      * The stack top index. A value of 0 indicates that the stack is empty.
@@ -90,12 +89,12 @@ public class JSONWriter {
     /**
      * The writer that will receive the output.
      */
-    protected Writer writer;
+    protected Appendable writer;
 
     /**
      * Make a fresh JSONWriter. It can be used to build one JSON text.
      */
-    public JSONWriter(Writer w) {
+    public JSONWriter(Appendable w) {
         this.comma = false;
         this.mode = 'i';
         this.stack = new JSONObject[maxdepth];
@@ -105,21 +104,24 @@ public class JSONWriter {
 
     /**
      * Append a value.
-     * @param s A string value.
+     * @param string A string value.
      * @return this
      * @throws JSONException If the value is out of sequence.
      */
-    private JSONWriter append(String s) throws JSONException {
-        if (s == null) {
+    private JSONWriter append(String string) throws JSONException {
+        if (string == null) {
             throw new JSONException("Null pointer");
         }
         if (this.mode == 'o' || this.mode == 'a') {
             try {
                 if (this.comma && this.mode == 'a') {
-                    this.writer.write(',');
+                    this.writer.append(',');
                 }
-                this.writer.write(s);
+                this.writer.append(string);
             } catch (IOException e) {
+            	// Android as of API 25 does not support this exception constructor
+            	// however we won't worry about it. If an exception is happening here
+            	// it will just throw a "Method not found" exception instead.
                 throw new JSONException(e);
             }
             if (this.mode == 'o') {
@@ -159,12 +161,17 @@ public class JSONWriter {
      */
     private JSONWriter end(char m, char c) throws JSONException {
         if (this.mode != m) {
-            throw new JSONException(m == 'o' ? "Misplaced endObject." : "Misplaced endArray.");
+            throw new JSONException(m == 'a'
+                ? "Misplaced endArray."
+                : "Misplaced endObject.");
         }
         this.pop(m);
         try {
-            this.writer.write(c);
+            this.writer.append(c);
         } catch (IOException e) {
+        	// Android as of API 25 does not support this exception constructor
+        	// however we won't worry about it. If an exception is happening here
+        	// it will just throw a "Method not found" exception instead.
             throw new JSONException(e);
         }
         this.comma = true;
@@ -194,32 +201,41 @@ public class JSONWriter {
     /**
      * Append a key. The key will be associated with the next value. In an
      * object, every value must be preceded by a key.
-     * @param s A key string.
+     * @param string A key string.
      * @return this
      * @throws JSONException If the key is out of place. For example, keys
      *  do not belong in arrays or if the key is null.
      */
-    public JSONWriter key(String s) throws JSONException {
-        if (s == null) {
+    public JSONWriter key(String string) throws JSONException {
+        if (string == null) {
             throw new JSONException("Null key.");
         }
         if (this.mode == 'k') {
             try {
-                stack[top - 1].putOnce(s, Boolean.TRUE);
+                JSONObject topObject = this.stack[this.top - 1];
+                // don't use the built in putOnce method to maintain Android support
+				if(topObject.has(string)) {
+					throw new JSONException("Duplicate key \"" + string + "\"");
+				}
+                topObject.put(string, true);
                 if (this.comma) {
-                    this.writer.write(',');
+                    this.writer.append(',');
                 }
-                this.writer.write(JSONObject.quote(s));
-                this.writer.write(':');
+                this.writer.append(JSONObject.quote(string));
+                this.writer.append(':');
                 this.comma = false;
                 this.mode = 'o';
                 return this;
             } catch (IOException e) {
+            	// Android as of API 25 does not support this exception constructor
+            	// however we won't worry about it. If an exception is happening here
+            	// it will just throw a "Method not found" exception instead.
                 throw new JSONException(e);
             }
         }
         throw new JSONException("Misplaced key.");
     }
+
 
     /**
      * Begin appending a new object. All keys and values until the balancing
@@ -244,6 +260,7 @@ public class JSONWriter {
 
     }
 
+
     /**
      * Pop an array or object scope.
      * @param c The scope to close.
@@ -254,12 +271,15 @@ public class JSONWriter {
             throw new JSONException("Nesting error.");
         }
         char m = this.stack[this.top - 1] == null ? 'a' : 'k';
-
         if (m != c) {
             throw new JSONException("Nesting error.");
         }
         this.top -= 1;
-        this.mode = this.top == 0 ? 'd' : this.stack[this.top - 1] == null ? 'a' : 'k';
+        this.mode = this.top == 0
+            ? 'd'
+            : this.stack[this.top - 1] == null
+            ? 'a'
+            : 'k';
     }
 
     /**
@@ -274,6 +294,78 @@ public class JSONWriter {
         this.stack[this.top] = jo;
         this.mode = jo == null ? 'a' : 'k';
         this.top += 1;
+    }
+
+    /**
+     * Make a JSON text of an Object value. If the object has an
+     * value.toJSONString() method, then that method will be used to produce the
+     * JSON text. The method is required to produce a strictly conforming text.
+     * If the object does not contain a toJSONString method (which is the most
+     * common case), then a text will be produced by other means. If the value
+     * is an array or Collection, then a JSONArray will be made from it and its
+     * toJSONString method will be called. If the value is a MAP, then a
+     * JSONObject will be made from it and its toJSONString method will be
+     * called. Otherwise, the value's toString method will be called, and the
+     * result will be quoted.
+     *
+     * <p>
+     * Warning: This method assumes that the data structure is acyclical.
+     *
+     * @param value
+     *            The value to be serialized.
+     * @return a printable, displayable, transmittable representation of the
+     *         object, beginning with <code>{</code>&nbsp;<small>(left
+     *         brace)</small> and ending with <code>}</code>&nbsp;<small>(right
+     *         brace)</small>.
+     * @throws JSONException
+     *             If the value is or contains an invalid number.
+     */
+    public static String valueToString(Object value) throws JSONException {
+        if (value == null || value.equals(null)) {
+            return "null";
+        }
+        if (value instanceof JSONString) {
+            String object;
+            try {
+                object = ((JSONString) value).toJSONString();
+            } catch (Exception e) {
+                throw new JSONException(e);
+            }
+            if (object != null) {
+                return object;
+            }
+            throw new JSONException("Bad value from toJSONString: " + object);
+        }
+        if (value instanceof Number) {
+            // not all Numbers may match actual JSON Numbers. i.e. Fractions or Complex
+            final String numberAsString = JSONObject.numberToString((Number) value);
+            if(JSONObject.NUMBER_PATTERN.matcher(numberAsString).matches()) {
+                // Close enough to a JSON number that we will return it unquoted
+                return numberAsString;
+            }
+            // The Number value is not a valid JSON number.
+            // Instead we will quote it as a string
+            return JSONObject.quote(numberAsString);
+        }
+        if (value instanceof Boolean || value instanceof JSONObject
+                || value instanceof JSONArray) {
+            return value.toString();
+        }
+        if (value instanceof Map) {
+            Map<?, ?> map = (Map<?, ?>) value;
+            return new JSONObject(map).toString();
+        }
+        if (value instanceof Collection) {
+            Collection<?> coll = (Collection<?>) value;
+            return new JSONArray(coll).toString();
+        }
+        if (value.getClass().isArray()) {
+            return new JSONArray(value).toString();
+        }
+        if(value instanceof Enum<?>){
+            return JSONObject.quote(((Enum<?>)value).name());
+        }
+        return JSONObject.quote(value.toString());
     }
 
     /**
@@ -294,7 +386,7 @@ public class JSONWriter {
      * @throws JSONException If the number is not finite.
      */
     public JSONWriter value(double d) throws JSONException {
-        return this.value(new Double(d));
+        return this.value(Double.valueOf(d));
     }
 
     /**
@@ -307,15 +399,15 @@ public class JSONWriter {
         return this.append(Long.toString(l));
     }
 
+
     /**
      * Append an object value.
-     * @param o The object to append. It can be null, or a Boolean, Number,
-     *   String, JSONObject, or JSONArray, or an object with a toJSONString()
-     *   method.
+     * @param object The object to append. It can be null, or a Boolean, Number,
+     *   String, JSONObject, or JSONArray, or an object that implements JSONString.
      * @return this
      * @throws JSONException If the value is out of sequence.
      */
-    public JSONWriter value(Object o) throws JSONException {
-        return this.append(JSONObject.valueToString(o));
+    public JSONWriter value(Object object) throws JSONException {
+        return this.append(valueToString(object));
     }
 }
