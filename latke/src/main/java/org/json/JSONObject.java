@@ -565,14 +565,7 @@ public class JSONObject {
      *             if the key is not found.
      */
     public Object get(String key) throws JSONException {
-        if (key == null) {
-            throw new JSONException("Null key.");
-        }
-        Object object = this.opt(key);
-        if (object == null) {
-            throw new JSONException("JSONObject[" + quote(key) + "] not found.");
-        }
-        return object;
+        return opt(key); // 支持 FM 的 ?? 语法 https://github.com/b3log/latke/issues/114
     }
 
     /**
