@@ -31,14 +31,13 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Enumeration;
-import java.util.regex.Pattern;
 
 /**
  * Request utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 1.1.4.3, Sep 1, 2018
+ * @version 2.0.0.0, Oct 15, 2018
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -71,23 +70,6 @@ public final class Requests {
      * Default window size.
      */
     private static final int DEFAULT_WINDOW_SIZE = 20;
-
-    /**
-     * HTTP header "User-Agent" pattern for mobile device requests.
-     */
-    private static final Pattern MOBILE_USER_AGENT_PATTERN = Pattern.compile(
-            "android.+mobile|avantgo|bada|blackberry|blazer|compal|elaine|fennec"
-                    + "|hiptop|iemobile|ip(hone|od)|iris|kindle|lge|maemo|midp|mmp|opera m(ob|in)i"
-                    + "|palm( os)?|phone|p(ixi|re)|plucker|pocket|psp|symbian|treo|up.(browser"
-                    + "|link)|ucweb|vodafone|wap|webos|windows (ce|phone)|xda|xiino|htc|MQQBrowser",
-            Pattern.CASE_INSENSITIVE);
-
-    /**
-     * HTTP header "User-Agent" pattern for search engine bot requests.
-     */
-    private static final Pattern SEARCH_ENGINE_BOT_USER_AGENT_PATTERN = Pattern.compile(
-            "spider|bot|fetcher|crawler|google|yahoo|sogou|youdao|xianguo|rss|monitor|bae|b3log|symphony|solo|rhythm|pipe",
-            Pattern.CASE_INSENSITIVE);
 
     /**
      * Cookie expiry of "visited".
@@ -230,23 +212,6 @@ public final class Requests {
     }
 
     /**
-     * Determines whether the specified request dose come from a search engine bot or not with its header "User-Agent".
-     *
-     * @param request the specified request
-     * @return {@code true} if the specified request comes from a search
-     * engine bot, returns {@code false} otherwise
-     */
-    public static boolean searchEngineBotRequest(final HttpServletRequest request) {
-        final String userAgent = request.getHeader("User-Agent");
-
-        if (StringUtils.isBlank(userAgent)) {
-            return false;
-        }
-
-        return SEARCH_ENGINE_BOT_USER_AGENT_PATTERN.matcher(userAgent).find();
-    }
-
-    /**
      * Determines whether the specified request has been served.
      * <p>
      * A "served request" is a request a URI as former one. For example, if a client is request "/test", all requests from the client
@@ -325,23 +290,6 @@ public final class Requests {
         }
 
         return false;
-    }
-
-    /**
-     * Determines whether the specified request dose come from mobile device or not with its header "User-Agent".
-     *
-     * @param request the specified request
-     * @return {@code true} if the specified request comes from mobile device,
-     * returns {@code false} otherwise
-     */
-    public static boolean mobileRequest(final HttpServletRequest request) {
-        final String userAgent = request.getHeader("User-Agent");
-
-        if (StringUtils.isBlank(userAgent)) {
-            return false;
-        }
-
-        return MOBILE_USER_AGENT_PATTERN.matcher(userAgent).find();
     }
 
     /**
