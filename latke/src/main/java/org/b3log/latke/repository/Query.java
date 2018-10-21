@@ -70,16 +70,6 @@ public final class Query {
     private boolean debug;
 
     /**
-     * Initialization value for hashing.
-     */
-    private static final int INIT_HASH = 5;
-
-    /**
-     * Base for hashing.
-     */
-    private static final int BASE = 83;
-
-    /**
      * Checks whether is debug.
      *
      * @return {@code true} if it is, returns {@code false} otherwise
@@ -262,51 +252,24 @@ public final class Query {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (null == obj) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Query query = (Query) o;
 
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final Query other = (Query) obj;
-
-        if (this.currentPageNum != other.currentPageNum) {
-            return false;
-        }
-
-        if (this.pageSize != other.pageSize) {
-            return false;
-        }
-
-        if (this.sorts != other.sorts && (null == this.sorts || !this.sorts.equals(other.sorts))) {
-            return false;
-        }
-
-        if (this.filter != other.filter && (null == this.filter || !this.filter.equals(other.filter))) {
-            return false;
-        }
-
-        if (this.projections != other.projections && (null == this.projections || !this.projections.equals(other.projections))) {
-            return false;
-        }
-
-        return true;
+        return currentPageNum == query.currentPageNum &&
+                pageSize == query.pageSize &&
+                debug == query.debug &&
+                Objects.equals(pageCount, query.pageCount) &&
+                Objects.equals(sorts, query.sorts) &&
+                Objects.equals(filter, query.filter) &&
+                Objects.equals(projections, query.projections) &&
+                Objects.equals(indexes, query.indexes);
     }
 
     @Override
     public int hashCode() {
-        int hash = INIT_HASH;
-
-        hash = BASE * hash + this.currentPageNum;
-        hash = BASE * hash + this.pageSize;
-        hash = BASE * hash + (this.sorts != null ? this.sorts.hashCode() : 0);
-        hash = BASE * hash + (this.filter != null ? this.filter.hashCode() : 0);
-        hash = BASE * hash + (this.projections != null ? this.projections.hashCode() : 0);
-
-        return hash;
+        return Objects.hash(currentPageNum, pageCount, pageSize, sorts, filter, projections, indexes, debug);
     }
 
     @Override

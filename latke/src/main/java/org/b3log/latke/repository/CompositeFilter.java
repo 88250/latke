@@ -16,12 +16,13 @@
 package org.b3log.latke.repository;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Composite filter that combines serval sub filters using a {@link CompositeFilterOperator}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Jul 31, 2018
+ * @version 1.0.0.3, Oct 21, 2018
  * @see CompositeFilterOperator
  */
 public final class CompositeFilter implements Filter {
@@ -35,16 +36,6 @@ public final class CompositeFilter implements Filter {
      * Sub filters.
      */
     private List<Filter> subFilters;
-
-    /**
-     * Initialization value for hashing.
-     */
-    private static final int INIT_HASH = 3;
-
-    /**
-     * Base for hashing.
-     */
-    private static final int BASE = 97;
 
     /**
      * Constructor with the specified parameters.
@@ -76,32 +67,17 @@ public final class CompositeFilter implements Filter {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (null == obj) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final CompositeFilter other = (CompositeFilter) obj;
-
-        if (this.operator != other.operator) {
-            return false;
-        }
-        if (this.subFilters != other.subFilters && (null == this.subFilters || !this.subFilters.equals(other.subFilters))) {
-            return false;
-        }
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompositeFilter that = (CompositeFilter) o;
+        return operator == that.operator &&
+                Objects.equals(subFilters, that.subFilters);
     }
 
     @Override
     public int hashCode() {
-        int ret = INIT_HASH;
-
-        ret = BASE * ret + (this.operator != null ? this.operator.hashCode() : 0);
-        ret = BASE * ret + (this.subFilters != null ? this.subFilters.hashCode() : 0);
-
-        return ret;
+        return Objects.hash(operator, subFilters);
     }
 
     @Override

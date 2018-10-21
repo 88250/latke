@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.repository;
 
+import java.util.Objects;
+
 /**
  * Projection.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, May 8, 2012
+ * @version 1.0.0.1, Oct 21, 2018
  */
 public class Projection {
 
@@ -32,16 +34,6 @@ public class Projection {
      * Value type.
      */
     private Class<?> type;
-
-    /**
-     * Initialization value for hashing.
-     */
-    private static final int INIT_HASH = 3;
-
-    /**
-     * Base for hashing.
-     */
-    private static final int BASE = 29;
 
     /**
      * Gets the key.
@@ -73,36 +65,17 @@ public class Projection {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (null == obj) {
-            return false;
-        }
-
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final Projection other = (Projection) obj;
-
-        if ((null == this.key) ? (other.key != null) : !this.key.equals(other.key)) {
-            return false;
-        }
-
-        if (this.type != other.type && (null == this.type || !this.type.equals(other.type))) {
-            return false;
-        }
-
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Projection that = (Projection) o;
+        return Objects.equals(key, that.key) &&
+                Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        int ret = INIT_HASH;
-
-        ret = BASE * ret + (this.key != null ? this.key.hashCode() : 0);
-        ret = BASE * ret + (this.type != null ? this.type.hashCode() : 0);
-
-        return ret;
+        return Objects.hash(key, type);
     }
 
     @Override

@@ -15,11 +15,13 @@
  */
 package org.b3log.latke.repository;
 
+import java.util.Objects;
+
 /**
  * A {@link Filter filter } on a single property.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Jun 27, 2012
+ * @version 2.0.0.1, Oct 21, 2018
  */
 public final class PropertyFilter implements Filter {
 
@@ -37,16 +39,6 @@ public final class PropertyFilter implements Filter {
      * Value.
      */
     private Object value;
-
-    /**
-     * Initialization value for hashing.
-     */
-    private static final int INIT_HASH = 7;
-
-    /**
-     * Base for hashing.
-     */
-    private static final int BASE = 97;
 
     /**
      * Constructor with the specified parameters.
@@ -89,41 +81,18 @@ public final class PropertyFilter implements Filter {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (null == obj) {
-            return false;
-        }
-
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final PropertyFilter other = (PropertyFilter) obj;
-
-        if ((null == this.key) ? (other.key != null) : !this.key.equals(other.key)) {
-            return false;
-        }
-
-        if (this.operator != other.operator) {
-            return false;
-        }
-
-        if (this.value != other.value && (null == this.value || !this.value.equals(other.value))) {
-            return false;
-        }
-
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PropertyFilter that = (PropertyFilter) o;
+        return Objects.equals(key, that.key) &&
+                operator == that.operator &&
+                Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        int ret = INIT_HASH;
-
-        ret = BASE * ret + (this.key != null ? this.key.hashCode() : 0);
-        ret = BASE * ret + (this.operator != null ? this.operator.hashCode() : 0);
-        ret = BASE * ret + (this.value != null ? this.value.hashCode() : 0);
-
-        return ret;
+        return Objects.hash(key, operator, value);
     }
 
     @Override
