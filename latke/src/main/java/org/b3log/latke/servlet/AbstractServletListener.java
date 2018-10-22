@@ -74,7 +74,7 @@ public abstract class AbstractServletListener implements ServletContextListener,
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
         servletContext = servletContextEvent.getServletContext();
 
-        Latkes.initRuntimeEnv();
+        Latkes.init();
         LOGGER.info("Initializing the context....");
 
         Latkes.setLocale(Locale.SIMPLIFIED_CHINESE);

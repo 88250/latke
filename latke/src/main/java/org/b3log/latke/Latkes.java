@@ -43,8 +43,8 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.8.0.5, Oct 15, 2018
- * @see #initRuntimeEnv()
+ * @version 2.8.0.6, Oct 22, 2018
+ * @see #init()
  * @see #shutdown()
  * @see #getServePath()
  * @see #getStaticServePath()
@@ -74,12 +74,12 @@ public final class Latkes {
     /**
      * Local properties (local.properties).
      */
-    private static final Properties LOCAL_PROPS = new Properties();
+    private static Properties localProps;
 
     /**
      * Latke configurations (latke.properties).
      */
-    private static final Properties LATKE_PROPS = new Properties();
+    private static Properties latkeProps;
 
     /**
      * Latke remote interfaces configurations (remote.properties).
@@ -181,25 +181,42 @@ public final class Latkes {
     private static org.h2.tools.Server h2;
 
     static {
+        LOGGER.debug("Loading remote.properties");
         try {
-            InputStream resourceAsStream;
-            final String latkePropsEnv = System.getenv("LATKE_PROPS");
-            if (StringUtils.isNotBlank(latkePropsEnv)) {
-                LOGGER.debug("Loading latke.properties from env var [$LATKE_PROPS=" + latkePropsEnv + "]");
-                resourceAsStream = new FileInputStream(latkePropsEnv);
-            } else {
-                LOGGER.debug("Loading latke.properties from classpath [/latke.properties]");
-                resourceAsStream = Latkes.class.getResourceAsStream("/latke.properties");
-            }
-
+            final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/remote.properties");
             if (null != resourceAsStream) {
-                LATKE_PROPS.load(resourceAsStream);
-                LOGGER.debug("Loaded latke.properties");
+                REMOTE_PROPS.load(resourceAsStream);
+                LOGGER.debug("Loaded remote.properties");
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Loads latke.properties failed", e);
+            LOGGER.log(Level.DEBUG, "Not found Latke remote.properties, ignored");
+        }
+    }
 
-            throw new RuntimeException("Loads latke.properties failed");
+    /**
+     * Sets local.props with the specified props. This method is useful when you want to override behaviours of the default properties.
+     *
+     * @param props the specified props
+     */
+    public static void setLocalProps(final Properties props) {
+        Latkes.localProps = props;
+    }
+
+    /**
+     * Sets latke.props with the specified props. This method is useful when you want to override behaviours of the default properties.
+     *
+     * @param props the specified props
+     */
+    public static void setLakteProps(final Properties props) {
+        Latkes.latkeProps = props;
+    }
+
+    /**
+     * Loads the local.props.
+     */
+    public static void loadLocalProps() {
+        if (null == localProps) {
+            localProps = new Properties();
         }
 
         try {
@@ -214,29 +231,42 @@ public final class Latkes {
             }
 
             if (null != resourceAsStream) {
-                LOCAL_PROPS.load(resourceAsStream);
+                localProps.load(resourceAsStream);
                 LOGGER.debug("Loaded local.properties");
             }
         } catch (final Exception e) {
             LOGGER.log(Level.DEBUG, "Loads local.properties failed, ignored");
         }
-
-        LOGGER.debug("Loading remote.properties");
-        try {
-            final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/remote.properties");
-            if (null != resourceAsStream) {
-                REMOTE_PROPS.load(resourceAsStream);
-                LOGGER.debug("Loaded remote.properties");
-            }
-        } catch (final Exception e) {
-            LOGGER.log(Level.DEBUG, "Not found Latke remote.properties, ignored");
-        }
     }
 
     /**
-     * Private constructor.
+     * Loads the latke.props.
      */
-    private Latkes() {
+    public static void loadLatkeProps() {
+        if (null == latkeProps) {
+            latkeProps = new Properties();
+        }
+
+        try {
+            InputStream resourceAsStream;
+            final String latkePropsEnv = System.getenv("LATKE_PROPS");
+            if (StringUtils.isNotBlank(latkePropsEnv)) {
+                LOGGER.debug("Loading latke.properties from env var [$LATKE_PROPS=" + latkePropsEnv + "]");
+                resourceAsStream = new FileInputStream(latkePropsEnv);
+            } else {
+                LOGGER.debug("Loading latke.properties from classpath [/latke.properties]");
+                resourceAsStream = Latkes.class.getResourceAsStream("/latke.properties");
+            }
+
+            if (null != resourceAsStream) {
+                latkeProps.load(resourceAsStream);
+                LOGGER.debug("Loaded latke.properties");
+            }
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Loads latke.properties failed", e);
+
+            throw new RuntimeException("Loads latke.properties failed");
+        }
     }
 
     /**
@@ -583,10 +613,13 @@ public final class Latkes {
     }
 
     /**
-     * Initializes Latke runtime environment.
+     * Initializes Latke framework.
      */
-    public static void initRuntimeEnv() {
-        LOGGER.log(Level.TRACE, "Initializes runtime environment from configuration file");
+    public static void init() {
+        LOGGER.log(Level.TRACE, "Initializing Latke");
+
+        loadLatkeProps();
+        loadLocalProps();
 
         if (null == runtimeMode) {
             final String runtimeModeValue = getLatkeProperty("runtimeMode");
@@ -602,17 +635,17 @@ public final class Latkes {
             LOGGER.warn("!!!!Runtime mode is [" + Latkes.RuntimeMode.DEVELOPMENT + "], please make sure configured it with ["
                     + Latkes.RuntimeMode.PRODUCTION + "] in latke.properties if deployed on production environment!!!!");
         } else {
-            LOGGER.log(Level.INFO, "Runtime mode is [{0}]", getRuntimeMode());
+            LOGGER.log(Level.DEBUG, "Runtime mode is [{0}]", getRuntimeMode());
         }
 
         final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
-        LOGGER.log(Level.INFO, "Runtime database is [{0}]", runtimeDatabase);
+        LOGGER.log(Level.DEBUG, "Runtime database is [{0}]", runtimeDatabase);
 
         if (RuntimeDatabase.H2 == runtimeDatabase) {
             final String newTCPServer = getLocalProperty("newTCPServer");
 
             if ("true".equals(newTCPServer)) {
-                LOGGER.log(Level.INFO, "Starting H2 TCP server");
+                LOGGER.log(Level.DEBUG, "Starting H2 TCP server");
 
                 final String jdbcURL = getLocalProperty("jdbc.URL");
 
@@ -627,9 +660,7 @@ public final class Latkes {
 
                 String port = parts[parts.length - 1];
                 port = StringUtils.substringBefore(port, "/");
-
                 LOGGER.log(Level.TRACE, "H2 TCP port [{0}]", port);
-
                 try {
                     h2 = org.h2.tools.Server.createTcpServer(new String[]{"-tcpPort", port, "-tcpAllowOthers"}).start();
                 } catch (final SQLException e) {
@@ -639,7 +670,7 @@ public final class Latkes {
                     throw new IllegalStateException(msg);
                 }
 
-                LOGGER.info("Started H2 TCP server");
+                LOGGER.log(Level.DEBUG, "Started H2 TCP server");
             }
         }
 
@@ -647,6 +678,8 @@ public final class Latkes {
         LOGGER.log(Level.INFO, "Runtime cache is [{0}]", runtimeCache);
 
         locale = new Locale("en_US");
+
+        LOGGER.log(Level.INFO, "Initialized Latke");
     }
 
     /**
@@ -741,7 +774,7 @@ public final class Latkes {
      * @return the value, returns {@code null} if not found
      */
     public static String getLocalProperty(final String key) {
-        String ret = LOCAL_PROPS.getProperty(key);
+        String ret = localProps.getProperty(key);
         if (StringUtils.isBlank(ret)) {
             return ret;
         }
@@ -758,7 +791,7 @@ public final class Latkes {
      * @return the value, returns {@code null} if not found
      */
     public static String getLatkeProperty(final String key) {
-        String ret = LATKE_PROPS.getProperty(key);
+        String ret = latkeProps.getProperty(key);
         if (StringUtils.isBlank(ret)) {
             return ret;
         }
@@ -983,5 +1016,11 @@ public final class Latkes {
         }
 
         return ret;
+    }
+
+    /**
+     * Private constructor.
+     */
+    private Latkes() {
     }
 }

@@ -44,7 +44,7 @@ final public class BeforeMethodTestCase {
     public void beforeTest() {
         System.out.println("before BeforeMethodTestCase");
 
-        Latkes.initRuntimeEnv();
+        Latkes.init();
         beanManager = BeanManager.getInstance();
         BeanManager.start(packageClasses);
         final A a = beanManager.getReference(A.class);

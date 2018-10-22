@@ -37,7 +37,7 @@ public class JdbcRepositoriesTestCase {
      */
     @Test
     public void jsonToModel() {
-        Latkes.initRuntimeEnv();
+        Latkes.init();
         final List<RepositoryDefinition> repositoryDefinitions = JdbcRepositories.getRepositoryDefinitions();
 
         assertNotNull(repositoryDefinitions);
@@ -48,7 +48,7 @@ public class JdbcRepositoriesTestCase {
      */
     @Test(groups = {"jdbc"})
     public void jsonToDB() {
-        Latkes.initRuntimeEnv();
+        Latkes.init();
 //        JdbcRepositories.initAllTables();
     }
 }

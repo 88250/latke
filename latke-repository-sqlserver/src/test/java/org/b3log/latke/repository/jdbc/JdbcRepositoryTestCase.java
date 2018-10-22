@@ -57,7 +57,7 @@ public class JdbcRepositoryTestCase {
     private boolean ifRun = true;
 
     static {
-        Latkes.initRuntimeEnv();
+        Latkes.init();
     }
 
     /**
@@ -102,7 +102,7 @@ public class JdbcRepositoryTestCase {
             JdbcUtil.executeSql(createTableSql.toString(), connection, false);
             connection.commit();
             connection.close();
-            Latkes.initRuntimeEnv();
+            Latkes.init();
 
         } catch (final Exception e) {
             e.printStackTrace();

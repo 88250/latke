@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 public class RedisCacheTestCase {
 
     static {
-        Latkes.initRuntimeEnv();
+        Latkes.init();
     }
 
     @Test

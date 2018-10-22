@@ -30,11 +30,11 @@ import org.testng.annotations.Test;
 public class StaticResourcesTestCase {
 
     static {
-        Latkes.initRuntimeEnv();
+        Latkes.init();
     }
 
     /**
-     * Tests method {@link StaticResources#isStatic(java.lang.String)}.
+     * Tests method {@link StaticResources#isStatic(HttpServletRequest)}.
      */
     @Test
     public void isStatic() {

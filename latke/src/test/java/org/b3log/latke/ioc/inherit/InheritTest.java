@@ -38,7 +38,7 @@ public class InheritTest {
     public void beforeTest() throws Exception {
         System.out.println("before " + InheritTest.class.getSimpleName());
 
-        Latkes.initRuntimeEnv();
+        Latkes.init();
         beanManager = BeanManager.getInstance();
 
         final Collection<Class<?>> beanClasses = Discoverer.discover("org.b3log.latke.ioc.inherit");

@@ -34,7 +34,7 @@ public final class MailServiceTestCase {
     private static final int T = 10000;
 
     static {
-        Latkes.initRuntimeEnv();
+        Latkes.init();
     }
 
     /**

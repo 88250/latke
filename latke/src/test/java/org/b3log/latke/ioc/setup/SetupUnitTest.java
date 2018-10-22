@@ -46,7 +46,7 @@ public final class SetupUnitTest {
     public void beforeTest() {
         System.out.println("before SetupUnitTest");
 
-        Latkes.initRuntimeEnv();
+        Latkes.init();
 
         beanManager = BeanManager.getInstance();
 

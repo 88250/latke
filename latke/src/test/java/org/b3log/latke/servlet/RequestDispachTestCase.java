@@ -49,7 +49,7 @@ public class RequestDispachTestCase {
     private final List<Handler> handlerList = new ArrayList<>();
 
     static {
-        Latkes.initRuntimeEnv();
+        Latkes.init();
     }
 
     @BeforeTest
