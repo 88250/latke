@@ -15,19 +15,17 @@
  */
 package org.b3log.latke.servlet.handler;
 
-
 import org.b3log.latke.Keys;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
- * HTTP request prepare handler. This handler will set the following attributes for the current request: 
- * 
+ * HTTP request prepare handler. This handler will set the following attributes for the current request:
+ *
  * <ul>
- *   <li>startTimeMillis</li>Current time millisecond.
+ * <li>startTimeMillis</li>Current time millisecond.
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
@@ -40,7 +38,6 @@ public class RequestPrepareHandler implements Handler {
         final HttpServletRequest request = context.getRequest();
 
         final long startTimeMillis = System.currentTimeMillis();
-
         request.setAttribute(Keys.HttpRequest.START_TIME_MILLIS, startTimeMillis);
 
         httpControl.nextHandler();

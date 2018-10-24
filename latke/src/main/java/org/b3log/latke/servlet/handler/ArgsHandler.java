@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.handler;
 
-
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.annotation.PathVariable;
@@ -25,7 +24,6 @@ import org.b3log.latke.util.Reflections;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 
 /**
  * PrepareHandler: prepare the method args.
@@ -59,7 +57,7 @@ public class ArgsHandler implements Handler {
 
         // do advice and real method invoke
         httpControl.nextHandler();
-        
+
     }
 
     /**
@@ -89,7 +87,7 @@ public class ArgsHandler implements Handler {
      */
     private String[] getParamterNames(final Method invokeMethond) {
         final String[] methodParamNames = Reflections.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
-            invokeMethond.getParameterTypes());
+                invokeMethond.getParameterTypes());
         int i = 0;
 
         // PathVariable will conver

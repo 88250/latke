@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.handler;
 
-
 import org.b3log.latke.Keys;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
@@ -38,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * The handler to do the advice work in configs.

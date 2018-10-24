@@ -15,13 +15,11 @@
  */
 package org.b3log.latke.servlet.handler;
 
-
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 
 import java.lang.reflect.Method;
-
 
 /**
  * ProcessorInfo,which store the processor-annotation info.
@@ -32,12 +30,12 @@ import java.lang.reflect.Method;
 public class ProcessorInfo {
 
     /**
-     *  patterns in Processor.
+     * patterns in Processor.
      */
     private String[] pattern;
 
     /**
-     *URIPatternMode.
+     * URIPatternMode.
      */
     private URIPatternMode uriPatternMode;
 
@@ -58,6 +56,7 @@ public class ProcessorInfo {
 
     /**
      * setPattern.
+     *
      * @param pattern pattern
      */
     public void setPattern(final String[] pattern) {
@@ -66,6 +65,7 @@ public class ProcessorInfo {
 
     /**
      * getPattern.
+     *
      * @return pattern
      */
     public String[] getPattern() {
@@ -74,6 +74,7 @@ public class ProcessorInfo {
 
     /**
      * setUriPatternMode.
+     *
      * @param uriPatternMode uriPatternMode
      */
     public void setUriPatternMode(final URIPatternMode uriPatternMode) {
@@ -82,7 +83,8 @@ public class ProcessorInfo {
 
     /**
      * getUriPatternMode.
-     * @return  uriPatternMode
+     *
+     * @return uriPatternMode
      */
     public URIPatternMode getUriPatternMode() {
         return uriPatternMode;
@@ -90,6 +92,7 @@ public class ProcessorInfo {
 
     /**
      * setHttpMethod.
+     *
      * @param httpMethod httpMethod
      */
     public void setHttpMethod(final HTTPRequestMethod[] httpMethod) {
@@ -98,6 +101,7 @@ public class ProcessorInfo {
 
     /**
      * getHttpMethod.
+     *
      * @return httpMethod
      */
     public HTTPRequestMethod[] getHttpMethod() {
@@ -106,7 +110,8 @@ public class ProcessorInfo {
 
     /**
      * setInvokeHolder.
-     * @param invokeHolder  invokeHolder
+     *
+     * @param invokeHolder invokeHolder
      */
     public void setInvokeHolder(final Method invokeHolder) {
         this.invokeHolder = invokeHolder;
@@ -114,6 +119,7 @@ public class ProcessorInfo {
 
     /**
      * getInvokeHolder.
+     *
      * @return invokeHolder
      */
     public Method getInvokeHolder() {
@@ -122,6 +128,7 @@ public class ProcessorInfo {
 
     /**
      * setConvertClass.
+     *
      * @param convertClass convertClass
      */
     public void setConvertClass(final Class<? extends ConvertSupport> convertClass) {
@@ -130,7 +137,8 @@ public class ProcessorInfo {
 
     /**
      * getConvertClass.
-     * @return  convertClass
+     *
+     * @return convertClass
      */
     public Class<? extends ConvertSupport> getConvertClass() {
         return convertClass;

@@ -15,10 +15,8 @@
  */
 package org.b3log.latke.servlet.handler;
 
-
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
-
 
 /**
  * A handler interface for  {@link org.b3log.latke.servlet.DispatcherServlet} to do the inner process.
@@ -30,10 +28,10 @@ public interface Handler {
 
     /**
      * Handle.
-     * 
+     *
      * @param context     {@link HTTPRequestContext}
      * @param httpControl {@link HttpControl}
-     * @throws Exception  {@link Exception}
+     * @throws Exception {@link Exception}
      */
     void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception;
 }

@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.handler;
 
-
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -23,7 +22,6 @@ import org.b3log.latke.servlet.HttpControl;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-
 
 /**
  * the handler to do the real method invoke!.
