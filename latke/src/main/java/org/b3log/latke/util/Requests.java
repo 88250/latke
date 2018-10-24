@@ -37,7 +37,7 @@ import java.util.Enumeration;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 2.0.0.0, Oct 15, 2018
+ * @version 2.0.0.1, Oct 24, 2018
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -180,35 +180,6 @@ public final class Requests {
         }
 
         return ret.split(",")[0];
-    }
-
-    /**
-     * Mobile and normal skin toggle.
-     *
-     * @param request the specified request
-     * @return {@code null} if not set cookie, returns value (mobile | $OTHER) of the cookie named "btouch_switch_toggle"
-     */
-    public static String mobileSwitchToggle(final HttpServletRequest request) {
-        final Cookie[] cookies = request.getCookies();
-        String ret = null;
-
-        if (null == cookies || 0 == cookies.length) {
-            return ret;
-        }
-
-        try {
-            for (int i = 0; i < cookies.length; i++) {
-                final Cookie cookie = cookies[i];
-
-                if ("btouch_switch_toggle".equals(cookie.getName())) {
-                    ret = cookie.getValue();
-                }
-            }
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Parses cookie failed", e);
-        }
-
-        return ret;
     }
 
     /**
