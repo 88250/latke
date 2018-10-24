@@ -15,64 +15,62 @@
  */
 package org.b3log.latke.servlet;
 
-
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
 import org.b3log.latke.servlet.renderer.HTTP500Renderer;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * NEW core dispatch-controller for HTTP request dispatching.
- * 
+ * Dispatch-controller for HTTP request dispatching.
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.0, Jul 18, 2014
+ * @version 1.0.2.1, Oct 24, 2018
  */
 public final class DispatcherServlet extends HttpServlet {
 
     /**
-     * Default serial version uid.
+     * Handlers.
      */
-    private static final long serialVersionUID = 1L;
+    public static final List<Handler> HANDLERS = new ArrayList<>();
 
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(DispatcherServlet.class);
-
-    /**
-     * the holder of all the sys-handler.
-     */
-    public static final List<Handler> SYS_HANDLER = new ArrayList<Handler>();
-
-    @Override
-    public void init() throws ServletException {
-        SYS_HANDLER.add(new StaticResourceHandler(getServletContext()));
-
-        SYS_HANDLER.add(new RequestPrepareHandler());
-        SYS_HANDLER.add(new RequestDispatchHandler());
-        SYS_HANDLER.add(new ArgsHandler());
-        SYS_HANDLER.add(new AdviceHandler());
-        SYS_HANDLER.add(new MethodInvokeHandler());
+    static {
+        HANDLERS.add(new RequestPrepareHandler());
+        HANDLERS.add(new RequestDispatchHandler());
+        HANDLERS.add(new ArgsHandler());
+        HANDLERS.add(new AdviceHandler());
+        // here are ext handlers if exist
+        HANDLERS.add(new MethodInvokeHandler());
     }
 
     @Override
-    protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+    public void init() {
+        // static resource handling must be the first one
+        HANDLERS.add(0, new StaticResourceHandler(getServletContext()));
+    }
+
+    /**
+     * Add the specified ext handler into handlers chain.
+     *
+     * @param handler the specified ext handler
+     */
+    public static void addHandler(final Handler handler) {
+        DispatcherServlet.HANDLERS.add(DispatcherServlet.HANDLERS.size() - 1, handler);
+    }
+
+    @Override
+    protected void service(final HttpServletRequest req, final HttpServletResponse resp) {
         final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
 
         httpRequestContext.setRequest(req);
         httpRequestContext.setResponse(resp);
-        final HttpControl httpControl = new HttpControl(SYS_HANDLER.iterator(), httpRequestContext);
+        final HttpControl httpControl = new HttpControl(HANDLERS.iterator(), httpRequestContext);
 
         try {
             httpControl.nextHandler();
@@ -84,24 +82,20 @@ public final class DispatcherServlet extends HttpServlet {
     }
 
     /**
-     * To http repsonse.
-     * 
+     * Do HTTP response.
+     *
      * @param context {@link HTTPRequestContext}
-     * @throws IOException IOException
      */
-    public static void result(final HTTPRequestContext context) throws IOException {
+    public static void result(final HTTPRequestContext context) {
         final HttpServletResponse response = context.getResponse();
-
         if (response.isCommitted()) { // Response sends redirect or error
             return;
         }
 
         AbstractHTTPResponseRenderer renderer = context.getRenderer();
-
         if (null == renderer) {
             renderer = new HTTP404Renderer();
         }
-
         renderer.render(context);
     }
 }
