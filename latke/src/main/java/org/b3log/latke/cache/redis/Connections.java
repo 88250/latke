@@ -27,7 +27,7 @@ import redis.clients.jedis.Protocol;
  * Redis connection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 6, 2017
+ * @version 1.0.1.0, Oct 25, 2018
  * @since 2.3.13
  */
 final class Connections {
@@ -54,7 +54,7 @@ final class Connections {
                 jedisPoolConfig.setMaxTotal(maxConnCnt);
                 final String host = Latkes.getLocalProperty("redis.host");
                 final int port = Integer.valueOf(Latkes.getLocalProperty("redis.port"));
-                final String password = Latkes.getLatkeProperty("redis.password");
+                final String password = Latkes.getLocalProperty("redis.password");
                 final long waitTime = Long.valueOf(Latkes.getLocalProperty("redis.waitTime"));
                 jedisPoolConfig.setMaxWaitMillis(waitTime);
 
