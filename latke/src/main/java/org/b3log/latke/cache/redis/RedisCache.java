@@ -30,7 +30,7 @@ import java.util.Set;
  * Redis cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Oct 27, 2018
+ * @version 1.0.1.0, Oct 27, 2018
  * @since 2.3.13
  */
 public final class RedisCache extends AbstractCache {
@@ -142,6 +142,10 @@ public final class RedisCache extends AbstractCache {
             jedis = Connections.getJedis();
 
             final Set<String> keys = jedis.keys(getName() + "*");
+            if (keys.isEmpty()) {
+                return;
+            }
+
             jedis.del(keys.toArray(new String[]{}));
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Clear cache failed", e);
