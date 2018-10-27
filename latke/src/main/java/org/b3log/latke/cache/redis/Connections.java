@@ -59,17 +59,10 @@ final class Connections {
                 jedisPoolConfig.setMaxWaitMillis(waitTime);
 
                 pool = new JedisPool(jedisPoolConfig, host, port, Protocol.DEFAULT_TIMEOUT, password);
-
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Initializes redis connection pool failed", e);
         }
-    }
-
-    /**
-     * Private constructor.
-     */
-    private Connections() {
     }
 
     /**
@@ -86,5 +79,11 @@ final class Connections {
      */
     static void shutdown() {
         pool.close();
+    }
+
+    /**
+     * Private constructor.
+     */
+    private Connections() {
     }
 }
