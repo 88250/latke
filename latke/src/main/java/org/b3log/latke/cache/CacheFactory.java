@@ -27,7 +27,7 @@ import java.util.Map;
  * Cache factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.1.2, Jul 6, 2017
+ * @version 2.1.1.3, Oct 27, 2018
  */
 public final class CacheFactory {
 
@@ -63,7 +63,7 @@ public final class CacheFactory {
                 Class<Cache> cacheClass;
                 switch (Latkes.getRuntimeCache()) {
                     case LOCAL_LRU:
-                        cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.local.memory.LruMemoryCache");
+                        cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.memory.LruMemoryCache");
 
                         break;
                     case REDIS:
@@ -95,11 +95,10 @@ public final class CacheFactory {
     /**
      * Clears all caches.
      */
-    public static synchronized void clearAll() {
+    public static synchronized void clear() {
         for (final Map.Entry<String, Cache> entry : CACHES.entrySet()) {
             final Cache cache = entry.getValue();
-
-            cache.removeAll();
+            cache.clear();
             LOGGER.log(Level.TRACE, "Cleared cache [name={0}]", entry.getKey());
         }
     }

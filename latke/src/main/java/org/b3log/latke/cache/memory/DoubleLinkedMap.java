@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.cache.local.memory;
+package org.b3log.latke.cache.memory;
 
 import java.io.Serializable;
 
@@ -97,7 +97,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
      * @param value the new value
      */
     public synchronized void addLast(final K key, final V value) {
-        final DoubleLinkedMapNode<K, V> node = new DoubleLinkedMapNode<K, V>(key, value);
+        final DoubleLinkedMapNode<K, V> node = new DoubleLinkedMapNode<>(key, value);
 
         addLastNode(node);
     }
@@ -117,7 +117,7 @@ final class DoubleLinkedMap<K, V> implements Serializable {
             throw new IllegalArgumentException("Key is null!");
         }
 
-        final DoubleLinkedMapNode<K, V> node = new DoubleLinkedMapNode<K, V>(key, value);
+        final DoubleLinkedMapNode<K, V> node = new DoubleLinkedMapNode<>(key, value);
 
         addFirstNode(node);
     }

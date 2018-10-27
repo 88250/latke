@@ -15,11 +15,9 @@
  */
 package org.b3log.latke.cache;
 
-
 import org.json.JSONObject;
 
 import java.util.Collection;
-
 
 /**
  * This is the top interface of cache like structures.
@@ -28,7 +26,7 @@ import java.util.Collection;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.9, Jul 6, 2017
+ * @version 2.0.2.10, Oct 27, 2018
  */
 public interface Cache {
 
@@ -95,16 +93,16 @@ public interface Cache {
     void remove(final String key);
 
     /**
-     * Removes objects by the specified keys.
+     * Remove objects by the specified keys.
      *
      * @param keys the specified keys
      */
     void remove(final Collection<String> keys);
 
     /**
-     * Removes all cached objects.
+     * Clear all cached objects.
      */
-    void removeAll();
+    void clear();
 
     /**
      * Gets the maximum objects count of this cache.

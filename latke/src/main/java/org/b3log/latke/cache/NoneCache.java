@@ -23,7 +23,7 @@ import java.util.Collection;
  * None cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 6, 2017
+ * @version 1.0.0.1, Oct 27, 2018
  * @since 2.3.13
  */
 public final class NoneCache extends AbstractCache {
@@ -51,7 +51,7 @@ public final class NoneCache extends AbstractCache {
     }
 
     @Override
-    public void removeAll() {
+    public void clear() {
     }
 
     @Override
