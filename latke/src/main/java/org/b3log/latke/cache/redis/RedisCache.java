@@ -142,7 +142,7 @@ public final class RedisCache extends AbstractCache {
             jedis = Connections.getJedis();
 
             final Set<String> keys = jedis.keys(getName() + "*");
-            remove(keys);
+            jedis.del(keys.toArray(new String[]{}));
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Clear cache failed", e);
         } finally {

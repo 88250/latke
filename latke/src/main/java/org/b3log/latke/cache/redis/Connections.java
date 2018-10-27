@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.cache.redis;
 
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -54,7 +55,10 @@ final class Connections {
                 jedisPoolConfig.setMaxTotal(maxConnCnt);
                 final String host = Latkes.getLocalProperty("redis.host");
                 final int port = Integer.valueOf(Latkes.getLocalProperty("redis.port"));
-                final String password = Latkes.getLocalProperty("redis.password");
+                String password = Latkes.getLocalProperty("redis.password");
+                if (StringUtils.isBlank(password)) {
+                    password = null;
+                }
                 final long waitTime = Long.valueOf(Latkes.getLocalProperty("redis.waitTime"));
                 jedisPoolConfig.setMaxWaitMillis(waitTime);
 
