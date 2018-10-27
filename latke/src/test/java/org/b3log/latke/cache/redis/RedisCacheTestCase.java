@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  * {@link RedisCache} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 6, 2017
+ * @version 1.0.0.1, Oct 27, 2018
  * @since 2.3.13
  */
 public class RedisCacheTestCase {
@@ -37,7 +37,7 @@ public class RedisCacheTestCase {
     }
 
     @Test
-    public void put() throws Exception {
+    public void put() {
         if (Latkes.RuntimeCache.REDIS != Latkes.getRuntimeCache()) {
             return;
         }
@@ -56,11 +56,11 @@ public class RedisCacheTestCase {
             final JSONObject d00 = cache.get(k0);
             Assert.assertEquals(d00.toString(), d0.toString());
 
-            cache.removeAll();
+            cache.clear();
 
             Assert.assertFalse(cache.contains(k0));
         } catch (final Exception e) {
-
+            e.printStackTrace();
         }
     }
 }
