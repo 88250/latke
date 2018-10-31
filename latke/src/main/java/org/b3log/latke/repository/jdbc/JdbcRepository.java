@@ -787,13 +787,8 @@ public final class JdbcRepository implements Repository {
     @Override
     public Transaction beginTransaction() {
         JdbcTransaction ret = TX.get();
-
-        if (null != ret) {
-            LOGGER.log(Level.DEBUG, "There is a transaction[isActive={0}] in current thread", ret.isActive());
-
-            if (ret.isActive()) {
-                return TX.get(); // Using 'the current transaction'
-            }
+        if (null != ret && ret.isActive()) {
+            return TX.get(); // Using 'the current transaction'
         }
 
         try {
@@ -831,24 +826,22 @@ public final class JdbcRepository implements Repository {
      */
     private Connection getConnection() {
         final JdbcTransaction jdbcTransaction = TX.get();
-
         if (null != jdbcTransaction && jdbcTransaction.isActive()) {
             return jdbcTransaction.getConnection();
         }
 
         Connection ret = CONN.get();
-
         try {
             if (null != ret && !ret.isClosed()) {
                 return ret;
             }
 
             ret = Connections.getConnection();
-
-            CONN.set(ret);
         } catch (final SQLException e) {
             LOGGER.log(Level.ERROR, "Gets connection failed", e);
         }
+
+        CONN.set(ret);
 
         return ret;
     }
