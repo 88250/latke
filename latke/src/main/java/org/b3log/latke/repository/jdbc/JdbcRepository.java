@@ -40,24 +40,24 @@ import java.util.*;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.2, Oct 3, 2018
+ * @version 1.3.0.3, Oct 31, 2018
  */
 public final class JdbcRepository implements Repository {
-
-    /**
-     * The current transaction.
-     */
-    public static final ThreadLocal<JdbcTransaction> TX = new InheritableThreadLocal<>();
-
-    /**
-     * The current JDBC connection.
-     */
-    public static final ThreadLocal<Connection> CONN = new ThreadLocal<>();
 
     /**
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(JdbcRepository.class);
+
+    /**
+     * The current transaction.
+     */
+    public static final ThreadLocal<JdbcTransaction> TX = new ThreadLocal<>();
+
+    /**
+     * The current JDBC connection.
+     */
+    private static final ThreadLocal<Connection> CONN = new ThreadLocal<>();
 
     /**
      * Key generator.

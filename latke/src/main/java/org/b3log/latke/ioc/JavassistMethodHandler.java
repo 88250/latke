@@ -54,7 +54,7 @@ public final class JavassistMethodHandler implements MethodHandler {
     /**
      * Call count in the current thread.
      */
-    private static final ThreadLocal<AtomicInteger> CALLS = new InheritableThreadLocal();
+    private static final ThreadLocal<AtomicInteger> CALLS = new ThreadLocal();
 
     /**
      * Method filter.
