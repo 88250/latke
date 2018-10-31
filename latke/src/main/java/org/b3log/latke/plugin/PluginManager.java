@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
-import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.ioc.Singleton;
@@ -45,7 +44,7 @@ import java.util.*;
  * Plugin loader.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.3, Sep 8, 2017
+ * @version 1.0.2.4, Oct 31, 2018
  */
 @Singleton
 public class PluginManager {
@@ -151,11 +150,7 @@ public class PluginManager {
             }
         }
 
-        try {
-            eventManager.fireEventSynchronously(new Event<>(PLUGIN_LOADED_EVENT, plugins));
-        } catch (final EventException e) {
-            throw new RuntimeException("Plugin load error", e);
-        }
+        eventManager.fireEventSynchronously(new Event<>(PLUGIN_LOADED_EVENT, plugins));
 
         Stopwatchs.end();
     }

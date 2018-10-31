@@ -15,23 +15,27 @@
  */
 package org.b3log.latke.repository.jdbc;
 
-
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-
 /**
- *
  * JdbcTransaction.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Mar 6, 2013
+ * @version 1.0.0.3, Oct 31, 2018
  */
 public final class JdbcTransaction implements Transaction {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(JdbcTransaction.class);
 
     /**
      * Connection.
@@ -44,8 +48,14 @@ public final class JdbcTransaction implements Transaction {
     private boolean isActive;
 
     /**
+     * Is programmatic.
+     */
+    private boolean isProgrammatic;
+
+    /**
      * Public constructor.
-     * @throws SQLException SQLException 
+     *
+     * @throws SQLException SQLException
      */
     public JdbcTransaction() throws SQLException {
         connection = Connections.getConnection();
@@ -54,23 +64,16 @@ public final class JdbcTransaction implements Transaction {
     }
 
     @Override
-    public String getId() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void commit() {
-        boolean ifSuccess = false;
-
+        boolean succ = false;
         try {
             connection.commit();
-            ifSuccess = true;
-        } catch (final SQLException e) {
-            throw new RuntimeException("commit mistake", e);
+            succ = true;
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Commits transaction [" + getId() + "] failed", e);
         }
 
-        if (ifSuccess) {
+        if (succ) {
             dispose();
         }
     }
@@ -86,37 +89,47 @@ public final class JdbcTransaction implements Transaction {
         }
     }
 
-    /**
-     * setActive.
-     * @param isActive isActive
-     */
-    public void setActive(final boolean isActive) {
-        this.isActive = isActive;
-    }
-
     @Override
     public boolean isActive() {
         return isActive;
     }
 
     /**
-     * close the connection.
+     * Determines whether this transaction is programmatic.
+     *
+     * @return {@code true} if this transaction is programmatic, returns {@code false} otherwise
+     */
+    public boolean isProgrammatic() {
+        return isProgrammatic;
+    }
+
+    /**
+     * Sets this transaction is programmatic with the specified flag.
+     *
+     * @param isProgrammatic the specified flag
+     */
+    public void setProgrammatic(final boolean isProgrammatic) {
+        this.isProgrammatic = isProgrammatic;
+    }
+
+    /**
+     * Disposes this transaction.
      */
     public void dispose() {
         try {
             connection.close();
-
-            JdbcRepository.TX.set(null);
-        } catch (final SQLException e) {
-            throw new RuntimeException("close connection", e);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Disposes transaction [" + getId() + "] failed", e);
         } finally {
             isActive = false;
             connection = null;
+            JdbcRepository.TX.set(null);
         }
     }
 
     /**
-     * getConnection.
+     * Gets the underlying connection of this transaction.
+     *
      * @return {@link Connection}
      */
     public Connection getConnection() {

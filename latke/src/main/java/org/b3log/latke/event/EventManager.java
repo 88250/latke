@@ -17,9 +17,7 @@ package org.b3log.latke.event;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.repository.jdbc.JdbcRepository;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
@@ -27,7 +25,7 @@ import java.util.concurrent.FutureTask;
  * Event manager.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.5, Jun 14, 2017
+ * @version 1.1.2.6, Oct 31, 2018
  */
 @Singleton
 public class EventManager {
@@ -41,9 +39,8 @@ public class EventManager {
      * Fire the specified event synchronously.
      *
      * @param event the specified event
-     * @throws EventException event exception
      */
-    public void fireEventSynchronously(final Event<?> event) throws EventException {
+    public void fireEventSynchronously(final Event<?> event) {
         synchronizedEventQueue.fireEvent(event);
     }
 
@@ -53,18 +50,12 @@ public class EventManager {
      * @param <T>   the result type
      * @param event the specified event
      * @return future result
-     * @throws EventException event exception
      */
-    public <T> Future<T> fireEventAsynchronously(final Event<?> event) throws EventException {
-        final FutureTask<T> futureTask = new FutureTask<T>(new Callable<T>() {
-            @Override
-            public T call() throws Exception {
-                synchronizedEventQueue.fireEvent(event);
+    public <T> Future<T> fireEventAsynchronously(final Event<?> event) {
+        final FutureTask<T> futureTask = new FutureTask<T>(() -> {
+            synchronizedEventQueue.fireEvent(event);
 
-                JdbcRepository.dispose(); // close the JDBC connection which might have been used
-
-                return null; // XXX: Our future????
-            }
+            return null; // XXX: Our future????
         });
 
         Latkes.EXECUTOR_SERVICE.execute(futureTask);

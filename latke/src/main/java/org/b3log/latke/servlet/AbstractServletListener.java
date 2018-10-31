@@ -34,7 +34,7 @@ import java.util.Locale;
  * Abstract servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.6.6, Jul 5, 2017
+ * @version 1.0.6.7, Oct 31, 2018
  */
 public abstract class AbstractServletListener implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
@@ -119,6 +119,5 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
     @Override
     public void sessionDestroyed(final HttpSessionEvent httpSessionEvent) {
-        JdbcRepository.dispose();
     }
 }

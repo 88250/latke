@@ -57,7 +57,7 @@ public final class JdbcRepository implements Repository {
     /**
      * The current JDBC connection.
      */
-    private static final ThreadLocal<Connection> CONN = new ThreadLocal<>();
+    public static final ThreadLocal<Connection> CONN = new ThreadLocal<>();
 
     /**
      * Key generator.
@@ -102,7 +102,7 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * dispose the resource when requestDestroyed .
+     * Disposes the resources.
      */
     public static void dispose() {
         final JdbcTransaction jdbcTransaction = TX.get();
@@ -788,11 +788,14 @@ public final class JdbcRepository implements Repository {
     public Transaction beginTransaction() {
         JdbcTransaction ret = TX.get();
         if (null != ret && ret.isActive()) {
+            ret.setProgrammatic(true);
+
             return TX.get(); // Using 'the current transaction'
         }
 
         try {
             ret = new JdbcTransaction();
+            ret.setProgrammatic(true);
         } catch (final SQLException e) {
             LOGGER.log(Level.ERROR, "Failed to initialize JDBC transaction", e);
 
@@ -820,7 +823,7 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * getConnection. default using current JdbcTransaction's connection,if null get a new one.
+     * getConnection. default using current JdbcTransaction's connection, if null get a new one.
      *
      * @return {@link Connection}
      */

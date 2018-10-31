@@ -17,6 +17,7 @@ package org.b3log.latke.ioc;
 
 import javassist.util.proxy.MethodFilter;
 import javassist.util.proxy.MethodHandler;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.intercept.annotation.AfterMethod;
 import org.b3log.latke.intercept.annotation.BeforeMethod;
 import org.b3log.latke.logging.Level;
@@ -28,8 +29,8 @@ import org.b3log.latke.repository.jdbc.JdbcTransaction;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 1.0.1.6, Oct 31, 2018
  * @since 2.4.18
  */
-public final class JavassistMethodHandler implements MethodHandler {
+final class JavassistMethodHandler implements MethodHandler {
 
     /**
      * Logger.
@@ -61,11 +62,14 @@ public final class JavassistMethodHandler implements MethodHandler {
      * Method filter.
      */
     private MethodFilter methodFilter = method -> {
+        final String pkg = method.getDeclaringClass().getPackage().getName();
+        if (StringUtils.startsWithAny(pkg, new String[]{"org.b3log.latke", "java.", "javax."})) {
+            return false;
+        }
+
         final String name = method.getName();
-
-        final boolean isObjectMethod = Arrays.stream(Object.class.getMethods()).anyMatch(m -> m.getName().equals(name));
-
-        return !isObjectMethod && !"beginTransaction".equals(name) && !"hasTransactionBegun".equals(name);
+        return !"invoke".equals(name) &&
+                !"beginTransaction".equals(name) && !"hasTransactionBegun".equals(name);
     };
 
     /**
@@ -100,12 +104,11 @@ public final class JavassistMethodHandler implements MethodHandler {
 
         // 2. Invocation with transaction handle
         final boolean withTransactionalAnno = method.isAnnotationPresent(Transactional.class);
-        final boolean alreadyInTransaction = null != JdbcRepository.TX.get();
+        JdbcTransaction transaction = JdbcRepository.TX.get();
+        final boolean alreadyInTransaction = null != transaction;
         final boolean needHandleTrans = withTransactionalAnno && !alreadyInTransaction;
 
         // Transaction Propagation: REQUIRED (Support a current transaction, create a new one if none exists)
-        JdbcTransaction transaction = null;
-
         if (needHandleTrans) {
             try {
                 transaction = new JdbcTransaction();
@@ -139,8 +142,12 @@ public final class JavassistMethodHandler implements MethodHandler {
         handleInterceptor(invokingMethodName, params, AfterMethod.class);
 
         if (0 == calls.decrementAndGet()) {
-            JdbcRepository.dispose();
             CALLS.set(null);
+            final Connection connection = JdbcRepository.CONN.get();
+            if (null != connection) {
+                connection.close();
+                JdbcRepository.CONN.set(null);
+            }
         }
 
         return ret;

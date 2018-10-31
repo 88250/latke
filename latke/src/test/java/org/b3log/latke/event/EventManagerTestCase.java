@@ -22,12 +22,11 @@ import org.testng.annotations.Test;
  * {@link EventManager} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Oct 8, 2013
+ * @version 1.0.0.6, Oct 31, 2018
  */
 public final class EventManagerTestCase {
 
     /**
-     *
      * @throws Exception exception
      */
     @Test
@@ -56,7 +55,7 @@ public final class EventManagerTestCase {
                 Thread.sleep(sleepTime);
             }
         } catch (final InterruptedException e) {
-            throw new EventException(e);
+            e.printStackTrace();
         }
         System.out.println("Done in simplest thread");
     }
@@ -108,7 +107,7 @@ public final class EventManagerTestCase {
     private final class TestEventAsyncListener1 extends AbstractEventListener<JSONObject> {
 
         @Override
-        public void action(final Event<JSONObject> event) throws EventException {
+        public void action(final Event<JSONObject> event) {
             System.out.println("Asynchonous listener1 is processing a event[type=" + event.getType() + ", data=" + event.getData() + "]");
             final long sleepTime = 100;
             final long loopCnt = 40;
@@ -118,7 +117,7 @@ public final class EventManagerTestCase {
                     Thread.sleep(sleepTime);
                 }
             } catch (final InterruptedException e) {
-                throw new EventException(e);
+                e.printStackTrace();
             }
         }
 

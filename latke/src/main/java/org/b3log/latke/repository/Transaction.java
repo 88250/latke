@@ -15,12 +15,13 @@
  */
 package org.b3log.latke.repository;
 
+import java.util.UUID;
 
 /**
  * Transaction.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Sep 11, 2011
+ * @version 1.0.0.3, Oct 31, 2018
  */
 public interface Transaction {
 
@@ -29,15 +30,16 @@ public interface Transaction {
      *
      * @return id
      */
-    String getId();
+    default String getId() {
+        return UUID.randomUUID().toString();
+    }
 
     /**
      * Commits this transaction.
      *
      * <p>
      * <b>Throws</b>:<br/>
-     * {@link java.lang.IllegalStateException} - if the transaction has already
-     * been committed, rolled back
+     * {@link java.lang.IllegalStateException} - if the transaction has already been committed, rolled back
      * </p>
      */
     void commit();
@@ -47,8 +49,7 @@ public interface Transaction {
      *
      * <p>
      * <b>Throws</b>:<br/>
-     * {@link java.lang.IllegalStateException} - if the transaction has already
-     * been committed, rolled back
+     * {@link java.lang.IllegalStateException} - if the transaction has already been committed, rolled back
      * </p>
      */
     void rollback();
@@ -56,8 +57,7 @@ public interface Transaction {
     /**
      * Determines whether this transaction is active.
      *
-     * @return {@code true} if this transaction is active, {@code false}
-     * otherwise
+     * @return {@code true} if this transaction is active, returns {@code false} otherwise
      */
     boolean isActive();
 }
