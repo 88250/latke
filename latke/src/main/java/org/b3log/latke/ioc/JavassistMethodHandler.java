@@ -30,12 +30,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Javassist method handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.5, Sep 29, 2018
+ * @version 1.0.1.6, Oct 31, 2018
  * @since 2.4.18
  */
 public final class JavassistMethodHandler implements MethodHandler {
@@ -49,6 +50,11 @@ public final class JavassistMethodHandler implements MethodHandler {
      * Bean manager.
      */
     private BeanManager beanManager;
+
+    /**
+     * Call count in the current thread.
+     */
+    private static final ThreadLocal<AtomicInteger> CALLS = new InheritableThreadLocal();
 
     /**
      * Method filter.
@@ -71,6 +77,17 @@ public final class JavassistMethodHandler implements MethodHandler {
     @Override
     public Object invoke(final Object proxy, final Method method, final Method proceed, final Object[] params) throws Throwable {
         LOGGER.trace("Processing invocation [" + method.toString() + "]");
+
+        AtomicInteger calls = CALLS.get();
+        if (null == calls) {
+            synchronized (this) {
+                if (null == calls) {
+                    calls = new AtomicInteger(0);
+                    CALLS.set(calls);
+                }
+            }
+        }
+        calls.incrementAndGet();
 
         final Class<?> declaringClass = method.getDeclaringClass();
         final String invokingMethodName = declaringClass.getName() + '#' + method.getName();
@@ -106,10 +123,6 @@ public final class JavassistMethodHandler implements MethodHandler {
                 transaction.commit();
             }
         } catch (final InvocationTargetException e) {
-            //final String errMsg = "Invoke [" + method.toString() + "] failed";
-
-            //LOGGER.log(Level.WARN, errMsg);
-
             if (needHandleTrans) {
                 if (transaction.isActive()) {
                     transaction.rollback();
@@ -121,6 +134,11 @@ public final class JavassistMethodHandler implements MethodHandler {
 
         // 3. @AfterMethod handle
         handleInterceptor(invokingMethodName, params, AfterMethod.class);
+
+        if (0 == calls.decrementAndGet()) {
+            JdbcRepository.dispose();
+            CALLS.set(null);
+        }
 
         return ret;
     }
