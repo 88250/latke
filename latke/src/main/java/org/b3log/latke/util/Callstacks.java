@@ -23,7 +23,7 @@ import org.b3log.latke.logging.Logger;
  * Call stack utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Apr 11, 2012
+ * @version 1.0.0.5, Oct 31, 2018
  */
 public final class Callstacks {
 
@@ -85,7 +85,8 @@ public final class Callstacks {
             return;
         }
 
-        final StringBuilder stackBuilder = new StringBuilder("CallStack [").append(Strings.LINE_SEPARATOR);
+        final long tId = Thread.currentThread().getId();
+        final StringBuilder stackBuilder = new StringBuilder("CallStack [tId=").append(tId).append(Strings.LINE_SEPARATOR);
 
         for (int i = 1; i < stackElements.length; i++) {
             final String stackElemClassName = stackElements[i].getClassName();
