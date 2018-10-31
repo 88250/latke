@@ -29,6 +29,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -62,7 +63,9 @@ public final class JavassistMethodHandler implements MethodHandler {
     private MethodFilter methodFilter = method -> {
         final String name = method.getName();
 
-        return !"beginTransaction".equals(name) && !"hasTransactionBegun".equals(name);
+        final boolean isObjectMethod = Arrays.stream(Object.class.getMethods()).anyMatch(m -> m.getName().equals(name));
+
+        return !isObjectMethod && !"beginTransaction".equals(name) && !"hasTransactionBegun".equals(name);
     };
 
     /**
