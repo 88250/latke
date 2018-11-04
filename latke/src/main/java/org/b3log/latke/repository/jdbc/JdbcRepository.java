@@ -40,7 +40,7 @@ import java.util.*;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.3, Oct 31, 2018
+ * @version 1.3.0.4, Nov 4, 2018
  */
 public final class JdbcRepository implements Repository {
 
@@ -183,9 +183,8 @@ public final class JdbcRepository implements Repository {
      * @param jsonObject jsonObject
      * @param paramlist  paramlist
      * @param sql        sql
-     * @throws Exception exception
      */
-    private void setProperties(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) throws Exception {
+    private void setProperties(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) {
         final Iterator<String> keys = jsonObject.keys();
 
         final StringBuilder insertString = new StringBuilder();
@@ -299,17 +298,16 @@ public final class JdbcRepository implements Repository {
             key = keys.next();
 
             if (isFirst) {
-                wildcardString.append(" set ").append(key).append("=?");
+                wildcardString.append(" SET ").append(key).append(" = ?");
                 isFirst = false;
             } else {
-                wildcardString.append(",").append(key).append("=?");
+                wildcardString.append(", ").append(key).append(" = ?");
             }
 
             paramList.add(needUpdateJsonObject.get(key));
         }
 
-        sql.append("update ").append(getName()).append(wildcardString).append(" where ").append(JdbcRepositories.getDefaultKeyName()).
-                append("=").append("?");
+        sql.append("UPDATE ").append(getName()).append(wildcardString).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = ?");
         paramList.add(id);
     }
 
@@ -393,7 +391,7 @@ public final class JdbcRepository implements Repository {
      * @param sql sql
      */
     private void remove(final String id, final StringBuilder sql) {
-        sql.append("delete from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("='").
+        sql.append("DELETE FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = '").
                 append(id).append("'");
     }
 
@@ -427,8 +425,7 @@ public final class JdbcRepository implements Repository {
      * @param sql sql
      */
     private void get(final StringBuilder sql) {
-        sql.append("select * from ").append(getName()).append(" where ").append(JdbcRepositories.getDefaultKeyName()).append("=").
-                append("?");
+        sql.append("SELECT * FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = ?");
     }
 
     @Override
@@ -551,15 +548,13 @@ public final class JdbcRepository implements Repository {
         getOrderBySql(orderBySql, query.getSorts());
 
         if (-1 == pageCount) {
-            final StringBuilder countSql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(
-                    getName());
+            final StringBuilder countSql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
 
             if (StringUtils.isNotBlank(filterSql.toString())) {
-                countSql.append(" where ").append(filterSql);
+                countSql.append(" WHERE ").append(filterSql);
             }
 
             recordCnt = (int) count(countSql, paramList);
-
             if (0 == recordCnt) {
                 ret.put(Pagination.PAGINATION_PAGE_COUNT, 0);
                 ret.put(Pagination.PAGINATION_RECORD_COUNT, 0);
@@ -585,7 +580,7 @@ public final class JdbcRepository implements Repository {
      * @param projections projections
      */
     private void getSelectSql(final StringBuilder selectSql, final Set<Projection> projections) {
-        selectSql.append(" select ");
+        selectSql.append("SELECT ");
 
         if (null == projections || projections.isEmpty()) {
             selectSql.append(" * ");
@@ -669,16 +664,16 @@ public final class JdbcRepository implements Repository {
 
         for (final Map.Entry<String, SortDirection> sort : sorts.entrySet()) {
             if (isFirst) {
-                orderBySql.append(" order by ");
+                orderBySql.append(" ORDER BY ");
                 isFirst = false;
             } else {
                 orderBySql.append(",");
             }
 
             if (sort.getValue().equals(SortDirection.ASCENDING)) {
-                querySortDirection = "asc";
+                querySortDirection = "ASC";
             } else {
-                querySortDirection = "desc";
+                querySortDirection = "DESC";
             }
 
             orderBySql.append(sort.getKey()).append(" ").append(querySortDirection);
@@ -722,14 +717,14 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public long count() throws RepositoryException {
-        final StringBuilder sql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
+        final StringBuilder sql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
 
         return count(sql, new ArrayList<>());
     }
 
     @Override
     public long count(final Query query) throws RepositoryException {
-        final StringBuilder countSql = new StringBuilder("select count(" + JdbcRepositories.getDefaultKeyName() + ") from ").append(getName());
+        final StringBuilder countSql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
 
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSql = new StringBuilder();
@@ -737,7 +732,7 @@ public final class JdbcRepository implements Repository {
         getFilterSql(filterSql, paramList, query.getFilter());
 
         if (StringUtils.isNotBlank(filterSql.toString())) {
-            countSql.append(" where ").append(filterSql);
+            countSql.append(" WHERE ").append(filterSql);
         }
 
         return (int) count(countSql, paramList);
@@ -759,7 +754,7 @@ public final class JdbcRepository implements Repository {
 
         try {
             jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), false);
-            count = jsonObject.getLong(jsonObject.keys().next().toString());
+            count = jsonObject.getLong(jsonObject.keys().next());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Count failed", e);
 
@@ -841,7 +836,7 @@ public final class JdbcRepository implements Repository {
 
             ret = Connections.getConnection();
         } catch (final SQLException e) {
-            LOGGER.log(Level.ERROR, "Gets connection failed", e);
+            LOGGER.log(Level.ERROR, "Gets a connection failed", e);
         }
 
         CONN.set(ret);
@@ -887,15 +882,15 @@ public final class JdbcRepository implements Repository {
 
                 break;
             case IN:
-                filterOperator = "in";
+                filterOperator = "IN";
 
                 break;
             case LIKE:
-                filterOperator = " like ";
+                filterOperator = " LIKE ";
 
                 break;
             case NOT_LIKE:
-                filterOperator = " not like ";
+                filterOperator = " NOT LIKE ";
 
                 break;
             default:
@@ -911,7 +906,7 @@ public final class JdbcRepository implements Repository {
             boolean isSubFist = true;
 
             if (objects != null && !objects.isEmpty()) {
-                filterSql.append(propertyFilter.getKey()).append(" in ");
+                filterSql.append(propertyFilter.getKey()).append(" IN ");
 
                 final Iterator<Object> obs = objects.iterator();
 
@@ -967,11 +962,11 @@ public final class JdbcRepository implements Repository {
             if (iterator.hasNext()) {
                 switch (compositeFilter.getOperator()) {
                     case AND:
-                        filterSql.append(" and ");
+                        filterSql.append(" AND ");
                         break;
 
                     case OR:
-                        filterSql.append(" or ");
+                        filterSql.append(" OR ");
                         break;
 
                     default:
