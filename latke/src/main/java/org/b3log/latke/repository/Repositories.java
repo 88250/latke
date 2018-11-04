@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Repository utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Sep 5, 2018
+ * @version 1.1.0.1, Nov 4, 2018
  */
 public final class Repositories {
 
@@ -162,7 +162,7 @@ public final class Repositories {
         }
 
         final JSONObject repositoryDef = getRepositoryDef(repositoryName);
-        if (!repositoryDef.optBoolean("fieldcheck")) { // https://github.com/b3log/latke/issues/103
+        if (!repositoryDef.optBoolean("fieldcheck")) { // 默认不启用字段检查 https://github.com/b3log/latke/issues/103
             return;
         }
 
