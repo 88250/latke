@@ -24,7 +24,7 @@ import java.util.Map;
  * None repository implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.0, Mar 2, 2018
+ * @version 1.3.0.1, Nov 4, 2018
  */
 public final class NoneRepository implements Repository {
 
@@ -121,4 +121,8 @@ public final class NoneRepository implements Repository {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public void setDebug(final boolean debugEnabled) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
