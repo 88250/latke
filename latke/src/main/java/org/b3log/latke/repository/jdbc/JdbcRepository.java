@@ -525,7 +525,7 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * getQuery sql.
+     * Builds query SQL and count result.
      *
      * @param currentPageNum currentPageNum
      * @param pageSize       pageSize
@@ -533,35 +533,33 @@ public final class JdbcRepository implements Repository {
      *                       calculated, otherwise, the returned pageCnt will be this pageCount, and recordCnt will be {@code 0}, means these
      *                       values will not be calculated
      * @param query          query
-     * @param sql            sql
+     * @param sqlBuilder     the specified SQL builder
      * @param paramList      paramList
      * @return &lt;pageCnt, Integer&gt;,<br/>
      * &lt;recordCnt, Integer&gt;<br/>
      * @throws RepositoryException RepositoryException
      */
     private Map<String, Object> get(final int currentPageNum, final int pageSize, final int pageCount,
-                                    final Query query, final StringBuilder sql, final List<Object> paramList) throws RepositoryException {
+                                    final Query query, final StringBuilder sqlBuilder, final List<Object> paramList) throws RepositoryException {
         final Map<String, Object> ret = new HashMap<>();
 
         int pageCnt = pageCount;
         int recordCnt = 0;
 
-        final StringBuilder selectSql = new StringBuilder();
-        final StringBuilder filterSql = new StringBuilder();
-        final StringBuilder orderBySql = new StringBuilder();
+        final StringBuilder selectBuilder = new StringBuilder();
+        final StringBuilder whereBuilder = new StringBuilder();
+        final StringBuilder orderByBuilder = new StringBuilder();
 
-        buildSelect(selectSql, query.getProjections());
-        buildWhere(filterSql, paramList, query.getFilter());
-        buildOrderBy(orderBySql, query.getSorts());
+        buildSelect(selectBuilder, query.getProjections());
+        buildWhere(whereBuilder, paramList, query.getFilter());
+        buildOrderBy(orderByBuilder, query.getSorts());
 
         if (-1 == pageCount) {
-            final StringBuilder countSql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
-
-            if (StringUtils.isNotBlank(filterSql.toString())) {
-                countSql.append(" WHERE ").append(filterSql);
+            final StringBuilder countBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
+            if (StringUtils.isNotBlank(whereBuilder.toString())) {
+                countBuilder.append(" WHERE ").append(whereBuilder);
             }
-
-            recordCnt = (int) count(countSql, paramList);
+            recordCnt = (int) count(countBuilder, paramList);
             if (0 == recordCnt) {
                 ret.put(Pagination.PAGINATION_PAGE_COUNT, 0);
                 ret.put(Pagination.PAGINATION_RECORD_COUNT, 0);
@@ -575,7 +573,10 @@ public final class JdbcRepository implements Repository {
         ret.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
         ret.put(Pagination.PAGINATION_RECORD_COUNT, recordCnt);
 
-        getQuerySql(currentPageNum, pageSize, selectSql, filterSql, orderBySql, sql);
+        final int start = (currentPageNum - 1) * pageSize;
+        final int end = start + pageSize;
+        sqlBuilder.append(JdbcFactory.createJdbcFactory().
+                queryPage(start, end, selectBuilder.toString(), whereBuilder.toString(), orderByBuilder.toString(), getName()));
 
         return ret;
     }
@@ -597,25 +598,6 @@ public final class JdbcRepository implements Repository {
         selectBuilder.append(projections.stream().map(Projection::getKey).collect(Collectors.joining(", ")));
     }
 
-    /**
-     * getQuerySql.
-     *
-     * @param currentPageNum currentPageNum
-     * @param pageSize       pageSize
-     * @param selectSql      selectSql
-     * @param filterSql      filterSql
-     * @param orderBySql     orderBySql
-     * @param sql            sql
-     */
-    private void getQuerySql(final int currentPageNum, final int pageSize,
-                             final StringBuilder selectSql, final StringBuilder filterSql,
-                             final StringBuilder orderBySql, final StringBuilder sql) {
-        final int start = (currentPageNum - 1) * pageSize;
-        final int end = start + pageSize;
-
-        sql.append(JdbcFactory.createJdbcFactory().queryPage(start, end, selectSql.toString(), filterSql.toString(), orderBySql.toString(),
-                getName()));
-    }
 
     /**
      * Builds 'WHERE' part with the specified where build, param list and filter.
