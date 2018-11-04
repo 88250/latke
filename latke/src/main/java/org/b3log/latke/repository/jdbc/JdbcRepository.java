@@ -897,11 +897,11 @@ public final class JdbcRepository implements Repository {
 
                 break;
             case LIKE:
-                filterOperator = " LIKE ";
+                filterOperator = "LIKE";
 
                 break;
             case NOT_LIKE:
-                filterOperator = " NOT LIKE ";
+                filterOperator = "NOT LIKE";
 
                 break;
             default:
@@ -909,7 +909,7 @@ public final class JdbcRepository implements Repository {
         }
 
         if (FilterOperator.IN != propertyFilter.getOperator()) {
-            filterSql.append(propertyFilter.getKey()).append(filterOperator).append("?");
+            filterSql.append(propertyFilter.getKey()).append(" ").append(filterOperator).append(" ?");
             paramList.add(propertyFilter.getValue());
         } else {
             final Collection<Object> objects = (Collection<Object>) propertyFilter.getValue();
