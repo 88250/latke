@@ -87,10 +87,16 @@ public final class JdbcRepository implements Repository {
      * Repository name.
      */
     private final String name;
+
     /**
      * Writable?
      */
     private boolean writable = true;
+
+    /**
+     * Debug enabled?
+     */
+    private boolean debug;
 
     /**
      * Constructs a JDBC repository with the specified name.
@@ -140,7 +146,7 @@ public final class JdbcRepository implements Repository {
                 toOracleClobEmpty(jsonObject);
             }
             ret = buildAddSql(jsonObject, paramList, sql);
-            JdbcUtil.executeSql(sql.toString(), paramList, connection, false);
+            JdbcUtil.executeSql(sql.toString(), paramList, connection, debug);
             JdbcUtil.fromOracleClobEmpty(jsonObject);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Add failed", e);
@@ -247,7 +253,7 @@ public final class JdbcRepository implements Repository {
                 return;
             }
 
-            JdbcUtil.executeSql(sql, paramList, connection, false);
+            JdbcUtil.executeSql(sql, paramList, connection, debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Update failed", e);
 
@@ -355,7 +361,7 @@ public final class JdbcRepository implements Repository {
 
         try {
             remove(id, sql);
-            JdbcUtil.executeSql(sql.toString(), connection, false);
+            JdbcUtil.executeSql(sql.toString(), connection, debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove failed", e);
 
@@ -376,7 +382,7 @@ public final class JdbcRepository implements Repository {
 
         final Connection connection = getConnection();
         try {
-            JdbcUtil.executeSql(deleteSQL.toString(), paramList, connection, false);
+            JdbcUtil.executeSql(deleteSQL.toString(), paramList, connection, debug);
         } catch (final SQLException e) {
             LOGGER.log(Level.ERROR, "Remove failed", e);
 
@@ -407,7 +413,7 @@ public final class JdbcRepository implements Repository {
             final ArrayList<Object> paramList = new ArrayList<>();
 
             paramList.add(id);
-            ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), false);
+            ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), debug);
         } catch (final SQLException e) {
             throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
@@ -502,9 +508,9 @@ public final class JdbcRepository implements Repository {
         final Connection connection = getConnection();
         try {
             if (null == params || 0 == params.length) {
-                jsonResults = JdbcUtil.queryJsonArray(statement, Collections.emptyList(), connection, getName(), false);
+                jsonResults = JdbcUtil.queryJsonArray(statement, Collections.emptyList(), connection, getName(), debug);
             } else {
-                jsonResults = JdbcUtil.queryJsonArray(statement, Arrays.asList(params), connection, getName(), false);
+                jsonResults = JdbcUtil.queryJsonArray(statement, Arrays.asList(params), connection, getName(), debug);
             }
 
             return CollectionUtils.jsonArrayToList(jsonResults);
@@ -691,7 +697,7 @@ public final class JdbcRepository implements Repository {
 
         getRandomly(fetchSize, sql);
         try {
-            jsonArray = JdbcUtil.queryJsonArray(sql.toString(), new ArrayList<>(), connection, getName(), false);
+            jsonArray = JdbcUtil.queryJsonArray(sql.toString(), new ArrayList<>(), connection, getName(), debug);
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObjects.add(jsonArray.getJSONObject(i));
@@ -753,7 +759,7 @@ public final class JdbcRepository implements Repository {
         long count;
 
         try {
-            jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), false);
+            jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), debug);
             count = jsonObject.getLong(jsonObject.keys().next());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Count failed", e);
@@ -815,6 +821,11 @@ public final class JdbcRepository implements Repository {
     @Override
     public void setWritable(final boolean writable) {
         this.writable = writable;
+    }
+
+    @Override
+    public void setDebug(final boolean debugEnabled) {
+        this.debug = debugEnabled;
     }
 
     /**

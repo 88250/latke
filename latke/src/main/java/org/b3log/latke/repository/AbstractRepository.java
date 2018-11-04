@@ -38,7 +38,7 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.3.0.0, Mar 3, 2018
+ * @version 2.3.0.1, Nov 4, 2018
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -51,6 +51,11 @@ public abstract class AbstractRepository implements Repository {
      * Repository.
      */
     private Repository repository;
+
+    /**
+     * Debug flag.
+     */
+    private boolean debug;
 
     /**
      * Constructs a repository with the specified name.
@@ -230,6 +235,11 @@ public abstract class AbstractRepository implements Repository {
     @Override
     public void setWritable(final boolean writable) {
         repository.setWritable(writable);
+    }
+
+    @Override
+    public void setDebug(final boolean debugEnabled) {
+        repository.setDebug(debugEnabled);
     }
 
     /**

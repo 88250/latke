@@ -26,7 +26,7 @@ import java.util.Map;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.4.0.0, Aug 27, 2018
+ * @version 1.4.0.1, Nov 4, 2018
  */
 public interface Repository {
 
@@ -218,7 +218,14 @@ public interface Repository {
     /**
      * Sets whether the repository is writable with the specified flag.
      *
-     * @param writable the specified flat, {@code true} for writable, {@code false} otherwise
+     * @param writable the specified flag, {@code true} for writable, {@code false} otherwise
      */
     void setWritable(final boolean writable);
+
+    /**
+     * Sets whether the repository is debug to show SQL with the specified flag.
+     *
+     * @param debugEnabled the specified flag, {@code true} for enabled, {@code false} otherwise
+     */
+    void setDebug(final boolean debugEnabled);
 }
