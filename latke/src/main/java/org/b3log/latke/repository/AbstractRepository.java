@@ -19,14 +19,10 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.model.Pagination;
-import org.b3log.latke.repository.jdbc.JDBCRepositoryException;
 import org.b3log.latke.util.Callstacks;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -145,13 +141,7 @@ public abstract class AbstractRepository implements Repository {
 
     @Override
     public JSONObject get(final String id) throws RepositoryException {
-        try {
-            return repository.get(id);
-        } catch (final JDBCRepositoryException e) {
-            LOGGER.log(Level.WARN, "SQL exception [msg={0}]", e.getMessage());
-
-            return null;
-        }
+        return repository.get(id);
     }
 
     @Override
@@ -166,35 +156,12 @@ public abstract class AbstractRepository implements Repository {
 
     @Override
     public JSONObject get(final Query query) throws RepositoryException {
-        try {
-            return repository.get(query);
-        } catch (final JDBCRepositoryException e) {
-            LOGGER.log(Level.WARN, "SQL exception [msg={0}, repository={1}, query={2}]",
-                    e.getMessage(), repository.getName(), query.toString());
-
-            final JSONObject ret = new JSONObject();
-            final JSONObject pagination = new JSONObject();
-
-            ret.put(Pagination.PAGINATION, pagination);
-            pagination.put(Pagination.PAGINATION_PAGE_COUNT, 0);
-            final JSONArray results = new JSONArray();
-
-            ret.put(Keys.RESULTS, results);
-
-            return ret;
-        }
+        return repository.get(query);
     }
 
     @Override
     public List<JSONObject> select(final String statement, final Object... params) throws RepositoryException {
-        try {
-            return repository.select(statement, params);
-        } catch (final JDBCRepositoryException e) {
-            LOGGER.log(Level.WARN, "SQL exception [msg={0}, repository={1}, statement={2}]",
-                    e.getMessage(), repository.getName(), statement);
-
-            return Collections.emptyList();
-        }
+        return repository.select(statement, params);
     }
 
     @Override

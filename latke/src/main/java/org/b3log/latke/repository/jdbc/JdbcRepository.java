@@ -415,8 +415,6 @@ public final class JdbcRepository implements Repository {
 
             paramList.add(id);
             ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), debug);
-        } catch (final SQLException e) {
-            throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Get failed", e);
 
@@ -473,26 +471,21 @@ public final class JdbcRepository implements Repository {
         final List<Object> paramList = new ArrayList<>();
 
         try {
-            final Map<String, Object> paginationCnt = get(currentPageNum, pageSize, pageCount, query, sql, paramList);
-
-            // page
+            final Map<String, Object> paginationCnt = buildSQLCount(currentPageNum, pageSize, pageCount, query, sql, paramList);
             final JSONObject pagination = new JSONObject();
             final int pageCnt = (Integer) paginationCnt.get(Pagination.PAGINATION_PAGE_COUNT);
             pagination.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
             pagination.put(Pagination.PAGINATION_RECORD_COUNT, paginationCnt.get(Pagination.PAGINATION_RECORD_COUNT));
             ret.put(Pagination.PAGINATION, pagination);
-
-            // result
             if (0 == pageCnt) {
                 ret.put(Keys.RESULTS, new JSONArray());
+
                 return ret;
             }
 
             final JSONArray jsonResults = JdbcUtil.queryJsonArray(sql.toString(), paramList, connection, getName(), query.isDebug());
 
             ret.put(Keys.RESULTS, jsonResults);
-        } catch (final SQLException e) {
-            throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Query failed", e);
 
@@ -515,8 +508,6 @@ public final class JdbcRepository implements Repository {
             }
 
             return CollectionUtils.jsonArrayToList(jsonResults);
-        } catch (final SQLException e) {
-            throw new JDBCRepositoryException(e);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Select failed", e);
 
@@ -539,8 +530,8 @@ public final class JdbcRepository implements Repository {
      * &lt;recordCnt, Integer&gt;<br/>
      * @throws RepositoryException RepositoryException
      */
-    private Map<String, Object> get(final int currentPageNum, final int pageSize, final int pageCount,
-                                    final Query query, final StringBuilder sqlBuilder, final List<Object> paramList) throws RepositoryException {
+    private Map<String, Object> buildSQLCount(final int currentPageNum, final int pageSize, final int pageCount,
+                                              final Query query, final StringBuilder sqlBuilder, final List<Object> paramList) throws RepositoryException {
         final Map<String, Object> ret = new HashMap<>();
 
         int pageCnt = pageCount;
