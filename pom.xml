@@ -163,6 +163,7 @@
                     <skipTests>false</skipTests>
                     <parallel>methods</parallel>
                     <threadCount>20</threadCount>
+                    <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
             </plugin>
 
