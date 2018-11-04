@@ -22,7 +22,7 @@ import java.util.Map.Entry;
  * Query.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Jun 5, 2018
+ * @version 1.1.0.1, Nov 4, 2018
  * @see Projection
  * @see Filter
  * @see SortDirection
@@ -57,7 +57,7 @@ public final class Query {
     /**
      * Projections.
      */
-    private Set<Projection> projections = new HashSet<>();
+    private List<Projection> projections = new ArrayList<>();
 
     /**
      * Indices.
@@ -108,8 +108,8 @@ public final class Query {
      *
      * @return projections
      */
-    public Set<Projection> getProjections() {
-        return Collections.unmodifiableSet(projections);
+    public List<Projection> getProjections() {
+        return Collections.unmodifiableList(projections);
     }
 
     /**

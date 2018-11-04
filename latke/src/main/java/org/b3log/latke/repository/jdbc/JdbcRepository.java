@@ -34,6 +34,7 @@ import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * JDBC repository implementation.
@@ -375,7 +376,7 @@ public final class JdbcRepository implements Repository {
 
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSql = new StringBuilder();
-        getFilterSql(filterSql, paramList, query.getFilter());
+        buildWhere(filterSql, paramList, query.getFilter());
         if (StringUtils.isNotBlank(filterSql.toString())) {
             deleteSQL.append(" WHERE ").append(filterSql);
         }
@@ -549,9 +550,9 @@ public final class JdbcRepository implements Repository {
         final StringBuilder filterSql = new StringBuilder();
         final StringBuilder orderBySql = new StringBuilder();
 
-        getSelectSql(selectSql, query.getProjections());
-        getFilterSql(filterSql, paramList, query.getFilter());
-        getOrderBySql(orderBySql, query.getSorts());
+        buildSelect(selectSql, query.getProjections());
+        buildWhere(filterSql, paramList, query.getFilter());
+        buildOrderBy(orderBySql, query.getSorts());
 
         if (-1 == pageCount) {
             final StringBuilder countSql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
@@ -580,42 +581,20 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * get select sql. if projections size = 0 ,return select count(*).
+     * Builds 'SELECT' part with the specified select build and projections.
      *
-     * @param selectSql   selectSql
-     * @param projections projections
+     * @param selectBuilder the specified select builder
+     * @param projections   the specified projections
      */
-    private void getSelectSql(final StringBuilder selectSql, final Set<Projection> projections) {
-        selectSql.append("SELECT ");
-
+    private void buildSelect(final StringBuilder selectBuilder, final List<Projection> projections) {
+        selectBuilder.append("SELECT ");
         if (null == projections || projections.isEmpty()) {
-            selectSql.append(" * ");
+            selectBuilder.append(" * ");
+
             return;
         }
 
-        concatProjections(projections, selectSql);
-    }
-
-    /**
-     * concat specified projections.
-     *
-     * @param projections specified
-     * @param selectSql   select statement
-     */
-    private void concatProjections(final Set<Projection> projections, final StringBuilder selectSql) {
-        for (Projection projection : projections) {
-            selectSql.append(projection.getKey()).append(",");
-        }
-        deleteLastChar(selectSql);
-    }
-
-    /**
-     * delete last char.
-     *
-     * @param selectSql select statement
-     */
-    private void deleteLastChar(final StringBuilder selectSql) {
-        selectSql.setLength(Math.max(selectSql.length() - 1, 0));
+        selectBuilder.append(projections.stream().map(Projection::getKey).collect(Collectors.joining(", ")));
     }
 
     /**
@@ -639,41 +618,41 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * get filterSql and paramList.
+     * Builds 'WHERE' part with the specified where build, param list and filter.
      *
-     * @param filterSql filterSql
-     * @param paramList paramList
-     * @param filter    filter
+     * @param whereBuilder the specified where builder
+     * @param paramList    the specified param list
+     * @param filter       the specified filter
      * @throws RepositoryException RepositoryException
      */
-    private void getFilterSql(final StringBuilder filterSql, final List<Object> paramList, final Filter filter) throws RepositoryException {
+    private void buildWhere(final StringBuilder whereBuilder, final List<Object> paramList, final Filter filter) throws RepositoryException {
         if (null == filter) {
             return;
         }
 
         if (filter instanceof PropertyFilter) {
-            processPropertyFilter(filterSql, paramList, (PropertyFilter) filter);
+            processPropertyFilter(whereBuilder, paramList, (PropertyFilter) filter);
         } else { // CompositeFiler
-            processCompositeFilter(filterSql, paramList, (CompositeFilter) filter);
+            processCompositeFilter(whereBuilder, paramList, (CompositeFilter) filter);
         }
     }
 
     /**
-     * getOrderBySql.
+     * Builds 'ORDER BY' part with the specified order by build and sorts.
      *
-     * @param orderBySql orderBySql
-     * @param sorts      sorts
+     * @param orderByBuilder the specified order by builder
+     * @param sorts          the specified sorts
      */
-    private void getOrderBySql(final StringBuilder orderBySql, final Map<String, SortDirection> sorts) {
+    private void buildOrderBy(final StringBuilder orderByBuilder, final Map<String, SortDirection> sorts) {
         boolean isFirst = true;
         String querySortDirection;
 
         for (final Map.Entry<String, SortDirection> sort : sorts.entrySet()) {
             if (isFirst) {
-                orderBySql.append(" ORDER BY ");
+                orderByBuilder.append(" ORDER BY ");
                 isFirst = false;
             } else {
-                orderBySql.append(",");
+                orderByBuilder.append(", ");
             }
 
             if (sort.getValue().equals(SortDirection.ASCENDING)) {
@@ -681,8 +660,7 @@ public final class JdbcRepository implements Repository {
             } else {
                 querySortDirection = "DESC";
             }
-
-            orderBySql.append(sort.getKey()).append(" ").append(querySortDirection);
+            orderByBuilder.append(sort.getKey()).append(" ").append(querySortDirection);
         }
     }
 
@@ -735,7 +713,7 @@ public final class JdbcRepository implements Repository {
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSql = new StringBuilder();
 
-        getFilterSql(filterSql, paramList, query.getFilter());
+        buildWhere(filterSql, paramList, query.getFilter());
 
         if (StringUtils.isNotBlank(filterSql.toString())) {
             countSql.append(" WHERE ").append(filterSql);
@@ -858,12 +836,12 @@ public final class JdbcRepository implements Repository {
     /**
      * Processes property filter.
      *
-     * @param filterSql      the specified filter SQL to build
+     * @param whereBuilder   the specified where builder
      * @param paramList      the specified parameter list
      * @param propertyFilter the specified property filter
      * @throws RepositoryException repository exception
      */
-    private void processPropertyFilter(final StringBuilder filterSql,
+    private void processPropertyFilter(final StringBuilder whereBuilder,
                                        final List<Object> paramList, final PropertyFilter propertyFilter) throws RepositoryException {
         String filterOperator;
 
@@ -909,7 +887,7 @@ public final class JdbcRepository implements Repository {
         }
 
         if (FilterOperator.IN != propertyFilter.getOperator()) {
-            filterSql.append(propertyFilter.getKey()).append(" ").append(filterOperator).append(" ?");
+            whereBuilder.append(propertyFilter.getKey()).append(" ").append(filterOperator).append(" ?");
             paramList.add(propertyFilter.getValue());
         } else {
             final Collection<Object> objects = (Collection<Object>) propertyFilter.getValue();
@@ -917,26 +895,26 @@ public final class JdbcRepository implements Repository {
             boolean isSubFist = true;
 
             if (objects != null && !objects.isEmpty()) {
-                filterSql.append(propertyFilter.getKey()).append(" IN ");
+                whereBuilder.append(propertyFilter.getKey()).append(" IN ");
 
                 final Iterator<Object> obs = objects.iterator();
 
                 while (obs.hasNext()) {
                     if (isSubFist) {
-                        filterSql.append("(");
+                        whereBuilder.append("(");
                         isSubFist = false;
                     } else {
-                        filterSql.append(",");
+                        whereBuilder.append(",");
                     }
-                    filterSql.append("?");
+                    whereBuilder.append("?");
                     paramList.add(obs.next());
 
                     if (!obs.hasNext()) {
-                        filterSql.append(") ");
+                        whereBuilder.append(") ");
                     }
                 }
             } else { // in () => 1!=1
-                filterSql.append("1!=1");
+                whereBuilder.append("1 != 1");
             }
         }
     }
@@ -944,40 +922,38 @@ public final class JdbcRepository implements Repository {
     /**
      * Processes composite filter.
      *
-     * @param filterSql       the specified filter SQL to build
+     * @param whereBuilder    the specified where builder
      * @param paramList       the specified parameter list
      * @param compositeFilter the specified composite filter
      * @throws RepositoryException repository exception
      */
-    private void processCompositeFilter(final StringBuilder filterSql,
+    private void processCompositeFilter(final StringBuilder whereBuilder,
                                         final List<Object> paramList, final CompositeFilter compositeFilter) throws RepositoryException {
         final List<Filter> subFilters = compositeFilter.getSubFilters();
-
         if (2 > subFilters.size()) {
             throw new RepositoryException("At least two sub filters in a composite filter");
         }
 
-        filterSql.append("(");
+        whereBuilder.append("(");
 
         final Iterator<Filter> iterator = subFilters.iterator();
-
         while (iterator.hasNext()) {
             final Filter filter = iterator.next();
 
             if (filter instanceof PropertyFilter) {
-                processPropertyFilter(filterSql, paramList, (PropertyFilter) filter);
+                processPropertyFilter(whereBuilder, paramList, (PropertyFilter) filter);
             } else { // CompositeFilter
-                processCompositeFilter(filterSql, paramList, (CompositeFilter) filter);
+                processCompositeFilter(whereBuilder, paramList, (CompositeFilter) filter);
             }
 
             if (iterator.hasNext()) {
                 switch (compositeFilter.getOperator()) {
                     case AND:
-                        filterSql.append(" AND ");
+                        whereBuilder.append(" AND ");
                         break;
 
                     case OR:
-                        filterSql.append(" OR ");
+                        whereBuilder.append(" OR ");
                         break;
 
                     default:
@@ -986,7 +962,7 @@ public final class JdbcRepository implements Repository {
             }
         }
 
-        filterSql.append(")");
+        whereBuilder.append(")");
     }
 
     /**
