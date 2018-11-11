@@ -21,6 +21,7 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.util.Requests;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +35,7 @@ import java.util.Map;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.13, Sep 26, 2018
+ * @version 1.0.0.14, Nov 11, 2018
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {
 
@@ -126,12 +127,13 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
 
             afterRender(context);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "FreeMarker renders error", e);
+            final String requestLog = Requests.getLog(request);
+            LOGGER.log(Level.ERROR, "Renders template failed [" + requestLog + "]", e);
 
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (final IOException ex) {
-                LOGGER.log(Level.ERROR, "Can not send error 500!", ex);
+                LOGGER.log(Level.ERROR, "Sends error 500 failed", ex);
             }
         }
     }
