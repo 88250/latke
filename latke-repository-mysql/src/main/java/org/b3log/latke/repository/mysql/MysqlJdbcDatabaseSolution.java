@@ -29,7 +29,7 @@ import java.util.List;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, May 15, 2018
+ * @version 2.0.0.1, Nov 14, 2018
  */
 public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
@@ -51,19 +51,19 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
                             final String tableName) {
         final StringBuilder sql = new StringBuilder();
 
-        sql.append(selectSql).append(" from ").append(tableName);
+        sql.append(selectSql).append(" FROM ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {
-            sql.append(" where ").append(filterSql);
+            sql.append(" WHERE ").append(filterSql);
         }
         sql.append(orderBySql);
-        sql.append(" limit ").append(start).append(",").append(end - start);
+        sql.append(" LIMIT ").append(start).append(",").append(end - start);
         return sql.toString();
     }
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
         final StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
+        sql.append("SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
 
         return sql.toString();
     }
