@@ -19,19 +19,16 @@ import org.apache.commons.io.IOUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-import java.io.*;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Command execution utilities.
  *
- * <p>
- * Uses {@link Runtime#exec(java.lang.String)} to execute command, to avoid the execution be blocked, starts a thread to
- * read error stream from th executing sub process.
- * </p>
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.4, Jul 27, 2016
+ * @version 2.0.0.0, Nov 25, 2018
  * @since 0.1.0
  */
 public final class Execs {
@@ -42,74 +39,46 @@ public final class Execs {
     private static final Logger LOGGER = Logger.getLogger(Execs.class);
 
     /**
-     * Private constructor.
-     */
-    private Execs() {
-    }
-
-    /**
-     * Executes the specified command.
+     * Executes the specified command with the specified timeout.
      *
-     * @param cmd the specified command
+     * @param cmd     the specified command
+     * @param timeout the specified timeout
      * @return execution output, returns {@code null} if execution failed
      */
-    public static String exec(final String cmd) {
-        InputStream inputStream = null;
-
-        try {
-            final Process p = Runtime.getRuntime().exec(cmd);
-
-            // Starts a thread for error stream
-            final Thread t = new Thread(new InputStreamRunnable(p.getErrorStream()));
-
-            t.start();
-
-            inputStream = p.getInputStream();
-            final String result = IOUtils.toString(inputStream, "UTF-8");
-
-            inputStream.close();
-            p.destroy();
-
-            return result;
-        } catch (final IOException e) {
-            LOGGER.log(Level.ERROR, "Executes command [" + cmd + "] failed", e);
-
-            return null;
-        } finally {
-            IOUtils.closeQuietly(inputStream);
+    public static String exec(final String cmd, final long timeout) {
+        final StringTokenizer st = new StringTokenizer(cmd);
+        final String[] cmds = new String[st.countTokens()];
+        for (int i = 0; st.hasMoreTokens(); i++) {
+            cmds[i] = st.nextToken();
         }
+
+        return exec(cmds, timeout);
     }
 
     /**
-     * Executes the specified commands.
+     * Executes the specified commands with the specified timeout.
      *
-     * @param cmds the specified commands
+     * @param cmds    the specified commands
+     * @param timeout the specified timeout in milliseconds
      * @return execution output, returns {@code null} if execution failed
      */
-    public static String exec(final String[] cmds) {
-        InputStream inputStream = null;
-
+    public static String exec(final String[] cmds, final long timeout) {
         try {
-            final Process p = Runtime.getRuntime().exec(cmds);
+            final Process process = new ProcessBuilder(cmds).redirectErrorStream(true).start();
+            try (final InputStream inputStream = process.getInputStream()) {
+                final InputStreamRunnable reader = new InputStreamRunnable(inputStream);
+                new Thread(reader).start();
+                if (!process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
+                    LOGGER.log(Level.WARN, "Executes commands [" + Arrays.toString(cmds) + "] timeout");
+                    process.destroy();
+                }
 
-            // Starts a thread for error stream
-            final Thread t = new Thread(new InputStreamRunnable(p.getErrorStream()));
-
-            t.start();
-
-            inputStream = p.getInputStream();
-            final String result = IOUtils.toString(inputStream, "UTF-8");
-
-            inputStream.close();
-            p.destroy();
-
-            return result;
-        } catch (final IOException e) {
+                return reader.output;
+            }
+        } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Executes commands [" + Arrays.toString(cmds) + "] failed", e);
 
             return null;
-        } finally {
-            IOUtils.closeQuietly(inputStream);
         }
     }
 
@@ -117,15 +86,20 @@ public final class Execs {
      * Input stream handle thread.
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.0, May 8, 2013
+     * @version 1.0.0.1, Nov 25, 2018
      * @since 0.1.0
      */
     private static class InputStreamRunnable implements Runnable {
 
         /**
-         * Reader.
+         * Input stream.
          */
-        private BufferedReader bufferedReader;
+        private InputStream inputStream;
+
+        /**
+         * Output.
+         */
+        private String output;
 
         /**
          * Constructs a input stream handle thread with the specified input stream.
@@ -133,24 +107,22 @@ public final class Execs {
          * @param is the specified input stream
          */
         public InputStreamRunnable(final InputStream is) {
-            try {
-                bufferedReader = new BufferedReader(new InputStreamReader(new BufferedInputStream(is), "UTF-8"));
-            } catch (final UnsupportedEncodingException e) {
-                throw new IllegalStateException("Constructs input stream handle thread failed", e);
-            }
+            inputStream = is;
         }
 
         @Override
         public void run() {
             try {
-                String s;
-
-                while (null != (s = bufferedReader.readLine())) {
-                }
-            } catch (final IOException e) {
-            } finally {
-                IOUtils.closeQuietly(bufferedReader);
+                output = IOUtils.toString(inputStream, "UTF-8");
+            } catch (final Exception e) {
+                LOGGER.log(Level.ERROR, "Reads input stream failed", e);
             }
         }
+    }
+
+    /**
+     * Private constructor.
+     */
+    private Execs() {
     }
 }
