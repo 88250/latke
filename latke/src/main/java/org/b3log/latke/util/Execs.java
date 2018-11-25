@@ -19,7 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
@@ -65,58 +65,25 @@ public final class Execs {
     public static String exec(final String[] cmds, final long timeout) {
         try {
             final Process process = new ProcessBuilder(cmds).redirectErrorStream(true).start();
-            try (final InputStream inputStream = process.getInputStream()) {
-                final InputStreamRunnable reader = new InputStreamRunnable(inputStream);
-                new Thread(reader).start();
-                if (!process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
-                    LOGGER.log(Level.WARN, "Executes commands [" + Arrays.toString(cmds) + "] timeout");
-                    process.destroy();
+            final StringWriter writer = new StringWriter();
+            new Thread(() -> {
+                try {
+                    IOUtils.copy(process.getInputStream(), writer, "UTF-8");
+                } catch (final Exception e) {
+                    LOGGER.log(Level.ERROR, "Reads input stream failed: " + e.getMessage());
                 }
+            }).start();
 
-                return reader.output;
+            if (!process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
+                LOGGER.log(Level.WARN, "Executes commands [" + Arrays.toString(cmds) + "] timeout");
+                process.destroy();
             }
+
+            return writer.toString();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Executes commands [" + Arrays.toString(cmds) + "] failed", e);
 
             return null;
-        }
-    }
-
-    /**
-     * Input stream handle thread.
-     *
-     * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.1, Nov 25, 2018
-     * @since 0.1.0
-     */
-    private static class InputStreamRunnable implements Runnable {
-
-        /**
-         * Input stream.
-         */
-        private InputStream inputStream;
-
-        /**
-         * Output.
-         */
-        private String output;
-
-        /**
-         * Constructs a input stream handle thread with the specified input stream.
-         *
-         * @param is the specified input stream
-         */
-        public InputStreamRunnable(final InputStream is) {
-            inputStream = is;
-        }
-
-        @Override
-        public void run() {
-            try {
-                output = IOUtils.toString(inputStream, "UTF-8");
-            } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, "Reads input stream failed", e);
-            }
         }
     }
 
