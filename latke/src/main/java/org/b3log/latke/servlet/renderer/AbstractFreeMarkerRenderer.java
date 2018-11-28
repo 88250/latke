@@ -35,7 +35,7 @@ import java.util.Map;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.14, Nov 11, 2018
+ * @version 1.0.0.15, Nov 28, 2018
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {
 
@@ -128,7 +128,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
             afterRender(context);
         } catch (final Exception e) {
             final String requestLog = Requests.getLog(request);
-            LOGGER.log(Level.ERROR, "Renders template failed [" + requestLog + "]", e);
+            LOGGER.log(Level.ERROR, "Renders template [" + templateName + "] failed [" + requestLog + "]", e);
 
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -170,18 +170,13 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
      * Puts the page response contents into cache with the key getting from request attribute specified by <i>page cache
      * key</i>.
      * </p>
-     * <p>
-     * <b>Note</b>: This method will write page content to the writer of the specified response without flush/close it.
-     * </p>
      *
      * @param html     the specified HTML content
      * @param request  the specified request
      * @param response the specified response
      * @throws Exception exception
      */
-    @SuppressWarnings("unchecked")
-    protected void doRender(final String html, final HttpServletRequest request, final HttpServletResponse response)
-            throws Exception {
+    protected void doRender(final String html, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         PrintWriter writer;
         try {
             writer = response.getWriter();
@@ -189,16 +184,20 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
             writer = new PrintWriter(response.getOutputStream());
         }
 
-        if (response.isCommitted()) { // response has been sent redirect
+        try {
+            if (response.isCommitted()) { // response has been sent redirect
+                writer.flush();
+                writer.close();
+
+                return;
+            }
+
+            writer.write(html);
             writer.flush();
             writer.close();
-
-            return;
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Writes pipe failed: " + e.getMessage());
         }
-
-        writer.write(html);
-        writer.flush();
-        writer.close();
     }
 
     /**
