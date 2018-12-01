@@ -84,69 +84,6 @@ public final class MatchResult {
     }
 
     /**
-     * setProcessorInfo.
-     *
-     * @param processorInfo processorInfo
-     */
-    public void setProcessorInfo(final ProcessorInfo processorInfo) {
-        this.processorInfo = processorInfo;
-    }
-
-    /**
-     * getRequestURI.
-     *
-     * @return requestURI
-     */
-    public String getRequestURI() {
-        return requestURI;
-    }
-
-    /**
-     * setRequestURI.
-     *
-     * @param requestURI requestURI
-     */
-    public void setRequestURI(final String requestURI) {
-        this.requestURI = requestURI;
-    }
-
-    /**
-     * getMatchedMethod.
-     *
-     * @return matchedMethod
-     */
-    public String getMatchedMethod() {
-        return matchedMethod;
-    }
-
-    /**
-     * setMatchedMethod.
-     *
-     * @param matchedMethod matchedMethod
-     */
-    public void setMatchedMethod(final String matchedMethod) {
-        this.matchedMethod = matchedMethod;
-    }
-
-    /**
-     * getMatchedPattern.
-     *
-     * @return matchedPattern
-     */
-    public String getMatchedPattern() {
-        return matchedPattern;
-    }
-
-    /**
-     * setMatchedPattern.
-     *
-     * @param matchedPattern matchedPattern
-     */
-    public void setMatchedPattern(final String matchedPattern) {
-        this.matchedPattern = matchedPattern;
-    }
-
-    /**
      * getMapValues.
      *
      * @return mapValues

@@ -54,14 +54,14 @@ public class RequestDispatchHandler implements Handler {
     private static final Logger LOGGER = Logger.getLogger(RequestDispatchHandler.class);
 
     /**
-     * the shared-matched-result-data name.
+     * The shared-matched-result-data name.
      */
     public static final String MATCH_RESULT = "MATCH_RESULT";
 
     /**
-     * all processors holder for match.
+     * All processors holder for routing.
      */
-    private final List<ProcessorInfo> processorInfos = new ArrayList<>();
+    private static final List<ProcessorInfo> processorInfos = new ArrayList<>();
 
     /**
      * Public constructor..
@@ -88,13 +88,12 @@ public class RequestDispatchHandler implements Handler {
     }
 
     /**
-     * doMatch.
+     * Routes the request specified by the given request URI and HTTP method.
      *
-     * @param requestURI requestURI
-     * @param httpMethod http-method
-     * @return MatchResult
+     * @param requestURI the given request URI
+     * @param httpMethod the given HTTP method
+     * @return MatchResult, returns {@code null} if not found
      */
-    // XXX: Performance Issue 
     private MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret = null;
         final String contextPath = Latkes.getContextPath();
@@ -165,10 +164,10 @@ public class RequestDispatchHandler implements Handler {
     }
 
     /**
-     * get real-Http-method.
+     * Gets the HTTP method.
      *
-     * @param request request
-     * @return http-method
+     * @param request the specified request
+     * @return HTTP method
      */
     private String getHTTPMethod(final HttpServletRequest request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
@@ -180,9 +179,9 @@ public class RequestDispatchHandler implements Handler {
     }
 
     /**
-     * get real-requestURI.
+     * Gets the request URI.
      *
-     * @param request request
+     * @param request the specified request
      * @return requestURI
      */
     private String getRequestURI(final HttpServletRequest request) {
