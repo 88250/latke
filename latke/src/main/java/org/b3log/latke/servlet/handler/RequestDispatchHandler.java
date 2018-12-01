@@ -44,7 +44,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Feb 24, 2018
+ * @version 1.0.1.1, Dec 1, 2018
  */
 public class RequestDispatchHandler implements Handler {
 
@@ -98,14 +98,12 @@ public class RequestDispatchHandler implements Handler {
     private MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret = null;
         final String contextPath = Latkes.getContextPath();
-        for (ProcessorInfo processorInfo : processorInfos) {
-            for (HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
+        for (final ProcessorInfo processorInfo : processorInfos) {
+            for (final HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
                 if (httpMethod.equals(httpRequestMethod.toString())) {
                     final String[] uriPatterns = processorInfo.getPattern();
-
-                    for (String uriPattern : uriPatterns) {
-                        ret = getResult(contextPath + uriPattern, processorInfo, requestURI, httpMethod);
-
+                    for (final String uriPattern : uriPatterns) {
+                        ret = route(contextPath + uriPattern, processorInfo, requestURI, httpMethod);
                         if (null != ret) {
                             return ret;
                         }
@@ -118,15 +116,15 @@ public class RequestDispatchHandler implements Handler {
     }
 
     /**
-     * get MatchResult.
+     * Routes the request specified by the given URI pattern, processor info, request URI and HTTP method.
      *
-     * @param uriPattern    uriPattern
-     * @param processorInfo processorInfo
-     * @param requestURI    requestURI
-     * @param method        http method
-     * @return MatchResult
+     * @param uriPattern    the given URI pattern
+     * @param processorInfo the given processor info
+     * @param requestURI    the given request URI
+     * @param method        the given HTTP method
+     * @return MatchResult, returns {@code null} if not found
      */
-    private MatchResult getResult(final String uriPattern, final ProcessorInfo processorInfo, final String requestURI, final String method) {
+    private MatchResult route(final String uriPattern, final ProcessorInfo processorInfo, final String requestURI, final String method) {
         if (requestURI.equals(uriPattern)) {
             return new MatchResult(processorInfo, requestURI, method, uriPattern);
         }
@@ -138,7 +136,6 @@ public class RequestDispatchHandler implements Handler {
                 }
 
                 break;
-
             case ANT_PATH:
                 if (AntPathMatcher.match(uriPattern, requestURI)) {
                     return new MatchResult(processorInfo, requestURI, method, uriPattern);
@@ -160,10 +157,8 @@ public class RequestDispatchHandler implements Handler {
                 }
 
                 break;
-
             default:
-                throw new IllegalStateException(
-                        "Can not process URI pattern[uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
+                throw new IllegalStateException("Can not process URI pattern [uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
         }
 
         return null;

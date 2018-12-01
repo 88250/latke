@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * the matched-result bean.
+ * The route matched-result bean.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Feb 24, 2018
+ * @version 1.0.0.3, Dec 1, 2018
  */
-public class MatchResult {
+public final class MatchResult {
 
     /**
      * the processorInfo which be matched.
@@ -72,12 +72,6 @@ public class MatchResult {
         this.requestURI = requestURI;
         this.matchedMethod = matchedMethod;
         this.matchedPattern = matchedPattern;
-    }
-
-    /**
-     * the default constructor.
-     */
-    public MatchResult() {
     }
 
     /**
