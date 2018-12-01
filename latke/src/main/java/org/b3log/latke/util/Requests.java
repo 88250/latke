@@ -37,7 +37,7 @@ import java.util.Enumeration;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 2.0.0.1, Oct 24, 2018
+ * @version 2.0.0.2, Dec 2, 2018
  * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
@@ -138,22 +138,23 @@ public final class Requests {
                 Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append(indents).append("host=").append(httpServletRequest.getRemoteHost()).append("],").append(
                 Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("headers=[").append(Strings.LINE_SEPARATOR);
-
+        logBuilder.append(indents).append("headers=[");
+        final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
         final StringBuilder headerLogBuilder = new StringBuilder();
-        @SuppressWarnings("unchecked") final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
-
-        while (headerNames.hasMoreElements()) {
-            final String name = headerNames.nextElement();
-            final String value = httpServletRequest.getHeader(name);
-
-            headerLogBuilder.append(indents).append(indents).append(name).append("=").append(value);
-
-            headerLogBuilder.append(Strings.LINE_SEPARATOR);
+        if (null != headerNames) {
+            logBuilder.append(Strings.LINE_SEPARATOR);
+            while (headerNames.hasMoreElements()) {
+                final String name = headerNames.nextElement();
+                final String value = httpServletRequest.getHeader(name);
+                headerLogBuilder.append(indents).append(indents).append(name).append("=").append(value);
+                headerLogBuilder.append(Strings.LINE_SEPARATOR);
+            }
+            headerLogBuilder.append(indents);
         }
-        headerLogBuilder.append(indents).append("]");
+        headerLogBuilder.append("]");
+        logBuilder.append(headerLogBuilder.toString());
 
-        logBuilder.append(headerLogBuilder.toString()).append(Strings.LINE_SEPARATOR).append("]");
+        logBuilder.append(Strings.LINE_SEPARATOR).append("]");
 
         return logBuilder.toString();
     }
