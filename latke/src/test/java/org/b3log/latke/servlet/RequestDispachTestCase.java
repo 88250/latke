@@ -52,10 +52,6 @@ public class RequestDispachTestCase {
         Latkes.init();
     }
 
-    public void func2(final HTTPRequestContext context) {
-        System.out.println("func2");
-    }
-
     @BeforeTest
     public void beforeTest() {
         System.out.println("Request Processors Test");
@@ -63,8 +59,7 @@ public class RequestDispachTestCase {
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
 
-        DispatcherServlet.route().get().uri("/func1").handler(c -> System.out.println("func1"));
-        DispatcherServlet.route().get().uri("/func2").handler(this::func2);
+        DispatcherServlet.route().get().uri("/func1").handler(c -> "func1");
         DispatcherServlet.mapping();
 
         BeanManager.start(classes);
@@ -84,12 +79,12 @@ public class RequestDispachTestCase {
     @Test
     public void testFunctionalRouting() {
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/func");
+        when(request.getRequestURI()).thenReturn("/func1");
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
         Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
-        Assert.assertEquals("string", control.data(MethodInvokeHandler.INVOKE_RESULT));
+        Assert.assertEquals("func1", control.data(MethodInvokeHandler.INVOKE_RESULT));
     }
 
     @Test

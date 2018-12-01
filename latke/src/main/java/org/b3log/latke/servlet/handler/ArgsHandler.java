@@ -19,6 +19,7 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.converter.Converters;
+import org.b3log.latke.servlet.function.ContextHandler;
 import org.b3log.latke.util.Reflections;
 
 import java.lang.reflect.Method;
@@ -42,11 +43,13 @@ public class ArgsHandler implements Handler {
     @Override
     public void handle(final HTTPRequestContext context, final HttpControl httpControl) {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
-        final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
+        final ProcessorInfo processorInfo = result.getProcessorInfo();
+        final ContextHandler handler = processorInfo.getHandler();
         final Map<String, Object> args = new LinkedHashMap<>();
-        if (invokeHolder.getDeclaringClass().getName().contains("$$Lambda$")) {
+        if (null != handler) {
             doParamter(args, HTTPRequestContext.class, "context", context, result, 0);
         } else {
+            final Method invokeHolder = processorInfo.getInvokeHolder();
             final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
             final String[] paramterNames = getParamterNames(invokeHolder);
             for (int i = 0; i < parameterTypes.length; i++) {

@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.1, Oct 24, 2018
+ * @version 1.0.2.2, Dec 2, 2018
  */
 public final class DispatcherServlet extends HttpServlet {
 
@@ -123,6 +123,7 @@ public final class DispatcherServlet extends HttpServlet {
         private URIPatternMode uriPatternMode = URIPatternMode.ANT_PATH;
         private List<HTTPRequestMethod> httpRequestMethods = new ArrayList<>();
         private Class<? extends ConvertSupport> convertSupport = ConvertSupport.class;
+        private ContextHandler handler;
         private Method method;
 
         public Router uri(final String requestURIPattern) {
@@ -180,11 +181,12 @@ public final class DispatcherServlet extends HttpServlet {
         }
 
         public void handler(final ContextHandler handler) {
+            this.handler = handler;
+
             final Class clazz = handler.getClass();
             System.out.println(clazz.hashCode());
-            final Method enclosingMethod = clazz.getDeclaredMethods()[0];
-
-            this.method = enclosingMethod;
+            final Method method = clazz.getDeclaredMethods()[0];
+            this.method = method;
         }
 
         ProcessorInfo toProcessorInfo() {
@@ -194,6 +196,7 @@ public final class DispatcherServlet extends HttpServlet {
             ret.setHttpMethod(httpRequestMethods.toArray(new HTTPRequestMethod[0]));
             ret.setConvertClass(convertSupport);
             ret.setInvokeHolder(method);
+            ret.setHandler(handler);
 
             return ret;
         }

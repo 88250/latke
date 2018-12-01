@@ -18,6 +18,7 @@ package org.b3log.latke.servlet.handler;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
 import org.b3log.latke.servlet.converter.ConvertSupport;
+import org.b3log.latke.servlet.function.ContextHandler;
 
 import java.lang.reflect.Method;
 
@@ -25,9 +26,10 @@ import java.lang.reflect.Method;
  * ProcessorInfo,which store the processor-annotation info.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 18, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.2, Dec 2, 2018
  */
-public class ProcessorInfo {
+public final class ProcessorInfo {
 
     /**
      * patterns in Processor.
@@ -48,6 +50,11 @@ public class ProcessorInfo {
      * the real Method holder.
      */
     private Method invokeHolder;
+
+    /**
+     * Context handler if using functional routing.
+     */
+    private ContextHandler handler;
 
     /**
      * the param-convert configs.
@@ -124,6 +131,24 @@ public class ProcessorInfo {
      */
     public Method getInvokeHolder() {
         return invokeHolder;
+    }
+
+    /**
+     * Sets the context handler.
+     *
+     * @param handler the specified handler
+     */
+    public void setHandler(final ContextHandler handler) {
+        this.handler = handler;
+    }
+
+    /**
+     * Gets the context handler.
+     *
+     * @return handler
+     */
+    public ContextHandler getHandler() {
+        return handler;
     }
 
     /**
