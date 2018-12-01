@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Jan 23, 2014
+ * @version 1.0.0.3, Dec 1, 2018
  */
 public class RequestDispachTestCase {
 
@@ -52,13 +52,20 @@ public class RequestDispachTestCase {
         Latkes.init();
     }
 
+    public void func2(final HTTPRequestContext context) {
+        System.out.println("func2");
+    }
+
     @BeforeTest
-    @SuppressWarnings("unchecked")
     public void beforeTest() {
         System.out.println("Request Processors Test");
         final List<Class<?>> classes = new ArrayList<>();
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
+
+        DispatcherServlet.route().get().uri("/func1").handler(c -> System.out.println("func1"));
+        DispatcherServlet.route().get().uri("/func2").handler(this::func2);
+        DispatcherServlet.mapping();
 
         BeanManager.start(classes);
 
@@ -72,6 +79,17 @@ public class RequestDispachTestCase {
     public void afterTest() {
         System.out.println("afterTest SpeakerUnitTest");
         BeanManager.close();
+    }
+
+    @Test
+    public void testFunctionalRouting() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn("/func");
+        when(request.getMethod()).thenReturn("GET");
+
+        HttpControl control = doFlow(request);
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
+        Assert.assertEquals("string", control.data(MethodInvokeHandler.INVOKE_RESULT));
     }
 
     @Test

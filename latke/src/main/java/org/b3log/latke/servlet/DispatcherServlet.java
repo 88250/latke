@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.servlet;
 
+import org.b3log.latke.servlet.converter.ConvertSupport;
+import org.b3log.latke.servlet.function.ContextHandler;
 import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.HTTP404Renderer;
@@ -23,6 +25,7 @@ import org.b3log.latke.servlet.renderer.HTTP500Renderer;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,5 +100,102 @@ public final class DispatcherServlet extends HttpServlet {
             renderer = new HTTP404Renderer();
         }
         renderer.render(context);
+    }
+
+    private static List<Router> routers = new ArrayList<>();
+
+    public static void mapping() {
+        for (final Router router : routers) {
+            final ProcessorInfo processorInfo = router.toProcessorInfo();
+            RequestDispatchHandler.addProcessorInfo(processorInfo);
+        }
+    }
+
+    public static Router route() {
+        final Router ret = new Router();
+        routers.add(ret);
+
+        return ret;
+    }
+
+    public static class Router {
+        private List<String> requestURIPattenrs = new ArrayList<>();
+        private URIPatternMode uriPatternMode = URIPatternMode.ANT_PATH;
+        private List<HTTPRequestMethod> httpRequestMethods = new ArrayList<>();
+        private Class<? extends ConvertSupport> convertSupport = ConvertSupport.class;
+        private Method method;
+
+        public Router uri(final String requestURIPattern) {
+            requestURIPattenrs.add(requestURIPattern);
+
+            return this;
+        }
+
+        public Router uriMode(final URIPatternMode uriPatternMode) {
+            this.uriPatternMode = uriPatternMode;
+
+            return this;
+        }
+
+        public Router get() {
+            httpRequestMethods.add(HTTPRequestMethod.GET);
+
+            return this;
+        }
+
+        public Router post() {
+            httpRequestMethods.add(HTTPRequestMethod.POST);
+
+            return this;
+        }
+
+        public Router delete() {
+            httpRequestMethods.add(HTTPRequestMethod.DELETE);
+
+            return this;
+        }
+
+        public Router put() {
+            httpRequestMethods.add(HTTPRequestMethod.PUT);
+
+            return this;
+        }
+
+        public Router head() {
+            httpRequestMethods.add(HTTPRequestMethod.HEAD);
+
+            return this;
+        }
+
+        public Router options() {
+            httpRequestMethods.add(HTTPRequestMethod.OPTIONS);
+
+            return this;
+        }
+
+        public Router trace() {
+            httpRequestMethods.add(HTTPRequestMethod.TRACE);
+
+            return this;
+        }
+
+        public void handler(final ContextHandler handler) {
+            final Class clazz = handler.getClass();
+            System.out.println(clazz.hashCode());
+            final Method enclosingMethod = clazz.getDeclaredMethods()[0];
+
+            this.method = enclosingMethod;
+        }
+
+        ProcessorInfo toProcessorInfo() {
+            final ProcessorInfo ret = new ProcessorInfo();
+            ret.setPattern(requestURIPattenrs.toArray(new String[0]));
+            ret.setUriPatternMode(uriPatternMode);
+            ret.setHttpMethod(httpRequestMethods.toArray(new HTTPRequestMethod[0]));
+            ret.setConvertClass(convertSupport);
+            ret.setInvokeHolder(method);
+
+            return ret;
+        }
     }
 }

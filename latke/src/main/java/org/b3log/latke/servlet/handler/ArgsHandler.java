@@ -29,7 +29,8 @@ import java.util.Map;
  * PrepareHandler: prepare the method args.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.2, Sep 26, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.3, Dec 2, 2018
  */
 public class ArgsHandler implements Handler {
 
@@ -39,25 +40,24 @@ public class ArgsHandler implements Handler {
     public static final String PREPARE_ARGS = "PREPARE_ARGS";
 
     @Override
-    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
-
+    public void handle(final HTTPRequestContext context, final HttpControl httpControl) {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final Method invokeHolder = result.getProcessorInfo().getInvokeHolder();
-
-        final Map<String, Object> args = new LinkedHashMap<String, Object>();
-
-        final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
-        final String[] paramterNames = getParamterNames(invokeHolder);
-
-        for (int i = 0; i < parameterTypes.length; i++) {
-            doParamter(args, parameterTypes[i], paramterNames[i], context, result, i);
+        final Map<String, Object> args = new LinkedHashMap<>();
+        if (invokeHolder.getDeclaringClass().getName().contains("$$Lambda$")) {
+            doParamter(args, HTTPRequestContext.class, "context", context, result, 0);
+        } else {
+            final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
+            final String[] paramterNames = getParamterNames(invokeHolder);
+            for (int i = 0; i < parameterTypes.length; i++) {
+                doParamter(args, parameterTypes[i], paramterNames[i], context, result, i);
+            }
         }
 
         httpControl.data(PREPARE_ARGS, args);
 
         // do advice and real method invoke
         httpControl.nextHandler();
-
     }
 
     /**
@@ -70,10 +70,7 @@ public class ArgsHandler implements Handler {
      * @param result        MatchResult
      * @param sequence      the sequence of the param in methon
      */
-
-
     private void doParamter(final Map<String, Object> args, final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) {
-
         final Object ret = Converters.doConvert(parameterType, paramterName, context, result, sequence);
 
         args.put(paramterName, ret);

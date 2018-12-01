@@ -211,25 +211,23 @@ public class RequestDispatchHandler implements Handler {
 
                 LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]", clz.getCanonicalName(), mthd.getName());
 
-                addProcessorInfo(requestProcessingMethodAnn, mthd);
+                final ProcessorInfo processorInfo = new ProcessorInfo();
+                processorInfo.setPattern(requestProcessingMethodAnn.value());
+                processorInfo.setUriPatternMode(requestProcessingMethodAnn.uriPatternsMode());
+                processorInfo.setHttpMethod(requestProcessingMethodAnn.method());
+                processorInfo.setConvertClass(requestProcessingMethodAnn.convertClass());
+                processorInfo.setInvokeHolder(mthd);
+                addProcessorInfo(processorInfo);
             }
         }
     }
 
     /**
-     * addProcessorInfo.
+     * Adds the specified processor info
      *
-     * @param requestProcessingMethodAnn requestProcessingMethodAnn
-     * @param mthd                       the invoke method
+     * @param processorInfo the specified processor info
      */
-    private void addProcessorInfo(final RequestProcessing requestProcessingMethodAnn, final Method mthd) {
-        final ProcessorInfo processorInfo = new ProcessorInfo();
-        processorInfo.setPattern(requestProcessingMethodAnn.value());
-        processorInfo.setUriPatternMode(requestProcessingMethodAnn.uriPatternsMode());
-        processorInfo.setHttpMethod(requestProcessingMethodAnn.method());
-        processorInfo.setConvertClass(requestProcessingMethodAnn.convertClass());
-        processorInfo.setInvokeHolder(mthd);
-
+    public static void addProcessorInfo(final ProcessorInfo processorInfo) {
         processorInfos.add(processorInfo);
     }
 }
