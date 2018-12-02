@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Dec 1, 2018
+ * @version 1.0.0.4, Dec 2, 2018
  */
 public class RequestDispachTestCase {
 
@@ -59,8 +59,8 @@ public class RequestDispachTestCase {
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
 
-        DispatcherServlet.route().get().uri("/func1").handler(c -> "func1");
-        DispatcherServlet.mapping();
+        DispatcherServlet.get("/func1", c -> "func1").
+                mapping();
 
         BeanManager.start(classes);
 

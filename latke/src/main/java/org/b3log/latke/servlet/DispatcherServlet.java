@@ -104,11 +104,20 @@ public final class DispatcherServlet extends HttpServlet {
 
     private static List<Router> routers = new ArrayList<>();
 
-    public static void mapping() {
-        for (final Router router : routers) {
-            final ProcessorInfo processorInfo = router.toProcessorInfo();
-            RequestDispatchHandler.addProcessorInfo(processorInfo);
-        }
+    public static Router delete(final String uriPattern, final ContextHandler handler) {
+        return route().delete(uriPattern, handler);
+    }
+
+    public static Router put(final String uriPattern, final ContextHandler handler) {
+        return route().put(uriPattern, handler);
+    }
+
+    public static Router get(final String uriPattern, final ContextHandler handler) {
+        return route().get(uriPattern, handler);
+    }
+
+    public static Router post(final String uriPattern, final ContextHandler handler) {
+        return route().post(uriPattern, handler);
     }
 
     public static Router route() {
@@ -118,16 +127,65 @@ public final class DispatcherServlet extends HttpServlet {
         return ret;
     }
 
+    public static void mapping() {
+        for (final Router router : routers) {
+            final ProcessorInfo processorInfo = router.toProcessorInfo();
+            RequestDispatchHandler.addProcessorInfo(processorInfo);
+        }
+    }
+
     public static class Router {
-        private List<String> requestURIPattenrs = new ArrayList<>();
+        private List<String> uriPatterns = new ArrayList<>();
         private URIPatternMode uriPatternMode = URIPatternMode.ANT_PATH;
         private List<HTTPRequestMethod> httpRequestMethods = new ArrayList<>();
         private Class<? extends ConvertSupport> convertSupport = ConvertSupport.class;
         private ContextHandler handler;
         private Method method;
 
-        public Router uri(final String requestURIPattern) {
-            requestURIPattenrs.add(requestURIPattern);
+        public Router delete(final String uriPattern, final ContextHandler handler) {
+            return delete(new String[]{uriPattern}, handler);
+        }
+
+        public Router delete(final String[] uriPatterns, final ContextHandler handler) {
+            return delete().uris(uriPatterns).handler(handler);
+        }
+
+        public Router put(final String uriPattern, final ContextHandler handler) {
+            return put(new String[]{uriPattern}, handler);
+        }
+
+        public Router put(final String[] uriPatterns, final ContextHandler handler) {
+            return put().uris(uriPatterns).handler(handler);
+        }
+
+        public Router post(final String uriPattern, final ContextHandler handler) {
+            return post(new String[]{uriPattern}, handler);
+        }
+
+        public Router post(final String[] uriPatterns, final ContextHandler handler) {
+            return post().uris(uriPatterns).handler(handler);
+        }
+
+        public Router get(final String uriPattern, final ContextHandler handler) {
+            return get(new String[]{uriPattern}, handler);
+        }
+
+        public Router get(final String[] uriPatterns, final ContextHandler handler) {
+            return get().uris(uriPatterns).handler(handler);
+        }
+
+        public Router uris(final String[] uriPatterns) {
+            for (int i = 0; i < uriPatterns.length; i++) {
+                uri(uriPatterns[i]);
+            }
+
+            return this;
+        }
+
+        public Router uri(final String uriPattern) {
+            if (!uriPatterns.contains(uriPattern)) {
+                uriPatterns.add(uriPattern);
+            }
 
             return this;
         }
@@ -139,59 +197,78 @@ public final class DispatcherServlet extends HttpServlet {
         }
 
         public Router get() {
-            httpRequestMethods.add(HTTPRequestMethod.GET);
+            if (!httpRequestMethods.contains(HTTPRequestMethod.GET)) {
+                httpRequestMethods.add(HTTPRequestMethod.GET);
+            }
 
             return this;
         }
 
         public Router post() {
-            httpRequestMethods.add(HTTPRequestMethod.POST);
+            if (!httpRequestMethods.contains(HTTPRequestMethod.POST)) {
+                httpRequestMethods.add(HTTPRequestMethod.POST);
+            }
 
             return this;
         }
 
         public Router delete() {
-            httpRequestMethods.add(HTTPRequestMethod.DELETE);
+            if (!httpRequestMethods.contains(HTTPRequestMethod.DELETE)) {
+                httpRequestMethods.add(HTTPRequestMethod.DELETE);
+            }
 
             return this;
         }
 
         public Router put() {
-            httpRequestMethods.add(HTTPRequestMethod.PUT);
+            if (!httpRequestMethods.contains(HTTPRequestMethod.PUT)) {
+                httpRequestMethods.add(HTTPRequestMethod.PUT);
+            }
 
             return this;
         }
 
         public Router head() {
-            httpRequestMethods.add(HTTPRequestMethod.HEAD);
+            if (!httpRequestMethods.contains(HTTPRequestMethod.HEAD)) {
+                httpRequestMethods.add(HTTPRequestMethod.HEAD);
+            }
 
             return this;
         }
 
         public Router options() {
-            httpRequestMethods.add(HTTPRequestMethod.OPTIONS);
+            if (!httpRequestMethods.contains(HTTPRequestMethod.OPTIONS)) {
+                httpRequestMethods.add(HTTPRequestMethod.OPTIONS);
+            }
 
             return this;
         }
 
         public Router trace() {
-            httpRequestMethods.add(HTTPRequestMethod.TRACE);
+            if (!httpRequestMethods.contains(HTTPRequestMethod.TRACE)) {
+                httpRequestMethods.add(HTTPRequestMethod.TRACE);
+            }
 
             return this;
         }
 
-        public void handler(final ContextHandler handler) {
+        public Router handler(final ContextHandler handler) {
             this.handler = handler;
 
             final Class clazz = handler.getClass();
-            System.out.println(clazz.hashCode());
             final Method method = clazz.getDeclaredMethods()[0];
             this.method = method;
+
+            return this;
+        }
+
+        public void mapping() {
+            DispatcherServlet.mapping();
         }
 
         ProcessorInfo toProcessorInfo() {
             final ProcessorInfo ret = new ProcessorInfo();
-            ret.setPattern(requestURIPattenrs.toArray(new String[0]));
+            ret.setPattern(uriPatterns.toArray(new String[0]));
             ret.setUriPatternMode(uriPatternMode);
             ret.setHttpMethod(httpRequestMethods.toArray(new HTTPRequestMethod[0]));
             ret.setConvertClass(convertSupport);
