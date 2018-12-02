@@ -59,7 +59,7 @@ public class RequestDispachTestCase {
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
 
-        DispatcherServlet.get("/func1", c -> "func1");
+        DispatcherServlet.get("/func1", c -> System.out.println("route to func1"));
         DispatcherServlet.mapping();
 
         BeanManager.start(classes);
@@ -84,7 +84,7 @@ public class RequestDispachTestCase {
 
         HttpControl control = doFlow(request);
         Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
-        Assert.assertEquals("func1", control.data(MethodInvokeHandler.INVOKE_RESULT));
+        Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
     }
 
     @Test

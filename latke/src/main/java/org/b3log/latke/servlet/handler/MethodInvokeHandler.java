@@ -47,10 +47,10 @@ public class MethodInvokeHandler implements Handler {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
         final ProcessorInfo processorInfo = result.getProcessorInfo();
-        Object ret;
+        Object ret = null;
         final ContextHandler handler = processorInfo.getHandler();
         if (null != handler) {
-            ret = processorInfo.getHandler().handle(context);
+            processorInfo.getHandler().handle(context);
         } else {
             final Method invokeHolder = processorInfo.getInvokeHolder();
             final BeanManager beanManager = BeanManager.getInstance();
