@@ -75,6 +75,15 @@ public final class MatchResult {
     }
 
     /**
+     * Gets the matched pattern.
+     *
+     * @return matched pattern
+     */
+    public String getMatchedPattern() {
+        return matchedPattern;
+    }
+
+    /**
      * getProcessorInfo.
      *
      * @return processorInfo
