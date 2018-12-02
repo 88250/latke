@@ -10,12 +10,12 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 ## 特性
 
 * 基于注解的 MVC
+* 支持函数式路由
 * IoC、AOP
 * 支持多种数据库 ORM
 * 内存/Redis 缓存
-* 定时任务
+* 支持多语言
 * 事件机制
-* 多语言支持
 * 插件机制
 
 ## 案例
