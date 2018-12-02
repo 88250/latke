@@ -15,7 +15,6 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 * 内存/Redis 缓存
 * 定时任务
 * 事件机制
-* Javamail 客户端
 * 多语言支持
 * 插件机制
 
