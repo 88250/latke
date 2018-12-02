@@ -19,7 +19,6 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.util.Callstacks;
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
@@ -34,7 +33,7 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.3.0.1, Nov 4, 2018
+ * @version 2.3.0.2, Dec 2, 2018
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -90,18 +89,9 @@ public abstract class AbstractRepository implements Repository {
         LOGGER.log(Level.INFO, "Constructed repository [name={0}]", name);
     }
 
-    /**
-     * Checks the current method is whether invoked as internal call.
-     *
-     * @return {@code true} if the current method is invoked as internal call, return {@code false} otherwise
-     */
-    private static boolean isInternalCall() {
-        return Callstacks.isCaller("org.b3log.latke.remote.RepositoryAccessor", "*");
-    }
-
     @Override
     public String add(final JSONObject jsonObject) throws RepositoryException {
-        if (!isWritable() && !isInternalCall()) {
+        if (!isWritable()) {
             throw new RepositoryException("The repository [name=" + getName() + "] is not writable at present");
         }
 
@@ -112,7 +102,7 @@ public abstract class AbstractRepository implements Repository {
 
     @Override
     public void update(final String id, final JSONObject jsonObject) throws RepositoryException {
-        if (!isWritable() && !isInternalCall()) {
+        if (!isWritable()) {
             throw new RepositoryException("The repository [name=" + getName() + "] is not writable at present");
         }
 
@@ -123,7 +113,7 @@ public abstract class AbstractRepository implements Repository {
 
     @Override
     public void remove(final String id) throws RepositoryException {
-        if (!isWritable() && !isInternalCall()) {
+        if (!isWritable()) {
             throw new RepositoryException("The repository [name=" + getName() + "] is not writable at present");
         }
 
@@ -132,7 +122,7 @@ public abstract class AbstractRepository implements Repository {
 
     @Override
     public void remove(final Query query) throws RepositoryException {
-        if (!isWritable() && !isInternalCall()) {
+        if (!isWritable()) {
             throw new RepositoryException("The repository [name=" + getName() + "] is not writable at present");
         }
 
