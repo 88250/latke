@@ -15,20 +15,19 @@
  */
 package org.b3log.latke.servlet.advice;
 
-
 import org.json.JSONObject;
 
-
 /**
- *  a mark Exception for {@link RequestProcessAdvice}.
- * 
+ * A mark exception for process advice.
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Jan 17, 2013
  */
 public class RequestReturnAdviceException extends RequestProcessAdviceException {
 
     /**
-     * the default constructor.
+     * Constructor.
+     *
      * @param jsonObject jsonObject
      */
     public RequestReturnAdviceException(final JSONObject jsonObject) {

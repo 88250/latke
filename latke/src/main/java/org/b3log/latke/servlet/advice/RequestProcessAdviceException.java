@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 
 /**
- * Exception for {@link RequestProcessAdvice}.
+ * Exception for process advice.
  * 
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Oct 14, 2012

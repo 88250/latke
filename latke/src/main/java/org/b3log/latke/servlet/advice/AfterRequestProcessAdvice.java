@@ -25,7 +25,7 @@ import org.b3log.latke.servlet.HTTPRequestContext;
  * @version 1.0.0.2, Sep 29, 2018
  */
 @Singleton
-public class AfterRequestProcessAdvice implements RequestProcessAdvice {
+public class AfterRequestProcessAdvice {
 
     /**
      * Do advice.

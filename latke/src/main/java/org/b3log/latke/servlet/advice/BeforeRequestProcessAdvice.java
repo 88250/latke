@@ -29,7 +29,7 @@ import java.util.Map;
  * @since 2.4.18
  */
 @Singleton
-public class BeforeRequestProcessAdvice implements RequestProcessAdvice {
+public class BeforeRequestProcessAdvice {
 
     /**
      * Do advice.
