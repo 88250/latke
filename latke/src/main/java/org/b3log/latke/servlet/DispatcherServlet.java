@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.servlet;
 
+import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
+import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.servlet.function.ContextHandler;
 import org.b3log.latke.servlet.handler.*;
@@ -313,6 +315,11 @@ public final class DispatcherServlet extends HttpServlet {
             ret.setConvertClass(convertSupport);
             ret.setInvokeHolder(method);
             ret.setHandler(handler);
+
+            final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = ProcessorInfo.getBeforeList(ret);
+            ret.setBeforeRequestProcessAdvices(beforeRequestProcessAdvices);
+            final List<AfterRequestProcessAdvice> afterRequestProcessAdvices = ProcessorInfo.getAfterList(ret);
+            ret.setAfterRequestProcessAdvices(afterRequestProcessAdvices);
 
             return ret;
         }

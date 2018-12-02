@@ -25,6 +25,8 @@ import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.HttpControl;
+import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
+import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.util.AntPathMatcher;
@@ -217,6 +219,12 @@ public class RequestDispatchHandler implements Handler {
                 processorInfo.setHttpMethod(requestProcessingMethodAnn.method());
                 processorInfo.setConvertClass(requestProcessingMethodAnn.convertClass());
                 processorInfo.setInvokeHolder(mthd);
+
+                final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = ProcessorInfo.getBeforeList(processorInfo);
+                processorInfo.setBeforeRequestProcessAdvices(beforeRequestProcessAdvices);
+                final List<AfterRequestProcessAdvice> afterRequestProcessAdvices = ProcessorInfo.getAfterList(processorInfo);
+                processorInfo.setAfterRequestProcessAdvices(afterRequestProcessAdvices);
+
                 addProcessorInfo(processorInfo);
             }
         }
