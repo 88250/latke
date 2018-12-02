@@ -229,13 +229,26 @@ public final class ProcessorInfo {
      * @return before request process advices
      */
     public static List<BeforeRequestProcessAdvice> getBeforeList(final ProcessorInfo processorInfo) {
-        final Method invokeHolder = processorInfo.getInvokeHolder();
-        final Class<?> processorClass = invokeHolder.getDeclaringClass();
-
         final List<BeforeRequestProcessAdvice> ret = new ArrayList<>();
 
+        final Method invokeHolder = processorInfo.getInvokeHolder();
+        Class<?> processorClass = null;
+
+        final ContextHandler handler = processorInfo.getHandler();
+        if (null != handler) {
+            try {
+                processorClass = Class.forName(invokeHolder.getDeclaringClass().getDeclaredFields()[0].getType().getName());
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            processorClass = invokeHolder.getDeclaringClass();
+        }
+
+        // TODO: get lambda method name for invokeHolder
+
         // 1. process class advice
-        if (processorClass.isAnnotationPresent(Before.class)) {
+        if (null != processorClass && processorClass.isAnnotationPresent(Before.class)) {
             final Class<? extends BeforeRequestProcessAdvice>[] bcs = processorClass.getAnnotation(Before.class).adviceClass();
             for (int i = 0; i < bcs.length; i++) {
                 final Class<? extends BeforeRequestProcessAdvice> bc = bcs[i];
@@ -263,10 +276,23 @@ public final class ProcessorInfo {
      * @return after request process advices
      */
     public static List<AfterRequestProcessAdvice> getAfterList(final ProcessorInfo processorInfo) {
-        final Method invokeHolder = processorInfo.getInvokeHolder();
-        final Class<?> processorClass = invokeHolder.getDeclaringClass();
-
         final List<AfterRequestProcessAdvice> ret = new ArrayList<>();
+
+        final Method invokeHolder = processorInfo.getInvokeHolder();
+        Class<?> processorClass = null;
+
+        final ContextHandler handler = processorInfo.getHandler();
+        if (null != handler) {
+            try {
+                processorClass = Class.forName(invokeHolder.getDeclaringClass().getDeclaredFields()[0].getType().getName());
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            processorClass = invokeHolder.getDeclaringClass();
+        }
+
+        // TODO: get lambda method name for invokeHolder
 
         // 1. process method advice
         if (invokeHolder.isAnnotationPresent(After.class)) {
@@ -278,7 +304,7 @@ public final class ProcessorInfo {
             }
         }
         // 2. process class advice
-        if (processorClass.isAnnotationPresent(After.class)) {
+        if (null != processorClass && processorClass.isAnnotationPresent(After.class)) {
             final Class<? extends AfterRequestProcessAdvice>[] acs = invokeHolder.getAnnotation(After.class).adviceClass();
             for (int i = 0; i < acs.length; i++) {
                 final Class<? extends AfterRequestProcessAdvice> ac = acs[i];
