@@ -16,7 +16,6 @@
 package org.b3log.latke.servlet;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Discoverer;
 import org.b3log.latke.ioc.mock.MockServletContext;
@@ -91,8 +90,6 @@ public abstract class AbstractServletListener implements ServletContextListener,
 
             throw new IllegalStateException("Initializes request processors failed");
         }
-
-        CronService.start();
     }
 
     /**

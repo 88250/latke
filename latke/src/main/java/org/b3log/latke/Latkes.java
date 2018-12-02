@@ -18,7 +18,6 @@ package org.b3log.latke;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cache.redis.RedisCache;
-import org.b3log.latke.cron.CronService;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -825,8 +824,6 @@ public final class Latkes {
      */
     public static void shutdown() {
         try {
-            CronService.shutdown();
-
             EXECUTOR_SERVICE.shutdown();
 
             if (RuntimeCache.REDIS == getRuntimeCache()) {
