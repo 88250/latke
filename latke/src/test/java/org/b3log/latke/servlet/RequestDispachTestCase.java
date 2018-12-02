@@ -59,8 +59,8 @@ public class RequestDispachTestCase {
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
 
-        DispatcherServlet.get("/func1", c -> "func1").
-                mapping();
+        DispatcherServlet.get("/func1", c -> "func1");
+        DispatcherServlet.mapping();
 
         BeanManager.start(classes);
 

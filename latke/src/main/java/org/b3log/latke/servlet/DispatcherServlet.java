@@ -70,11 +70,9 @@ public final class DispatcherServlet extends HttpServlet {
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) {
         final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
-
         httpRequestContext.setRequest(req);
         httpRequestContext.setResponse(resp);
         final HttpControl httpControl = new HttpControl(HANDLERS.iterator(), httpRequestContext);
-
         try {
             httpControl.nextHandler();
         } catch (final Exception e) {
@@ -260,10 +258,6 @@ public final class DispatcherServlet extends HttpServlet {
             this.method = method;
 
             return this;
-        }
-
-        public void mapping() {
-            DispatcherServlet.mapping();
         }
 
         ProcessorInfo toProcessorInfo() {
