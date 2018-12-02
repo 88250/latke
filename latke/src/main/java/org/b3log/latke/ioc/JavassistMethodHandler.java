@@ -24,12 +24,10 @@ import org.b3log.latke.repository.annotation.Transactional;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.b3log.latke.repository.jdbc.JdbcTransaction;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -94,13 +92,7 @@ final class JavassistMethodHandler implements MethodHandler {
         }
         calls.incrementAndGet();
 
-        final Class<?> declaringClass = method.getDeclaringClass();
-        final String invokingMethodName = declaringClass.getName() + '#' + method.getName();
-
-        // 1. @BeforeMethod handle
-        handleInterceptor(invokingMethodName, params, BeforeMethod.class);
-
-        // 2. Invocation with transaction handle
+        // Invocation with transaction handle
         final boolean withTransactionalAnno = method.isAnnotationPresent(Transactional.class);
         JdbcTransaction transaction = JdbcRepository.TX.get();
         final boolean alreadyInTransaction = null != transaction;
@@ -136,9 +128,6 @@ final class JavassistMethodHandler implements MethodHandler {
             throw e.getTargetException();
         }
 
-        // 3. @AfterMethod handle
-        handleInterceptor(invokingMethodName, params, AfterMethod.class);
-
         if (0 == calls.decrementAndGet()) {
             CALLS.set(null);
             final Connection connection = JdbcRepository.CONN.get();
@@ -149,34 +138,6 @@ final class JavassistMethodHandler implements MethodHandler {
         }
 
         return ret;
-    }
-
-    /**
-     * Interceptor handle with the specified invoking method name, invoking method parameters and intercept annotation
-     * class.
-     *
-     * @param invokingMehtodName the specified invoking method name
-     * @param params             the specified invoking method parameters
-     * @param interceptAnnClass  the specified intercept annotation class
-     */
-    private void handleInterceptor(final String invokingMehtodName, final Object[] params,
-                                   final Class<? extends Annotation> interceptAnnClass) {
-        final Set<Interceptor> interceptors = InterceptorHolder.getInterceptors(invokingMehtodName, interceptAnnClass);
-        for (final Interceptor interceptor : interceptors) {
-            final Method interceptMethod = interceptor.getInterceptMethod();
-            final Class<?> interceptMethodClass = interceptMethod.getDeclaringClass();
-
-            try {
-                final Object reference = beanManager.getReference(interceptMethodClass);
-
-                interceptMethod.invoke(reference, params);
-            } catch (final Exception e) {
-                final String errMsg = "Interception[" + interceptor.toString() + "] execute failed";
-                LOGGER.log(Level.ERROR, errMsg, e);
-
-                throw new RuntimeException(errMsg);
-            }
-        }
     }
 
     /**
