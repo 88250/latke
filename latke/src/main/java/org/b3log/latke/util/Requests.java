@@ -384,9 +384,6 @@ public final class Requests {
     public static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response) {
         response.setContentType("application/json");
 
-        final String errMsg = "Can not parse request[requestURI=" + request.getRequestURI() + ", method=" + request.getMethod()
-                + "], returns an empty json object";
-
         try {
             BufferedReader reader;
             try {
