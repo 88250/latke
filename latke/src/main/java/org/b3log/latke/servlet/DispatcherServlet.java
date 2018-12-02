@@ -100,24 +100,60 @@ public final class DispatcherServlet extends HttpServlet {
         renderer.render(context);
     }
 
+    /**
+     * Programmatic routers.
+     */
     private static List<Router> routers = new ArrayList<>();
 
+    /**
+     * HTTP DELETE routing.
+     *
+     * @param uriPattern the specified request URI pattern
+     * @param handler    the specified handler
+     * @return router
+     */
     public static Router delete(final String uriPattern, final ContextHandler handler) {
         return route().delete(uriPattern, handler);
     }
 
+    /**
+     * HTTP PUT routing.
+     *
+     * @param uriPattern the specified request URI pattern
+     * @param handler    the specified handler
+     * @return router
+     */
     public static Router put(final String uriPattern, final ContextHandler handler) {
         return route().put(uriPattern, handler);
     }
 
+    /**
+     * HTTP GET routing.
+     *
+     * @param uriPattern the specified request URI pattern
+     * @param handler    the specified handler
+     * @return router
+     */
     public static Router get(final String uriPattern, final ContextHandler handler) {
         return route().get(uriPattern, handler);
     }
 
+    /**
+     * HTTP POST routing.
+     *
+     * @param uriPattern the specified request URI pattern
+     * @param handler    the specified handler
+     * @return router
+     */
     public static Router post(final String uriPattern, final ContextHandler handler) {
         return route().post(uriPattern, handler);
     }
 
+    /**
+     * Registers a new router.
+     *
+     * @return router
+     */
     public static Router route() {
         final Router ret = new Router();
         routers.add(ret);
@@ -125,6 +161,9 @@ public final class DispatcherServlet extends HttpServlet {
         return ret;
     }
 
+    /**
+     * Performs mapping for all routers.
+     */
     public static void mapping() {
         for (final Router router : routers) {
             final ProcessorInfo processorInfo = router.toProcessorInfo();
@@ -132,6 +171,12 @@ public final class DispatcherServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Programmatic router.
+     *
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
+     * @version 1.0.0.0, Dec 2, 2018
+     */
     public static class Router {
         private List<String> uriPatterns = new ArrayList<>();
         private URIPatternMode uriPatternMode = URIPatternMode.ANT_PATH;
