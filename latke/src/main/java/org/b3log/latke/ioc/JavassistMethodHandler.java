@@ -18,8 +18,6 @@ package org.b3log.latke.ioc;
 import javassist.util.proxy.MethodFilter;
 import javassist.util.proxy.MethodHandler;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.intercept.annotation.AfterMethod;
-import org.b3log.latke.intercept.annotation.BeforeMethod;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.annotation.Transactional;

@@ -15,9 +15,6 @@
  */
 package org.b3log.latke.ioc;
 
-import org.b3log.latke.intercept.annotation.AfterMethod;
-import org.b3log.latke.intercept.annotation.BeforeMethod;
-
 import java.lang.annotation.Annotation;
 import java.util.*;
 

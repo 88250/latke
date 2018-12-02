@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.intercept;
 
-import org.b3log.latke.intercept.annotation.BeforeMethod;
+import org.b3log.latke.ioc.BeforeMethod;
 import org.b3log.latke.ioc.Singleton;
 
 @Singleton
