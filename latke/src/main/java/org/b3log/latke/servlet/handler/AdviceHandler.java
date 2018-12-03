@@ -23,7 +23,6 @@ import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
-import org.b3log.latke.servlet.advice.RequestReturnAdviceException;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.json.JSONObject;
@@ -60,8 +59,6 @@ public class AdviceHandler implements Handler {
             for (final BeforeRequestProcessAdvice beforeRequestProcessAdvice : beforeRequestProcessAdvices) {
                 beforeRequestProcessAdvice.doAdvice(context, args);
             }
-        } catch (final RequestReturnAdviceException re) {
-            return;
         } catch (final RequestProcessAdviceException e) {
             final JSONObject exception = e.getJsonObject();
             final String msg = exception.optString(Keys.MSG);
