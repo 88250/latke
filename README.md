@@ -3,7 +3,7 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 
 ## 简介
 
-[Latke](https://github.com/b3log/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC/AOP、事件通知、ORM、插件等组件。
+[Latke](https://github.com/b3log/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC、事件通知、ORM、插件等组件。
 
 在实体模型上使用 JSON 贯穿前后端，使应用开发更加快捷。这是 Latke 不同于其他框架的地方，非常适合小型应用的快速开发。
 
