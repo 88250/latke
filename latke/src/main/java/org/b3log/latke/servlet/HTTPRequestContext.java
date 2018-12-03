@@ -22,6 +22,7 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.b3log.latke.util.Requests;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -114,6 +115,15 @@ public final class HTTPRequestContext {
      */
     public void setResponse(final HttpServletResponse response) {
         this.response = response;
+    }
+
+    /**
+     * Gets the remote address of request.
+     *
+     * @return remote address
+     */
+    public String remoteAddr() {
+        return Requests.getRemoteAddr(request);
     }
 
     /**
