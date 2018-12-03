@@ -117,6 +117,112 @@ public final class HTTPRequestContext {
     }
 
     /**
+     * Sends redirect to the specified location.
+     *
+     * @param location the specified location
+     */
+    public void sendRedirect(final String location) {
+        try {
+            response.sendRedirect(location);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Sends redirect [" + location + "] failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Gets the value of a header specified by the given name
+     *
+     * @param name the given name
+     */
+    public String header(final String name) {
+        return request.getHeader(name);
+    }
+
+    /**
+     * Adds a header specified by the given name and value to the response.
+     *
+     * @param name  the given name
+     * @param value the given value
+     */
+    public void addHeader(final String name, final String value) {
+        response.addHeader(name, value);
+    }
+
+    /**
+     * Sets a header specified by the given name and value to the response.
+     *
+     * @param name  the given name
+     * @param value the given value
+     */
+    public void setHeader(final String name, final String value) {
+        response.setHeader(name, value);
+    }
+
+    /**
+     * Gets the request HTTP method.
+     *
+     * @return HTTP method
+     */
+    public String method() {
+        return request.getMethod();
+    }
+
+    /**
+     * Gets the request URI.
+     *
+     * @return request URI
+     */
+    public String requestURI() {
+        return request.getRequestURI();
+    }
+
+    /**
+     * Gets a attribute specified by the given name from request.
+     *
+     * @param name the given name
+     * @return attribute, returns {@code null} if not found
+     */
+    public Object attr(final String name) {
+        return request.getAttribute(name);
+    }
+
+    /**
+     * Gets a parameter specified by the given name from request body form or query string.
+     *
+     * @param name the given name
+     * @return parameter, returns {@code null} if not found
+     */
+    public String param(final String name) {
+        return request.getParameter(name);
+    }
+
+    /**
+     * Sends the specified error status code.
+     *
+     * @param sc the specified error status code
+     */
+    public void sendError(final int sc) {
+        try {
+            response.sendError(sc);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Sends error status code [" + sc + "] failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Sends the specified status code.
+     *
+     * @param sc the specified status code
+     */
+    public void setStatus(final int sc) {
+        try {
+            response.setStatus(sc);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Sends status code [" + sc + "] failed: " + e.getMessage());
+        }
+    }
+
+    /**
      * Parses request body into a json object.
      *
      * @return parsed request json object
