@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.util;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -26,8 +25,6 @@ import org.json.JSONObject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Enumeration;
@@ -55,11 +52,6 @@ public final class Requests {
      * </p>
      */
     public static final String PAGINATION_PATH_PATTERN = "*/*/*";
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(Requests.class);
 
     /**
      * Default page size.
@@ -120,24 +112,16 @@ public final class Requests {
 
         logBuilder.append(indents).append("method=").append(httpServletRequest.getMethod()).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("URL=").append(httpServletRequest.getRequestURL()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("contentType=").append(httpServletRequest.getContentType()).append(",").append(
-                Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("characterEncoding=").append(httpServletRequest.getCharacterEncoding()).append(",").append(
-                Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("contentType=").append(httpServletRequest.getContentType()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("characterEncoding=").append(httpServletRequest.getCharacterEncoding()).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("local=[").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("addr=").append(httpServletRequest.getLocalAddr()).append(",").append(
-                Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getLocalPort()).append(",").append(
-                Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("name=").append(httpServletRequest.getLocalName()).append("],").append(
-                Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("addr=").append(httpServletRequest.getLocalAddr()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getLocalPort()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("name=").append(httpServletRequest.getLocalName()).append("],").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("remote=[").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("addr=").append(getRemoteAddr(httpServletRequest)).append(",").append(
-                Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getRemotePort()).append(",").append(
-                Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("host=").append(httpServletRequest.getRemoteHost()).append("],").append(
-                Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("addr=").append(getRemoteAddr(httpServletRequest)).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getRemotePort()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("host=").append(httpServletRequest.getRemoteHost()).append("],").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("headers=[");
         final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
         final StringBuilder headerLogBuilder = new StringBuilder();
@@ -171,11 +155,9 @@ public final class Requests {
      */
     public static String getRemoteAddr(final HttpServletRequest request) {
         String ret = request.getHeader("X-forwarded-for");
-
         if (StringUtils.isBlank(ret)) {
             ret = request.getHeader("X-Real-IP");
         }
-
         if (StringUtils.isBlank(ret)) {
             return request.getRemoteAddr();
         }
@@ -252,8 +234,6 @@ public final class Requests {
                 response.addCookie(c);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.WARN, "Parses cookie failed, clears the cookie[name=visited]");
-
             final Cookie c = new Cookie("visited", null);
             c.setMaxAge(0);
             c.setPath("/");
@@ -301,8 +281,6 @@ public final class Requests {
      * @see #PAGINATION_PATH_PATTERN
      */
     public static int getCurrentPageNum(final String path) {
-        LOGGER.log(Level.TRACE, "Getting current page number[path={0}]", path);
-
         if (StringUtils.isBlank(path) || path.equals("/")) {
             return 1;
         }
@@ -324,20 +302,14 @@ public final class Requests {
      * @see #PAGINATION_PATH_PATTERN
      */
     public static int getPageSize(final String path) {
-        LOGGER.log(Level.TRACE, "Page number[string={0}]", path);
-
         if (StringUtils.isBlank(path)) {
             return DEFAULT_PAGE_SIZE;
         }
-
         final String[] parts = path.split("/");
-
         if (1 >= parts.length) {
             return DEFAULT_PAGE_SIZE;
         }
-
         final String pageSize = parts[1];
-
         if (!Strings.isNumeric(pageSize)) {
             return DEFAULT_PAGE_SIZE;
         }
@@ -353,55 +325,18 @@ public final class Requests {
      * @see #PAGINATION_PATH_PATTERN
      */
     public static int getWindowSize(final String path) {
-        LOGGER.log(Level.TRACE, "Page number[string={0}]", path);
-
         if (StringUtils.isBlank(path)) {
             return DEFAULT_WINDOW_SIZE;
         }
-
         final String[] parts = path.split("/");
-
         if (2 >= parts.length) {
             return DEFAULT_WINDOW_SIZE;
         }
-
         final String windowSize = parts[2];
-
         if (!Strings.isNumeric(windowSize)) {
             return DEFAULT_WINDOW_SIZE;
         }
 
         return Integer.valueOf(windowSize);
-    }
-
-    /**
-     * Gets the request json object with the specified request.
-     *
-     * @param request  the specified request
-     * @param response the specified response, sets its content type with "application/json"
-     * @return a json object
-     */
-    public static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response) {
-        response.setContentType("application/json");
-
-        try {
-            BufferedReader reader;
-            try {
-                reader = request.getReader();
-            } catch (final IllegalStateException illegalStateException) {
-                reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-            }
-
-            String tmp = IOUtils.toString(reader);
-            if (StringUtils.isBlank(tmp)) {
-                tmp = "{}";
-            }
-
-            return new JSONObject(tmp);
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Parses request JSON object failed [" + e.getMessage() + "], returns an empty json object");
-
-            return new JSONObject();
-        }
     }
 }

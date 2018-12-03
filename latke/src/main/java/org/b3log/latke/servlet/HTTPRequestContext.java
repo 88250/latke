@@ -15,14 +15,19 @@
  */
 package org.b3log.latke.servlet;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
-import org.b3log.latke.util.Requests;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * HTTP request context.
@@ -31,6 +36,11 @@ import javax.servlet.http.HttpServletResponse;
  * @version 1.3.0.0, Dec 3, 2018
  */
 public final class HTTPRequestContext {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(HTTPRequestContext.class);
 
     /**
      * Request.
@@ -113,7 +123,7 @@ public final class HTTPRequestContext {
      */
     public JSONObject requestJSON() {
         if (null == requestJSON) {
-            requestJSON = Requests.parseRequestJSONObject(request, response);
+            requestJSON = parseRequestJSONObject(request, response);
         }
 
         return requestJSON;
@@ -246,5 +256,36 @@ public final class HTTPRequestContext {
         }
 
         return this;
+    }
+
+    /**
+     * Gets the request json object with the specified request.
+     *
+     * @param request  the specified request
+     * @param response the specified response, sets its content type with "application/json"
+     * @return a json object
+     */
+    private static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response) {
+        response.setContentType("application/json");
+
+        try {
+            BufferedReader reader;
+            try {
+                reader = request.getReader();
+            } catch (final IllegalStateException illegalStateException) {
+                reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+            }
+
+            String tmp = IOUtils.toString(reader);
+            if (StringUtils.isBlank(tmp)) {
+                tmp = "{}";
+            }
+
+            return new JSONObject(tmp);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Parses request JSON object failed [" + e.getMessage() + "], returns an empty json object");
+
+            return new JSONObject();
+        }
     }
 }
