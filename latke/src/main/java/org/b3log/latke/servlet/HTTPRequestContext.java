@@ -18,6 +18,7 @@ package org.b3log.latke.servlet;
 import org.b3log.latke.Keys;
 import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.b3log.latke.util.Requests;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, Mar 5, 2017
+ * @version 1.3.0.0, Dec 3, 2018
  */
 public final class HTTPRequestContext {
 
@@ -40,6 +41,11 @@ public final class HTTPRequestContext {
      * Response.
      */
     private HttpServletResponse response;
+
+    /**
+     * Request json.
+     */
+    private JSONObject requestJSON;
 
     /**
      * Renderer.
@@ -98,6 +104,19 @@ public final class HTTPRequestContext {
      */
     public void setResponse(final HttpServletResponse response) {
         this.response = response;
+    }
+
+    /**
+     * Parses request body into a json object.
+     *
+     * @return parsed request json object
+     */
+    public JSONObject requestJSON() {
+        if (null == requestJSON) {
+            requestJSON = Requests.parseRequestJSONObject(request, response);
+        }
+
+        return requestJSON;
     }
 
     /**
