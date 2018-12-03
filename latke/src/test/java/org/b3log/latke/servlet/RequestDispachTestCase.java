@@ -210,65 +210,6 @@ public class RequestDispachTestCase {
     }
 
     @Test
-    public void testBaseInvoke8() {
-
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/do/render");
-        when(request.getMethod()).thenReturn("GET");
-
-        HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
-
-        Assert.assertTrue(control.data(MethodInvokeHandler.INVOKE_RESULT) instanceof DoNothingRenderer);
-
-    }
-
-    @Test
-    public void testBaseInvoke9() {
-
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/do/render1");
-        when(request.getMethod()).thenReturn("GET");
-
-        HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
-
-        List<AbstractHTTPResponseRenderer> list = (List<AbstractHTTPResponseRenderer>) control
-                .data(MethodInvokeHandler.INVOKE_RESULT);
-
-        final int totalMatched = 3;
-        Assert.assertEquals(totalMatched, list.size());
-        Assert.assertTrue(list.get(0) instanceof JSONRenderer);
-        Assert.assertTrue(list.get(1) instanceof DoNothingRenderer);
-        Assert.assertTrue(list.get(2) instanceof JSONRenderer);
-        Assert.assertFalse(list.get(0) == list.get(2));
-
-    }
-
-    @Test
-    public void testBaseInvoke10() throws JSONException {
-
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/json/n");
-        when(request.getMethod()).thenReturn("GET");
-        when(request.getParameterMap()).thenReturn(new HashMap<String, String[]>() {
-            {
-                put("id", new String[]{"1"});
-                put("des", new String[]{"aa", "bbb"});
-            }
-        });
-
-        HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
-
-        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
-        JSONObject jsonObject = (JSONObject) args.get("jsonObject");
-        Assert.assertTrue(jsonObject.get("des") instanceof String[]);
-        Assert.assertEquals("n", control.data(MethodInvokeHandler.INVOKE_RESULT));
-
-    }
-
-    @Test
     public void testRetVoid() {
         final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn("/void");
