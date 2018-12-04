@@ -17,21 +17,15 @@ package org.b3log.latke.servlet.mock;
 
 import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
-
-import java.util.Arrays;
-import java.util.Map;
+import org.b3log.latke.servlet.advice.ProcessAdvice;
 
 @Singleton
-public class TestBeforeAdvice extends BeforeRequestProcessAdvice {
+public class TestBeforeAdvice extends ProcessAdvice {
 
     @Override
-    public void doAdvice(RequestContext context, Map<String, Object> args) {
-        Integer id = (Integer) args.get("id");
-        if (null != id) {
-            args.put("id", id + 1);
-        }
+    public void doAdvice(final RequestContext context) {
+        String id = context.pathVar("id");
 
-        System.out.println("do before advice for [" + context.requestURI() + ", args=" + args.toString() + "]");
+        System.out.println("do before advice for [" + context.requestURI() + "], path vars [id=" + id + "]");
     }
 }

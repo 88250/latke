@@ -153,11 +153,11 @@ final public class Reflections {
     }
 
     /**
-     * getMethodVariableNames in user defined.
+     * Get method variable names of the specified class, target method name and parameter types.
      *
      * @param clazz            the specific clazz
-     * @param targetMethodName the targetMethodName
-     * @param types            the types of the method parameters
+     * @param targetMethodName the specified target method name
+     * @param types            the specified parameter types
      * @return the String[] of names
      */
     public static String[] getMethodVariableNames(final Class<?> clazz, final String targetMethodName, final Class<?>[] types) {

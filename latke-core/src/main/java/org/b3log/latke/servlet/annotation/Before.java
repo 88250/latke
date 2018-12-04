@@ -15,20 +15,20 @@
  */
 package org.b3log.latke.servlet.annotation;
 
-
-import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
+import org.b3log.latke.servlet.advice.ProcessAdvice;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
- * The before advice mark for processMethod.(for both processClass and processMethod).
- * 
+ * The before advice.
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.1.0.0, Jan 17, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.0, Dec 4, 2018
+ * @since 2.4.34
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -39,6 +39,6 @@ public @interface Before {
      * 
      * @return advice class
      */
-    Class<? extends BeforeRequestProcessAdvice>[] adviceClass() default BeforeRequestProcessAdvice.class;
+    Class<? extends ProcessAdvice>[] adviceClass() default ProcessAdvice.class;
 
 }

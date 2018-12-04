@@ -37,18 +37,19 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * to match one method of processor to do the reqest handler.
+ * Route handler
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Dec 1, 2018
+ * @version 1.0.0.0, Dec 4, 2018
+ * @since 2.4.34
  */
-public class RequestDispatchHandler implements Handler {
+public class RouteHandler implements Handler {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(RequestDispatchHandler.class);
+    private static final Logger LOGGER = Logger.getLogger(RouteHandler.class);
 
     /**
      * The shared-matched-result-data name.
@@ -63,7 +64,7 @@ public class RequestDispatchHandler implements Handler {
     /**
      * Public constructor..
      */
-    public RequestDispatchHandler() {
+    public RouteHandler() {
         final BeanManager beanManager = BeanManager.getInstance();
         final Set<Bean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
         genInfo(processBeans);
@@ -116,10 +117,10 @@ public class RequestDispatchHandler implements Handler {
     /**
      * Routes the request specified by the given URI pattern, processor info, request URI and HTTP method.
      *
-     * @param uriPattern    the given URI pattern
+     * @param uriPattern         the given URI pattern
      * @param contextHandlerMeta the given context handler meta
-     * @param requestURI    the given request URI
-     * @param method        the given HTTP method
+     * @param requestURI         the given request URI
+     * @param method             the given HTTP method
      * @return MatchResult, returns {@code null} if not found
      */
     private MatchResult route(final String uriPattern, final ContextHandlerMeta contextHandlerMeta, final String requestURI, final String method) {
@@ -185,7 +186,6 @@ public class RequestDispatchHandler implements Handler {
                 final ContextHandlerMeta contextHandlerMeta = new ContextHandlerMeta();
                 contextHandlerMeta.setPattern(requestProcessingMethodAnn.value());
                 contextHandlerMeta.setHttpMethod(requestProcessingMethodAnn.method());
-                contextHandlerMeta.setConvertClass(requestProcessingMethodAnn.convertClass());
                 contextHandlerMeta.setInvokeHolder(mthd);
                 contextHandlerMeta.initProcessAdvices();
 

@@ -20,8 +20,7 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
 import org.b3log.latke.service.LangPropsService;
-import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
+import org.b3log.latke.servlet.advice.ProcessAdvice;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -52,8 +51,7 @@ public class BeanManager {
      */
     private static List<Class<?>> builtInBeanClasses = Arrays.asList(
             LangPropsService.class,
-            BeforeRequestProcessAdvice.class,
-            AfterRequestProcessAdvice.class,
+            ProcessAdvice.class,
             EventManager.class,
             PluginManager.class);
 

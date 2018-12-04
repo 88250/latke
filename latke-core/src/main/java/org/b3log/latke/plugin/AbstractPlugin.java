@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.plugin;
 
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.lang.StringUtils;
@@ -38,7 +37,6 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.*;
-
 
 /**
  * Abstract plugin.
@@ -224,9 +222,8 @@ public abstract class AbstractPlugin implements Serializable {
      * prePlug after the real method be invoked.
      *
      * @param context context
-     * @param args    args
      */
-    public abstract void prePlug(final RequestContext context, final Map<String, Object> args);
+    public abstract void prePlug(final RequestContext context);
 
     /**
      * postPlug after the dataModel of the simplest-view be generated.

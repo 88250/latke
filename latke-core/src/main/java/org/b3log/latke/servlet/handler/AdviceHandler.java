@@ -18,10 +18,9 @@ package org.b3log.latke.servlet.handler;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HttpControl;
-import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
+import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.servlet.advice.ProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
 import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
 import org.b3log.latke.servlet.renderer.JsonRenderer;
@@ -29,7 +28,6 @@ import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The handler to do the advice work in configs.
@@ -37,6 +35,7 @@ import java.util.Map;
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.3, Dec 3, 2018
+ * @since 2.4.34
  */
 public class AdviceHandler implements Handler {
 
@@ -47,16 +46,15 @@ public class AdviceHandler implements Handler {
 
     @Override
     public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
-        final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
-        final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
+        final MatchResult result = (MatchResult) httpControl.data(RouteHandler.MATCH_RESULT);
 
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final List<AbstractResponseRenderer> rendererList = result.getRendererList();
 
         try {
-            final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = contextHandlerMeta.getBeforeRequestProcessAdvices();
-            for (final BeforeRequestProcessAdvice beforeRequestProcessAdvice : beforeRequestProcessAdvices) {
-                beforeRequestProcessAdvice.doAdvice(context, args);
+            final List<ProcessAdvice> beforeRequestProcessAdvices = contextHandlerMeta.getBeforeRequestProcessAdvices();
+            for (final ProcessAdvice beforeRequestProcessAdvice : beforeRequestProcessAdvices) {
+                beforeRequestProcessAdvice.doAdvice(context);
             }
         } catch (final RequestProcessAdviceException e) {
             final JSONObject exception = e.getJsonObject();
@@ -76,8 +74,8 @@ public class AdviceHandler implements Handler {
             return;
         }
 
-        for (AbstractResponseRenderer renderer : rendererList) {
-            renderer.preRender(context, args);
+        for (final AbstractResponseRenderer renderer : rendererList) {
+            renderer.preRender(context);
         }
 
         httpControl.nextHandler();
@@ -86,9 +84,9 @@ public class AdviceHandler implements Handler {
             rendererList.get(j).postRender(context, httpControl.data(MethodInvokeHandler.INVOKE_RESULT));
         }
 
-        final List<AfterRequestProcessAdvice> afterRequestProcessAdvices = contextHandlerMeta.getAfterRequestProcessAdvices();
-        for (final AfterRequestProcessAdvice afterRequestProcessAdvice : afterRequestProcessAdvices) {
-            afterRequestProcessAdvice.doAdvice(context, httpControl.data(MethodInvokeHandler.INVOKE_RESULT));
+        final List<ProcessAdvice> afterRequestProcessAdvices = contextHandlerMeta.getAfterRequestProcessAdvices();
+        for (final ProcessAdvice afterRequestProcessAdvice : afterRequestProcessAdvices) {
+            afterRequestProcessAdvice.doAdvice(context);
         }
     }
 }

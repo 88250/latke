@@ -21,7 +21,6 @@ import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.RequestContext;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
  * the handler to do the real method invoke!.
@@ -43,14 +42,12 @@ public class MethodInvokeHandler implements Handler {
 
     @Override
     public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
-        final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
-        final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
+        final MatchResult result = (MatchResult) httpControl.data(RouteHandler.MATCH_RESULT);
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
-        Object ret;
         final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
         final BeanManager beanManager = BeanManager.getInstance();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
-        ret = invokeHolder.invoke(classHolder, args.values().toArray());
+        final Object ret = invokeHolder.invoke(classHolder, context);
 
         httpControl.data(INVOKE_RESULT, ret);
     }

@@ -17,7 +17,6 @@ package org.b3log.latke.servlet;
 
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.servlet.function.ContextHandler;
 import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
@@ -53,8 +52,7 @@ public final class DispatcherServlet extends HttpServlet {
     public static final List<Handler> HANDLERS = new ArrayList<>();
 
     static {
-        HANDLERS.add(new RequestDispatchHandler());
-        HANDLERS.add(new ArgsHandler());
+        HANDLERS.add(new RouteHandler());
         HANDLERS.add(new AdviceHandler());
         // here are ext handlers if exist
         HANDLERS.add(new MethodInvokeHandler());
@@ -175,7 +173,7 @@ public final class DispatcherServlet extends HttpServlet {
     public static void mapping() {
         for (final Router router : routers) {
             final ContextHandlerMeta contextHandlerMeta = router.toContextHandlerMeta();
-            RequestDispatchHandler.addContextHandlerMeta(contextHandlerMeta);
+            RouteHandler.addContextHandlerMeta(contextHandlerMeta);
         }
     }
 
@@ -188,7 +186,6 @@ public final class DispatcherServlet extends HttpServlet {
     public static class Router {
         private List<String> uriPatterns = new ArrayList<>();
         private List<HttpMethod> httpRequestMethods = new ArrayList<>();
-        private Class<? extends ConvertSupport> convertSupport = ConvertSupport.class;
         private ContextHandler handler;
         private Method method;
 
@@ -318,7 +315,6 @@ public final class DispatcherServlet extends HttpServlet {
             final ContextHandlerMeta ret = new ContextHandlerMeta();
             ret.setPattern(uriPatterns.toArray(new String[0]));
             ret.setHttpMethod(httpRequestMethods.toArray(new HttpMethod[0]));
-            ret.setConvertClass(convertSupport);
             ret.setInvokeHolder(method);
             ret.setHandler(handler);
             ret.initProcessAdvices();

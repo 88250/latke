@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * HTTP request context.
@@ -62,6 +64,11 @@ public final class RequestContext {
      * Renderer.
      */
     private AbstractResponseRenderer renderer;
+
+    /**
+     * Path vars.
+     */
+    private Map<String, String> pathVars = new HashMap<>();
 
     /**
      * Gets the renderer.
@@ -223,7 +230,17 @@ public final class RequestContext {
      * @return path var, returns {@code null} if not found
      */
     public String pathVar(final String name) {
-        return null;
+        return pathVars.get(name);
+    }
+
+    /**
+     * Puts a path var specified by the given name and value.
+     *
+     * @param name  the given name
+     * @param value the given value
+     */
+    public void pathVar(final String name, String value) {
+        pathVars.put(name, value);
     }
 
     /**

@@ -17,13 +17,12 @@ package org.b3log.latke.servlet.renderer;
 
 import org.b3log.latke.servlet.RequestContext;
 
-import java.util.Map;
-
 /**
  * The interface of all the renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Dec 4, 2018
+ * @since 2.4.34
  */
 public interface ResponseRenderer {
 
@@ -31,9 +30,8 @@ public interface ResponseRenderer {
      * Pre-render before the real method be invoked.
      *
      * @param context the specified HTTP request context
-     * @param args    the arguments of the real method
      */
-    void preRender(final RequestContext context, final Map<String, Object> args);
+    void preRender(final RequestContext context);
 
     /**
      * Renders with the specified HTTP request context.

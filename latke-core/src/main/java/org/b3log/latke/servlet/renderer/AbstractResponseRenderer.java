@@ -53,14 +53,14 @@ public abstract class AbstractResponseRenderer implements ResponseRenderer {
     public abstract void render(final RequestContext context);
 
     @Override
-    public void preRender(final RequestContext context, final Map<String, Object> args) {
+    public void preRender(final RequestContext context) {
         if (StringUtils.isBlank(rendererId)) {
             return;
         }
 
         final Set<AbstractPlugin> pSet = BeanManager.getInstance().getReference(PluginManager.class).getPlugins(rendererId);
         for (final AbstractPlugin plugin : pSet) {
-            plugin.prePlug(context, args);
+            plugin.prePlug(context);
         }
     }
 

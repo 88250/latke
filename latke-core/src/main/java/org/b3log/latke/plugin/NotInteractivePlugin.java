@@ -32,7 +32,7 @@ import java.util.Map;
 public class NotInteractivePlugin extends AbstractPlugin {
 
     @Override
-    public void prePlug(final RequestContext context, final Map<String, Object> args) {}
+    public void prePlug(final RequestContext context) {}
 
     @Override
     public void postPlug(final Map<String, Object> dataModel, final RequestContext context, final Object ret) {}

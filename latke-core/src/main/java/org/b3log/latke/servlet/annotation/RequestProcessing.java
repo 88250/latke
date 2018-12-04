@@ -16,7 +16,6 @@
 package org.b3log.latke.servlet.annotation;
 
 import org.b3log.latke.servlet.HttpMethod;
-import org.b3log.latke.servlet.converter.ConvertSupport;
 
 import java.lang.annotation.*;
 
@@ -46,11 +45,4 @@ public @interface RequestProcessing {
      * @return HTTP methods
      */
     HttpMethod[] method() default {HttpMethod.GET};
-
-    /**
-     * User customized data convert class.
-     *
-     * @return convert class
-     */
-    Class<? extends ConvertSupport> convertClass() default ConvertSupport.class;
 }

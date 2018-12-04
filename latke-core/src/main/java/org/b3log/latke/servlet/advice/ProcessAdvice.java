@@ -19,20 +19,21 @@ import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.servlet.RequestContext;
 
 /**
- * BeforeRequestProcessAdvice.
+ * Process advice.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.2, Sep 29, 2018
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.0, Dec 4, 2018
+ * @since 2.4.34
  */
 @Singleton
-public class AfterRequestProcessAdvice {
+public class ProcessAdvice {
 
     /**
      * Do advice.
      *
-     * @param context {@link RequestContext}
-     * @param ret     the invoke ret
+     * @param context the specified request context
+     * @throws RequestProcessAdviceException if advice failed
      */
-    public void doAdvice(final RequestContext context, final Object ret) {
+    public void doAdvice(final RequestContext context) throws RequestProcessAdviceException {
     }
 }
