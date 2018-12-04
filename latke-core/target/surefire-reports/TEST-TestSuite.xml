@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="60" failures="0" name="TestSuite" time="8.657" errors="0" skipped="0">
+<testsuite tests="60" failures="0" name="TestSuite" time="8.411" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2018.2.7"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -65,62 +65,62 @@
   </properties>
   <testcase classname="org.b3log.latke.ioc.setup.SetupUnitTest" name="bean3Say" time="0.002"/>
   <testcase classname="org.b3log.latke.ioc.inherit.InheritTest" name="hello" time="0"/>
-  <testcase classname="org.b3log.latke.util.AntPathMatcherTestCase" name="match" time="0.004"/>
-  <testcase classname="org.b3log.latke.util.StringsTestCase" name="isURL" time="0.001"/>
+  <testcase classname="org.b3log.latke.util.StringsTestCase" name="isURL" time="0.004"/>
   <testcase classname="org.b3log.latke.util.StringsTestCase" name="isEmail" time="0.001"/>
-  <testcase classname="org.b3log.latke.util.StringsTestCase" name="contains" time="0.004"/>
-  <testcase classname="org.b3log.latke.util.StringsTestCase" name="containsIgnoreCase" time="0.004"/>
-  <testcase classname="org.b3log.latke.util.ReflectionsTestCase" name="getMethodVariableNames" time="0"/>
-  <testcase classname="org.b3log.latke.util.StringsTestCase" name="trimAll" time="0.002"/>
+  <testcase classname="org.b3log.latke.util.AntPathMatcherTestCase" name="match" time="0"/>
+  <testcase classname="org.b3log.latke.util.StringsTestCase" name="containsIgnoreCase" time="0.002"/>
+  <testcase classname="org.b3log.latke.util.StringsTestCase" name="contains" time="0.002"/>
+  <testcase classname="org.b3log.latke.util.StringsTestCase" name="trimAll" time="0.004"/>
+  <testcase classname="org.b3log.latke.util.ReflectionsTestCase" name="getMethodVariableNames" time="0.007"/>
   <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="matchError" time="0.001"/>
-  <testcase classname="org.b3log.latke.LatkesTestCase" name="init" time="0.001"/>
+  <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="match" time="0.001"/>
   <testcase classname="org.b3log.latke.util.ExecsTestCase" name="exec" time="0"/>
-  <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="match" time="0.003"/>
-  <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="matchLowercaseOK" time="0.003"/>
-  <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="matchLowercaseAndUpercaseOK" time="0.003"/>
-  <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="matchUpercaseOK" time="0.003"/>
-  <testcase classname="org.b3log.latke.util.StaticResourcesTestCase" name="isStatic" time="0.056"/>
+  <testcase classname="org.b3log.latke.LatkesTestCase" name="init" time="0.001"/>
+  <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="matchUpercaseOK" time="0.002"/>
+  <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="matchLowercaseOK" time="0.002"/>
+  <testcase classname="org.b3log.latke.util.DefaultMatcherTestCase" name="matchLowercaseAndUpercaseOK" time="0.002"/>
+  <testcase classname="org.b3log.latke.util.StaticResourcesTestCase" name="isStatic" time="0.026"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStatWhileException" time="0.06"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.069"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.069"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.069"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.069"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.069"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testFunctionalRouting" time="0.046"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke1" time="0.046"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testAntPathMatch" time="0.046"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testRetVoid" time="0.046"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke7" time="0.048"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke2" time="0.048"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke5" time="0.048"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke4" time="0.048"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke3" time="0.048"/>
+  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke6" time="0.049"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
+  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.083"/>
   <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
   <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
   <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
   <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
   <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStatWhileException" time="0.082"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testFunctionalRouting" time="0.07"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke1" time="0.07"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testRetVoid" time="0.07"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testAntPathMatch" time="0.07"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke7" time="0.076"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke4" time="0.076"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke3" time="0.076"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke2" time="0.076"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke5" time="0.076"/>
-  <testcase classname="org.b3log.latke.servlet.RequestDispachTestCase" name="testBaseInvoke6" time="0.076"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.084"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.084"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.084"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.084"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.084"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.08"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.08"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.08"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.001"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.001"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.081"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.081"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.081"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.util.StopwatchsTestCase" name="getTimingStat" time="0.082"/>
-  <testcase classname="org.b3log.latke.cache.redis.RedisCacheTestCase" name="put" time="1.783"/>
-  <testcase classname="org.b3log.latke.event.EventManagerTestCase" name="test" time="3.669"/>
+  <testcase classname="org.b3log.latke.cache.redis.RedisCacheTestCase" name="put" time="1.734"/>
+  <testcase classname="org.b3log.latke.event.EventManagerTestCase" name="test" time="3.672"/>
 </testsuite>

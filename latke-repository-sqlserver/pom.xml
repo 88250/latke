@@ -29,7 +29,7 @@
 
             <dependency>
                 <groupId>org.b3log</groupId>
-                <artifactId>latke</artifactId>
+                <artifactId>latke-core</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
 

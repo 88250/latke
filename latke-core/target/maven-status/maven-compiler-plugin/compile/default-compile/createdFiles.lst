@@ -33,7 +33,6 @@ org\b3log\latke\servlet\handler\MethodInvokeHandler.class
 org\json\Cookie.class
 org\weborganic\furi\URIResolveResult.class
 org\b3log\latke\Latkes$RuntimeMode.class
-org\b3log\latke\util\EmailSender$1.class
 org\b3log\latke\repository\jdbc\util\JdbcRepositories$CreateTableResult.class
 org\b3log\latke\model\Role.class
 org\weborganic\furi\TokenOperatorDX$Operator$4.class
@@ -217,7 +216,6 @@ org\b3log\latke\servlet\renderer\AtomRenderer.class
 org\weborganic\furi\Variable$Modifier.class
 org\b3log\latke\repository\AbstractRepository.class
 org\b3log\latke\servlet\filter\AbstractGZIPFilter$GZIPServletResponseWrapper.class
-org\b3log\latke\util\EmailSender$SMTPAuthenticator.class
 org\weborganic\furi\TokenOperatorPS$Operator$4.class
 org\json\HTTP.class
 org\b3log\latke\cache\memory\DoubleLinkedMap.class
@@ -253,7 +251,6 @@ org\b3log\latke\plugin\ViewLoadEventHandler$1.class
 org\b3log\latke\servlet\renderer\RssRenderer.class
 org\b3log\latke\servlet\renderer\AbstractHTTPResponseRenderer.class
 org\weborganic\furi\TokenBase.class
-org\b3log\latke\util\EmailSender.class
 org\b3log\latke\ioc\mock\MockHttpSession.class
 org\b3log\latke\Keys$Runtime.class
 org\b3log\latke\util\StaticResources.class

@@ -57,8 +57,6 @@
         <jedis.version>2.9.0</jedis.version>
 
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
-        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
-        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <testng.version>6.1.1</testng.version>
 
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -131,7 +129,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <skipTests>false</skipTests>
                     <parallel>methods</parallel>
@@ -143,7 +140,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

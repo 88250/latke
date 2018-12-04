@@ -179,7 +179,6 @@ D:\b3log\latke\latke-core\src\main\java\org\b3log\latke\repository\jdbc\util\Jdb
 D:\b3log\latke\latke-core\src\main\java\org\weborganic\furi\TokenOperatorDX.java
 D:\b3log\latke\latke-core\src\main\java\org\b3log\latke\cache\redis\Connections.java
 D:\b3log\latke\latke-core\src\main\java\org\weborganic\furi\URIResolver.java
-D:\b3log\latke\latke-core\src\main\java\org\b3log\latke\util\EmailSender.java
 D:\b3log\latke\latke-core\src\main\java\org\b3log\latke\servlet\renderer\HTTP500Renderer.java
 D:\b3log\latke\latke-core\src\main\java\org\b3log\latke\ioc\annotated\AnnotatedField.java
 D:\b3log\latke\latke-core\src\main\java\org\b3log\latke\event\SynchronizedEventQueue.java

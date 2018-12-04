@@ -21,18 +21,16 @@ import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.mock.TestBeforeAdvice;
 import org.b3log.latke.servlet.mock.TestRequestProcessor;
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.servlet.renderer.DoNothingRenderer;
-import org.b3log.latke.servlet.renderer.JSONRenderer;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

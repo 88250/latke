@@ -1,14 +1,7 @@
-/latke/target/
-/latke-client/target/
-/latke-repository-mysql/target/
-/latke-repository-h2/target/
-/target/
+*/target/
 pom.xml.*
-/*/pom.xml.*
+*/pom.xml.*
 release.properties
-/latke-repository-/target/
-/latke-repository-sqlserver/target/
-/latke-repository-oracle/target/
 
 .idea/
 *.iml
