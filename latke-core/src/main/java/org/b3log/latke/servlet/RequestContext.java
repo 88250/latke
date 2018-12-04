@@ -68,7 +68,7 @@ public final class RequestContext {
     /**
      * Path vars.
      */
-    private Map<String, String> pathVars = new HashMap<>();
+    private Map<String, String> pathVars;
 
     /**
      * Gets the renderer.
@@ -231,6 +231,24 @@ public final class RequestContext {
      */
     public String pathVar(final String name) {
         return pathVars.get(name);
+    }
+
+    /**
+     * Get all path vars.
+     *
+     * @return path vars
+     */
+    public Map<String, String> pathVars() {
+        return pathVars;
+    }
+
+    /**
+     * Set all path vars.
+     *
+     * @param pathVars the specified path vars
+     */
+    public void pathVars(final Map<String, String> pathVars) {
+        this.pathVars = pathVars;
     }
 
     /**

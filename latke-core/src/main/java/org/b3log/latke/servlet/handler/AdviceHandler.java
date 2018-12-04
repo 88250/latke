@@ -59,7 +59,7 @@ public class AdviceHandler implements Handler {
         } catch (final RequestProcessAdviceException e) {
             final JSONObject exception = e.getJsonObject();
             final String msg = exception.optString(Keys.MSG);
-            LOGGER.log(Level.WARN, "Occurred an exception before request processing [errMsg={0}]", msg);
+            LOGGER.log(Level.WARN, "Occurred an exception before request processing: " + msg);
 
             final int statusCode = exception.optInt(Keys.STATUS_CODE, -1);
             if (-1 != statusCode && HttpServletResponse.SC_OK != statusCode) {
@@ -84,9 +84,27 @@ public class AdviceHandler implements Handler {
             rendererList.get(j).postRender(context, httpControl.data(MethodInvokeHandler.INVOKE_RESULT));
         }
 
-        final List<ProcessAdvice> afterRequestProcessAdvices = contextHandlerMeta.getAfterRequestProcessAdvices();
-        for (final ProcessAdvice afterRequestProcessAdvice : afterRequestProcessAdvices) {
-            afterRequestProcessAdvice.doAdvice(context);
+        try {
+            final List<ProcessAdvice> afterRequestProcessAdvices = contextHandlerMeta.getAfterRequestProcessAdvices();
+            for (final ProcessAdvice afterRequestProcessAdvice : afterRequestProcessAdvices) {
+                afterRequestProcessAdvice.doAdvice(context);
+            }
+        } catch (final RequestProcessAdviceException e) {
+            final JSONObject exception = e.getJsonObject();
+            final String msg = exception.optString(Keys.MSG);
+            LOGGER.log(Level.WARN, "Occurred an exception after request processing: " + msg);
+
+            final int statusCode = exception.optInt(Keys.STATUS_CODE, -1);
+            if (-1 != statusCode && HttpServletResponse.SC_OK != statusCode) {
+                final HttpServletResponse response = context.getResponse();
+                response.sendError(statusCode, msg);
+            } else {
+                final JsonRenderer ret = new JsonRenderer();
+                ret.setJSONObject(exception);
+                context.setRenderer(ret);
+            }
+
+            return;
         }
     }
 }

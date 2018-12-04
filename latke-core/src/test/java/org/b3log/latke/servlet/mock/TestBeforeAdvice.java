@@ -24,8 +24,6 @@ public class TestBeforeAdvice extends ProcessAdvice {
 
     @Override
     public void doAdvice(final RequestContext context) {
-        String id = context.pathVar("id");
-
-        System.out.println("do before advice for [" + context.requestURI() + "], path vars [id=" + id + "]");
+        System.out.println("do before advice for [" + context.requestURI() + "], path vars [" + context.pathVars() + "]");
     }
 }

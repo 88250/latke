@@ -82,6 +82,8 @@ public class RouteHandler implements Handler {
 
         final MatchResult result = doMatch(requestURI, httpMethod);
         if (result != null) {
+            context.pathVars(result.getPathVars());
+            
             httpControl.data(MATCH_RESULT, result);
             httpControl.nextHandler();
         }

@@ -52,15 +52,13 @@ public class RequestDispachTestCase {
 
     @BeforeTest
     public void beforeTest() {
-        System.out.println("Request Processors Test");
         final List<Class<?>> classes = new ArrayList<>();
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
         BeanManager.start(classes);
 
         final TestRequestProcessor testRequestProcessor = BeanManager.getInstance().getReference(TestRequestProcessor.class);
-        DispatcherServlet.get("/func1", testRequestProcessor::lambdaRoute);
-        DispatcherServlet.get("/func2/{arg_name}", testRequestProcessor::lambdaRoute);
+        DispatcherServlet.get("/l", testRequestProcessor::l);
         DispatcherServlet.mapping();
 
         handlerList.add(new RouteHandler());
@@ -70,14 +68,13 @@ public class RequestDispachTestCase {
 
     @AfterTest
     public void afterTest() {
-        System.out.println("afterTest SpeakerUnitTest");
         BeanManager.close();
     }
 
-    @Test
-    public void testFunctionalRouting() {
+    //@Test
+    public void a() {
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/func1");
+        when(request.getRequestURI()).thenReturn("/a");
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
@@ -86,9 +83,9 @@ public class RequestDispachTestCase {
     }
 
     @Test
-    public void testFunctionalRouting1() {
+    public void a1() {
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/func2/argVar");
+        when(request.getRequestURI()).thenReturn("/a/88250/D");
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
@@ -96,27 +93,13 @@ public class RequestDispachTestCase {
         Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
     }
 
-    @Test
-    public void testBaseInvoke1() {
-
+    //@Test
+    public void l() {
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/string");
+        when(request.getRequestURI()).thenReturn("/l");
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RouteHandler.MATCH_RESULT));
-        Assert.assertEquals("string", control.data(MethodInvokeHandler.INVOKE_RESULT));
-
-    }
-
-    @Test
-    public void testRetVoid() {
-        final HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/void");
-        when(request.getMethod()).thenReturn("GET");
-
-        final HttpControl control = doFlow(request);
-
         Assert.assertNotNull(control.data(RouteHandler.MATCH_RESULT));
         Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
     }
