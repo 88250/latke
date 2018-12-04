@@ -66,7 +66,7 @@ public class HttpControl {
     /**
      * the share-data in one request.
      */
-    private Map<String, Object> controlContext = new HashMap<String, Object>();
+    private Map<String, Object> controlContext = new HashMap<>();
 
     /**
      * set the shared-data.

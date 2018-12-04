@@ -187,13 +187,23 @@ public final class RequestContext {
     }
 
     /**
-     * Gets a attribute specified by the given name from request.
+     * Gets an attribute specified by the given name from request.
      *
      * @param name the given name
      * @return attribute, returns {@code null} if not found
      */
     public Object attr(final String name) {
         return request.getAttribute(name);
+    }
+
+    /**
+     * Sets an attribute specified by the given name and value into request.
+     *
+     * @param name  the given name
+     * @param value the given value
+     */
+    public void attr(final String name, final Object value) {
+        request.setAttribute(name, value);
     }
 
     /**
