@@ -16,8 +16,7 @@
 package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.servlet.HttpRequestMethod;
-import org.b3log.latke.servlet.URIPatternMode;
+import org.b3log.latke.servlet.HttpMethod;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.annotation.After;
@@ -30,13 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ProcessorInfo,which store the processor-annotation info.
+ * Context handler metadata.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Dec 2, 2018
+ * @version 1.0.0.3, Dec 4, 2018
+ * @since 2.4.34
  */
-public final class ProcessorInfo {
+public final class ContextHandlerMeta {
 
     /**
      * Patterns.
@@ -44,14 +43,9 @@ public final class ProcessorInfo {
     private String[] pattern;
 
     /**
-     * URIPatternMode.
-     */
-    private URIPatternMode uriPatternMode;
-
-    /**
      * HTTP methods.
      */
-    private HttpRequestMethod[] httpMethod;
+    private HttpMethod[] httpMethod;
 
     /**
      * The processor method.
@@ -79,15 +73,6 @@ public final class ProcessorInfo {
     private List<AfterRequestProcessAdvice> afterRequestProcessAdvices;
 
     /**
-     * Set the before request process advices.
-     *
-     * @param beforeRequestProcessAdvices the specified before request process advices
-     */
-    public void setBeforeRequestProcessAdvices(final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices) {
-        this.beforeRequestProcessAdvices = beforeRequestProcessAdvices;
-    }
-
-    /**
      * Get the before request process advices.
      *
      * @return before request process advices
@@ -97,21 +82,20 @@ public final class ProcessorInfo {
     }
 
     /**
-     * Set the after request process advices.
-     *
-     * @param afterRequestProcessAdvices the specified after request process advices
-     */
-    public void setAfterRequestProcessAdvices(final List<AfterRequestProcessAdvice> afterRequestProcessAdvices) {
-        this.afterRequestProcessAdvices = afterRequestProcessAdvices;
-    }
-
-    /**
      * Get the after request process advices.
      *
      * @return after request process advices
      */
     public List<AfterRequestProcessAdvice> getAfterRequestProcessAdvices() {
         return afterRequestProcessAdvices;
+    }
+
+    /**
+     * Initializes process advices.
+     */
+    public void initProcessAdvices() {
+        initBeforeList();
+        initAfterList();
     }
 
     /**
@@ -133,29 +117,11 @@ public final class ProcessorInfo {
     }
 
     /**
-     * setUriPatternMode.
-     *
-     * @param uriPatternMode uriPatternMode
-     */
-    public void setUriPatternMode(final URIPatternMode uriPatternMode) {
-        this.uriPatternMode = uriPatternMode;
-    }
-
-    /**
-     * getUriPatternMode.
-     *
-     * @return uriPatternMode
-     */
-    public URIPatternMode getUriPatternMode() {
-        return uriPatternMode;
-    }
-
-    /**
      * setHttpMethod.
      *
      * @param httpMethod httpMethod
      */
-    public void setHttpMethod(final HttpRequestMethod[] httpMethod) {
+    public void setHttpMethod(final HttpMethod[] httpMethod) {
         this.httpMethod = httpMethod;
     }
 
@@ -164,7 +130,7 @@ public final class ProcessorInfo {
      *
      * @return httpMethod
      */
-    public HttpRequestMethod[] getHttpMethod() {
+    public HttpMethod[] getHttpMethod() {
         return httpMethod;
     }
 
@@ -223,15 +189,12 @@ public final class ProcessorInfo {
     }
 
     /**
-     * Get before process advices.
-     *
-     * @param processorInfo the specified process info
-     * @return before request process advices
+     * Initializes before process advices.
      */
-    public static List<BeforeRequestProcessAdvice> getBeforeList(final ProcessorInfo processorInfo) {
-        final List<BeforeRequestProcessAdvice> ret = new ArrayList<>();
+    private void initBeforeList() {
+        final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = new ArrayList<>();
 
-        final Method invokeHolder = processorInfo.getInvokeHolder();
+        final Method invokeHolder = getInvokeHolder();
         final Class<?> processorClass = invokeHolder.getDeclaringClass();
 
         // 1. process class advice
@@ -240,7 +203,7 @@ public final class ProcessorInfo {
             for (int i = 0; i < bcs.length; i++) {
                 final Class<? extends BeforeRequestProcessAdvice> bc = bcs[i];
                 final BeforeRequestProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(bc);
-                ret.add(beforeRequestProcessAdvice);
+                beforeRequestProcessAdvices.add(beforeRequestProcessAdvice);
             }
         }
         // 2. process method advice
@@ -249,23 +212,20 @@ public final class ProcessorInfo {
             for (int i = 0; i < bcs.length; i++) {
                 final Class<? extends BeforeRequestProcessAdvice> bc = bcs[i];
                 final BeforeRequestProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(bc);
-                ret.add(beforeRequestProcessAdvice);
+                beforeRequestProcessAdvices.add(beforeRequestProcessAdvice);
             }
         }
 
-        return ret;
+        this.beforeRequestProcessAdvices = beforeRequestProcessAdvices;
     }
 
     /**
-     * Get after process advices.
-     *
-     * @param processorInfo the specified process info
-     * @return after request process advices
+     * Initializes after process advices.
      */
-    public static List<AfterRequestProcessAdvice> getAfterList(final ProcessorInfo processorInfo) {
-        final List<AfterRequestProcessAdvice> ret = new ArrayList<>();
+    private void initAfterList() {
+        final List<AfterRequestProcessAdvice> afterRequestProcessAdvices = new ArrayList<>();
 
-        final Method invokeHolder = processorInfo.getInvokeHolder();
+        final Method invokeHolder = getInvokeHolder();
         final Class<?> processorClass = invokeHolder.getDeclaringClass();
 
         // 1. process method advice
@@ -274,7 +234,7 @@ public final class ProcessorInfo {
             for (int i = 0; i < acs.length; i++) {
                 final Class<? extends AfterRequestProcessAdvice> ac = acs[i];
                 final AfterRequestProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(ac);
-                ret.add(beforeRequestProcessAdvice);
+                afterRequestProcessAdvices.add(beforeRequestProcessAdvice);
             }
         }
         // 2. process class advice
@@ -283,10 +243,10 @@ public final class ProcessorInfo {
             for (int i = 0; i < acs.length; i++) {
                 final Class<? extends AfterRequestProcessAdvice> ac = acs[i];
                 final AfterRequestProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(ac);
-                ret.add(beforeRequestProcessAdvice);
+                afterRequestProcessAdvices.add(beforeRequestProcessAdvice);
             }
         }
 
-        return ret;
+        this.afterRequestProcessAdvices = afterRequestProcessAdvices;
     }
 }

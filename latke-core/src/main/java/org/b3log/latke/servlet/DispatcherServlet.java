@@ -17,8 +17,6 @@ package org.b3log.latke.servlet;
 
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.servlet.function.ContextHandler;
 import org.b3log.latke.servlet.handler.*;
@@ -176,8 +174,8 @@ public final class DispatcherServlet extends HttpServlet {
      */
     public static void mapping() {
         for (final Router router : routers) {
-            final ProcessorInfo processorInfo = router.toProcessorInfo();
-            RequestDispatchHandler.addProcessorInfo(processorInfo);
+            final ContextHandlerMeta contextHandlerMeta = router.toContextHandlerMeta();
+            RequestDispatchHandler.addContextHandlerMeta(contextHandlerMeta);
         }
     }
 
@@ -189,8 +187,7 @@ public final class DispatcherServlet extends HttpServlet {
      */
     public static class Router {
         private List<String> uriPatterns = new ArrayList<>();
-        private URIPatternMode uriPatternMode = URIPatternMode.ANT_PATH;
-        private List<HttpRequestMethod> httpRequestMethods = new ArrayList<>();
+        private List<HttpMethod> httpRequestMethods = new ArrayList<>();
         private Class<? extends ConvertSupport> convertSupport = ConvertSupport.class;
         private ContextHandler handler;
         private Method method;
@@ -243,63 +240,57 @@ public final class DispatcherServlet extends HttpServlet {
             return this;
         }
 
-        public Router uriMode(final URIPatternMode uriPatternMode) {
-            this.uriPatternMode = uriPatternMode;
-
-            return this;
-        }
-
         public Router get() {
-            if (!httpRequestMethods.contains(HttpRequestMethod.GET)) {
-                httpRequestMethods.add(HttpRequestMethod.GET);
+            if (!httpRequestMethods.contains(HttpMethod.GET)) {
+                httpRequestMethods.add(HttpMethod.GET);
             }
 
             return this;
         }
 
         public Router post() {
-            if (!httpRequestMethods.contains(HttpRequestMethod.POST)) {
-                httpRequestMethods.add(HttpRequestMethod.POST);
+            if (!httpRequestMethods.contains(HttpMethod.POST)) {
+                httpRequestMethods.add(HttpMethod.POST);
             }
 
             return this;
         }
 
         public Router delete() {
-            if (!httpRequestMethods.contains(HttpRequestMethod.DELETE)) {
-                httpRequestMethods.add(HttpRequestMethod.DELETE);
+            if (!httpRequestMethods.contains(HttpMethod.DELETE)) {
+                httpRequestMethods.add(HttpMethod.DELETE);
             }
 
             return this;
         }
 
         public Router put() {
-            if (!httpRequestMethods.contains(HttpRequestMethod.PUT)) {
-                httpRequestMethods.add(HttpRequestMethod.PUT);
+            if (!httpRequestMethods.contains(HttpMethod.PUT)) {
+                httpRequestMethods.add(HttpMethod.PUT);
             }
 
             return this;
         }
 
         public Router head() {
-            if (!httpRequestMethods.contains(HttpRequestMethod.HEAD)) {
-                httpRequestMethods.add(HttpRequestMethod.HEAD);
+            if (!httpRequestMethods.contains(HttpMethod.HEAD)) {
+                httpRequestMethods.add(HttpMethod.HEAD);
             }
 
             return this;
         }
 
         public Router options() {
-            if (!httpRequestMethods.contains(HttpRequestMethod.OPTIONS)) {
-                httpRequestMethods.add(HttpRequestMethod.OPTIONS);
+            if (!httpRequestMethods.contains(HttpMethod.OPTIONS)) {
+                httpRequestMethods.add(HttpMethod.OPTIONS);
             }
 
             return this;
         }
 
         public Router trace() {
-            if (!httpRequestMethods.contains(HttpRequestMethod.TRACE)) {
-                httpRequestMethods.add(HttpRequestMethod.TRACE);
+            if (!httpRequestMethods.contains(HttpMethod.TRACE)) {
+                httpRequestMethods.add(HttpMethod.TRACE);
             }
 
             return this;
@@ -315,7 +306,7 @@ public final class DispatcherServlet extends HttpServlet {
                 final SerializedLambda sl = (SerializedLambda) m.invoke(lambda);
                 final String implClassName = sl.getImplClass().replaceAll("/", ".");
                 final Class<?> implClass = Class.forName(implClassName);
-                this.method =  implClass.getDeclaredMethod(sl.getImplMethodName(), RequestContext.class);
+                this.method = implClass.getDeclaredMethod(sl.getImplMethodName(), RequestContext.class);
             } catch (final Exception e) {
                 LOGGER.log(Level.ERROR, "Found lambda method reference impl method failed", e);
             }
@@ -323,19 +314,14 @@ public final class DispatcherServlet extends HttpServlet {
             return this;
         }
 
-        ProcessorInfo toProcessorInfo() {
-            final ProcessorInfo ret = new ProcessorInfo();
+        ContextHandlerMeta toContextHandlerMeta() {
+            final ContextHandlerMeta ret = new ContextHandlerMeta();
             ret.setPattern(uriPatterns.toArray(new String[0]));
-            ret.setUriPatternMode(uriPatternMode);
-            ret.setHttpMethod(httpRequestMethods.toArray(new HttpRequestMethod[0]));
+            ret.setHttpMethod(httpRequestMethods.toArray(new HttpMethod[0]));
             ret.setConvertClass(convertSupport);
             ret.setInvokeHolder(method);
             ret.setHandler(handler);
-
-            final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = ProcessorInfo.getBeforeList(ret);
-            ret.setBeforeRequestProcessAdvices(beforeRequestProcessAdvices);
-            final List<AfterRequestProcessAdvice> afterRequestProcessAdvices = ProcessorInfo.getAfterList(ret);
-            ret.setAfterRequestProcessAdvices(afterRequestProcessAdvices);
+            ret.initProcessAdvices();
 
             return ret;
         }

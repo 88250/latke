@@ -13,26 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.b3log.latke.servlet;
 
 /**
- * URI pattern mode.
+ * Enumerations of HTTP request methods.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 31, 2011
+ * @version 1.0.0.2, Dec 4, 2018
  */
-public enum URIPatternMode {
+public enum HttpMethod {
 
     /**
-     * Indicates the URI pattern was parsed as ant path.
+     * Indicates HTTP GET method.
      */
-    ANT_PATH,
+    GET,
     /**
-     * Indicates the URI pattern was parsed as regular expression.
+     * Indicates HTTP HEAD method.
      */
-    REGEX
+    HEAD,
+    /**
+     * Indicates HTTP POST method.
+     */
+    POST,
+    /**
+     * Indicates HTTP PUT method.
+     */
+    PUT,
+    /**
+     * Indicates HTTP DELETE method.
+     */
+    DELETE,
+    /**
+     * Indicates HTTP OPTIONS method.
+     */
+    OPTIONS,
+    /**
+     * Indicates HTTP TRACE method.
+     */
+    TRACE;
 }

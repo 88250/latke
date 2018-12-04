@@ -42,13 +42,13 @@ public class ArgsHandler implements Handler {
     @Override
     public void handle(final RequestContext context, final HttpControl httpControl) {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
-        final ProcessorInfo processorInfo = result.getProcessorInfo();
-        final ContextHandler handler = processorInfo.getHandler();
+        final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
+        final ContextHandler handler = contextHandlerMeta.getHandler();
         final Map<String, Object> args = new LinkedHashMap<>();
         if (null != handler) {
             doParamter(args, RequestContext.class, "context", context, result, 0);
         } else {
-            final Method invokeHolder = processorInfo.getInvokeHolder();
+            final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
             final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
             final String[] methodVariableNames = Reflections.getMethodVariableNames(
                     invokeHolder.getDeclaringClass(), invokeHolder.getName(), invokeHolder.getParameterTypes());

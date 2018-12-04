@@ -158,14 +158,14 @@ class PathVariableConvert implements IConverters {
         String ret = result.getPathVars().get(paramterName);
         if (null != ret) {
             // the dafault sys-convert.
-            return getConverter(result.getProcessorInfo().getConvertClass()).convert(paramterName, ret, parameterType);
+            return getConverter(result.getContextHandlerMeta().getConvertClass()).convert(paramterName, ret, parameterType);
         }
 
         final HttpServletRequest request = context.getRequest();
         ret = request.getParameter(paramterName);
         if (null != ret) {
             // the user-customer converter.
-            return getConverter(result.getProcessorInfo().getConvertClass()).convert(paramterName, ret, parameterType);
+            return getConverter(result.getContextHandlerMeta().getConvertClass()).convert(paramterName, ret, parameterType);
         }
 
         return null;

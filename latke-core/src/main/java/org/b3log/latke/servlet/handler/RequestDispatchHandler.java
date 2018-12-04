@@ -23,10 +23,8 @@ import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HttpControl;
-import org.b3log.latke.servlet.HttpRequestMethod;
+import org.b3log.latke.servlet.HttpMethod;
 import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
-import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.util.UriTemplates;
@@ -58,9 +56,9 @@ public class RequestDispatchHandler implements Handler {
     public static final String MATCH_RESULT = "MATCH_RESULT";
 
     /**
-     * All processors holder for routing.
+     * All context handler metas holder for routing.
      */
-    private static final List<ProcessorInfo> processorInfos = new ArrayList<>();
+    private static final List<ContextHandlerMeta> CONTEXT_HANDLER_METAS = new ArrayList<>();
 
     /**
      * Public constructor..
@@ -98,12 +96,12 @@ public class RequestDispatchHandler implements Handler {
     private MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret;
         final String contextPath = Latkes.getContextPath();
-        for (final ProcessorInfo processorInfo : processorInfos) {
-            for (final HttpRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
+        for (final ContextHandlerMeta contextHandlerMeta : CONTEXT_HANDLER_METAS) {
+            for (final HttpMethod httpRequestMethod : contextHandlerMeta.getHttpMethod()) {
                 if (httpMethod.equals(httpRequestMethod.toString())) {
-                    final String[] uriPatterns = processorInfo.getPattern();
+                    final String[] uriPatterns = contextHandlerMeta.getPattern();
                     for (final String uriPattern : uriPatterns) {
-                        ret = route(contextPath + uriPattern, processorInfo, requestURI, httpMethod);
+                        ret = route(contextPath + uriPattern, contextHandlerMeta, requestURI, httpMethod);
                         if (null != ret) {
                             return ret;
                         }
@@ -119,18 +117,18 @@ public class RequestDispatchHandler implements Handler {
      * Routes the request specified by the given URI pattern, processor info, request URI and HTTP method.
      *
      * @param uriPattern    the given URI pattern
-     * @param processorInfo the given processor info
+     * @param contextHandlerMeta the given context handler meta
      * @param requestURI    the given request URI
      * @param method        the given HTTP method
      * @return MatchResult, returns {@code null} if not found
      */
-    private MatchResult route(final String uriPattern, final ProcessorInfo processorInfo, final String requestURI, final String method) {
+    private MatchResult route(final String uriPattern, final ContextHandlerMeta contextHandlerMeta, final String requestURI, final String method) {
         final Map<String, String> resolveResult = UriTemplates.resolve(requestURI, uriPattern);
         if (null == resolveResult) {
             return null;
         }
 
-        final MatchResult ret = new MatchResult(processorInfo, requestURI, method, uriPattern);
+        final MatchResult ret = new MatchResult(contextHandlerMeta, requestURI, method, uriPattern);
         ret.setPathVars(resolveResult);
 
         return ret;
@@ -184,19 +182,14 @@ public class RequestDispatchHandler implements Handler {
 
                 LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]", clz.getCanonicalName(), mthd.getName());
 
-                final ProcessorInfo processorInfo = new ProcessorInfo();
-                processorInfo.setPattern(requestProcessingMethodAnn.value());
-                processorInfo.setUriPatternMode(requestProcessingMethodAnn.uriPatternsMode());
-                processorInfo.setHttpMethod(requestProcessingMethodAnn.method());
-                processorInfo.setConvertClass(requestProcessingMethodAnn.convertClass());
-                processorInfo.setInvokeHolder(mthd);
+                final ContextHandlerMeta contextHandlerMeta = new ContextHandlerMeta();
+                contextHandlerMeta.setPattern(requestProcessingMethodAnn.value());
+                contextHandlerMeta.setHttpMethod(requestProcessingMethodAnn.method());
+                contextHandlerMeta.setConvertClass(requestProcessingMethodAnn.convertClass());
+                contextHandlerMeta.setInvokeHolder(mthd);
+                contextHandlerMeta.initProcessAdvices();
 
-                final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = ProcessorInfo.getBeforeList(processorInfo);
-                processorInfo.setBeforeRequestProcessAdvices(beforeRequestProcessAdvices);
-                final List<AfterRequestProcessAdvice> afterRequestProcessAdvices = ProcessorInfo.getAfterList(processorInfo);
-                processorInfo.setAfterRequestProcessAdvices(afterRequestProcessAdvices);
-
-                addProcessorInfo(processorInfo);
+                addContextHandlerMeta(contextHandlerMeta);
             }
         }
     }
@@ -204,9 +197,9 @@ public class RequestDispatchHandler implements Handler {
     /**
      * Adds the specified processor info
      *
-     * @param processorInfo the specified processor info
+     * @param contextHandlerMeta the specified context handler meta
      */
-    public static void addProcessorInfo(final ProcessorInfo processorInfo) {
-        processorInfos.add(processorInfo);
+    public static void addContextHandlerMeta(final ContextHandlerMeta contextHandlerMeta) {
+        CONTEXT_HANDLER_METAS.add(contextHandlerMeta);
     }
 }

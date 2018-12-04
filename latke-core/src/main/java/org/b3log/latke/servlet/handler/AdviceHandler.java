@@ -50,11 +50,11 @@ public class AdviceHandler implements Handler {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
 
-        final ProcessorInfo processorInfo = result.getProcessorInfo();
+        final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final List<AbstractResponseRenderer> rendererList = result.getRendererList();
 
         try {
-            final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = processorInfo.getBeforeRequestProcessAdvices();
+            final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = contextHandlerMeta.getBeforeRequestProcessAdvices();
             for (final BeforeRequestProcessAdvice beforeRequestProcessAdvice : beforeRequestProcessAdvices) {
                 beforeRequestProcessAdvice.doAdvice(context, args);
             }
@@ -86,7 +86,7 @@ public class AdviceHandler implements Handler {
             rendererList.get(j).postRender(context, httpControl.data(MethodInvokeHandler.INVOKE_RESULT));
         }
 
-        final List<AfterRequestProcessAdvice> afterRequestProcessAdvices = processorInfo.getAfterRequestProcessAdvices();
+        final List<AfterRequestProcessAdvice> afterRequestProcessAdvices = contextHandlerMeta.getAfterRequestProcessAdvices();
         for (final AfterRequestProcessAdvice afterRequestProcessAdvice : afterRequestProcessAdvices) {
             afterRequestProcessAdvice.doAdvice(context, httpControl.data(MethodInvokeHandler.INVOKE_RESULT));
         }

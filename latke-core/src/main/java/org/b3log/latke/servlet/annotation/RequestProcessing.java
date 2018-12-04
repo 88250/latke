@@ -15,8 +15,7 @@
  */
 package org.b3log.latke.servlet.annotation;
 
-import org.b3log.latke.servlet.HttpRequestMethod;
-import org.b3log.latke.servlet.URIPatternMode;
+import org.b3log.latke.servlet.HttpMethod;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 
 import java.lang.annotation.*;
@@ -26,7 +25,7 @@ import java.lang.annotation.*;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.5, Dec 23, 2015
+ * @version 1.0.0.6, Dec 4, 2018
  * @see RequestProcessor
  */
 @Target(ElementType.METHOD)
@@ -37,32 +36,20 @@ public @interface RequestProcessing {
     /**
      * The dispatching URI path patterns of a request.
      *
-     * <p>
-     * Semantics of these values adapting to the URL patterns (&lt;url-pattern/&gt;) configures in web application
-     * descriptor (web.xml) of a servlet. Ant-style path pattern and regular expression pattern are also supported.
-     * </p>
-     * 
      * @return values
      */
     String[] value() default {};
 
     /**
-     * The URI patterns mode.
-     * 
-     * @return URI patterns mode
-     */
-    URIPatternMode uriPatternsMode() default URIPatternMode.ANT_PATH;
-
-    /**
      * The HTTP request methods the annotated method should process.
-     * 
-     * @return HTTP request methods
+     *
+     * @return HTTP methods
      */
-    HttpRequestMethod[] method() default {HttpRequestMethod.GET};
+    HttpMethod[] method() default {HttpMethod.GET};
 
     /**
      * User customized data convert class.
-     * 
+     *
      * @return convert class
      */
     Class<? extends ConvertSupport> convertClass() default ConvertSupport.class;

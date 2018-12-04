@@ -27,14 +27,14 @@ import java.util.Map;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Dec 1, 2018
+ * @version 1.0.0.4, Dec 4, 2018
  */
 public final class MatchResult {
 
     /**
-     * the processorInfo which be matched.
+     * Context handler meta..
      */
-    private ProcessorInfo processorInfo;
+    private ContextHandlerMeta contextHandlerMeta;
 
     /**
      * requestURI.
@@ -62,13 +62,13 @@ public final class MatchResult {
     private final List<AbstractResponseRenderer> rendererList = new ArrayList<>();
 
     /**
-     * @param processorInfo  processorInfo
-     * @param requestURI     requestURI from request
-     * @param matchedMethod  matched http-Method
-     * @param matchedPattern matchedPattern in processors
+     * @param contextHandlerMeta context handler meta
+     * @param requestURI         requestURI from request
+     * @param matchedMethod      matched HTTP method
+     * @param matchedPattern     matched pattern
      */
-    MatchResult(final ProcessorInfo processorInfo, final String requestURI, final String matchedMethod, final String matchedPattern) {
-        this.processorInfo = processorInfo;
+    MatchResult(final ContextHandlerMeta contextHandlerMeta, final String requestURI, final String matchedMethod, final String matchedPattern) {
+        this.contextHandlerMeta = contextHandlerMeta;
         this.requestURI = requestURI;
         this.matchedMethod = matchedMethod;
         this.matchedPattern = matchedPattern;
@@ -84,12 +84,12 @@ public final class MatchResult {
     }
 
     /**
-     * getProcessorInfo.
+     * Gets the context handler meta.
      *
-     * @return processorInfo
+     * @return context handler meta
      */
-    public ProcessorInfo getProcessorInfo() {
-        return processorInfo;
+    public ContextHandlerMeta getContextHandlerMeta() {
+        return contextHandlerMeta;
     }
 
     /**
@@ -126,7 +126,5 @@ public final class MatchResult {
      */
     public List<AbstractResponseRenderer> getRendererList() {
         return rendererList;
-
-
     }
 }

@@ -45,9 +45,9 @@ public class MethodInvokeHandler implements Handler {
     public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
-        final ProcessorInfo processorInfo = result.getProcessorInfo();
+        final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         Object ret;
-        final Method invokeHolder = processorInfo.getInvokeHolder();
+        final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
         final BeanManager beanManager = BeanManager.getInstance();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
         ret = invokeHolder.invoke(classHolder, args.values().toArray());
