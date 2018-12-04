@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.servlet;
 
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.converter.ConvertSupport;
@@ -27,6 +29,8 @@ import org.b3log.latke.servlet.renderer.Http500Renderer;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
+import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,11 @@ import java.util.List;
  * @version 1.0.2.2, Dec 2, 2018
  */
 public final class DispatcherServlet extends HttpServlet {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(DispatcherServlet.class);
 
     /**
      * Handlers.
@@ -298,10 +307,18 @@ public final class DispatcherServlet extends HttpServlet {
 
         public Router handler(final ContextHandler handler) {
             this.handler = handler;
-
             final Class clazz = handler.getClass();
-            final Method method = clazz.getDeclaredMethods()[0];
-            this.method = method;
+            try {
+                final Serializable lambda = handler;
+                final Method m = clazz.getDeclaredMethod("writeReplace");
+                m.setAccessible(true);
+                final SerializedLambda sl = (SerializedLambda) m.invoke(lambda);
+                final String implClassName = sl.getImplClass().replaceAll("/", ".");
+                final Class<?> implClass = Class.forName(implClassName);
+                this.method =  implClass.getDeclaredMethod(sl.getImplMethodName(), RequestContext.class);
+            } catch (final Exception e) {
+                LOGGER.log(Level.ERROR, "Found lambda method reference impl method failed", e);
+            }
 
             return this;
         }

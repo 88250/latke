@@ -17,6 +17,8 @@ package org.b3log.latke.servlet.function;
 
 import org.b3log.latke.servlet.RequestContext;
 
+import java.io.Serializable;
+
 /**
  * Represents an request handler that accepts a context as the single input argument and returns no result.
  *
@@ -25,7 +27,7 @@ import org.b3log.latke.servlet.RequestContext;
  * @since 2.4.30
  */
 @FunctionalInterface
-public interface ContextHandler {
+public interface ContextHandler extends Serializable {
 
     /**
      * Performs request handling with the specified context.

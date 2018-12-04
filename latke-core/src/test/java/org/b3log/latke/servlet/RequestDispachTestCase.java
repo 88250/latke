@@ -56,11 +56,11 @@ public class RequestDispachTestCase {
         final List<Class<?>> classes = new ArrayList<>();
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
-
-        DispatcherServlet.get("/func1", c -> System.out.println("route to func1"));
-        DispatcherServlet.mapping();
-
         BeanManager.start(classes);
+
+        final TestRequestProcessor testRequestProcessor = BeanManager.getInstance().getReference(TestRequestProcessor.class);
+        DispatcherServlet.get("/func1", testRequestProcessor::lambdaRoute);
+        DispatcherServlet.mapping();
 
         handlerList.add(new RequestDispatchHandler());
         handlerList.add(new ArgsHandler());

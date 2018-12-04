@@ -232,20 +232,7 @@ public final class ProcessorInfo {
         final List<BeforeRequestProcessAdvice> ret = new ArrayList<>();
 
         final Method invokeHolder = processorInfo.getInvokeHolder();
-        Class<?> processorClass = null;
-
-        final ContextHandler handler = processorInfo.getHandler();
-        if (null != handler) {
-            try {
-                processorClass = Class.forName(invokeHolder.getDeclaringClass().getDeclaredFields()[0].getType().getName());
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            processorClass = invokeHolder.getDeclaringClass();
-        }
-
-        // TODO: get lambda method name for invokeHolder
+        final Class<?> processorClass = invokeHolder.getDeclaringClass();
 
         // 1. process class advice
         if (null != processorClass && processorClass.isAnnotationPresent(Before.class)) {
@@ -279,20 +266,7 @@ public final class ProcessorInfo {
         final List<AfterRequestProcessAdvice> ret = new ArrayList<>();
 
         final Method invokeHolder = processorInfo.getInvokeHolder();
-        Class<?> processorClass = null;
-
-        final ContextHandler handler = processorInfo.getHandler();
-        if (null != handler) {
-            try {
-                processorClass = Class.forName(invokeHolder.getDeclaringClass().getDeclaredFields()[0].getType().getName());
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            processorClass = invokeHolder.getDeclaringClass();
-        }
-
-        // TODO: get lambda method name for invokeHolder
+        final Class<?> processorClass = invokeHolder.getDeclaringClass();
 
         // 1. process method advice
         if (invokeHolder.isAnnotationPresent(After.class)) {

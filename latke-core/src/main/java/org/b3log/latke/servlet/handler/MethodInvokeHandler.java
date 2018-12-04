@@ -17,9 +17,8 @@ package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HttpControl;
-import org.b3log.latke.servlet.function.ContextHandler;
+import org.b3log.latke.servlet.RequestContext;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -47,16 +46,12 @@ public class MethodInvokeHandler implements Handler {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
         final ProcessorInfo processorInfo = result.getProcessorInfo();
-        Object ret = null;
-        final ContextHandler handler = processorInfo.getHandler();
-        if (null != handler) {
-            processorInfo.getHandler().handle(context);
-        } else {
-            final Method invokeHolder = processorInfo.getInvokeHolder();
-            final BeanManager beanManager = BeanManager.getInstance();
-            final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
-            ret = invokeHolder.invoke(classHolder, args.values().toArray());
-        }
+        Object ret;
+        final Method invokeHolder = processorInfo.getInvokeHolder();
+        final BeanManager beanManager = BeanManager.getInstance();
+        final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
+        ret = invokeHolder.invoke(classHolder, args.values().toArray());
+
 
         httpControl.data(INVOKE_RESULT, ret);
     }

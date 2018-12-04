@@ -15,7 +15,11 @@
  */
 package org.b3log.latke.servlet.mock;
 
-import org.b3log.latke.servlet.annotation.*;
+import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.servlet.annotation.After;
+import org.b3log.latke.servlet.annotation.Before;
+import org.b3log.latke.servlet.annotation.RequestProcessing;
+import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
 import org.b3log.latke.servlet.renderer.JsonRenderer;
 import org.b3log.latke.testhelper.MockConverSupport;
@@ -93,5 +97,9 @@ public class TestRequestProcessor {
     @RequestProcessing("/*.html")
     public void testAntPathMatch() {
         System.out.println("testAntPathMatch");
+    }
+
+    public void lambdaRoute(final RequestContext context) {
+        System.out.println("route via lambda");
     }
 }
