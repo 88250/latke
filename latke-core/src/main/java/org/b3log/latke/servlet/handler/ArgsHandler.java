@@ -66,15 +66,15 @@ public class ArgsHandler implements Handler {
      * do args convert.
      *
      * @param args          the method args
-     * @param parameterType parameterType
-     * @param paramterName  paramterName
-     * @param context       RequestContext
-     * @param result        MatchResult
-     * @param sequence      the sequence of the param in methon
+     * @param parameterType parameter type
+     * @param paramName     parameter name
+     * @param context       request context
+     * @param result        match result
+     * @param sequence      the sequence of the param in method
      */
-    private void doParamter(final Map<String, Object> args, final Class<?> parameterType, final String paramterName, final RequestContext context, final MatchResult result, final int sequence) {
-        final Object ret = Converters.doConvert(parameterType, paramterName, context, result, sequence);
+    private void doParamter(final Map<String, Object> args, final Class<?> parameterType, final String paramName, final RequestContext context, final MatchResult result, final int sequence) {
+        final Object ret = Converters.doConvert(parameterType, paramName, context, result, sequence);
 
-        args.put(paramterName, ret);
+        args.put(paramName, ret);
     }
 }

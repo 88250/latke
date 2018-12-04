@@ -78,7 +78,7 @@ public class TestRequestProcessor {
 
     @RequestProcessing(value = "/do/render1")
     public List<AbstractResponseRenderer> testRender1(final JsonRenderer renderer1, final JsonRenderer renderer2) {
-        final List<AbstractResponseRenderer> ret = new ArrayList<AbstractResponseRenderer>();
+        final List<AbstractResponseRenderer> ret = new ArrayList<>();
         ret.add(renderer1);
         ret.add(renderer2);
         return ret;

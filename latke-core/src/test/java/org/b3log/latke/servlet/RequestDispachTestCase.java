@@ -89,7 +89,7 @@ public class RequestDispachTestCase {
     @Test
     public void testFunctionalRouting1() {
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/func2/pathvar");
+        when(request.getRequestURI()).thenReturn("/func2/argVar");
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
