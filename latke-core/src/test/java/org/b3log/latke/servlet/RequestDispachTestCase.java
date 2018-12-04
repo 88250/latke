@@ -128,23 +128,6 @@ public class RequestDispachTestCase {
     }
 
     @Test
-    public void testBaseInvoke3() {
-
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/string/aapbb");
-        when(request.getMethod()).thenReturn("GET");
-
-        HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
-
-        Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
-        Assert.assertEquals("aa", args.get("id"));
-        Assert.assertEquals("bb", args.get("name"));
-        Assert.assertEquals("aabb", control.data(MethodInvokeHandler.INVOKE_RESULT));
-
-    }
-
-    @Test
     public void testBaseInvoke4() {
 
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -223,18 +206,6 @@ public class RequestDispachTestCase {
     public void testRetVoid() {
         final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn("/void");
-        when(request.getMethod()).thenReturn("GET");
-
-        final HttpControl control = doFlow(request);
-
-        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
-        Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
-    }
-
-    @Test
-    public void testAntPathMatch() {
-        final HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/a.html");
         when(request.getMethod()).thenReturn("GET");
 
         final HttpControl control = doFlow(request);

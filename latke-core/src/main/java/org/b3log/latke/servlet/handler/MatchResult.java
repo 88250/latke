@@ -52,9 +52,9 @@ public final class MatchResult {
     private String matchedPattern;
 
     /**
-     * the mapValue from url mapping.
+     * URI template name-args mappings.
      */
-    private Map<String, Object> mapValues = new HashMap<>();
+    private Map<String, String> pathVars = new HashMap<>();
 
     /**
      * the {@link AbstractResponseRenderer}  holders which be inited by sys, for advice to do the pre and post work.
@@ -93,24 +93,6 @@ public final class MatchResult {
     }
 
     /**
-     * getMapValues.
-     *
-     * @return mapValues
-     */
-    public Map<String, Object> getMapValues() {
-        return mapValues;
-    }
-
-    /**
-     * setMapValues.
-     *
-     * @param mapValues mapValues
-     */
-    public void setMapValues(final Map<String, Object> mapValues) {
-        this.mapValues = mapValues;
-    }
-
-    /**
      * addRenders.
      *
      * @param ins AbstractResponseRenderer
@@ -120,11 +102,31 @@ public final class MatchResult {
     }
 
     /**
+     * Get path vars.
+     *
+     * @return path vars
+     */
+    public Map<String, String> getPathVars() {
+        return pathVars;
+    }
+
+    /**
+     * Set path vars.
+     *
+     * @param pathVars the specified path vars
+     */
+    public void setPathVars(final Map<String, String> pathVars) {
+        this.pathVars = pathVars;
+    }
+
+    /**
      * getRendererList.
      *
      * @return rendererList
      */
     public List<AbstractResponseRenderer> getRendererList() {
         return rendererList;
+
+
     }
 }

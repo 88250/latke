@@ -59,20 +59,19 @@ public abstract class AbstractResponseRenderer implements ResponseRenderer {
         }
 
         final Set<AbstractPlugin> pSet = BeanManager.getInstance().getReference(PluginManager.class).getPlugins(rendererId);
-        for (AbstractPlugin plugin : pSet) {
+        for (final AbstractPlugin plugin : pSet) {
             plugin.prePlug(context, args);
         }
     }
 
     @Override
     public void postRender(final RequestContext context, final Object ret) {
-
         if (StringUtils.isBlank(rendererId)) {
             return;
         }
 
         final Set<AbstractPlugin> pSet = BeanManager.getInstance().getReference(PluginManager.class).getPlugins(rendererId);
-        for (AbstractPlugin plugin : pSet) {
+        for (final AbstractPlugin plugin : pSet) {
             plugin.plug(getRenderDataModel(), context, ret);
         }
     }
@@ -83,6 +82,6 @@ public abstract class AbstractResponseRenderer implements ResponseRenderer {
      * @return map
      */
     public Map<String, Object> getRenderDataModel() {
-        return new HashMap<String, Object>();
+        return new HashMap<>();
     }
 }

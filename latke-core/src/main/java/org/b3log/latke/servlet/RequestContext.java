@@ -217,6 +217,16 @@ public final class RequestContext {
     }
 
     /**
+     * Gets a path var specified by the given name from request URI.
+     *
+     * @param name the given name
+     * @return path var, returns {@code null} if not found
+     */
+    public String pathVar(final String name) {
+        return null;
+    }
+
+    /**
      * Sends the specified error status code.
      *
      * @param sc the specified error status code

@@ -16,87 +16,29 @@
 package org.b3log.latke.servlet.mock;
 
 import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.annotation.After;
 import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
-import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
-import org.b3log.latke.servlet.renderer.JsonRenderer;
-import org.b3log.latke.testhelper.MockConverSupport;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Request processor for testing.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Sep 25, 2013
+ * @version 1.0.0.2, Dec 4, 2018
+ * @since 2.4.34
  */
 @RequestProcessor
 public class TestRequestProcessor {
 
-    @RequestProcessing(value = "/string")
-    public String getString() {
-        return "string";
+    @RequestProcessing(value = "/a")
+    public void a(final RequestContext context) {
+        System.out.println("a done");
     }
 
-    @RequestProcessing(value = "/string/{id}/{name}")
-    public String getString1(final String id, final String name) {
-        return id + name;
-    }
-
-    @RequestProcessing(value = "/string/{id}p{name}")
-    public String getString11(final String id, final String name) {
-        return id + name;
-    }
-
-    @RequestProcessing(value = "/string/{a}*{b}")
-    public Integer getString11(final Integer a, final Integer b) {
-        return a * b;
-    }
-
-    @RequestProcessing(value = "/string/{name}+{password}")
-    public String getString2(final String name, final String password) {
-        return name + password;
-    }
-
-    @RequestProcessing(value = "/date/{id}/{date}", convertClass = MockConverSupport.class)
-    public String getString2(final Integer id, final Date date) {
-        return "" + id + date.getTime();
-    }
-
-    @Before(adviceClass = TestBeforeAdvice.class)
-    @After
-    @RequestProcessing(value = "/dobefore/{id}")
-    public Integer getString3(final Integer id) {
-        return id;
-    }
-
-    @RequestProcessing(value = "/do/render1")
-    public List<AbstractResponseRenderer> testRender1(final JsonRenderer renderer1, final JsonRenderer renderer2) {
-        final List<AbstractResponseRenderer> ret = new ArrayList<>();
-        ret.add(renderer1);
-        ret.add(renderer2);
-        return ret;
-    }
-
-    @RequestProcessing(value = "/json/{name}")
-    public String testJson(JSONObject jsonObject) {
-        return jsonObject.optString("name");
-    }
-
-    @RequestProcessing("/void")
-    public void testRetVoid() {
-        System.out.println("testRetVoid");
-    }
-
-    @RequestProcessing("/*.html")
-    public void testAntPathMatch() {
-        System.out.println("testAntPathMatch");
+    @RequestProcessing(value = "/a/{id}/{name}")
+    public void a1(final RequestContext context) {
+        final String id = context.pathVar("id");
+        System.out.println("a1: " + id);
     }
 
     @Before(adviceClass = TestBeforeAdvice.class)

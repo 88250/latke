@@ -155,18 +155,15 @@ class PathVariableConvert implements IConverters {
     @Override
     public Object convert(final Class<?> parameterType, final String paramterName, final RequestContext context,
                           final MatchResult result, final int sequence) throws Exception {
-
-        Object ret = result.getMapValues().get(paramterName);
-
-        if (ret != null) {
+        String ret = result.getPathVars().get(paramterName);
+        if (null != ret) {
             // the dafault sys-convert.
             return getConverter(result.getProcessorInfo().getConvertClass()).convert(paramterName, ret, parameterType);
         }
 
         final HttpServletRequest request = context.getRequest();
-
         ret = request.getParameter(paramterName);
-        if (ret != null) {
+        if (null != ret) {
             // the user-customer converter.
             return getConverter(result.getProcessorInfo().getConvertClass()).convert(paramterName, ret, parameterType);
         }

@@ -52,7 +52,6 @@ public class MethodInvokeHandler implements Handler {
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
         ret = invokeHolder.invoke(classHolder, args.values().toArray());
 
-
         httpControl.data(INVOKE_RESULT, ret);
     }
 }

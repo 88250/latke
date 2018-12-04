@@ -29,16 +29,13 @@ import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
-import org.b3log.latke.util.AntPathMatcher;
-import org.b3log.latke.util.DefaultMatcher;
-import org.b3log.latke.util.RegexPathMatcher;
-import org.weborganic.furi.URIResolveResult;
+import org.b3log.latke.util.UriTemplates;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -128,43 +125,15 @@ public class RequestDispatchHandler implements Handler {
      * @return MatchResult, returns {@code null} if not found
      */
     private MatchResult route(final String uriPattern, final ProcessorInfo processorInfo, final String requestURI, final String method) {
-        if (requestURI.equals(uriPattern)) {
-            return new MatchResult(processorInfo, requestURI, method, uriPattern);
+        final Map<String, String> resolveResult = UriTemplates.resolve(requestURI, uriPattern);
+        if (null == resolveResult) {
+            return null;
         }
 
-        switch (processorInfo.getUriPatternMode()) {
-            case REGEX:
-                if (RegexPathMatcher.match(uriPattern, requestURI)) {
-                    return new MatchResult(processorInfo, requestURI, method, uriPattern);
-                }
+        final MatchResult ret = new MatchResult(processorInfo, requestURI, method, uriPattern);
+        ret.setPathVars(resolveResult);
 
-                break;
-            case ANT_PATH:
-                if (AntPathMatcher.match(uriPattern, requestURI)) {
-                    return new MatchResult(processorInfo, requestURI, method, uriPattern);
-                }
-
-                final URIResolveResult result = DefaultMatcher.match(uriPattern, requestURI);
-
-                if (URIResolveResult.Status.RESOLVED == result.getStatus()) {
-                    final MatchResult ret = new MatchResult(processorInfo, requestURI, method, uriPattern);
-
-                    final HashMap<String, Object> map = new HashMap<>();
-                    for (String s : result.names()) {
-                        map.put(s, result.get(s));
-                    }
-
-                    ret.setMapValues(map);
-
-                    return ret;
-                }
-
-                break;
-            default:
-                throw new IllegalStateException("Can not process URI pattern [uriPattern=" + uriPattern + ", mode=" + processorInfo.getUriPatternMode() + "]");
-        }
-
-        return null;
+        return ret;
     }
 
     /**
