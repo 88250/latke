@@ -19,6 +19,7 @@ import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @Singleton
@@ -26,9 +27,11 @@ public class TestBeforeAdvice extends BeforeRequestProcessAdvice {
 
     @Override
     public void doAdvice(RequestContext context, Map<String, Object> args) {
-
         Integer id = (Integer) args.get("id");
-        args.put("id", id + 1);
-    }
+        if (null != id) {
+            args.put("id", id + 1);
+        }
 
+        System.out.println("do before advice for [" + context.requestURI() + ", args=" + args.toString() + "]");
+    }
 }

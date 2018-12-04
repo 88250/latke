@@ -99,7 +99,8 @@ public class TestRequestProcessor {
         System.out.println("testAntPathMatch");
     }
 
+    @Before(adviceClass = TestBeforeAdvice.class)
     public void lambdaRoute(final RequestContext context) {
-        System.out.println("route via lambda");
+        System.out.println("route via lambda: " + context.requestURI());
     }
 }

@@ -60,6 +60,7 @@ public class RequestDispachTestCase {
 
         final TestRequestProcessor testRequestProcessor = BeanManager.getInstance().getReference(TestRequestProcessor.class);
         DispatcherServlet.get("/func1", testRequestProcessor::lambdaRoute);
+        DispatcherServlet.get("/func2/{arg_name}", testRequestProcessor::lambdaRoute);
         DispatcherServlet.mapping();
 
         handlerList.add(new RequestDispatchHandler());
@@ -78,6 +79,17 @@ public class RequestDispachTestCase {
     public void testFunctionalRouting() {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn("/func1");
+        when(request.getMethod()).thenReturn("GET");
+
+        HttpControl control = doFlow(request);
+        Assert.assertNotNull(control.data(RequestDispatchHandler.MATCH_RESULT));
+        Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
+    }
+
+    @Test
+    public void testFunctionalRouting1() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn("/func2/pathvar");
         when(request.getMethod()).thenReturn("GET");
 
         HttpControl control = doFlow(request);
