@@ -45,7 +45,7 @@ public class HttpControl {
      * the constructor.
      *
      * @param handlerIterable    Iterator<Handler>
-     * @param httpRequestContext HTTPRequestContext
+     * @param httpRequestContext RequestContext
      */
     public HttpControl(final Iterator<Handler> handlerIterable, final RequestContext httpRequestContext) {
 
@@ -59,7 +59,7 @@ public class HttpControl {
     private Iterator<Handler> ihandlerIterable;
 
     /**
-     * HTTPRequestContext.
+     * RequestContext.
      */
     private RequestContext httpRequestContext;
 

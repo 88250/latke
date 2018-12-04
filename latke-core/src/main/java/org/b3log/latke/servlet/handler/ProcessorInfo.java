@@ -16,7 +16,7 @@
 package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.servlet.HTTPRequestMethod;
+import org.b3log.latke.servlet.HttpRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
@@ -51,7 +51,7 @@ public final class ProcessorInfo {
     /**
      * HTTP methods.
      */
-    private HTTPRequestMethod[] httpMethod;
+    private HttpRequestMethod[] httpMethod;
 
     /**
      * The processor method.
@@ -155,7 +155,7 @@ public final class ProcessorInfo {
      *
      * @param httpMethod httpMethod
      */
-    public void setHttpMethod(final HTTPRequestMethod[] httpMethod) {
+    public void setHttpMethod(final HttpRequestMethod[] httpMethod) {
         this.httpMethod = httpMethod;
     }
 
@@ -164,7 +164,7 @@ public final class ProcessorInfo {
      *
      * @return httpMethod
      */
-    public HTTPRequestMethod[] getHttpMethod() {
+    public HttpRequestMethod[] getHttpMethod() {
         return httpMethod;
     }
 

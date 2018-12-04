@@ -69,7 +69,7 @@ public class ArgsHandler implements Handler {
      * @param args          the method args
      * @param parameterType parameterType
      * @param paramterName  paramterName
-     * @param context       HTTPRequestContext
+     * @param context       RequestContext
      * @param result        MatchResult
      * @param sequence      the sequence of the param in methon
      */

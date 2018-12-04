@@ -113,7 +113,7 @@ public final class MatchResult {
     /**
      * addRenders.
      *
-     * @param ins AbstractHTTPResponseRenderer
+     * @param ins AbstractResponseRenderer
      */
     public void addRenders(final AbstractResponseRenderer ins) {
         rendererList.add(ins);

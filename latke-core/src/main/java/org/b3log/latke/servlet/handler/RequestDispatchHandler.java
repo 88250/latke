@@ -23,7 +23,7 @@ import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.HTTPRequestMethod;
+import org.b3log.latke.servlet.HttpRequestMethod;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
@@ -78,7 +78,7 @@ public class RequestDispatchHandler implements Handler {
     public void handle(final RequestContext context, final HttpControl httpControl) {
         final HttpServletRequest request = context.getRequest();
         final String requestURI = getRequestURI(request);
-        final String httpMethod = getHTTPMethod(request);
+        final String httpMethod = getHttpMethod(request);
 
         LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", requestURI, httpMethod);
 
@@ -100,7 +100,7 @@ public class RequestDispatchHandler implements Handler {
         MatchResult ret = null;
         final String contextPath = Latkes.getContextPath();
         for (final ProcessorInfo processorInfo : processorInfos) {
-            for (final HTTPRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
+            for (final HttpRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
                 if (httpMethod.equals(httpRequestMethod.toString())) {
                     final String[] uriPatterns = processorInfo.getPattern();
                     for (final String uriPattern : uriPatterns) {
@@ -171,7 +171,7 @@ public class RequestDispatchHandler implements Handler {
      * @param request the specified request
      * @return HTTP method
      */
-    private String getHTTPMethod(final HttpServletRequest request) {
+    private String getHttpMethod(final HttpServletRequest request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
         if (StringUtils.isBlank(ret)) {
             ret = request.getMethod();

@@ -182,7 +182,7 @@ public final class DispatcherServlet extends HttpServlet {
     public static class Router {
         private List<String> uriPatterns = new ArrayList<>();
         private URIPatternMode uriPatternMode = URIPatternMode.ANT_PATH;
-        private List<HTTPRequestMethod> httpRequestMethods = new ArrayList<>();
+        private List<HttpRequestMethod> httpRequestMethods = new ArrayList<>();
         private Class<? extends ConvertSupport> convertSupport = ConvertSupport.class;
         private ContextHandler handler;
         private Method method;
@@ -242,56 +242,56 @@ public final class DispatcherServlet extends HttpServlet {
         }
 
         public Router get() {
-            if (!httpRequestMethods.contains(HTTPRequestMethod.GET)) {
-                httpRequestMethods.add(HTTPRequestMethod.GET);
+            if (!httpRequestMethods.contains(HttpRequestMethod.GET)) {
+                httpRequestMethods.add(HttpRequestMethod.GET);
             }
 
             return this;
         }
 
         public Router post() {
-            if (!httpRequestMethods.contains(HTTPRequestMethod.POST)) {
-                httpRequestMethods.add(HTTPRequestMethod.POST);
+            if (!httpRequestMethods.contains(HttpRequestMethod.POST)) {
+                httpRequestMethods.add(HttpRequestMethod.POST);
             }
 
             return this;
         }
 
         public Router delete() {
-            if (!httpRequestMethods.contains(HTTPRequestMethod.DELETE)) {
-                httpRequestMethods.add(HTTPRequestMethod.DELETE);
+            if (!httpRequestMethods.contains(HttpRequestMethod.DELETE)) {
+                httpRequestMethods.add(HttpRequestMethod.DELETE);
             }
 
             return this;
         }
 
         public Router put() {
-            if (!httpRequestMethods.contains(HTTPRequestMethod.PUT)) {
-                httpRequestMethods.add(HTTPRequestMethod.PUT);
+            if (!httpRequestMethods.contains(HttpRequestMethod.PUT)) {
+                httpRequestMethods.add(HttpRequestMethod.PUT);
             }
 
             return this;
         }
 
         public Router head() {
-            if (!httpRequestMethods.contains(HTTPRequestMethod.HEAD)) {
-                httpRequestMethods.add(HTTPRequestMethod.HEAD);
+            if (!httpRequestMethods.contains(HttpRequestMethod.HEAD)) {
+                httpRequestMethods.add(HttpRequestMethod.HEAD);
             }
 
             return this;
         }
 
         public Router options() {
-            if (!httpRequestMethods.contains(HTTPRequestMethod.OPTIONS)) {
-                httpRequestMethods.add(HTTPRequestMethod.OPTIONS);
+            if (!httpRequestMethods.contains(HttpRequestMethod.OPTIONS)) {
+                httpRequestMethods.add(HttpRequestMethod.OPTIONS);
             }
 
             return this;
         }
 
         public Router trace() {
-            if (!httpRequestMethods.contains(HTTPRequestMethod.TRACE)) {
-                httpRequestMethods.add(HTTPRequestMethod.TRACE);
+            if (!httpRequestMethods.contains(HttpRequestMethod.TRACE)) {
+                httpRequestMethods.add(HttpRequestMethod.TRACE);
             }
 
             return this;
@@ -311,7 +311,7 @@ public final class DispatcherServlet extends HttpServlet {
             final ProcessorInfo ret = new ProcessorInfo();
             ret.setPattern(uriPatterns.toArray(new String[0]));
             ret.setUriPatternMode(uriPatternMode);
-            ret.setHttpMethod(httpRequestMethods.toArray(new HTTPRequestMethod[0]));
+            ret.setHttpMethod(httpRequestMethods.toArray(new HttpRequestMethod[0]));
             ret.setConvertClass(convertSupport);
             ret.setInvokeHolder(method);
             ret.setHandler(handler);

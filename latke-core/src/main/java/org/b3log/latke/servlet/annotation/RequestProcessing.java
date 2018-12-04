@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.servlet.annotation;
 
-import org.b3log.latke.servlet.HTTPRequestMethod;
+import org.b3log.latke.servlet.HttpRequestMethod;
 import org.b3log.latke.servlet.URIPatternMode;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 
@@ -58,7 +58,7 @@ public @interface RequestProcessing {
      * 
      * @return HTTP request methods
      */
-    HTTPRequestMethod[] method() default {HTTPRequestMethod.GET};
+    HttpRequestMethod[] method() default {HttpRequestMethod.GET};
 
     /**
      * User customized data convert class.
