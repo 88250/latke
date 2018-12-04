@@ -20,8 +20,8 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
+import org.b3log.latke.servlet.renderer.JsonRenderer;
 import org.b3log.latke.util.Requests;
 import org.json.JSONObject;
 
@@ -36,12 +36,12 @@ import java.io.InputStreamReader;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.3.0.0, Dec 3, 2018
  */
-public final class HTTPRequestContext {
+public final class RequestContext {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(HTTPRequestContext.class);
+    private static final Logger LOGGER = Logger.getLogger(RequestContext.class);
 
     /**
      * Request.
@@ -61,14 +61,14 @@ public final class HTTPRequestContext {
     /**
      * Renderer.
      */
-    private AbstractHTTPResponseRenderer renderer;
+    private AbstractResponseRenderer renderer;
 
     /**
      * Gets the renderer.
      *
      * @return renderer
      */
-    public AbstractHTTPResponseRenderer getRenderer() {
+    public AbstractResponseRenderer getRenderer() {
         return renderer;
     }
 
@@ -77,7 +77,7 @@ public final class HTTPRequestContext {
      *
      * @param renderer the specified renderer
      */
-    public void setRenderer(final AbstractHTTPResponseRenderer renderer) {
+    public void setRenderer(final AbstractResponseRenderer renderer) {
         this.renderer = renderer;
     }
 
@@ -251,8 +251,8 @@ public final class HTTPRequestContext {
      * @param json the specified json object
      * @return this context
      */
-    public HTTPRequestContext renderJSONPretty(final JSONObject json) {
-        final JSONRenderer jsonRenderer = new JSONRenderer();
+    public RequestContext renderJSONPretty(final JSONObject json) {
+        final JsonRenderer jsonRenderer = new JsonRenderer();
         jsonRenderer.setJSONObject(json);
         jsonRenderer.setPretty(true);
 
@@ -262,12 +262,12 @@ public final class HTTPRequestContext {
     }
 
     /**
-     * Renders using {@link JSONRenderer} with {"sc": false}.
+     * Renders using {@link JsonRenderer} with {"sc": false}.
      *
      * @return this context
      */
-    public HTTPRequestContext renderJSON() {
-        final JSONRenderer jsonRenderer = new JSONRenderer();
+    public RequestContext renderJSON() {
+        final JsonRenderer jsonRenderer = new JsonRenderer();
         final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, false);
         jsonRenderer.setJSONObject(ret);
 
@@ -282,8 +282,8 @@ public final class HTTPRequestContext {
      * @param json the specified json object
      * @return this context
      */
-    public HTTPRequestContext renderJSON(final JSONObject json) {
-        final JSONRenderer jsonRenderer = new JSONRenderer();
+    public RequestContext renderJSON(final JSONObject json) {
+        final JsonRenderer jsonRenderer = new JsonRenderer();
         jsonRenderer.setJSONObject(json);
 
         this.renderer = jsonRenderer;
@@ -292,13 +292,13 @@ public final class HTTPRequestContext {
     }
 
     /**
-     * Renders using {@link JSONRenderer} with {"sc": sc}.
+     * Renders using {@link JsonRenderer} with {"sc": sc}.
      *
      * @param sc the specified sc
      * @return this context
      */
-    public HTTPRequestContext renderJSON(final boolean sc) {
-        final JSONRenderer jsonRenderer = new JSONRenderer();
+    public RequestContext renderJSON(final boolean sc) {
+        final JsonRenderer jsonRenderer = new JsonRenderer();
         final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, sc);
         jsonRenderer.setJSONObject(ret);
 
@@ -312,9 +312,9 @@ public final class HTTPRequestContext {
      *
      * @return this context
      */
-    public HTTPRequestContext renderTrueResult() {
-        if (this.renderer instanceof JSONRenderer) {
-            final JSONRenderer r = (JSONRenderer) this.renderer;
+    public RequestContext renderTrueResult() {
+        if (this.renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) this.renderer;
 
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.STATUS_CODE, true);
@@ -328,9 +328,9 @@ public final class HTTPRequestContext {
      *
      * @return this context
      */
-    public HTTPRequestContext renderFalseResult() {
-        if (this.renderer instanceof JSONRenderer) {
-            final JSONRenderer r = (JSONRenderer) this.renderer;
+    public RequestContext renderFalseResult() {
+        if (this.renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) this.renderer;
 
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.STATUS_CODE, false);
@@ -345,9 +345,9 @@ public final class HTTPRequestContext {
      * @param msg the specified msg
      * @return this context
      */
-    public HTTPRequestContext renderMsg(final String msg) {
-        if (this.renderer instanceof JSONRenderer) {
-            final JSONRenderer r = (JSONRenderer) this.renderer;
+    public RequestContext renderMsg(final String msg) {
+        if (this.renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) this.renderer;
 
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.MSG, msg);
@@ -363,9 +363,9 @@ public final class HTTPRequestContext {
      * @param obj  the specified object
      * @return this context
      */
-    public HTTPRequestContext renderJSONValue(final String name, final Object obj) {
-        if (this.renderer instanceof JSONRenderer) {
-            final JSONRenderer r = (JSONRenderer) this.renderer;
+    public RequestContext renderJSONValue(final String name, final Object obj) {
+        if (this.renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) this.renderer;
 
             final JSONObject ret = r.getJSONObject();
             ret.put(name, obj);

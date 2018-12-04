@@ -232,7 +232,7 @@ public class RequestDispachTestCase {
     }
 
     public HttpControl doFlow(HttpServletRequest req) {
-        HTTPRequestContext httpRequestContext = new HTTPRequestContext();
+        RequestContext httpRequestContext = new RequestContext();
         httpRequestContext.setRequest(req);
         HttpControl ret = new HttpControl(handlerList.iterator(), httpRequestContext);
         ret.nextHandler();

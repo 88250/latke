@@ -20,9 +20,9 @@ import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.converter.ConvertSupport;
 import org.b3log.latke.servlet.function.ContextHandler;
 import org.b3log.latke.servlet.handler.*;
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.servlet.renderer.HTTP404Renderer;
-import org.b3log.latke.servlet.renderer.HTTP500Renderer;
+import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
+import org.b3log.latke.servlet.renderer.Http404Renderer;
+import org.b3log.latke.servlet.renderer.Http500Renderer;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -71,14 +71,14 @@ public final class DispatcherServlet extends HttpServlet {
 
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) {
-        final HTTPRequestContext httpRequestContext = new HTTPRequestContext();
+        final RequestContext httpRequestContext = new RequestContext();
         httpRequestContext.setRequest(req);
         httpRequestContext.setResponse(resp);
         final HttpControl httpControl = new HttpControl(HANDLERS.iterator(), httpRequestContext);
         try {
             httpControl.nextHandler();
         } catch (final Exception e) {
-            httpRequestContext.setRenderer(new HTTP500Renderer(e));
+            httpRequestContext.setRenderer(new Http500Renderer(e));
         }
 
         result(httpRequestContext);
@@ -87,17 +87,17 @@ public final class DispatcherServlet extends HttpServlet {
     /**
      * Do HTTP response.
      *
-     * @param context {@link HTTPRequestContext}
+     * @param context {@link RequestContext}
      */
-    public static void result(final HTTPRequestContext context) {
+    public static void result(final RequestContext context) {
         final HttpServletResponse response = context.getResponse();
         if (response.isCommitted()) { // Response sends redirect or error
             return;
         }
 
-        AbstractHTTPResponseRenderer renderer = context.getRenderer();
+        AbstractResponseRenderer renderer = context.getRenderer();
         if (null == renderer) {
-            renderer = new HTTP404Renderer();
+            renderer = new Http404Renderer();
         }
         renderer.render(context);
     }

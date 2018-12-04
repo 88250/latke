@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.servlet.handler;
 
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HttpControl;
 
 /**
@@ -29,9 +29,9 @@ public interface Handler {
     /**
      * Handle.
      *
-     * @param context     {@link HTTPRequestContext}
+     * @param context     {@link RequestContext}
      * @param httpControl {@link HttpControl}
      * @throws Exception {@link Exception}
      */
-    void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception;
+    void handle(final RequestContext context, final HttpControl httpControl) throws Exception;
 }

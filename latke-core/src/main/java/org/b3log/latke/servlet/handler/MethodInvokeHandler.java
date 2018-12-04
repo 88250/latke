@@ -17,7 +17,7 @@ package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.function.ContextHandler;
 
@@ -43,7 +43,7 @@ public class MethodInvokeHandler implements Handler {
     public static final String INVOKE_RESULT = "INVOKE_RESULT";
 
     @Override
-    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
+    public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
         final ProcessorInfo processorInfo = result.getProcessorInfo();

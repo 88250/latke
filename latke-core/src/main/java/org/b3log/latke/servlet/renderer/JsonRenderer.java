@@ -17,7 +17,7 @@ package org.b3log.latke.servlet.renderer;
 
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletResponse;
@@ -30,12 +30,12 @@ import java.io.PrintWriter;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.2.1.1, Mar 5, 2017
  */
-public final class JSONRenderer extends AbstractHTTPResponseRenderer {
+public final class JsonRenderer extends AbstractResponseRenderer {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JSONRenderer.class);
+    private static final Logger LOGGER = Logger.getLogger(JsonRenderer.class);
 
     /**
      * Pretty output.
@@ -108,7 +108,7 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
      * @param isJSONP {@code true} for JSONP, {@code false} otherwise
      * @return this
      */
-    public JSONRenderer setJSONP(final boolean isJSONP) {
+    public JsonRenderer setJSONP(final boolean isJSONP) {
         this.jsonp = isJSONP;
 
         return this;
@@ -130,7 +130,7 @@ public final class JSONRenderer extends AbstractHTTPResponseRenderer {
     }
 
     @Override
-    public void render(final HTTPRequestContext context) {
+    public void render(final RequestContext context) {
         final HttpServletResponse response = context.getResponse();
         response.setCharacterEncoding("UTF-8");
 

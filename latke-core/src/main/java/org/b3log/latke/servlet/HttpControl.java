@@ -47,7 +47,7 @@ public class HttpControl {
      * @param handlerIterable    Iterator<Handler>
      * @param httpRequestContext HTTPRequestContext
      */
-    public HttpControl(final Iterator<Handler> handlerIterable, final HTTPRequestContext httpRequestContext) {
+    public HttpControl(final Iterator<Handler> handlerIterable, final RequestContext httpRequestContext) {
 
         this.ihandlerIterable = handlerIterable;
         this.httpRequestContext = httpRequestContext;
@@ -61,7 +61,7 @@ public class HttpControl {
     /**
      * HTTPRequestContext.
      */
-    private HTTPRequestContext httpRequestContext;
+    private RequestContext httpRequestContext;
 
     /**
      * the share-data in one request.

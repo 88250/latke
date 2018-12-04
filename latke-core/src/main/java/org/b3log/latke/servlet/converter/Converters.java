@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.servlet.converter;
 
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.handler.MatchResult;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,7 +70,7 @@ public final class Converters {
      * @param sequence      sequence
      * @return ret
      */
-    public static Object doConvert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+    public static Object doConvert(final Class<?> parameterType, final String paramterName, final RequestContext context,
                                    final MatchResult result, final int sequence) {
         for (final IConverters iConverters : CONVERTERS_LIST) {
             if (iConverters.isMatched(parameterType, paramterName)) {
@@ -114,7 +114,7 @@ interface IConverters {
      * @return ret
      * @throws Exception the convert-Exception
      */
-    Object convert(Class<?> parameterType, String paramterName, HTTPRequestContext context, MatchResult result, int sequence)
+    Object convert(Class<?> parameterType, String paramterName, RequestContext context, MatchResult result, int sequence)
             throws Exception;
 }
 
@@ -127,14 +127,14 @@ interface IConverters {
 class ContextConvert implements IConverters {
     @Override
     public Boolean isMatched(final Class<?> parameterType, final String paramterName) {
-        if (parameterType.equals(HTTPRequestContext.class)) {
+        if (parameterType.equals(RequestContext.class)) {
             return true;
         }
         return false;
     }
 
     @Override
-    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+    public Object convert(final Class<?> parameterType, final String paramterName, final RequestContext context,
                           final MatchResult result, final int sequence) throws Exception {
         return context;
     }
@@ -153,7 +153,7 @@ class PathVariableConvert implements IConverters {
     }
 
     @Override
-    public Object convert(final Class<?> parameterType, final String paramterName, final HTTPRequestContext context,
+    public Object convert(final Class<?> parameterType, final String paramterName, final RequestContext context,
                           final MatchResult result, final int sequence) throws Exception {
 
         Object ret = result.getMapValues().get(paramterName);

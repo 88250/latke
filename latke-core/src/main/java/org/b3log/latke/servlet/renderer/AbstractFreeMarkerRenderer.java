@@ -20,7 +20,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.util.Requests;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ import java.util.Map;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.15, Nov 28, 2018
  */
-public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRenderer {
+public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRenderer {
 
     /**
      * Logger.
@@ -60,7 +60,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
      * @param context the specified context
      * @throws Exception exception
      */
-    protected abstract void beforeRender(final HTTPRequestContext context) throws Exception;
+    protected abstract void beforeRender(final RequestContext context) throws Exception;
 
     /**
      * Invoked after render.
@@ -68,7 +68,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
      * @param context the specified context
      * @throws Exception exception
      */
-    protected abstract void afterRender(final HTTPRequestContext context) throws Exception;
+    protected abstract void afterRender(final RequestContext context) throws Exception;
 
     /**
      * Gets a template.
@@ -78,7 +78,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractHTTPResponseRen
     protected abstract Template getTemplate();
 
     @Override
-    public void render(final HTTPRequestContext context) {
+    public void render(final RequestContext context) {
         final HttpServletResponse response = context.getResponse();
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");

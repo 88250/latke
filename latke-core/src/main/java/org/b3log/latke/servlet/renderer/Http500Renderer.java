@@ -15,45 +15,42 @@
  */
 package org.b3log.latke.servlet.renderer;
 
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
 /**
  * HTTP {@link HttpServletResponse#SC_INTERNAL_SERVER_ERROR status} renderer.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Sep 26, 2013
  */
-public final class HTTP500Renderer extends AbstractHTTPResponseRenderer {
+public final class Http500Renderer extends AbstractResponseRenderer {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(HTTP500Renderer.class);
+    private static final Logger LOGGER = Logger.getLogger(Http500Renderer.class);
 
     /**
-     * the internal exception.
+     * The internal exception.
      */
     private Exception e;
 
     /**
-     * the constructor.
-     * 
+     * Constructor.
+     *
      * @param e internal exception
-     *            
      */
-    public HTTP500Renderer(final Exception e) {
+    public Http500Renderer(final Exception e) {
         this.e = e;
     }
 
     @Override
-    public void render(final HTTPRequestContext context) {
+    public void render(final RequestContext context) {
         final HttpServletResponse response = context.getResponse();
 
         try {

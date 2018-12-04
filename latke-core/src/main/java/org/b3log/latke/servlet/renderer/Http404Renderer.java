@@ -15,14 +15,12 @@
  */
 package org.b3log.latke.servlet.renderer;
 
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 
 /**
  * HTTP {@link HttpServletResponse#SC_NOT_FOUND 404 status} renderer.
@@ -30,15 +28,15 @@ import java.io.IOException;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Oct 31, 2011
  */
-public final class HTTP404Renderer extends AbstractHTTPResponseRenderer {
+public final class Http404Renderer extends AbstractResponseRenderer {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(HTTP404Renderer.class);
+    private static final Logger LOGGER = Logger.getLogger(Http404Renderer.class);
 
     @Override
-    public void render(final HTTPRequestContext context) {
+    public void render(final RequestContext context) {
         final HttpServletResponse response = context.getResponse();
 
         try {

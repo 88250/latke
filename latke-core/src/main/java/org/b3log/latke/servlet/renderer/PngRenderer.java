@@ -15,57 +15,52 @@
  */
 package org.b3log.latke.servlet.renderer;
 
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-
+import java.io.OutputStream;
 
 /**
- * HTML HTTP response renderer.
+ * PNG HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 11, 2011
+ * @version 1.0.0.1, Aug 2, 2018
  */
-public final class TextHTMLRenderer extends AbstractHTTPResponseRenderer {
+public final class PngRenderer extends AbstractResponseRenderer {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(TextHTMLRenderer.class);
+    private static final Logger LOGGER = Logger.getLogger(PngRenderer.class);
 
     /**
-     * Content to render.
+     * Image data to render.
      */
-    private String content;
+    private byte[] data;
 
     /**
-     * Sets the content with the specified content.
-     * 
-     * @param content the specified content
+     * Sets the image with the specified image.
+     *
+     * @param data the specified image data
      */
-    public void setContent(final String content) {
-        this.content = content;
+    public void setImage(final byte[] data) {
+        this.data = data;
     }
 
     @Override
-    public void render(final HTTPRequestContext context) {
+    public void render(final RequestContext context) {
         try {
             final HttpServletResponse response = context.getResponse();
+            response.setContentType("image/png");
 
-            response.setContentType("text/html");
-            response.setCharacterEncoding("UTF-8");
-
-            final PrintWriter writer = response.getWriter();
-
-            writer.write(content);
-            writer.close();
+            final OutputStream outputStream = response.getOutputStream();
+            outputStream.write(data);
+            outputStream.close();
         } catch (final IOException e) {
-            LOGGER.log(Level.ERROR, "Render failed", e);
+            LOGGER.log(Level.ERROR, "Render PNG failed", e);
         }
     }
 }

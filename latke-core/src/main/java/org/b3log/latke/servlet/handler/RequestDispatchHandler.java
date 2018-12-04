@@ -22,7 +22,7 @@ import org.b3log.latke.ioc.Bean;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
@@ -75,7 +75,7 @@ public class RequestDispatchHandler implements Handler {
     }
 
     @Override
-    public void handle(final HTTPRequestContext context, final HttpControl httpControl) {
+    public void handle(final RequestContext context, final HttpControl httpControl) {
         final HttpServletRequest request = context.getRequest();
         final String requestURI = getRequestURI(request);
         final String httpMethod = getHTTPMethod(request);

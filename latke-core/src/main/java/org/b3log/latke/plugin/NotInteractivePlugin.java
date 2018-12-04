@@ -16,7 +16,7 @@
 package org.b3log.latke.plugin;
 
 
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 
 import java.util.Map;
 
@@ -32,9 +32,9 @@ import java.util.Map;
 public class NotInteractivePlugin extends AbstractPlugin {
 
     @Override
-    public void prePlug(final HTTPRequestContext context, final Map<String, Object> args) {}
+    public void prePlug(final RequestContext context, final Map<String, Object> args) {}
 
     @Override
-    public void postPlug(final Map<String, Object> dataModel, final HTTPRequestContext context, final Object ret) {}
+    public void postPlug(final Map<String, Object> dataModel, final RequestContext context, final Object ret) {}
 
 }

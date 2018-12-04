@@ -15,23 +15,19 @@
  */
 package org.b3log.latke.servlet.mock;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import org.b3log.latke.servlet.annotation.After;
-import org.b3log.latke.servlet.annotation.Before;
-import org.b3log.latke.servlet.annotation.PathVariable;
-import org.b3log.latke.servlet.annotation.RequestProcessing;
-import org.b3log.latke.servlet.annotation.RequestProcessor;
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.servlet.renderer.DoNothingRenderer;
-import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.b3log.latke.servlet.annotation.*;
+import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
+import org.b3log.latke.servlet.renderer.JsonRenderer;
 import org.b3log.latke.testhelper.MockConverSupport;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Request processor for testing.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Sep 25, 2013
@@ -76,17 +72,10 @@ public class TestRequestProcessor {
         return id;
     }
 
-    @RequestProcessing(value = "/do/render")
-    public Object testRender(final DoNothingRenderer renderer) {
-        return renderer;
-    }
-
     @RequestProcessing(value = "/do/render1")
-    public List<AbstractHTTPResponseRenderer> testRender1(final JSONRenderer renderer1,
-            final DoNothingRenderer doNothingRenderer, final JSONRenderer renderer2) {
-        final List<AbstractHTTPResponseRenderer> ret = new ArrayList<AbstractHTTPResponseRenderer>();
+    public List<AbstractResponseRenderer> testRender1(final JsonRenderer renderer1, final JsonRenderer renderer2) {
+        final List<AbstractResponseRenderer> ret = new ArrayList<AbstractResponseRenderer>();
         ret.add(renderer1);
-        ret.add(doNothingRenderer);
         ret.add(renderer2);
         return ret;
     }
@@ -95,12 +84,12 @@ public class TestRequestProcessor {
     public String testJson(JSONObject jsonObject) {
         return jsonObject.optString("name");
     }
-    
+
     @RequestProcessing("/void")
     public void testRetVoid() {
         System.out.println("testRetVoid");
-    } 
-    
+    }
+
     @RequestProcessing("/*.html")
     public void testAntPathMatch() {
         System.out.println("testAntPathMatch");

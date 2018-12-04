@@ -15,40 +15,38 @@
  */
 package org.b3log.latke.servlet.renderer;
 
-
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 
 import java.util.Map;
-
 
 /**
  * The interface of all the renderer.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.0, Jan 22, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Dec 4, 2018
  */
-public interface HTTPResponseRenderer {
+public interface ResponseRenderer {
 
     /**
      * Pre-render before the real method be invoked.
-     * 
+     *
      * @param context the specified HTTP request context
-     * @param args the arguments of the real method
+     * @param args    the arguments of the real method
      */
-    void preRender(final HTTPRequestContext context, final Map<String, Object> args);
+    void preRender(final RequestContext context, final Map<String, Object> args);
 
     /**
      * Renders with the specified HTTP request context.
-     * 
+     *
      * @param context the specified HTTP request context
      */
-    void render(final HTTPRequestContext context);
+    void render(final RequestContext context);
 
     /**
      * Post-render after the real method be invoked.
-     * 
+     *
      * @param context the specified HTTP request context
-     * @param ret the return value of the real method
+     * @param ret     the return value of the real method
      */
-    void postRender(final HTTPRequestContext context, final Object ret);
+    void postRender(final RequestContext context, final Object ret);
 }

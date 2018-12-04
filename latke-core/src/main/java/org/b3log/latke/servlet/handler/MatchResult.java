@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.servlet.handler;
 
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +57,9 @@ public final class MatchResult {
     private Map<String, Object> mapValues = new HashMap<>();
 
     /**
-     * the {@link AbstractHTTPResponseRenderer}  holders which be inited by sys, for advice to do the pre and post work.
+     * the {@link AbstractResponseRenderer}  holders which be inited by sys, for advice to do the pre and post work.
      */
-    private final List<AbstractHTTPResponseRenderer> rendererList = new ArrayList<>();
+    private final List<AbstractResponseRenderer> rendererList = new ArrayList<>();
 
     /**
      * @param processorInfo  processorInfo
@@ -115,7 +115,7 @@ public final class MatchResult {
      *
      * @param ins AbstractHTTPResponseRenderer
      */
-    public void addRenders(final AbstractHTTPResponseRenderer ins) {
+    public void addRenders(final AbstractResponseRenderer ins) {
         rendererList.add(ins);
     }
 
@@ -124,7 +124,7 @@ public final class MatchResult {
      *
      * @return rendererList
      */
-    public List<AbstractHTTPResponseRenderer> getRendererList() {
+    public List<AbstractResponseRenderer> getRendererList() {
         return rendererList;
     }
 }

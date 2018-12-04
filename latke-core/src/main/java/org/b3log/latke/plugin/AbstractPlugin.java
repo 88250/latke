@@ -28,7 +28,7 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.b3log.latke.servlet.AbstractServletListener;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -226,7 +226,7 @@ public abstract class AbstractPlugin implements Serializable {
      * @param context context
      * @param args    args
      */
-    public abstract void prePlug(final HTTPRequestContext context, final Map<String, Object> args);
+    public abstract void prePlug(final RequestContext context, final Map<String, Object> args);
 
     /**
      * postPlug after the dataModel of the simplest-view be generated.
@@ -235,7 +235,7 @@ public abstract class AbstractPlugin implements Serializable {
      * @param context   context
      * @param ret       ret
      */
-    public abstract void postPlug(Map<String, Object> dataModel, HTTPRequestContext context, Object ret);
+    public abstract void postPlug(Map<String, Object> dataModel, RequestContext context, Object ret);
 
     /**
      * The lifecycle pointcut for the plugin to start(enable status).
@@ -273,7 +273,7 @@ public abstract class AbstractPlugin implements Serializable {
      * @param context   context
      * @param ret       ret
      */
-    public void plug(final Map<String, Object> dataModel, final HTTPRequestContext context, final Object ret) {
+    public void plug(final Map<String, Object> dataModel, final RequestContext context, final Object ret) {
         String content = (String) dataModel.get(Plugin.PLUGINS);
 
         if (null == content) {

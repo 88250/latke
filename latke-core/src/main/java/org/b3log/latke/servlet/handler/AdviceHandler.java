@@ -18,13 +18,13 @@ package org.b3log.latke.servlet.handler;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
+import org.b3log.latke.servlet.renderer.JsonRenderer;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletResponse;
@@ -46,13 +46,13 @@ public class AdviceHandler implements Handler {
     private static final Logger LOGGER = Logger.getLogger(AdviceHandler.class);
 
     @Override
-    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
+    public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
         // the data which pre-handler provided.
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
 
         final ProcessorInfo processorInfo = result.getProcessorInfo();
-        final List<AbstractHTTPResponseRenderer> rendererList = result.getRendererList();
+        final List<AbstractResponseRenderer> rendererList = result.getRendererList();
 
         try {
             final List<BeforeRequestProcessAdvice> beforeRequestProcessAdvices = processorInfo.getBeforeRequestProcessAdvices();
@@ -69,7 +69,7 @@ public class AdviceHandler implements Handler {
                 final HttpServletResponse response = context.getResponse();
                 response.sendError(statusCode, msg);
             } else {
-                final JSONRenderer ret = new JSONRenderer();
+                final JsonRenderer ret = new JsonRenderer();
                 ret.setJSONObject(exception);
                 context.setRenderer(ret);
             }
@@ -77,7 +77,7 @@ public class AdviceHandler implements Handler {
             return;
         }
 
-        for (AbstractHTTPResponseRenderer renderer : rendererList) {
+        for (AbstractResponseRenderer renderer : rendererList) {
             renderer.preRender(context, args);
         }
 

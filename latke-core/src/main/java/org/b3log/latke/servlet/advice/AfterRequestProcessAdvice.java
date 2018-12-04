@@ -16,7 +16,7 @@
 package org.b3log.latke.servlet.advice;
 
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 
 /**
  * BeforeRequestProcessAdvice.
@@ -30,9 +30,9 @@ public class AfterRequestProcessAdvice {
     /**
      * Do advice.
      *
-     * @param context {@link HTTPRequestContext}
+     * @param context {@link RequestContext}
      * @param ret     the invoke ret
      */
-    public void doAdvice(final HTTPRequestContext context, final Object ret) {
+    public void doAdvice(final RequestContext context, final Object ret) {
     }
 }

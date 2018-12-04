@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.servlet.handler;
 
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.annotation.PathVariable;
 import org.b3log.latke.servlet.converter.Converters;
@@ -41,13 +41,13 @@ public class ArgsHandler implements Handler {
     public static final String PREPARE_ARGS = "PREPARE_ARGS";
 
     @Override
-    public void handle(final HTTPRequestContext context, final HttpControl httpControl) {
+    public void handle(final RequestContext context, final HttpControl httpControl) {
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final ProcessorInfo processorInfo = result.getProcessorInfo();
         final ContextHandler handler = processorInfo.getHandler();
         final Map<String, Object> args = new LinkedHashMap<>();
         if (null != handler) {
-            doParamter(args, HTTPRequestContext.class, "context", context, result, 0);
+            doParamter(args, RequestContext.class, "context", context, result, 0);
         } else {
             final Method invokeHolder = processorInfo.getInvokeHolder();
             final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
@@ -73,7 +73,7 @@ public class ArgsHandler implements Handler {
      * @param result        MatchResult
      * @param sequence      the sequence of the param in methon
      */
-    private void doParamter(final Map<String, Object> args, final Class<?> parameterType, final String paramterName, final HTTPRequestContext context, final MatchResult result, final int sequence) {
+    private void doParamter(final Map<String, Object> args, final Class<?> parameterType, final String paramterName, final RequestContext context, final MatchResult result, final int sequence) {
         final Object ret = Converters.doConvert(parameterType, paramterName, context, result, sequence);
 
         args.put(paramterName, ret);

@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.servlet.function;
 
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 
 /**
  * Represents an request handler that accepts a context as the single input argument and returns no result.
@@ -32,5 +32,5 @@ public interface ContextHandler {
      *
      * @param context the specified context
      */
-    void handle(final HTTPRequestContext context);
+    void handle(final RequestContext context);
 }

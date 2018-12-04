@@ -15,15 +15,13 @@
  */
 package org.b3log.latke.servlet.renderer;
 
-
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 
 /**
  * XML HTTP response renderer.
@@ -31,12 +29,12 @@ import java.io.PrintWriter;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Sep 22, 2011
  */
-public final class TextXMLRenderer extends AbstractHTTPResponseRenderer {
+public final class TextXmlRenderer extends AbstractResponseRenderer {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(TextXMLRenderer.class);
+    private static final Logger LOGGER = Logger.getLogger(TextXmlRenderer.class);
 
     /**
      * Content to render.
@@ -45,7 +43,7 @@ public final class TextXMLRenderer extends AbstractHTTPResponseRenderer {
 
     /**
      * Sets the content with the specified content.
-     * 
+     *
      * @param content the specified content
      */
     public void setContent(final String content) {
@@ -53,15 +51,13 @@ public final class TextXMLRenderer extends AbstractHTTPResponseRenderer {
     }
 
     @Override
-    public void render(final HTTPRequestContext context) {
+    public void render(final RequestContext context) {
         try {
             final HttpServletResponse response = context.getResponse();
-
             response.setContentType("text/xml");
             response.setCharacterEncoding("UTF-8");
 
             final PrintWriter writer = response.getWriter();
-
             writer.write(content);
             writer.close();
         } catch (final IOException e) {

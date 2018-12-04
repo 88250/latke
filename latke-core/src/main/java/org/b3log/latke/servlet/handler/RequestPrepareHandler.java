@@ -16,7 +16,7 @@
 package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.Keys;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HttpControl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestPrepareHandler implements Handler {
 
     @Override
-    public void handle(final HTTPRequestContext context, final HttpControl httpControl) throws Exception {
+    public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
         final HttpServletRequest request = context.getRequest();
 
         final long startTimeMillis = System.currentTimeMillis();

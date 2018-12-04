@@ -16,7 +16,7 @@
 package org.b3log.latke.servlet.mock;
 
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.servlet.HTTPRequestContext;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class TestBeforeAdvice extends BeforeRequestProcessAdvice {
 
     @Override
-    public void doAdvice(HTTPRequestContext context, Map<String, Object> args) {
+    public void doAdvice(RequestContext context, Map<String, Object> args) {
 
         Integer id = (Integer) args.get("id");
         args.put("id", id + 1);

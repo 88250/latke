@@ -15,21 +15,13 @@
  */
 package org.b3log.latke.testhelper;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.b3log.latke.servlet.annotation.*;
 
-import org.b3log.latke.servlet.annotation.After;
-import org.b3log.latke.servlet.annotation.Before;
-import org.b3log.latke.servlet.annotation.PathVariable;
-import org.b3log.latke.servlet.annotation.RequestProcessing;
-import org.b3log.latke.servlet.annotation.RequestProcessor;
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
-import org.b3log.latke.servlet.renderer.DoNothingRenderer;
-import org.b3log.latke.servlet.renderer.JSONRenderer;
+import java.util.Date;
 
 /**
- * Mockservice,for dispatch UT.
+ * Mock service for dispatch UT.
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Sep 3, 2012
  */
@@ -38,6 +30,7 @@ public class MockService {
 
     /**
      * getString.
+     *
      * @return a String
      */
     @RequestProcessing(value = "string")
@@ -47,7 +40,8 @@ public class MockService {
 
     /**
      * getString1.
-     * @param id id
+     *
+     * @param id   id
      * @param name name
      * @return a String
      */
@@ -58,7 +52,8 @@ public class MockService {
 
     /**
      * getString11.
-     * @param id id
+     *
+     * @param id   id
      * @param name name
      * @return a String
      */
@@ -69,7 +64,8 @@ public class MockService {
 
     /**
      * getString2.
-     * @param name name
+     *
+     * @param name     name
      * @param password password
      * @return a String
      */
@@ -80,7 +76,8 @@ public class MockService {
 
     /**
      * getString2.
-     * @param id id 
+     *
+     * @param id   id
      * @param date data
      * @return string
      */
@@ -91,7 +88,8 @@ public class MockService {
 
     /**
      * getString3.
-     * @param id id 
+     *
+     * @param id id
      * @return string
      */
     @Before
@@ -100,32 +98,5 @@ public class MockService {
     public String getString3(final Integer id) {
         return id
                 + "";
-    }
-
-    /**
-     * testRender.
-     * @param renderer renderer
-     * @return renderer
-     */
-    @RequestProcessing(value = "/do/render")
-    public Object testRender(final DoNothingRenderer renderer) {
-        return renderer;
-    }
-
-    /**
-     * testRender1.
-     * @param renderer1 renderer1
-     * @param doNothingRenderer doNothingRenderer
-     * @param renderer2 renderer2
-     * @return all of the renderer.
-     */
-    @RequestProcessing(value = "/do/render1")
-    public List<AbstractHTTPResponseRenderer> testRender1(final JSONRenderer renderer1, final DoNothingRenderer doNothingRenderer,
-            final JSONRenderer renderer2) {
-        final List<AbstractHTTPResponseRenderer> ret = new ArrayList<AbstractHTTPResponseRenderer>();
-        ret.add(renderer1);
-        ret.add(doNothingRenderer);
-        ret.add(renderer2);
-        return ret;
     }
 }
