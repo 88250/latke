@@ -65,18 +65,6 @@ public class MockService {
     /**
      * getString2.
      *
-     * @param name     name
-     * @param password password
-     * @return a String
-     */
-    @RequestProcessing(value = "/{name}--{password}")
-    public String getString2(@PathVariable("password") final String name, @PathVariable("name") final String password) {
-        return name + password;
-    }
-
-    /**
-     * getString2.
-     *
      * @param id   id
      * @param date data
      * @return string

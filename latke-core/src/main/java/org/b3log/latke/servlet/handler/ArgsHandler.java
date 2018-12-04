@@ -15,9 +15,8 @@
  */
 package org.b3log.latke.servlet.handler;
 
-import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.HttpControl;
-import org.b3log.latke.servlet.annotation.PathVariable;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.converter.Converters;
 import org.b3log.latke.servlet.function.ContextHandler;
 import org.b3log.latke.util.Reflections;
@@ -51,15 +50,15 @@ public class ArgsHandler implements Handler {
         } else {
             final Method invokeHolder = processorInfo.getInvokeHolder();
             final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
-            final String[] paramterNames = getParamterNames(invokeHolder);
+            final String[] methodVariableNames = Reflections.getMethodVariableNames(
+                    invokeHolder.getDeclaringClass(), invokeHolder.getName(), invokeHolder.getParameterTypes());
             for (int i = 0; i < parameterTypes.length; i++) {
-                doParamter(args, parameterTypes[i], paramterNames[i], context, result, i);
+                doParamter(args, parameterTypes[i], methodVariableNames[i], context, result, i);
             }
         }
 
         httpControl.data(PREPARE_ARGS, args);
 
-        // do advice and real method invoke
         httpControl.nextHandler();
     }
 
@@ -77,28 +76,5 @@ public class ArgsHandler implements Handler {
         final Object ret = Converters.doConvert(parameterType, paramterName, context, result, sequence);
 
         args.put(paramterName, ret);
-    }
-
-    /**
-     * using PathVariable or reflection to get the getParamterNames in method.
-     *
-     * @param invokeMethond invokeMethond
-     * @return the names of the params.
-     */
-    private String[] getParamterNames(final Method invokeMethond) {
-        final String[] methodParamNames = Reflections.getMethodVariableNames(invokeMethond.getDeclaringClass(), invokeMethond.getName(),
-                invokeMethond.getParameterTypes());
-        int i = 0;
-
-        // PathVariable will conver
-        for (java.lang.annotation.Annotation[] annotations : invokeMethond.getParameterAnnotations()) {
-            for (java.lang.annotation.Annotation annotation : annotations) {
-                if (annotation instanceof PathVariable) {
-                    methodParamNames[i] = ((PathVariable) annotation).value();
-                }
-            }
-            i++;
-        }
-        return methodParamNames;
     }
 }

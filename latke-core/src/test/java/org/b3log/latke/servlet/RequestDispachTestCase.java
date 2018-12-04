@@ -162,7 +162,7 @@ public class RequestDispachTestCase {
         Map<String, Object> args = (Map<String, Object>) control.data(ArgsHandler.PREPARE_ARGS);
         Assert.assertEquals("a", args.get("name"));
         Assert.assertEquals("b", args.get("password"));
-        Assert.assertEquals("ba", control.data(MethodInvokeHandler.INVOKE_RESULT));
+        Assert.assertEquals("ab", control.data(MethodInvokeHandler.INVOKE_RESULT));
 
     }
 

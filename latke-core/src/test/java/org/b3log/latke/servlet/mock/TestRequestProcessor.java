@@ -56,7 +56,7 @@ public class TestRequestProcessor {
     }
 
     @RequestProcessing(value = "/string/{name}+{password}")
-    public String getString2(@PathVariable("password") final String name, @PathVariable("name") final String password) {
+    public String getString2(final String name, final String password) {
         return name + password;
     }
 

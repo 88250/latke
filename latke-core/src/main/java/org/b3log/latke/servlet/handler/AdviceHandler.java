@@ -47,7 +47,6 @@ public class AdviceHandler implements Handler {
 
     @Override
     public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
-        // the data which pre-handler provided.
         final MatchResult result = (MatchResult) httpControl.data(RequestDispatchHandler.MATCH_RESULT);
         final Map<String, Object> args = (Map<String, Object>) httpControl.data(ArgsHandler.PREPARE_ARGS);
 
