@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
     <name>Latke Parent</name>
     <url>https://github.com/b3log/latke</url>
-    <description>一个类似 Spring 但以 JSON 为主的 Java Web 框架。</description>
+    <description>一款以 JSON 为主的 Java Web 框架。</description>
     <inceptionYear>2009</inceptionYear>
 
     <parent>
@@ -22,7 +22,7 @@
     </parent>
 
     <modules>
-        <module>latke</module>
+        <module>latke-core</module>
         <module>latke-repository-h2</module>
         <module>latke-repository-mysql</module>
         <module>latke-repository-sqlserver</module>
@@ -45,24 +45,21 @@
         <servlet.version>3.1.0</servlet.version>
         <el-api.version>1.0</el-api.version>
         <freemarker.version>2.3.28</freemarker.version>
-        <javax.mail.version>1.4.7</javax.mail.version>
         <commons-io.version>2.6</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-codec.version>1.11</commons-codec.version>
         <javassist.version>3.23.1-GA</javassist.version>
         <slf4j.version>1.7.25</slf4j.version>
 
-        <!-- Maven Plugin -->
-        <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
-        <!-- Unit Test -->
-        <testng.version>6.1.1</testng.version>
-        <!-- JDBC Drivers -->
         <mysql-connector-java.version>8.0.12</mysql-connector-java.version>
-        <!-- JDBC Connection Pool -->
         <h2.version>1.4.197</h2.version>
         <hikaricp.version>3.2.0</hikaricp.version>
-        <!-- Redis -->
         <jedis.version>2.9.0</jedis.version>
+
+        <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
+        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <testng.version>6.1.1</testng.version>
 
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -134,6 +131,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <skipTests>false</skipTests>
                     <parallel>methods</parallel>
@@ -145,6 +143,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
