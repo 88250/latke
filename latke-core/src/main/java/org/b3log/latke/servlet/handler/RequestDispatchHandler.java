@@ -22,9 +22,9 @@ import org.b3log.latke.ioc.Bean;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.HttpRequestMethod;
 import org.b3log.latke.servlet.HttpControl;
+import org.b3log.latke.servlet.HttpRequestMethod;
+import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.advice.AfterRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
@@ -77,10 +77,12 @@ public class RequestDispatchHandler implements Handler {
     @Override
     public void handle(final RequestContext context, final HttpControl httpControl) {
         final HttpServletRequest request = context.getRequest();
+
+        final long startTimeMillis = System.currentTimeMillis();
+        request.setAttribute(Keys.HttpRequest.START_TIME_MILLIS, startTimeMillis);
         final String requestURI = getRequestURI(request);
         final String httpMethod = getHttpMethod(request);
-
-        LOGGER.log(Level.DEBUG, "Request[requestURI={0}, method={1}]", requestURI, httpMethod);
+        LOGGER.log(Level.DEBUG, "Request [requestURI={0}, method={1}]", requestURI, httpMethod);
 
         final MatchResult result = doMatch(requestURI, httpMethod);
         if (result != null) {
@@ -97,7 +99,7 @@ public class RequestDispatchHandler implements Handler {
      * @return MatchResult, returns {@code null} if not found
      */
     private MatchResult doMatch(final String requestURI, final String httpMethod) {
-        MatchResult ret = null;
+        MatchResult ret;
         final String contextPath = Latkes.getContextPath();
         for (final ProcessorInfo processorInfo : processorInfos) {
             for (final HttpRequestMethod httpRequestMethod : processorInfo.getHttpMethod()) {
@@ -113,7 +115,7 @@ public class RequestDispatchHandler implements Handler {
             }
         }
 
-        return ret;
+        return null;
     }
 
     /**

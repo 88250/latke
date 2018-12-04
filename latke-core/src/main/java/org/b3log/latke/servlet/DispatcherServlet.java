@@ -46,7 +46,6 @@ public final class DispatcherServlet extends HttpServlet {
     public static final List<Handler> HANDLERS = new ArrayList<>();
 
     static {
-        HANDLERS.add(new RequestPrepareHandler());
         HANDLERS.add(new RequestDispatchHandler());
         HANDLERS.add(new ArgsHandler());
         HANDLERS.add(new AdviceHandler());
