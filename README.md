@@ -58,3 +58,4 @@ Latke 的诞生离不开以下开源项目：
 * [Commons Codec](https://github.com/apache/commons-codec)：Java 编解码库
 * [Javassist](https://github.com/jboss-javassist/javassist)：Java 字节码处理工具库
 * [SLF4j](https://github.com/qos-ch/slf4j)：Java 日志门户
+* [Gin](https://github.com/gin-gonic/gin)：又快又好用的 golang HTTP web 框架

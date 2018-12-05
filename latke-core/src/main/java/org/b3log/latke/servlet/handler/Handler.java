@@ -16,22 +16,22 @@
 package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.HttpControl;
 
 /**
  * A handler interface for  {@link org.b3log.latke.servlet.DispatcherServlet} to do the inner process.
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 18, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.2, Dec 5, 2018
+ * @since 2.4.34
  */
 public interface Handler {
 
     /**
      * Handle.
      *
-     * @param context     {@link RequestContext}
-     * @param httpControl {@link HttpControl}
-     * @throws Exception {@link Exception}
+     * @param context the specified request context
+     * @throws Exception exception
      */
-    void handle(final RequestContext context, final HttpControl httpControl) throws Exception;
+    void handle(final RequestContext context) throws Exception;
 }

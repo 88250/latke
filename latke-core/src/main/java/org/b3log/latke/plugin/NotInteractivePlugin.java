@@ -15,11 +15,9 @@
  */
 package org.b3log.latke.plugin;
 
-
 import org.b3log.latke.servlet.RequestContext;
 
 import java.util.Map;
-
 
 /**
  * The default plugin for which do not need interact with the server end.
@@ -32,9 +30,10 @@ import java.util.Map;
 public class NotInteractivePlugin extends AbstractPlugin {
 
     @Override
-    public void prePlug(final RequestContext context) {}
+    public void prePlug(final RequestContext context) {
+    }
 
     @Override
-    public void postPlug(final Map<String, Object> dataModel, final RequestContext context, final Object ret) {}
-
+    public void postPlug(final Map<String, Object> dataModel, final RequestContext context) {
+    }
 }

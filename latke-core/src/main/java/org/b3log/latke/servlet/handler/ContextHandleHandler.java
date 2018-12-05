@@ -17,38 +17,31 @@ package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.RequestContext;
 
 import java.lang.reflect.Method;
 
 /**
- * the handler to do the real method invoke!.
+ * Invokes processing method ({@link org.b3log.latke.servlet.function.ContextHandler#handle(RequestContext)} or method annotated {@link org.b3log.latke.servlet.annotation.RequestProcessing}).
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.1, Sep 18, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.0, Dec 5, 2018
+ * @since 2.4.34
  */
-public class MethodInvokeHandler implements Handler {
+public class ContextHandleHandler implements Handler {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(MethodInvokeHandler.class);
-
-    /**
-     * the shared-invoke-result-data name.
-     */
-    public static final String INVOKE_RESULT = "INVOKE_RESULT";
+    private static final Logger LOGGER = Logger.getLogger(ContextHandleHandler.class);
 
     @Override
-    public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
-        final MatchResult result = (MatchResult) httpControl.data(RouteHandler.MATCH_RESULT);
+    public void handle(final RequestContext context) throws Exception {
+        final MatchResult result = (MatchResult) context.attr(RouteHandler.MATCH_RESULT);
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
         final BeanManager beanManager = BeanManager.getInstance();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
-        final Object ret = invokeHolder.invoke(classHolder, context);
-
-        httpControl.data(INVOKE_RESULT, ret);
+        invokeHolder.invoke(classHolder, context);
     }
 }

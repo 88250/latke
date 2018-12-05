@@ -22,7 +22,6 @@ import org.b3log.latke.ioc.Bean;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.HttpMethod;
 import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
@@ -67,11 +66,11 @@ public class RouteHandler implements Handler {
     public RouteHandler() {
         final BeanManager beanManager = BeanManager.getInstance();
         final Set<Bean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
-        genInfo(processBeans);
+        generateContextHandlerMeta(processBeans);
     }
 
     @Override
-    public void handle(final RequestContext context, final HttpControl httpControl) {
+    public void handle(final RequestContext context) {
         final HttpServletRequest request = context.getRequest();
 
         final long startTimeMillis = System.currentTimeMillis();
@@ -83,10 +82,11 @@ public class RouteHandler implements Handler {
         final MatchResult result = doMatch(requestURI, httpMethod);
         if (result != null) {
             context.pathVars(result.getPathVars());
-            
-            httpControl.data(MATCH_RESULT, result);
-            httpControl.nextHandler();
+            context.attr(MATCH_RESULT, result);
+            context.handle();
         }
+
+        context.abort();
     }
 
     /**
@@ -172,23 +172,23 @@ public class RouteHandler implements Handler {
      *
      * @param processBeans processBeans which contains {@link RequestProcessor}
      */
-    private void genInfo(final Set<Bean<?>> processBeans) {
+    private void generateContextHandlerMeta(final Set<Bean<?>> processBeans) {
         for (final Bean<?> latkeBean : processBeans) {
             final Class<?> clz = latkeBean.getBeanClass();
             final Method[] declaredMethods = clz.getDeclaredMethods();
             for (int i = 0; i < declaredMethods.length; i++) {
-                final Method mthd = declaredMethods[i];
-                final RequestProcessing requestProcessingMethodAnn = mthd.getAnnotation(RequestProcessing.class);
+                final Method method = declaredMethods[i];
+                final RequestProcessing requestProcessingMethodAnn = method.getAnnotation(RequestProcessing.class);
                 if (null == requestProcessingMethodAnn) {
                     continue;
                 }
 
-                LOGGER.log(Level.DEBUG, "Added a processor method[className={0}], method[{1}]", clz.getCanonicalName(), mthd.getName());
+                LOGGER.log(Level.DEBUG, "Added a processor method [className={0}, name={1}]", clz.getCanonicalName(), method.getName());
 
                 final ContextHandlerMeta contextHandlerMeta = new ContextHandlerMeta();
                 contextHandlerMeta.setPattern(requestProcessingMethodAnn.value());
                 contextHandlerMeta.setHttpMethod(requestProcessingMethodAnn.method());
-                contextHandlerMeta.setInvokeHolder(mthd);
+                contextHandlerMeta.setInvokeHolder(method);
                 contextHandlerMeta.initProcessAdvices();
 
                 addContextHandlerMeta(contextHandlerMeta);

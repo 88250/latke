@@ -44,7 +44,6 @@ public interface ResponseRenderer {
      * Post-render after the real method be invoked.
      *
      * @param context the specified HTTP request context
-     * @param ret     the return value of the real method
      */
-    void postRender(final RequestContext context, final Object ret);
+    void postRender(final RequestContext context);
 }

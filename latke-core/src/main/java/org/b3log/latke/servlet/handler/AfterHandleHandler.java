@@ -18,7 +18,6 @@ package org.b3log.latke.servlet.handler;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.servlet.HttpControl;
 import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.advice.ProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
@@ -30,58 +29,28 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * The handler to do the advice work in configs.
+ * After processing method ({@link org.b3log.latke.servlet.function.ContextHandler#handle(RequestContext)} or method annotated {@link org.b3log.latke.servlet.annotation.RequestProcessing}).
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Dec 3, 2018
+ * @version 1.0.0.0, Dec 5, 2018
  * @since 2.4.34
  */
-public class AdviceHandler implements Handler {
+public class AfterHandleHandler implements Handler {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AdviceHandler.class);
+    private static final Logger LOGGER = Logger.getLogger(AfterHandleHandler.class);
 
     @Override
-    public void handle(final RequestContext context, final HttpControl httpControl) throws Exception {
-        final MatchResult result = (MatchResult) httpControl.data(RouteHandler.MATCH_RESULT);
+    public void handle(final RequestContext context) throws Exception {
+        final MatchResult result = (MatchResult) context.attr(RouteHandler.MATCH_RESULT);
 
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final List<AbstractResponseRenderer> rendererList = result.getRendererList();
 
-        try {
-            final List<ProcessAdvice> beforeRequestProcessAdvices = contextHandlerMeta.getBeforeRequestProcessAdvices();
-            for (final ProcessAdvice beforeRequestProcessAdvice : beforeRequestProcessAdvices) {
-                beforeRequestProcessAdvice.doAdvice(context);
-            }
-        } catch (final RequestProcessAdviceException e) {
-            final JSONObject exception = e.getJsonObject();
-            final String msg = exception.optString(Keys.MSG);
-            LOGGER.log(Level.WARN, "Occurred an exception before request processing: " + msg);
-
-            final int statusCode = exception.optInt(Keys.STATUS_CODE, -1);
-            if (-1 != statusCode && HttpServletResponse.SC_OK != statusCode) {
-                final HttpServletResponse response = context.getResponse();
-                response.sendError(statusCode, msg);
-            } else {
-                final JsonRenderer ret = new JsonRenderer();
-                ret.setJSONObject(exception);
-                context.setRenderer(ret);
-            }
-
-            return;
-        }
-
-        for (final AbstractResponseRenderer renderer : rendererList) {
-            renderer.preRender(context);
-        }
-
-        httpControl.nextHandler();
-
         for (int j = rendererList.size() - 1; j >= 0; j--) {
-            rendererList.get(j).postRender(context, httpControl.data(MethodInvokeHandler.INVOKE_RESULT));
+            rendererList.get(j).postRender(context);
         }
 
         try {

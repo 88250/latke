@@ -18,9 +18,9 @@ package org.b3log.latke.servlet;
 import junit.framework.Assert;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.servlet.handler.AdviceHandler;
+import org.b3log.latke.servlet.handler.AfterHandleHandler;
 import org.b3log.latke.servlet.handler.Handler;
-import org.b3log.latke.servlet.handler.MethodInvokeHandler;
+import org.b3log.latke.servlet.handler.ContextHandleHandler;
 import org.b3log.latke.servlet.handler.RouteHandler;
 import org.b3log.latke.servlet.mock.TestBeforeAdvice;
 import org.b3log.latke.servlet.mock.TestRequestProcessor;
@@ -62,8 +62,8 @@ public class RequestDispachTestCase {
         DispatcherServlet.mapping();
 
         handlerList.add(new RouteHandler());
-        handlerList.add(new AdviceHandler());
-        handlerList.add(new MethodInvokeHandler());
+        handlerList.add(new AfterHandleHandler());
+        handlerList.add(new ContextHandleHandler());
     }
 
     @AfterTest
@@ -73,43 +73,42 @@ public class RequestDispachTestCase {
 
     //@Test
     public void a() {
-        HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn("/a");
         when(request.getMethod()).thenReturn("GET");
 
-        HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RouteHandler.MATCH_RESULT));
-        Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
+        final RequestContext requestContext = doFlow(request);
     }
 
     @Test
     public void a1() {
-        HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.att)
         when(request.getRequestURI()).thenReturn("/a/88250/D");
         when(request.getMethod()).thenReturn("GET");
 
-        HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RouteHandler.MATCH_RESULT));
-        Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
+        final RequestContext requestContext = doFlow(request);
     }
 
     //@Test
     public void l() {
-        HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn("/l");
         when(request.getMethod()).thenReturn("GET");
 
-        HttpControl control = doFlow(request);
-        Assert.assertNotNull(control.data(RouteHandler.MATCH_RESULT));
-        Assert.assertNull(control.data(MethodInvokeHandler.INVOKE_RESULT));
+        final RequestContext requestContext = doFlow(request);
     }
 
-    public HttpControl doFlow(HttpServletRequest req) {
-        RequestContext httpRequestContext = new RequestContext();
-        httpRequestContext.setRequest(req);
-        HttpControl ret = new HttpControl(handlerList.iterator(), httpRequestContext);
-        ret.nextHandler();
+    public RequestContext doFlow(final HttpServletRequest req) {
+        final RequestContext context = new RequestContext();
+        context.setRequest(req);
 
-        return ret;
+        for (final Handler handler : DispatcherServlet.HANDLERS) {
+            context.addHandler(handler);
+        }
+
+        context.handle();
+
+        return context;
     }
 }

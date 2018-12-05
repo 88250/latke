@@ -21,7 +21,6 @@ import org.b3log.latke.servlet.function.ContextHandler;
 import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
 import org.b3log.latke.servlet.renderer.Http404Renderer;
-import org.b3log.latke.servlet.renderer.Http500Renderer;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -53,9 +52,9 @@ public final class DispatcherServlet extends HttpServlet {
 
     static {
         HANDLERS.add(new RouteHandler());
-        HANDLERS.add(new AdviceHandler());
-        // here are ext handlers if exist
-        HANDLERS.add(new MethodInvokeHandler());
+        HANDLERS.add(new BeforeHandleHandler());
+        HANDLERS.add(new ContextHandleHandler());
+        HANDLERS.add(new AfterHandleHandler());
     }
 
     @Override
@@ -64,28 +63,18 @@ public final class DispatcherServlet extends HttpServlet {
         HANDLERS.add(0, new StaticResourceHandler(getServletContext()));
     }
 
-    /**
-     * Add the specified ext handler into handlers chain.
-     *
-     * @param handler the specified ext handler
-     */
-    public static void addHandler(final Handler handler) {
-        DispatcherServlet.HANDLERS.add(DispatcherServlet.HANDLERS.size() - 1, handler);
-    }
-
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) {
-        final RequestContext httpRequestContext = new RequestContext();
-        httpRequestContext.setRequest(req);
-        httpRequestContext.setResponse(resp);
-        final HttpControl httpControl = new HttpControl(HANDLERS.iterator(), httpRequestContext);
-        try {
-            httpControl.nextHandler();
-        } catch (final Exception e) {
-            httpRequestContext.setRenderer(new Http500Renderer(e));
+        final RequestContext context = new RequestContext();
+        context.setRequest(req);
+        context.setResponse(resp);
+
+        for (final Handler handler : HANDLERS) {
+            context.addHandler(handler);
         }
 
-        result(httpRequestContext);
+        context.handle();
+        result(context);
     }
 
     /**

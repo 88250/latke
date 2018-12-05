@@ -54,7 +54,7 @@ import java.util.*;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.3.2.1, May 31, 2014
+ * @version 1.3.2.2, Dec 5, 2018
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -230,9 +230,8 @@ public abstract class AbstractPlugin implements Serializable {
      *
      * @param dataModel dataModel
      * @param context   context
-     * @param ret       ret
      */
-    public abstract void postPlug(Map<String, Object> dataModel, RequestContext context, Object ret);
+    public abstract void postPlug(Map<String, Object> dataModel, RequestContext context);
 
     /**
      * The lifecycle pointcut for the plugin to start(enable status).
@@ -260,7 +259,7 @@ public abstract class AbstractPlugin implements Serializable {
      * @param dataModel the specified data model
      */
     public void plug(final Map<String, Object> dataModel) {
-        plug(dataModel, null, null);
+        plug(dataModel, null);
     }
 
     /**
@@ -268,9 +267,8 @@ public abstract class AbstractPlugin implements Serializable {
      *
      * @param dataModel dataModel
      * @param context   context
-     * @param ret       ret
      */
-    public void plug(final Map<String, Object> dataModel, final RequestContext context, final Object ret) {
+    public void plug(final Map<String, Object> dataModel, final RequestContext context) {
         String content = (String) dataModel.get(Plugin.PLUGINS);
 
         if (null == content) {
@@ -280,7 +278,7 @@ public abstract class AbstractPlugin implements Serializable {
         handleLangs(dataModel);
         fillDefault(dataModel);
 
-        postPlug(dataModel, context, ret);
+        postPlug(dataModel, context);
 
         content = (String) dataModel.get(Plugin.PLUGINS);
         final StringBuilder contentBuilder = new StringBuilder(content);

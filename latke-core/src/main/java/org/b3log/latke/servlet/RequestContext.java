@@ -20,7 +20,9 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.servlet.handler.Handler;
 import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
+import org.b3log.latke.servlet.renderer.Http500Renderer;
 import org.b3log.latke.servlet.renderer.JsonRenderer;
 import org.b3log.latke.util.Requests;
 import org.json.JSONObject;
@@ -29,7 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,6 +72,16 @@ public final class RequestContext {
      * Path vars.
      */
     private Map<String, String> pathVars;
+
+    /**
+     * Process flow index.
+     */
+    private int handleIndex = -1;
+
+    /**
+     * Handlers.
+     */
+    private List<Handler> handlers = new ArrayList<>();
 
     /**
      * Gets the renderer.
@@ -427,6 +440,35 @@ public final class RequestContext {
         }
 
         return this;
+    }
+
+    /**
+     * Handles this context with handlers.
+     */
+    public void handle() {
+        try {
+            for (handleIndex++; handleIndex < handlers.size(); handleIndex++) {
+                handlers.get(handleIndex).handle(this);
+            }
+        } catch (final Exception e) {
+            this.setRenderer(new Http500Renderer(e));
+        }
+    }
+
+    /**
+     * Aborts the remaining handlers.
+     */
+    public void abort() {
+        handleIndex = 64;
+    }
+
+    /**
+     * Adds the specified handler to handler chain.
+     *
+     * @param handler the specified handler
+     */
+    public void addHandler(final Handler handler) {
+        handlers.add(handler);
     }
 
     /**
