@@ -96,15 +96,32 @@ public class RouteHandler implements Handler {
      * @param httpMethod the given HTTP method
      * @return MatchResult, returns {@code null} if not found
      */
+    // XXX: 使用树结构存储路由信息，提升查找效率
     private MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret;
         final String contextPath = Latkes.getContextPath();
+
+        // 精确匹配
         for (final ContextHandlerMeta contextHandlerMeta : CONTEXT_HANDLER_METAS) {
             for (final HttpMethod httpRequestMethod : contextHandlerMeta.getHttpMethod()) {
                 if (httpMethod.equals(httpRequestMethod.toString())) {
                     final String[] uriPatterns = contextHandlerMeta.getPattern();
                     for (final String uriPattern : uriPatterns) {
-                        ret = route(contextPath + uriPattern, contextHandlerMeta, requestURI, httpMethod);
+                        if (uriPattern.equals(requestURI)) {
+                            return new MatchResult(contextHandlerMeta, requestURI, httpMethod, uriPattern);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // 路径变量匹配
+        for (final ContextHandlerMeta contextHandlerMeta : CONTEXT_HANDLER_METAS) {
+            for (final HttpMethod httpRequestMethod : contextHandlerMeta.getHttpMethod()) {
+                if (httpMethod.equals(httpRequestMethod.toString())) {
+                    final String[] uriPatterns = contextHandlerMeta.getPattern();
+                    for (final String uriPattern : uriPatterns) {
+                        ret = route(contextPath + uriPattern, requestURI, httpMethod, contextHandlerMeta);
                         if (null != ret) {
                             return ret;
                         }
@@ -120,12 +137,12 @@ public class RouteHandler implements Handler {
      * Routes the request specified by the given URI pattern, processor info, request URI and HTTP method.
      *
      * @param uriPattern         the given URI pattern
-     * @param contextHandlerMeta the given context handler meta
      * @param requestURI         the given request URI
      * @param method             the given HTTP method
+     * @param contextHandlerMeta the given context handler meta
      * @return MatchResult, returns {@code null} if not found
      */
-    private MatchResult route(final String uriPattern, final ContextHandlerMeta contextHandlerMeta, final String requestURI, final String method) {
+    private MatchResult route(final String uriPattern, final String requestURI, final String method, final ContextHandlerMeta contextHandlerMeta) {
         final Map<String, String> resolveResult = UriTemplates.resolve(requestURI, uriPattern);
         if (null == resolveResult) {
             return null;
