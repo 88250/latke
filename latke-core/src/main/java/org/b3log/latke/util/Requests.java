@@ -18,9 +18,7 @@ package org.b3log.latke.util;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.model.Pagination;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -35,44 +33,13 @@ import java.util.Enumeration;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
  * @version 2.0.0.2, Dec 2, 2018
- * @see #PAGINATION_PATH_PATTERN
  */
 public final class Requests {
-
-    /**
-     * The pagination path pattern.
-     * <p>
-     * The first star represents "the current page number", the second star represents "the page size", and the third star represents
-     * "the window size". Argument of each of these stars should be a number.
-     * </p>
-     * <p>
-     * For example, the request URI is "xxx/1/2/3", so the specified path is "1/2/3". The first number represents
-     * "the current page number", the second number represents "the page size", and the third number represents "the window size", all of
-     * these for pagination.
-     * </p>
-     */
-    public static final String PAGINATION_PATH_PATTERN = "*/*/*";
-
-    /**
-     * Default page size.
-     */
-    private static final int DEFAULT_PAGE_SIZE = 15;
-
-    /**
-     * Default window size.
-     */
-    private static final int DEFAULT_WINDOW_SIZE = 20;
 
     /**
      * Cookie expiry of "visited".
      */
     private static final int COOKIE_EXPIRY = 60 * 60 * 24; // 24 hours
-
-    /**
-     * Private constructor.
-     */
-    private Requests() {
-    }
 
     /**
      * Logs the specified request with the specified level and logger.
@@ -245,98 +212,8 @@ public final class Requests {
     }
 
     /**
-     * Builds pagination request with the specified path.
-     *
-     * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN}
-     *             for the details
-     * @return pagination request json object, for example,
-     * <pre>
-     * {
-     *     "paginationCurrentPageNum": int,
-     *     "paginationPageSize": int,
-     *     "paginationWindowSize": int
-     * }
-     * </pre>
-     * @see #PAGINATION_PATH_PATTERN
+     * Private constructor.
      */
-    public static JSONObject buildPaginationRequest(final String path) {
-        final Integer currentPageNum = getCurrentPageNum(path);
-        final Integer pageSize = getPageSize(path);
-        final Integer windowSize = getWindowSize(path);
-
-        final JSONObject ret = new JSONObject();
-
-        ret.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, currentPageNum);
-        ret.put(Pagination.PAGINATION_PAGE_SIZE, pageSize);
-        ret.put(Pagination.PAGINATION_WINDOW_SIZE, windowSize);
-
-        return ret;
-    }
-
-    /**
-     * Gets the request page number from the specified path.
-     *
-     * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN} for the details
-     * @return page number, returns {@code 1} if the specified request URI can not convert to an number
-     * @see #PAGINATION_PATH_PATTERN
-     */
-    public static int getCurrentPageNum(final String path) {
-        if (StringUtils.isBlank(path) || path.equals("/")) {
-            return 1;
-        }
-
-        final String currentPageNumber = path.split("/")[0];
-
-        if (!Strings.isNumeric(currentPageNumber)) {
-            return 1;
-        }
-
-        return Integer.valueOf(currentPageNumber);
-    }
-
-    /**
-     * Gets the request page size from the specified path.
-     *
-     * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN} for the details
-     * @return page number, returns {@value #DEFAULT_PAGE_SIZE} if the specified request URI can not convert to an number
-     * @see #PAGINATION_PATH_PATTERN
-     */
-    public static int getPageSize(final String path) {
-        if (StringUtils.isBlank(path)) {
-            return DEFAULT_PAGE_SIZE;
-        }
-        final String[] parts = path.split("/");
-        if (1 >= parts.length) {
-            return DEFAULT_PAGE_SIZE;
-        }
-        final String pageSize = parts[1];
-        if (!Strings.isNumeric(pageSize)) {
-            return DEFAULT_PAGE_SIZE;
-        }
-
-        return Integer.valueOf(pageSize);
-    }
-
-    /**
-     * Gets the request window size from the specified path.
-     *
-     * @param path the specified path, see {@link #PAGINATION_PATH_PATTERN} for the details
-     * @return page number, returns {@value #DEFAULT_WINDOW_SIZE} if the specified request URI can not convert to an number
-     * @see #PAGINATION_PATH_PATTERN
-     */
-    public static int getWindowSize(final String path) {
-        if (StringUtils.isBlank(path)) {
-            return DEFAULT_WINDOW_SIZE;
-        }
-        final String[] parts = path.split("/");
-        if (2 >= parts.length) {
-            return DEFAULT_WINDOW_SIZE;
-        }
-        final String windowSize = parts[2];
-        if (!Strings.isNumeric(windowSize)) {
-            return DEFAULT_WINDOW_SIZE;
-        }
-
-        return Integer.valueOf(windowSize);
+    private Requests() {
     }
 }
