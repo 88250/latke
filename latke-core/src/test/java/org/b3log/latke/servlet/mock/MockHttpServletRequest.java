@@ -13,31 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.mock;
+package org.b3log.latke.servlet.mock;
 
+import org.b3log.latke.servlet.HttpMethod;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import javax.servlet.AsyncContext;
-import javax.servlet.DispatcherType;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.http.Part;
+import java.util.*;
 
 /**
  * Mock HTTP servlet request.
@@ -50,7 +36,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     /**
      * Header.
      */
-    private Map<String, String> headers = new HashMap<String, String>();
+    private Map<String, String> headers = new HashMap<>();
     /**
      * Request URI.
      */
@@ -81,8 +67,8 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     /**
      * Sets header with the specified name and value.
-     * 
-     * @param name the specified name
+     *
+     * @param name  the specified name
      * @param value the specified value
      */
     public void setHeader(final String name, final String value) {
@@ -109,9 +95,16 @@ public class MockHttpServletRequest implements HttpServletRequest {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+
+    private String method = HttpMethod.GET.toString();
+
+    public void setMethod(final String method) {
+        this.method = method;
+    }
+
     @Override
     public String getMethod() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return method;
     }
 
     @Override
@@ -161,7 +154,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     /**
      * Sets request URI with the specified request URI.
-     * 
+     *
      * @param requestURI the specified request URI
      */
     public void setRequestURI(final String requestURI) {

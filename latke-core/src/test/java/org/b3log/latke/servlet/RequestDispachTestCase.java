@@ -15,25 +15,22 @@
  */
 package org.b3log.latke.servlet;
 
-import junit.framework.Assert;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.servlet.handler.AfterHandleHandler;
-import org.b3log.latke.servlet.handler.Handler;
 import org.b3log.latke.servlet.handler.ContextHandleHandler;
+import org.b3log.latke.servlet.handler.Handler;
 import org.b3log.latke.servlet.handler.RouteHandler;
+import org.b3log.latke.servlet.mock.MockHttpServletRequest;
+import org.b3log.latke.servlet.mock.MockHttpServletResponse;
 import org.b3log.latke.servlet.mock.TestBeforeAdvice;
 import org.b3log.latke.servlet.mock.TestRequestProcessor;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Processor test.
@@ -71,44 +68,30 @@ public class RequestDispachTestCase {
         BeanManager.close();
     }
 
-    //@Test
+    @Test
     public void a() {
-        final HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/a");
-        when(request.getMethod()).thenReturn("GET");
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/a");
+        final MockHttpServletResponse response = new MockHttpServletResponse();
 
-        final RequestContext requestContext = doFlow(request);
+        final RequestContext context = DispatcherServlet.handle(request, response);
     }
 
     @Test
     public void a1() {
-        final HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.att)
-        when(request.getRequestURI()).thenReturn("/a/88250/D");
-        when(request.getMethod()).thenReturn("GET");
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/a/88250/D");
+        final MockHttpServletResponse response = new MockHttpServletResponse();
 
-        final RequestContext requestContext = doFlow(request);
+        final RequestContext context = DispatcherServlet.handle(request, response);
     }
 
-    //@Test
+    @Test
     public void l() {
-        final HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/l");
-        when(request.getMethod()).thenReturn("GET");
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/1");
+        final MockHttpServletResponse response = new MockHttpServletResponse();
 
-        final RequestContext requestContext = doFlow(request);
-    }
-
-    public RequestContext doFlow(final HttpServletRequest req) {
-        final RequestContext context = new RequestContext();
-        context.setRequest(req);
-
-        for (final Handler handler : DispatcherServlet.HANDLERS) {
-            context.addHandler(handler);
-        }
-
-        context.handle();
-
-        return context;
+        final RequestContext context = DispatcherServlet.handle(request, response);
     }
 }

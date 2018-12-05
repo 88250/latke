@@ -17,7 +17,7 @@ package org.b3log.latke.util;
 
 import javax.servlet.http.HttpServletRequest;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.mock.MockHttpServletRequest;
+import org.b3log.latke.servlet.mock.MockHttpServletRequest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

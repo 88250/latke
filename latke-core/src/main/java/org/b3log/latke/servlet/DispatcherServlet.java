@@ -64,17 +64,30 @@ public final class DispatcherServlet extends HttpServlet {
     }
 
     @Override
-    protected void service(final HttpServletRequest req, final HttpServletResponse resp) {
-        final RequestContext context = new RequestContext();
-        context.setRequest(req);
-        context.setResponse(resp);
+    protected void service(final HttpServletRequest request, final HttpServletResponse response) {
+        handle(request, response);
+    }
+
+    /**
+     * Handle flow.
+     *
+     * @param request  the specified request
+     * @param response the specified response
+     * @return context
+     */
+    public static RequestContext handle(final HttpServletRequest request, final HttpServletResponse response) {
+        final RequestContext ret = new RequestContext();
+        ret.setRequest(request);
+        ret.setResponse(response);
 
         for (final Handler handler : HANDLERS) {
-            context.addHandler(handler);
+            ret.addHandler(handler);
         }
 
-        context.handle();
-        result(context);
+        ret.handle();
+        result(ret);
+
+        return ret;
     }
 
     /**
