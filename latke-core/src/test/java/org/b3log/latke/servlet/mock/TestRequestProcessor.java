@@ -16,6 +16,7 @@
 package org.b3log.latke.servlet.mock;
 
 import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 
@@ -29,17 +30,25 @@ import org.b3log.latke.servlet.annotation.RequestProcessor;
 @RequestProcessor
 public class TestRequestProcessor {
 
-    @RequestProcessing(value = "/a")
+    @RequestProcessing("/a")
     public void a(final RequestContext context) {
         System.out.println("a");
     }
 
-    @RequestProcessing(value = "/a/{id}/{name}")
+    @RequestProcessing("/a/{id}/{name}")
     public void a1(final RequestContext context) {
         System.out.println("a1: " + context.pathVars());
+    }
+
+    @RequestProcessing("/a/before")
+    @Before(TestBeforeAdvice.class)
+    public void abefore(final RequestContext context) {
+        System.out.println("abefore");
     }
 
     public void l(final RequestContext context) {
         System.out.println("l: " + context.requestURI());
     }
+
+
 }

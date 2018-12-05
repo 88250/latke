@@ -23,11 +23,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The after advice.
+ * Indicates invoking process advices after an annotated method.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Dec 4, 2018
+ * @version 1.0.0.0, Dec 5, 2018
  * @since 2.4.34
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
@@ -35,10 +34,9 @@ import java.lang.annotation.Target;
 public @interface After {
 
     /**
-     * the real AfterRequestProcessAdvice.
+     * The after advice classes.
      *
-     * @return advice class
+     * @return after advice classes
      */
-    Class<? extends ProcessAdvice>[] adviceClass() default ProcessAdvice.class;
-
+    Class<? extends ProcessAdvice>[] value() default ProcessAdvice.class;
 }

@@ -94,4 +94,13 @@ public class RequestDispachTestCase {
 
         final RequestContext context = DispatcherServlet.handle(request, response);
     }
+
+    @Test
+    public void abefore() {
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/a/before");
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+
+        final RequestContext context = DispatcherServlet.handle(request, response);
+    }
 }

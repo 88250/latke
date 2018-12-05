@@ -174,7 +174,7 @@ public final class ContextHandlerMeta {
 
         // 1. process class advice
         if (null != processorClass && processorClass.isAnnotationPresent(Before.class)) {
-            final Class<? extends ProcessAdvice>[] bcs = processorClass.getAnnotation(Before.class).adviceClass();
+            final Class<? extends ProcessAdvice>[] bcs = processorClass.getAnnotation(Before.class).value();
             for (int i = 0; i < bcs.length; i++) {
                 final Class<? extends ProcessAdvice> bc = bcs[i];
                 final ProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(bc);
@@ -183,7 +183,7 @@ public final class ContextHandlerMeta {
         }
         // 2. process method advice
         if (invokeHolder.isAnnotationPresent(Before.class)) {
-            final Class<? extends ProcessAdvice>[] bcs = invokeHolder.getAnnotation(Before.class).adviceClass();
+            final Class<? extends ProcessAdvice>[] bcs = invokeHolder.getAnnotation(Before.class).value();
             for (int i = 0; i < bcs.length; i++) {
                 final Class<? extends ProcessAdvice> bc = bcs[i];
                 final ProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(bc);
@@ -205,7 +205,7 @@ public final class ContextHandlerMeta {
 
         // 1. process method advice
         if (invokeHolder.isAnnotationPresent(After.class)) {
-            final Class<? extends ProcessAdvice>[] acs = invokeHolder.getAnnotation(After.class).adviceClass();
+            final Class<? extends ProcessAdvice>[] acs = invokeHolder.getAnnotation(After.class).value();
             for (int i = 0; i < acs.length; i++) {
                 final Class<? extends ProcessAdvice> ac = acs[i];
                 final ProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(ac);
@@ -214,7 +214,7 @@ public final class ContextHandlerMeta {
         }
         // 2. process class advice
         if (null != processorClass && processorClass.isAnnotationPresent(After.class)) {
-            final Class<? extends ProcessAdvice>[] acs = invokeHolder.getAnnotation(After.class).adviceClass();
+            final Class<? extends ProcessAdvice>[] acs = invokeHolder.getAnnotation(After.class).value();
             for (int i = 0; i < acs.length; i++) {
                 final Class<? extends ProcessAdvice> ac = acs[i];
                 final ProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(ac);
