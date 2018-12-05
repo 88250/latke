@@ -97,7 +97,7 @@ public class RouteHandler implements Handler {
      * @return MatchResult, returns {@code null} if not found
      */
     // XXX: 使用树结构存储路由信息，提升查找效率
-    private MatchResult doMatch(final String requestURI, final String httpMethod) {
+    public static MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret;
         final String contextPath = Latkes.getContextPath();
 
@@ -142,7 +142,7 @@ public class RouteHandler implements Handler {
      * @param contextHandlerMeta the given context handler meta
      * @return MatchResult, returns {@code null} if not found
      */
-    private MatchResult route(final String uriPattern, final String requestURI, final String method, final ContextHandlerMeta contextHandlerMeta) {
+    private static MatchResult route(final String uriPattern, final String requestURI, final String method, final ContextHandlerMeta contextHandlerMeta) {
         final Map<String, String> resolveResult = UriTemplates.resolve(requestURI, uriPattern);
         if (null == resolveResult) {
             return null;
