@@ -114,7 +114,7 @@ public class RouteHandler implements Handler {
                 }
             }
         }
-        
+
         // 路径变量匹配
         for (final ContextHandlerMeta contextHandlerMeta : CONTEXT_HANDLER_METAS) {
             for (final HttpMethod httpRequestMethod : contextHandlerMeta.getHttpMethod()) {
