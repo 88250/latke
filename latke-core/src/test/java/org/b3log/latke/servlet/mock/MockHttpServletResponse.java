@@ -16,12 +16,12 @@
 package org.b3log.latke.servlet.mock;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Locale;
+import java.io.StringWriter;
+import java.util.*;
 
 /**
  * Mock HTTP servlet request.
@@ -32,9 +32,15 @@ import java.util.Locale;
  */
 public class MockHttpServletResponse implements HttpServletResponse {
 
+    private List<Cookie> cookies = new ArrayList<>();
+
     @Override
     public void addCookie(Cookie cookie) {
+        cookies.add(cookie);
+    }
 
+    public List<Cookie> cookies() {
+        return cookies;
     }
 
     @Override
@@ -63,17 +69,17 @@ public class MockHttpServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public void sendError(int sc, String msg) throws IOException {
+    public void sendError(int sc, String msg) {
 
     }
 
     @Override
-    public void sendError(int sc) throws IOException {
+    public void sendError(int sc) {
 
     }
 
     @Override
-    public void sendRedirect(String location) throws IOException {
+    public void sendRedirect(String location) {
 
     }
 
@@ -87,14 +93,21 @@ public class MockHttpServletResponse implements HttpServletResponse {
 
     }
 
+    private Map<String, String> headers = new HashMap<>();
+
     @Override
     public void setHeader(String name, String value) {
+        headers.put(name, value);
+    }
 
+    @Override
+    public String getHeader(String name) {
+        return headers.get(name);
     }
 
     @Override
     public void addHeader(String name, String value) {
-
+        headers.put(name, value);
     }
 
     @Override
@@ -123,11 +136,6 @@ public class MockHttpServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public String getHeader(String name) {
-        return null;
-    }
-
-    @Override
     public Collection<String> getHeaders(String name) {
         return null;
     }
@@ -148,13 +156,43 @@ public class MockHttpServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public ServletOutputStream getOutputStream() throws IOException {
-        return null;
+    public ServletOutputStream getOutputStream() {
+        return new ServletOutputStream() {
+            @Override
+            public boolean isReady() {
+                return false;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener writeListener) {
+
+            }
+
+            @Override
+            public void write(int b) {
+
+            }
+        };
+    }
+
+    private StringWriter bodyWriter;
+    private PrintWriter writer;
+
+    public void setWriter(final PrintWriter writer) {
+        this.writer = writer;
+    }
+
+    public void setBodyWriter(final StringWriter bodyWriter) {
+        this.bodyWriter = bodyWriter;
+    }
+
+    public String body() {
+        return bodyWriter.toString();
     }
 
     @Override
-    public PrintWriter getWriter() throws IOException {
-        return null;
+    public PrintWriter getWriter() {
+        return writer;
     }
 
     @Override
@@ -188,7 +226,7 @@ public class MockHttpServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public void flushBuffer() throws IOException {
+    public void flushBuffer() {
 
     }
 

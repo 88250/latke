@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.servlet.mock;
+package org.b3log.latke.servlet;
 
 import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.servlet.advice.ProcessAdvice;
 
 @Singleton
-public class TestAfterAdvice extends ProcessAdvice {
+public class TestBeforeAdvice extends ProcessAdvice {
 
     @Override
     public void doAdvice(final RequestContext context) {
-        context.attr("after", "after");
+        context.attr("before", "before");
     }
 }

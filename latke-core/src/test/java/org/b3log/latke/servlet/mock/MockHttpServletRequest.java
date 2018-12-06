@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.mock;
 
+import org.b3log.latke.Latkes;
 import org.b3log.latke.servlet.HttpMethod;
 
 import javax.servlet.*;
@@ -55,9 +56,16 @@ public class MockHttpServletRequest implements HttpServletRequest {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+
+    private Cookie[] cookies;
+
+    public void setCookies(final Cookie[] cookies) {
+        this.cookies = cookies;
+    }
+
     @Override
     public Cookie[] getCookies() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return cookies;
     }
 
     @Override
@@ -163,7 +171,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public StringBuffer getRequestURL() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new StringBuffer(Latkes.getServePath() + requestURI);
     }
 
     @Override
@@ -173,7 +181,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public HttpSession getSession(final boolean create) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
     @Override
@@ -217,8 +225,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public void setCharacterEncoding(final String env) throws
-            UnsupportedEncodingException {
+    public void setCharacterEncoding(final String env) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -233,13 +240,19 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public ServletInputStream getInputStream() throws IOException {
+    public ServletInputStream getInputStream() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private Map<String, String> param = new HashMap<>();
+
+    public void putParameter(final String name, final String value) {
+        param.put(name, value);
     }
 
     @Override
     public String getParameter(final String name) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return param.get(name);
     }
 
     @Override
@@ -277,14 +290,27 @@ public class MockHttpServletRequest implements HttpServletRequest {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    private BufferedReader reader;
+
+    public void setReader(BufferedReader reader) {
+        this.reader = reader;
+    }
+
     @Override
-    public BufferedReader getReader() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public BufferedReader getReader() {
+        return reader;
+    }
+
+
+    private String remoteAddr;
+
+    public void setRemoteAddr(final String remoteAddr) {
+        this.remoteAddr = remoteAddr;
     }
 
     @Override
     public String getRemoteAddr() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return remoteAddr;
     }
 
     @Override
@@ -353,32 +379,32 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public boolean authenticate(final HttpServletResponse response) throws IOException, ServletException {
+    public boolean authenticate(final HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void login(final String username, final String password) throws ServletException {
+    public void login(final String username, final String password) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void logout() throws ServletException {
+    public void logout() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Collection<Part> getParts() throws IOException, ServletException {
+    public Collection<Part> getParts() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Part getPart(final String name) throws IOException, ServletException {
+    public Part getPart(final String name) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public <T extends HttpUpgradeHandler> T upgrade(final Class<T> handlerClass) throws IOException, ServletException {
+    public <T extends HttpUpgradeHandler> T upgrade(final Class<T> handlerClass) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
