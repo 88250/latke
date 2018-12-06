@@ -30,7 +30,7 @@ Latke 每个版本都会发布到 Maven 中央库，可在 pom.xml 中直接引�
 ```xml
 <dependency>
     <groupId>org.b3log</groupId>
-    <artifactId>latke</artifactId>
+    <artifactId>latke-core</artifactId>
     <version>${latke.version}</version>
 </dependency>
 ```
