@@ -24,9 +24,9 @@ package org.b3log.latke.repository.annotation;
 public enum Isolation {
 
     /**
-     * A constant indicating that dirty reads are prevented; non-repeatable reads and phantom reads can occur. 
+     * A constant indicating that dirty reads are prevented; non-repeatable reads and phantom reads can occur.
      * This level only prohibits a transaction from reading a row with uncommitted changes in it.
-     * 
+     *
      * @see java.sql.Connection#TRANSACTION_READ_COMMITTED
      */
     READ_COMMITTED,

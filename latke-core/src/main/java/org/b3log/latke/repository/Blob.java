@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 /**
  * Blob.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Jan 18, 2011
  */
@@ -39,8 +39,8 @@ public final class Blob implements Serializable {
 
     /**
      * Constructs a blob with the specified bytes.
-     * 
-     * @param bytes the specified bytes 
+     *
+     * @param bytes the specified bytes
      */
     public Blob(final byte[] bytes) {
         this.bytes = bytes;
@@ -48,7 +48,7 @@ public final class Blob implements Serializable {
 
     /**
      * Gets bytes.
-     * 
+     *
      * @return bytes
      */
     public byte[] getBytes() {

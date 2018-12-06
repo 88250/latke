@@ -25,7 +25,7 @@ public enum PluginStatus {
     /**
      * Indicates a plugin is enabled.
      */
-    ENABLED, 
+    ENABLED,
     /**
      * Indicates a plugin is disabled.
      */

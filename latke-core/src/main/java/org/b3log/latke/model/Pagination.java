@@ -82,5 +82,6 @@ public final class Pagination {
     /**
      * Private constructor.
      */
-    private Pagination() {}
+    private Pagination() {
+    }
 }

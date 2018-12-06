@@ -23,7 +23,7 @@ package org.b3log.latke.service;
  * @version 1.0.0.0, Oct 25, 2011
  */
 public final class ServiceException extends Exception {
-    
+
     /**
      * Default serial version uid.
      */

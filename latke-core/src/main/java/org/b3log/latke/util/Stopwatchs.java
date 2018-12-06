@@ -73,7 +73,7 @@ import java.util.List;
  *
  *     Stopwatchs.release();
  * </pre>
- *
+ * <p>
  * Outputs:
  * <pre>
  * [100.0]%, [80]ms [task 1]
@@ -179,8 +179,7 @@ public final class Stopwatchs {
      * Gets elapsed time from the specified parent stopwatch with the specified task title.
      *
      * @param taskTitle the specified task title
-     * @return
-     * <ul>
+     * @return <ul>
      * <li>{@linkplain org.b3log.latke.util.Stopwatchs.Stopwatch#getElapsedTime() elapsed time} of the found task if it
      * {@linkplain org.b3log.latke.util.Stopwatchs.Stopwatch#isEnded() is ended}</li>
      * <li>{@linkplain System#currentTimeMillis() the current time} subtracts
@@ -218,7 +217,7 @@ public final class Stopwatchs {
     /**
      * Gets stopwatch from the specified parent stopwatch with the specified task title.
      *
-     * @param parent the specified parent
+     * @param parent    the specified parent
      * @param taskTitle the specified task title
      * @return stopwatch, returns {@code null} if not found
      */
@@ -448,7 +447,7 @@ public final class Stopwatchs {
         /**
          * Appends the timing statistics with the specified string builder.
          *
-         * @param level the current level of the task tree
+         * @param level         the current level of the task tree
          * @param stringBuilder the specified string builder
          */
         private void appendTimingStat(final int level, final StringBuilder stringBuilder) {

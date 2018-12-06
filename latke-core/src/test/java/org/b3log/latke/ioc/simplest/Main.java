@@ -15,8 +15,8 @@
  */
 package org.b3log.latke.ioc.simplest;
 
-import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Bean;
+import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.ioc.Singleton;
 

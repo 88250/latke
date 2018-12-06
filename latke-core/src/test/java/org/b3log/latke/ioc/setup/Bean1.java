@@ -16,7 +16,6 @@
 package org.b3log.latke.ioc.setup;
 
 /**
- *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 17, 2009
  */

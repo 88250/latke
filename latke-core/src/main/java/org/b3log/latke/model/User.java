@@ -78,5 +78,6 @@ public final class User {
     /**
      * Private constructor.
      */
-    private User() {}
+    private User() {
+    }
 }

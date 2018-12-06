@@ -39,7 +39,7 @@ public final class ViewLoadEventData {
 
     /**
      * Gets the data model.
-     * 
+     *
      * @return data model
      */
     public Map<String, Object> getDataModel() {
@@ -48,7 +48,7 @@ public final class ViewLoadEventData {
 
     /**
      * Sets the data model with the specified data model.
-     * 
+     *
      * @param dataModel the specified data model
      */
     public void setDataModel(final Map<String, Object> dataModel) {
@@ -57,7 +57,7 @@ public final class ViewLoadEventData {
 
     /**
      * Gets the name of the template file.
-     * 
+     *
      * @return name of the template file
      */
     public String getViewName() {
@@ -66,7 +66,7 @@ public final class ViewLoadEventData {
 
     /**
      * Sets the name of the template file with the specified name.
-     * 
+     *
      * @param viewName the specified name
      */
     public void setViewName(final String viewName) {

@@ -78,9 +78,10 @@ public final class Plugin {
      * Key of plugin status.
      */
     public static final String PLUGIN_STATUS = "status";
-    
+
     /**
      * Private constructor.
      */
-    private Plugin() {}
+    private Plugin() {
+    }
 }

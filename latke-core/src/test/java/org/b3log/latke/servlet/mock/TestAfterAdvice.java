@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.ioc.setup;
+package org.b3log.latke.servlet.mock;
 
-import org.b3log.latke.ioc.Inject;
+import org.b3log.latke.ioc.Singleton;
+import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.servlet.advice.ProcessAdvice;
 
-/**
- * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Nov 17, 2009
- */
-public class Bean3 {
+@Singleton
+public class TestAfterAdvice extends ProcessAdvice {
 
-    @Inject
-    public Bean1 bean1;
-
-    @Inject
-    public Bean2 bean2;
-
-    public String say() {
-        return "Bean3";
+    @Override
+    public void doAdvice(final RequestContext context) {
+        context.attr("after", "after");
     }
 }

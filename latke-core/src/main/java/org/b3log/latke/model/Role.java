@@ -82,5 +82,6 @@ public final class Role {
     /**
      * Private constructor.
      */
-    private Role() {}
+    private Role() {
+    }
 }

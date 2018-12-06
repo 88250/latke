@@ -25,7 +25,7 @@ package org.b3log.latke.logging;
  * <li>DEBUG</li>
  * <li>TRACE</li>
  * </ul>
- *
+ * <p>
  * In addition there is a level OFF that can be used to turn off logging, and a level ALL that can be used to enable
  * logging of all messages.
  *

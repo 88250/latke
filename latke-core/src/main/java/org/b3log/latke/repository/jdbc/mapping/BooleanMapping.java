@@ -21,12 +21,12 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**
  * Boolean data type mapping.
- * 
+ *
  * <p>
  * The data type is CHAR(1), we could INSERT INTO `test`(`test`) VALUES (false/true) in MySQL database, the actual value is '0' for false,
  * '1' for true.
  * </p>
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.1, Dec 27, 2012
  */

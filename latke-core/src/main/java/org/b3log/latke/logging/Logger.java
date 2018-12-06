@@ -148,8 +148,8 @@ public final class Logger {
     /**
      * Logs the specified message with the specified logging level and throwable.
      *
-     * @param level the specified logging level
-     * @param msg the specified message
+     * @param level     the specified logging level
+     * @param msg       the specified message
      * @param throwable the specified throwable
      */
     public void log(final Level level, final String msg, final Throwable throwable) {
@@ -213,8 +213,8 @@ public final class Logger {
      * Logs the specified message with the specified logging level and arguments.
      *
      * @param level the specified logging level
-     * @param msg the specified message
-     * @param args the specified arguments
+     * @param msg   the specified message
+     * @param args  the specified arguments
      */
     public void log(final Level level, final String msg, final Object... args) {
         String message = msg;

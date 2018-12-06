@@ -43,7 +43,7 @@ public final class TextHtmlRenderer extends AbstractResponseRenderer {
 
     /**
      * Sets the content with the specified content.
-     * 
+     *
      * @param content the specified content
      */
     public void setContent(final String content) {

@@ -21,10 +21,8 @@ import org.b3log.latke.servlet.handler.AfterHandleHandler;
 import org.b3log.latke.servlet.handler.ContextHandleHandler;
 import org.b3log.latke.servlet.handler.Handler;
 import org.b3log.latke.servlet.handler.RouteHandler;
-import org.b3log.latke.servlet.mock.MockHttpServletRequest;
-import org.b3log.latke.servlet.mock.MockHttpServletResponse;
-import org.b3log.latke.servlet.mock.TestBeforeAdvice;
-import org.b3log.latke.servlet.mock.TestRequestProcessor;
+import org.b3log.latke.servlet.mock.*;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -52,10 +50,12 @@ public class RequestDispachTestCase {
         final List<Class<?>> classes = new ArrayList<>();
         classes.add(TestRequestProcessor.class);
         classes.add(TestBeforeAdvice.class);
+        classes.add(TestAfterAdvice.class);
         BeanManager.start(classes);
 
         final TestRequestProcessor testRequestProcessor = BeanManager.getInstance().getReference(TestRequestProcessor.class);
         DispatcherServlet.get("/l", testRequestProcessor::l);
+        DispatcherServlet.get("/lbefore", testRequestProcessor::lbefore);
         DispatcherServlet.mapping();
 
         handlerList.add(new RouteHandler());
@@ -75,6 +75,7 @@ public class RequestDispachTestCase {
         final MockHttpServletResponse response = new MockHttpServletResponse();
 
         final RequestContext context = DispatcherServlet.handle(request, response);
+        Assert.assertEquals(context.attr("a"), "a");
     }
 
     @Test
@@ -84,15 +85,8 @@ public class RequestDispachTestCase {
         final MockHttpServletResponse response = new MockHttpServletResponse();
 
         final RequestContext context = DispatcherServlet.handle(request, response);
-    }
-
-    @Test
-    public void l() {
-        final MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI("/1");
-        final MockHttpServletResponse response = new MockHttpServletResponse();
-
-        final RequestContext context = DispatcherServlet.handle(request, response);
+        Assert.assertEquals(context.attr("id"), "88250");
+        Assert.assertEquals(context.attr("name"), "D");
     }
 
     @Test
@@ -102,5 +96,30 @@ public class RequestDispachTestCase {
         final MockHttpServletResponse response = new MockHttpServletResponse();
 
         final RequestContext context = DispatcherServlet.handle(request, response);
+        Assert.assertEquals(context.attr("before"), "before");
+        Assert.assertEquals(context.attr("abefore"), "abefore");
     }
+
+    @Test
+    public void l() {
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/l");
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+
+        final RequestContext context = DispatcherServlet.handle(request, response);
+        Assert.assertEquals(context.attr("l"), "l");
+    }
+
+    @Test
+    public void lbefore() {
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/lbefore");
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+
+        final RequestContext context = DispatcherServlet.handle(request, response);
+        Assert.assertEquals(context.attr("before"), "before");
+        Assert.assertEquals(context.attr("after"), "after");
+        Assert.assertEquals(context.attr("lbefore"), "lbefore");
+    }
+
 }

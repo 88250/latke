@@ -21,18 +21,18 @@ import java.lang.annotation.*;
 
 /**
  * The render mark for the parameter of the method, just to set the id of the renderer.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Jan 21, 2013
  */
-@Target({ ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD })
+@Target({ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Render {
 
     /**
      * The id of the render, for plugin to identify.
-     * 
+     *
      * @return value
      */
     String value();

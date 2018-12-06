@@ -21,11 +21,11 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**
  * Date type mapping.
- * 
+ *
  * <p>
  * Maps Java {@link java.util.Date} type to SQL DATETIME type.
  * </p>
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Feb 29, 2012
  */

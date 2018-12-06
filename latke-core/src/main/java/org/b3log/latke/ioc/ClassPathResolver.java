@@ -173,7 +173,7 @@ public final class ClassPathResolver {
      * scan the jar to get the URLS of the Classes.
      *
      * @param rootDirResource which is "Jar"
-     * @param subPattern subPattern
+     * @param subPattern      subPattern
      * @return the URLs of all the matched classes
      */
     private static Collection<? extends URL> doFindPathMatchingJarResources(final URL rootDirResource, final String subPattern) {
@@ -233,7 +233,7 @@ public final class ClassPathResolver {
                 // does.
                 rootEntryPath = rootEntryPath + "/";
             }
-            for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();) {
+            for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements(); ) {
                 final JarEntry entry = (JarEntry) entries.nextElement();
                 final String entryPath = entry.getName();
 
@@ -292,7 +292,7 @@ public final class ClassPathResolver {
      * scan the system file to get the URLS of the Classes.
      *
      * @param rootDirResource rootDirResource which is in File System
-     * @param subPattern subPattern
+     * @param subPattern      subPattern
      * @return the URLs of all the matched classes
      */
     private static Collection<? extends URL> doFindPathMatchingFileResources(final URL rootDirResource, final String subPattern) {
@@ -313,8 +313,7 @@ public final class ClassPathResolver {
         }
         final String filePattern = fullPattern + StringUtils.replace(subPattern, File.separator, "/");
 
-        @SuppressWarnings("unchecked")
-        final Collection<File> files = FileUtils.listFiles(rootFile, new IOFileFilter() {
+        @SuppressWarnings("unchecked") final Collection<File> files = FileUtils.listFiles(rootFile, new IOFileFilter() {
             @Override
             public boolean accept(final File dir, final String name) {
                 return true;
@@ -370,7 +369,7 @@ public final class ClassPathResolver {
         /**
          * scan Resources in Jboss Victual File System.
          *
-         * @param rootUrl rootUrl
+         * @param rootUrl         rootUrl
          * @param locationPattern subPattern
          * @return the matched URLd
          */
@@ -415,7 +414,7 @@ public final class ClassPathResolver {
         /**
          * the simplest constructor.
          *
-         * @param rootPath rootPath
+         * @param rootPath   rootPath
          * @param subPattern subPattern
          */
         PatternVirtualFileVisitor(final String rootPath, final String subPattern) {

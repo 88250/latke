@@ -16,8 +16,8 @@
 package org.b3log.latke.ioc.setup;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Bean;
+import org.b3log.latke.ioc.BeanManager;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;

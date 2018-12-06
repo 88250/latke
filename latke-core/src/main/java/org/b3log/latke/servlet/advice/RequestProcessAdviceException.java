@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 /**
  * Exception for process advice.
- * 
+ *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @version 1.0.0.0, Oct 14, 2012
  */
@@ -39,6 +39,7 @@ public class RequestProcessAdviceException extends Exception {
 
     /**
      * the default constructor.
+     *
      * @param jsonObject jsonObject
      */
     public RequestProcessAdviceException(final JSONObject jsonObject) {
