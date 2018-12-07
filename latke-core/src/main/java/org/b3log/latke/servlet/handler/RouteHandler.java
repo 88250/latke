@@ -134,7 +134,7 @@ public class RouteHandler implements Handler {
     }
 
     /**
-     * Routes the request specified by the given URI pattern, processor info, request URI and HTTP method.
+     * Routes the request specified by the given URI pattern, context handler meta, request URI and HTTP method.
      *
      * @param uriPattern         the given URI pattern
      * @param requestURI         the given request URI
@@ -185,7 +185,7 @@ public class RouteHandler implements Handler {
     }
 
     /**
-     * Scan beans to get the processor info.
+     * Scan beans to get the context handler meta.
      *
      * @param processBeans processBeans which contains {@link RequestProcessor}
      */
@@ -214,11 +214,35 @@ public class RouteHandler implements Handler {
     }
 
     /**
-     * Adds the specified processor info
+     * Adds the specified context handler meta
      *
      * @param contextHandlerMeta the specified context handler meta
      */
     public static void addContextHandlerMeta(final ContextHandlerMeta contextHandlerMeta) {
+        final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
+        final Class<?> returnType = invokeHolder.getReturnType();
+        final String methodName = invokeHolder.getDeclaringClass().getName() + "#" + invokeHolder.getName();
+
+        if (!void.class.equals(returnType)) {
+            LOGGER.error("Handler method [" + methodName + "] must return void");
+            System.exit(-1);
+        }
+        final Class<?>[] exceptionTypes = invokeHolder.getExceptionTypes();
+        if (0 < exceptionTypes.length) {
+            LOGGER.error("Handler method [" + methodName + "] can not throw exceptions");
+            System.exit(-1);
+        }
+        final Class<?>[] parameterTypes = invokeHolder.getParameterTypes();
+        if (1 != parameterTypes.length) {
+            LOGGER.error("Handler method [" + methodName + "] must have one parameter with type [RequestContext]");
+            System.exit(-1);
+        }
+        final Class<?> parameterType = parameterTypes[0];
+        if (!RequestContext.class.equals(parameterType)) {
+            LOGGER.error("Handler method [" + methodName + "] must have one parameter with type [RequestContext]");
+            System.exit(-1);
+        }
+
         CONTEXT_HANDLER_METAS.add(contextHandlerMeta);
     }
 }
