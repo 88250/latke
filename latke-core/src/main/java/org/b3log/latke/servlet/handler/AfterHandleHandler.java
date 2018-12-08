@@ -32,7 +32,7 @@ import java.util.List;
  * After processing method ({@link org.b3log.latke.servlet.function.ContextHandler#handle(RequestContext)} or method annotated {@link org.b3log.latke.servlet.annotation.RequestProcessing}).
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Dec 5, 2018
+ * @version 1.0.1.0, Dec 8, 2018
  * @since 2.4.34
  */
 public class AfterHandleHandler implements Handler {
@@ -73,7 +73,7 @@ public class AfterHandleHandler implements Handler {
                 context.setRenderer(ret);
             }
 
-            return;
+            context.abort();
         }
     }
 }
