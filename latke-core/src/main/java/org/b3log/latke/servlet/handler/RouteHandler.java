@@ -200,8 +200,6 @@ public class RouteHandler implements Handler {
                     continue;
                 }
 
-                LOGGER.log(Level.DEBUG, "Added a processor method [className={0}, name={1}]", clz.getCanonicalName(), method.getName());
-
                 final ContextHandlerMeta contextHandlerMeta = new ContextHandlerMeta();
                 contextHandlerMeta.setPattern(requestProcessingMethodAnn.value());
                 contextHandlerMeta.setHttpMethod(requestProcessingMethodAnn.method());
@@ -244,5 +242,6 @@ public class RouteHandler implements Handler {
         }
 
         CONTEXT_HANDLER_METAS.add(contextHandlerMeta);
+        LOGGER.log(Level.DEBUG, "Added a processor method [" + methodName + "]");
     }
 }
