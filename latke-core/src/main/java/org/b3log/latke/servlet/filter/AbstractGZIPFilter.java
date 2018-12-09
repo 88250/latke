@@ -41,7 +41,7 @@ public abstract class AbstractGZIPFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(AbstractGZIPFilter.class);
 
     @Override
-    public void init(final FilterConfig cfg) throws ServletException {
+    public void init(final FilterConfig cfg) {
     }
 
     /**
@@ -91,8 +91,7 @@ public abstract class AbstractGZIPFilter implements Filter {
      * Determines whether the specified request URI should be skipped filter.
      *
      * <p>
-     * <b>Note</b>: This method SHOULD be invoked for all filters with pattern
-     * "/*".
+     * <b>Note</b>: This method SHOULD be invoked for all filters with pattern "/*".
      * </p>
      *
      * @param requestURI the specified request URI
@@ -132,10 +131,8 @@ public abstract class AbstractGZIPFilter implements Filter {
          * specified http servlet response.
          *
          * @param httpServletResponse the specified http servlet response
-         * @throws IOException io exception
          */
-        GZIPServletResponseWrapper(final HttpServletResponse httpServletResponse)
-                throws IOException {
+        GZIPServletResponseWrapper(final HttpServletResponse httpServletResponse) {
             super(httpServletResponse);
         }
 
