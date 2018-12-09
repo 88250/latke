@@ -96,7 +96,6 @@ public class RouteHandler implements Handler {
      * @param httpMethod the given HTTP method
      * @return MatchResult, returns {@code null} if not found
      */
-    // XXX: 使用树结构存储路由信息，提升查找效率
     public static MatchResult doMatch(final String requestURI, final String httpMethod) {
         MatchResult ret;
         final String contextPath = Latkes.getContextPath();
