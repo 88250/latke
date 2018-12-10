@@ -316,7 +316,7 @@ public final class DispatcherServlet extends HttpServlet {
         ContextHandlerMeta toContextHandlerMeta() {
             final ContextHandlerMeta ret = new ContextHandlerMeta();
             ret.setUriTemplates(uriTemplates.toArray(new String[0]));
-            ret.setHttpMethod(httpRequestMethods.toArray(new HttpMethod[0]));
+            ret.setHttpMethods(httpRequestMethods.toArray(new HttpMethod[0]));
             ret.setInvokeHolder(method);
             ret.setHandler(handler);
             ret.initProcessAdvices();

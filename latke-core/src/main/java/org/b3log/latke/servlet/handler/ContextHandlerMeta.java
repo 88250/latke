@@ -43,7 +43,7 @@ public final class ContextHandlerMeta {
     /**
      * HTTP methods.
      */
-    private HttpMethod[] httpMethod;
+    private HttpMethod[] httpMethods;
 
     /**
      * The processor method.
@@ -110,36 +110,36 @@ public final class ContextHandlerMeta {
     }
 
     /**
-     * setHttpMethod.
+     * Sets the HTTP methods with the specified HTTP methods.
      *
-     * @param httpMethod httpMethod
+     * @param httpMethods httpMethods the specified HTTP methods
      */
-    public void setHttpMethod(final HttpMethod[] httpMethod) {
-        this.httpMethod = httpMethod;
+    public void setHttpMethods(final HttpMethod[] httpMethods) {
+        this.httpMethods = httpMethods;
     }
 
     /**
-     * getHttpMethod.
+     * Get the HTTP methods.
      *
-     * @return httpMethod
+     * @return HTTP methods
      */
-    public HttpMethod[] getHttpMethod() {
-        return httpMethod;
+    public HttpMethod[] getHttpMethods() {
+        return httpMethods;
     }
 
     /**
-     * setInvokeHolder.
+     * Sets the invoke holder with the specified invoke holder.
      *
-     * @param invokeHolder invokeHolder
+     * @param invokeHolder invokeHolder the specified invoke holder
      */
     public void setInvokeHolder(final Method invokeHolder) {
         this.invokeHolder = invokeHolder;
     }
 
     /**
-     * getInvokeHolder.
+     * Gets the invoke holder.
      *
-     * @return invokeHolder
+     * @return invoke holder
      */
     public Method getInvokeHolder() {
         return invokeHolder;
