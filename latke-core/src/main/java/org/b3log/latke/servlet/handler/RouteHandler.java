@@ -326,7 +326,7 @@ public class RouteHandler implements Handler {
 
         final HttpMethod[] httpMethods = contextHandlerMeta.getHttpMethods();
         for (int i = 0; i < httpMethods.length; i++) {
-            final String httpMethod = httpMethods[i].name();
+            final String httpMethod = httpMethods[i].name().toLowerCase();
             final String[] uriTemplates = contextHandlerMeta.getUriTemplates();
             for (int j = 0; j < uriTemplates.length; j++) {
                 final String uriTemplate = uriTemplates[j];
