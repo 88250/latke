@@ -90,9 +90,29 @@ public class RouteHandler implements Handler {
     private static final Map<String, ContextHandlerMeta> TWO_SEG_CONCRETE_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
 
     /**
-     * Two segments path var URI context handler metas holder.
+     * Two segments GET path var URI context handler metas holder.
      */
-    private static final Map<String, ContextHandlerMeta> TWO_SEG_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+    private static final Map<String, ContextHandlerMeta> TWO_SEG_GET_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Two segments POST path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> TWO_SEG_POST_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Two segments PUT path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> TWO_SEG_PUT_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Two segments DELETE path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> TWO_SEG_DELETE_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Two segments other HTTP methods path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> TWO_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
 
     /**
      * Three segments concrete URI context handler metas holder.
@@ -100,9 +120,29 @@ public class RouteHandler implements Handler {
     private static final Map<String, ContextHandlerMeta> THREE_SEG_CONCRETE_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
 
     /**
-     * Three segments path var URI context handler metas holder.
+     * Three segments GET path var URI context handler metas holder.
      */
-    private static final Map<String, ContextHandlerMeta> THREE_SEG_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+    private static final Map<String, ContextHandlerMeta> THREE_SEG_GET_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Three segments POST path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> THREE_SEG_POST_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Three segments PUT path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> THREE_SEG_PUT_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Three segments DELETE path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> THREE_SEG_DELETE_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Three segments other HTTP methods path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> THREE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
 
     /**
      * Four and more segments concrete URI context handler metas holder.
@@ -110,9 +150,29 @@ public class RouteHandler implements Handler {
     private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_CONCRETE_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
 
     /**
-     * Four and more segments path var URI context handler metas holder.
+     * Four more segments GET path var URI context handler metas holder.
      */
-    private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+    private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_GET_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Four more segments POST path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_POST_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Four more segments PUT path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_PUT_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Four more segments DELETE path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_DELETE_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Four more segments other HTTP methods path var URI context handler metas holder.
+     */
+    private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
 
 
     /**
@@ -132,7 +192,7 @@ public class RouteHandler implements Handler {
         request.setAttribute(Keys.HttpRequest.START_TIME_MILLIS, startTimeMillis);
         String requestURI = getRequestURI(request);
         requestURI = StringUtils.substringAfter(requestURI, Latkes.getContextPath()); // remove servlet container context path
-        final String httpMethod = getHttpMethod(request);
+        final String httpMethod = getHttpMethod(request).toLowerCase();
         LOGGER.log(Level.DEBUG, "Request [requestURI={0}, method={1}]", requestURI, httpMethod);
 
         final MatchResult result = doMatch(requestURI, httpMethod);
@@ -164,65 +224,73 @@ public class RouteHandler implements Handler {
                     return new MatchResult(contextHandlerMeta, requestURI, httpMethod, requestURI);
                 }
 
-                for (final Map.Entry<String, ContextHandlerMeta> entry : ONE_SEG_VAR_CTX_HANDLER_METAS.entrySet()) {
-                    final String uriTemplate = entry.getKey();
-                    contextHandlerMeta = entry.getValue();
-                    ret = route(uriTemplate, requestURI, httpMethod, contextHandlerMeta);
-                    if (null != ret) {
-                        return ret;
-                    }
+                switch (httpMethod) {
+                    case "get":
+                        return route(requestURI, httpMethod, ONE_SEG_GET_VAR_CTX_HANDLER_METAS);
+                    case "post":
+                        return route(requestURI, httpMethod, ONE_SEG_POST_VAR_CTX_HANDLER_METAS);
+                    case "put":
+                        return route(requestURI, httpMethod, ONE_SEG_PUT_VAR_CTX_HANDLER_METAS);
+                    case "delete":
+                        return route(requestURI, httpMethod, ONE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
+                    default:
+                        return route(requestURI, httpMethod, ONE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
                 }
-
-                break;
             case 2:
                 contextHandlerMeta = TWO_SEG_CONCRETE_CTX_HANDLER_METAS.get(concreteKey);
                 if (null != contextHandlerMeta) {
                     return new MatchResult(contextHandlerMeta, requestURI, httpMethod, requestURI);
                 }
 
-                for (final Map.Entry<String, ContextHandlerMeta> entry : TWO_SEG_VAR_CTX_HANDLER_METAS.entrySet()) {
-                    final String uriTemplate = entry.getKey();
-                    contextHandlerMeta = entry.getValue();
-                    ret = route(uriTemplate, requestURI, httpMethod, contextHandlerMeta);
-                    if (null != ret) {
-                        return ret;
-                    }
+                switch (httpMethod) {
+                    case "get":
+                        return route(requestURI, httpMethod, TWO_SEG_GET_VAR_CTX_HANDLER_METAS);
+                    case "post":
+                        return route(requestURI, httpMethod, TWO_SEG_POST_VAR_CTX_HANDLER_METAS);
+                    case "put":
+                        return route(requestURI, httpMethod, TWO_SEG_PUT_VAR_CTX_HANDLER_METAS);
+                    case "delete":
+                        return route(requestURI, httpMethod, TWO_SEG_DELETE_VAR_CTX_HANDLER_METAS);
+                    default:
+                        return route(requestURI, httpMethod, TWO_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
                 }
-
-                break;
             case 3:
                 contextHandlerMeta = THREE_SEG_CONCRETE_CTX_HANDLER_METAS.get(concreteKey);
                 if (null != contextHandlerMeta) {
                     return new MatchResult(contextHandlerMeta, requestURI, httpMethod, requestURI);
                 }
 
-                for (final Map.Entry<String, ContextHandlerMeta> entry : THREE_SEG_VAR_CTX_HANDLER_METAS.entrySet()) {
-                    final String uriTemplate = entry.getKey();
-                    contextHandlerMeta = entry.getValue();
-                    ret = route(uriTemplate, requestURI, httpMethod, contextHandlerMeta);
-                    if (null != ret) {
-                        return ret;
-                    }
+                switch (httpMethod) {
+                    case "get":
+                        return route(requestURI, httpMethod, THREE_SEG_GET_VAR_CTX_HANDLER_METAS);
+                    case "post":
+                        return route(requestURI, httpMethod, THREE_SEG_POST_VAR_CTX_HANDLER_METAS);
+                    case "put":
+                        return route(requestURI, httpMethod, THREE_SEG_PUT_VAR_CTX_HANDLER_METAS);
+                    case "delete":
+                        return route(requestURI, httpMethod, THREE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
+                    default:
+                        return route(requestURI, httpMethod, THREE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
                 }
-
-                break;
             default:
                 contextHandlerMeta = FOUR_MORE_SEG_CONCRETE_CTX_HANDLER_METAS.get(concreteKey);
                 if (null != contextHandlerMeta) {
                     return new MatchResult(contextHandlerMeta, requestURI, httpMethod, requestURI);
                 }
 
-                for (final Map.Entry<String, ContextHandlerMeta> entry : FOUR_MORE_SEG_VAR_CTX_HANDLER_METAS.entrySet()) {
-                    final String uriTemplate = entry.getKey();
-                    contextHandlerMeta = entry.getValue();
-                    ret = route(uriTemplate, requestURI, httpMethod, contextHandlerMeta);
-                    if (null != ret) {
-                        return ret;
-                    }
+                switch (httpMethod) {
+                    case "get":
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_GET_VAR_CTX_HANDLER_METAS);
+                    case "post":
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_POST_VAR_CTX_HANDLER_METAS);
+                    case "put":
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_PUT_VAR_CTX_HANDLER_METAS);
+                    case "delete":
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
+                    default:
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
                 }
         }
-
-        return null;
     }
 
 
@@ -300,15 +368,60 @@ public class RouteHandler implements Handler {
 
                             break;
                         case 2:
-                            TWO_SEG_VAR_CTX_HANDLER_METAS.put(key, contextHandlerMeta);
+                            switch (httpMethod.toLowerCase()) {
+                                case "get":
+                                    TWO_SEG_GET_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "post":
+                                    TWO_SEG_POST_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "put":
+                                    TWO_SEG_PUT_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "delete":
+                                    TWO_SEG_DELETE_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                default:
+                                    TWO_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                            }
 
                             break;
                         case 3:
-                            THREE_SEG_VAR_CTX_HANDLER_METAS.put(key, contextHandlerMeta);
+                            switch (httpMethod.toLowerCase()) {
+                                case "get":
+                                    THREE_SEG_GET_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "post":
+                                    THREE_SEG_POST_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "put":
+                                    THREE_SEG_PUT_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "delete":
+                                    THREE_SEG_DELETE_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                default:
+                                    THREE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                            }
 
                             break;
                         default:
-                            FOUR_MORE_SEG_VAR_CTX_HANDLER_METAS.put(key, contextHandlerMeta);
+                            switch (httpMethod.toLowerCase()) {
+                                case "get":
+                                    FOUR_MORE_SEG_GET_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "post":
+                                    FOUR_MORE_SEG_POST_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "put":
+                                    FOUR_MORE_SEG_PUT_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                case "delete":
+                                    FOUR_MORE_SEG_DELETE_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                                    break;
+                                default:
+                                    FOUR_MORE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
+                            }
                     }
                 }
             }
@@ -318,24 +431,30 @@ public class RouteHandler implements Handler {
     }
 
     /**
-     * Routes the request specified by the given URI template, context handler meta, request URI and HTTP method.
+     * Routes the specified request URI containing path vars with the specified HTTP method and path var context handler metas holder.
      *
-     * @param uriTemplate        the given URI template
-     * @param requestURI         the given request URI
-     * @param method             the given HTTP method
-     * @param contextHandlerMeta the given context handler meta
-     * @return MatchResult, returns {@code null} if not found
+     * @param requestURI                       the specified request URI
+     * @param httpMethod                       the specified HTTP method
+     * @param pathVarContextHandlerMetasHolder the specified path var context handler metas holder
+     * @return match result, returns {@code null} if not found
      */
-    private static MatchResult route(final String uriTemplate, final String requestURI, final String method, final ContextHandlerMeta contextHandlerMeta) {
-        final Map<String, String> resolveResult = UriTemplates.resolve(requestURI, uriTemplate);
-        if (null == resolveResult) {
-            return null;
+    private static MatchResult route(final String requestURI, final String httpMethod, final Map<String, ContextHandlerMeta> pathVarContextHandlerMetasHolder) {
+        MatchResult ret;
+        for (final Map.Entry<String, ContextHandlerMeta> entry : pathVarContextHandlerMetasHolder.entrySet()) {
+            final String uriTemplate = entry.getKey();
+            final ContextHandlerMeta contextHandlerMeta = entry.getValue();
+            final Map<String, String> resolveResult = UriTemplates.resolve(requestURI, uriTemplate);
+            if (null == resolveResult) {
+                continue;
+            }
+
+            ret = new MatchResult(contextHandlerMeta, requestURI, httpMethod, uriTemplate);
+            ret.setPathVars(resolveResult);
+
+            return ret;
         }
 
-        final MatchResult ret = new MatchResult(contextHandlerMeta, requestURI, method, uriTemplate);
-        ret.setPathVars(resolveResult);
-
-        return ret;
+        return null;
     }
 
     /**
