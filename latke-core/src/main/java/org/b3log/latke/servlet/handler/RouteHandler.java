@@ -30,10 +30,9 @@ import org.b3log.latke.util.UriTemplates;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Route handler
@@ -56,9 +55,45 @@ public class RouteHandler implements Handler {
     public static final String MATCH_RESULT = "MATCH_RESULT";
 
     /**
-     * All context handler metas holder for routing.
+     * One segment concrete URI context handler metas holder.
      */
-    private static final List<ContextHandlerMeta> CONTEXT_HANDLER_METAS = new ArrayList<>();
+    private static final Map<String, String> ONE_SEG_CONCRETE_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * One segment path var URI context handler metas holder.
+     */
+    private static final Map<String, String> ONE_SEG_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Two segments concrete URI context handler metas holder.
+     */
+    private static final Map<String, String> TWO_SEG_CONCRETE_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Two segments path var URI context handler metas holder.
+     */
+    private static final Map<String, String> TWO_SEG_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Three segments concrete URI context handler metas holder.
+     */
+    private static final Map<String, String> THREE_SEG_CONCRETE_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Three segments path var URI context handler metas holder.
+     */
+    private static final Map<String, String> THREE_SEG_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Four and more segments concrete URI context handler metas holder.
+     */
+    private static final Map<String, String> FOUR_MORE_SEG_CONCRETE_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
+    /**
+     * Four and more segments path var URI context handler metas holder.
+     */
+    private static final Map<String, String> FOUR_MORE_SEG_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
+
 
     /**
      * Public constructor..
@@ -104,10 +139,10 @@ public class RouteHandler implements Handler {
         for (final ContextHandlerMeta contextHandlerMeta : CONTEXT_HANDLER_METAS) {
             for (final HttpMethod httpRequestMethod : contextHandlerMeta.getHttpMethod()) {
                 if (httpMethod.equals(httpRequestMethod.toString())) {
-                    final String[] uriPatterns = contextHandlerMeta.getPattern();
-                    for (final String uriPattern : uriPatterns) {
-                        if (uriPattern.equals(requestURI)) {
-                            return new MatchResult(contextHandlerMeta, requestURI, httpMethod, uriPattern);
+                    final String[] uriTemplates = contextHandlerMeta.getUriTemplates();
+                    for (final String uriTemplate : uriTemplates) {
+                        if (uriTemplate.equals(requestURI)) {
+                            return new MatchResult(contextHandlerMeta, requestURI, httpMethod, uriTemplate);
                         }
                     }
                 }
@@ -118,9 +153,9 @@ public class RouteHandler implements Handler {
         for (final ContextHandlerMeta contextHandlerMeta : CONTEXT_HANDLER_METAS) {
             for (final HttpMethod httpRequestMethod : contextHandlerMeta.getHttpMethod()) {
                 if (httpMethod.equals(httpRequestMethod.toString())) {
-                    final String[] uriPatterns = contextHandlerMeta.getPattern();
-                    for (final String uriPattern : uriPatterns) {
-                        ret = route(contextPath + uriPattern, requestURI, httpMethod, contextHandlerMeta);
+                    final String[] uriTemplates = contextHandlerMeta.getUriTemplates();
+                    for (final String uriTemplate : uriTemplates) {
+                        ret = route(contextPath + uriTemplate, requestURI, httpMethod, contextHandlerMeta);
                         if (null != ret) {
                             return ret;
                         }
@@ -133,21 +168,21 @@ public class RouteHandler implements Handler {
     }
 
     /**
-     * Routes the request specified by the given URI pattern, context handler meta, request URI and HTTP method.
+     * Routes the request specified by the given URI template, context handler meta, request URI and HTTP method.
      *
-     * @param uriPattern         the given URI pattern
+     * @param uriTemplate         the given URI template
      * @param requestURI         the given request URI
      * @param method             the given HTTP method
      * @param contextHandlerMeta the given context handler meta
      * @return MatchResult, returns {@code null} if not found
      */
-    private static MatchResult route(final String uriPattern, final String requestURI, final String method, final ContextHandlerMeta contextHandlerMeta) {
-        final Map<String, String> resolveResult = UriTemplates.resolve(requestURI, uriPattern);
+    private static MatchResult route(final String uriTemplate, final String requestURI, final String method, final ContextHandlerMeta contextHandlerMeta) {
+        final Map<String, String> resolveResult = UriTemplates.resolve(requestURI, uriTemplate);
         if (null == resolveResult) {
             return null;
         }
 
-        final MatchResult ret = new MatchResult(contextHandlerMeta, requestURI, method, uriPattern);
+        final MatchResult ret = new MatchResult(contextHandlerMeta, requestURI, method, uriTemplate);
         ret.setPathVars(resolveResult);
 
         return ret;
@@ -200,7 +235,7 @@ public class RouteHandler implements Handler {
                 }
 
                 final ContextHandlerMeta contextHandlerMeta = new ContextHandlerMeta();
-                contextHandlerMeta.setPattern(requestProcessingMethodAnn.value());
+                contextHandlerMeta.setUriTemplates(requestProcessingMethodAnn.value());
                 contextHandlerMeta.setHttpMethod(requestProcessingMethodAnn.method());
                 contextHandlerMeta.setInvokeHolder(method);
                 contextHandlerMeta.initProcessAdvices();
@@ -241,6 +276,10 @@ public class RouteHandler implements Handler {
         }
 
         CONTEXT_HANDLER_METAS.add(contextHandlerMeta);
+
+        contextHandlerMeta.getUriTemplates()
+
+
         LOGGER.log(Level.DEBUG, "Added a processor method [" + methodName + "]");
     }
 }

@@ -116,45 +116,45 @@ public final class DispatcherServlet extends HttpServlet {
     /**
      * HTTP DELETE routing.
      *
-     * @param uriPattern the specified request URI pattern
+     * @param uriTemplate the specified request URI template
      * @param handler    the specified handler
      * @return router
      */
-    public static Router delete(final String uriPattern, final ContextHandler handler) {
-        return route().delete(uriPattern, handler);
+    public static Router delete(final String uriTemplate, final ContextHandler handler) {
+        return route().delete(uriTemplate, handler);
     }
 
     /**
      * HTTP PUT routing.
      *
-     * @param uriPattern the specified request URI pattern
+     * @param uriTemplate the specified request URI template
      * @param handler    the specified handler
      * @return router
      */
-    public static Router put(final String uriPattern, final ContextHandler handler) {
-        return route().put(uriPattern, handler);
+    public static Router put(final String uriTemplate, final ContextHandler handler) {
+        return route().put(uriTemplate, handler);
     }
 
     /**
      * HTTP GET routing.
      *
-     * @param uriPattern the specified request URI pattern
+     * @param uriTemplate the specified request URI template
      * @param handler    the specified handler
      * @return router
      */
-    public static Router get(final String uriPattern, final ContextHandler handler) {
-        return route().get(uriPattern, handler);
+    public static Router get(final String uriTemplate, final ContextHandler handler) {
+        return route().get(uriTemplate, handler);
     }
 
     /**
      * HTTP POST routing.
      *
-     * @param uriPattern the specified request URI pattern
+     * @param uriTemplate the specified request URI template
      * @param handler    the specified handler
      * @return router
      */
-    public static Router post(final String uriPattern, final ContextHandler handler) {
-        return route().post(uriPattern, handler);
+    public static Router post(final String uriTemplate, final ContextHandler handler) {
+        return route().post(uriTemplate, handler);
     }
 
     /**
@@ -186,54 +186,54 @@ public final class DispatcherServlet extends HttpServlet {
      * @version 1.0.0.0, Dec 2, 2018
      */
     public static class Router {
-        private List<String> uriPatterns = new ArrayList<>();
+        private List<String> uriTemplates = new ArrayList<>();
         private List<HttpMethod> httpRequestMethods = new ArrayList<>();
         private ContextHandler handler;
         private Method method;
 
-        public Router delete(final String uriPattern, final ContextHandler handler) {
-            return delete(new String[]{uriPattern}, handler);
+        public Router delete(final String uriTemplate, final ContextHandler handler) {
+            return delete(new String[]{uriTemplate}, handler);
         }
 
-        public Router delete(final String[] uriPatterns, final ContextHandler handler) {
-            return delete().uris(uriPatterns).handler(handler);
+        public Router delete(final String[] uriTemplates, final ContextHandler handler) {
+            return delete().uris(uriTemplates).handler(handler);
         }
 
-        public Router put(final String uriPattern, final ContextHandler handler) {
-            return put(new String[]{uriPattern}, handler);
+        public Router put(final String uriTemplate, final ContextHandler handler) {
+            return put(new String[]{uriTemplate}, handler);
         }
 
-        public Router put(final String[] uriPatterns, final ContextHandler handler) {
-            return put().uris(uriPatterns).handler(handler);
+        public Router put(final String[] uriTemplates, final ContextHandler handler) {
+            return put().uris(uriTemplates).handler(handler);
         }
 
-        public Router post(final String uriPattern, final ContextHandler handler) {
-            return post(new String[]{uriPattern}, handler);
+        public Router post(final String uriTemplate, final ContextHandler handler) {
+            return post(new String[]{uriTemplate}, handler);
         }
 
-        public Router post(final String[] uriPatterns, final ContextHandler handler) {
-            return post().uris(uriPatterns).handler(handler);
+        public Router post(final String[] uriTemplates, final ContextHandler handler) {
+            return post().uris(uriTemplates).handler(handler);
         }
 
-        public Router get(final String uriPattern, final ContextHandler handler) {
-            return get(new String[]{uriPattern}, handler);
+        public Router get(final String uriTemplate, final ContextHandler handler) {
+            return get(new String[]{uriTemplate}, handler);
         }
 
-        public Router get(final String[] uriPatterns, final ContextHandler handler) {
-            return get().uris(uriPatterns).handler(handler);
+        public Router get(final String[] uriTemplates, final ContextHandler handler) {
+            return get().uris(uriTemplates).handler(handler);
         }
 
-        public Router uris(final String[] uriPatterns) {
-            for (int i = 0; i < uriPatterns.length; i++) {
-                uri(uriPatterns[i]);
+        public Router uris(final String[] uriTemplates) {
+            for (int i = 0; i < uriTemplates.length; i++) {
+                uri(uriTemplates[i]);
             }
 
             return this;
         }
 
-        public Router uri(final String uriPattern) {
-            if (!uriPatterns.contains(uriPattern)) {
-                uriPatterns.add(uriPattern);
+        public Router uri(final String uriTemplate) {
+            if (!uriTemplates.contains(uriTemplate)) {
+                uriTemplates.add(uriTemplate);
             }
 
             return this;
@@ -315,7 +315,7 @@ public final class DispatcherServlet extends HttpServlet {
 
         ContextHandlerMeta toContextHandlerMeta() {
             final ContextHandlerMeta ret = new ContextHandlerMeta();
-            ret.setPattern(uriPatterns.toArray(new String[0]));
+            ret.setUriTemplates(uriTemplates.toArray(new String[0]));
             ret.setHttpMethod(httpRequestMethods.toArray(new HttpMethod[0]));
             ret.setInvokeHolder(method);
             ret.setHandler(handler);

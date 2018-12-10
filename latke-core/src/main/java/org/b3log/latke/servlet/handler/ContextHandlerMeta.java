@@ -30,15 +30,15 @@ import java.util.List;
  * Context handler metadata.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Dec 4, 2018
+ * @version 1.0.0.4, Dec 10, 2018
  * @since 2.4.34
  */
 public final class ContextHandlerMeta {
 
     /**
-     * Patterns.
+     * URI templates.
      */
-    private String[] pattern;
+    private String[] uriTemplates;
 
     /**
      * HTTP methods.
@@ -92,21 +92,21 @@ public final class ContextHandlerMeta {
     }
 
     /**
-     * setPattern.
+     * Set the URI templates with the specified URI templates.
      *
-     * @param pattern pattern
+     * @param uriTemplates the specified URI templates
      */
-    public void setPattern(final String[] pattern) {
-        this.pattern = pattern;
+    public void setUriTemplates(final String[] uriTemplates) {
+        this.uriTemplates = uriTemplates;
     }
 
     /**
-     * getPattern.
+     * Get the URI templates.
      *
-     * @return pattern
+     * @return URI templates
      */
-    public String[] getPattern() {
-        return pattern;
+    public String[] getUriTemplates() {
+        return uriTemplates;
     }
 
     /**

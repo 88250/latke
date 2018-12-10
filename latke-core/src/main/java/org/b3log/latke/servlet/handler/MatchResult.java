@@ -37,19 +37,19 @@ public final class MatchResult {
     private ContextHandlerMeta contextHandlerMeta;
 
     /**
-     * requestURI.
+     * Request URI.
      */
     private String requestURI;
 
     /**
-     * matchedMethod: http-method.
+     * Matched HTTP method.
      */
     private String matchedMethod;
 
     /**
-     * the real matchedPattern in processors.
+     * Matched URI template.
      */
-    private String matchedPattern;
+    private String matchedUriTemplate;
 
     /**
      * URI template name-args mappings.
@@ -65,22 +65,22 @@ public final class MatchResult {
      * @param contextHandlerMeta context handler meta
      * @param requestURI         requestURI from request
      * @param matchedMethod      matched HTTP method
-     * @param matchedPattern     matched pattern
+     * @param matchedUriTemplate matched URI template
      */
-    MatchResult(final ContextHandlerMeta contextHandlerMeta, final String requestURI, final String matchedMethod, final String matchedPattern) {
+    MatchResult(final ContextHandlerMeta contextHandlerMeta, final String requestURI, final String matchedMethod, final String matchedUriTemplate) {
         this.contextHandlerMeta = contextHandlerMeta;
         this.requestURI = requestURI;
         this.matchedMethod = matchedMethod;
-        this.matchedPattern = matchedPattern;
+        this.matchedUriTemplate = matchedUriTemplate;
     }
 
     /**
-     * Gets the matched pattern.
+     * Gets the matched URI template.
      *
-     * @return matched pattern
+     * @return matched URI template
      */
-    public String getMatchedPattern() {
-        return matchedPattern;
+    public String getMatchedUriTemplate() {
+        return matchedUriTemplate;
     }
 
     /**

@@ -23,8 +23,7 @@ import java.lang.annotation.*;
  * Indicates that an annotated method for HTTP servlet request processing.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
- * @version 1.0.0.6, Dec 4, 2018
+ * @version 1.0.0.7, Dec 10, 2018
  * @see RequestProcessor
  */
 @Target(ElementType.METHOD)
@@ -33,7 +32,7 @@ import java.lang.annotation.*;
 public @interface RequestProcessing {
 
     /**
-     * The dispatching URI path patterns of a request.
+     * The dispatching URI templates of a request.
      *
      * @return values
      */
