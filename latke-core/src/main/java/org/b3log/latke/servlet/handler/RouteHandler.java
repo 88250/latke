@@ -225,13 +225,13 @@ public class RouteHandler implements Handler {
                 }
 
                 switch (httpMethod) {
-                    case "get":
+                    case "GET":
                         return route(requestURI, httpMethod, ONE_SEG_GET_VAR_CTX_HANDLER_METAS);
-                    case "post":
+                    case "POST":
                         return route(requestURI, httpMethod, ONE_SEG_POST_VAR_CTX_HANDLER_METAS);
-                    case "put":
+                    case "PUT":
                         return route(requestURI, httpMethod, ONE_SEG_PUT_VAR_CTX_HANDLER_METAS);
-                    case "delete":
+                    case "DELETE":
                         return route(requestURI, httpMethod, ONE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
                     default:
                         return route(requestURI, httpMethod, ONE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
@@ -243,13 +243,13 @@ public class RouteHandler implements Handler {
                 }
 
                 switch (httpMethod) {
-                    case "get":
+                    case "GET":
                         return route(requestURI, httpMethod, TWO_SEG_GET_VAR_CTX_HANDLER_METAS);
-                    case "post":
+                    case "POST":
                         return route(requestURI, httpMethod, TWO_SEG_POST_VAR_CTX_HANDLER_METAS);
-                    case "put":
+                    case "PUT":
                         return route(requestURI, httpMethod, TWO_SEG_PUT_VAR_CTX_HANDLER_METAS);
-                    case "delete":
+                    case "DELETE":
                         return route(requestURI, httpMethod, TWO_SEG_DELETE_VAR_CTX_HANDLER_METAS);
                     default:
                         return route(requestURI, httpMethod, TWO_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
@@ -261,13 +261,13 @@ public class RouteHandler implements Handler {
                 }
 
                 switch (httpMethod) {
-                    case "get":
+                    case "GET":
                         return route(requestURI, httpMethod, THREE_SEG_GET_VAR_CTX_HANDLER_METAS);
-                    case "post":
+                    case "POST":
                         return route(requestURI, httpMethod, THREE_SEG_POST_VAR_CTX_HANDLER_METAS);
-                    case "put":
+                    case "PUT":
                         return route(requestURI, httpMethod, THREE_SEG_PUT_VAR_CTX_HANDLER_METAS);
-                    case "delete":
+                    case "DELETE":
                         return route(requestURI, httpMethod, THREE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
                     default:
                         return route(requestURI, httpMethod, THREE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
@@ -279,13 +279,13 @@ public class RouteHandler implements Handler {
                 }
 
                 switch (httpMethod) {
-                    case "get":
+                    case "GET":
                         return route(requestURI, httpMethod, FOUR_MORE_SEG_GET_VAR_CTX_HANDLER_METAS);
-                    case "post":
+                    case "POST":
                         return route(requestURI, httpMethod, FOUR_MORE_SEG_POST_VAR_CTX_HANDLER_METAS);
-                    case "put":
+                    case "PUT":
                         return route(requestURI, httpMethod, FOUR_MORE_SEG_PUT_VAR_CTX_HANDLER_METAS);
-                    case "delete":
+                    case "DELETE":
                         return route(requestURI, httpMethod, FOUR_MORE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
                     default:
                         return route(requestURI, httpMethod, FOUR_MORE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
