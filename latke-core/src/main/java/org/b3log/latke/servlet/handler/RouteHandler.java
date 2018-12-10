@@ -192,7 +192,7 @@ public class RouteHandler implements Handler {
         request.setAttribute(Keys.HttpRequest.START_TIME_MILLIS, startTimeMillis);
         String requestURI = getRequestURI(request);
         requestURI = StringUtils.substringAfter(requestURI, Latkes.getContextPath()); // remove servlet container context path
-        final String httpMethod = getHttpMethod(request).toLowerCase();
+        final String httpMethod = getHttpMethod(request);
         LOGGER.log(Level.DEBUG, "Request [requestURI={0}, method={1}]", requestURI, httpMethod);
 
         final MatchResult result = doMatch(requestURI, httpMethod);
@@ -326,7 +326,7 @@ public class RouteHandler implements Handler {
 
         final HttpMethod[] httpMethods = contextHandlerMeta.getHttpMethods();
         for (int i = 0; i < httpMethods.length; i++) {
-            final String httpMethod = httpMethods[i].name().toLowerCase();
+            final String httpMethod = httpMethods[i].name();
             final String[] uriTemplates = contextHandlerMeta.getUriTemplates();
             for (int j = 0; j < uriTemplates.length; j++) {
                 final String uriTemplate = uriTemplates[j];
@@ -349,17 +349,17 @@ public class RouteHandler implements Handler {
                 } else { // URI templates contain path vars
                     switch (segs) {
                         case 1:
-                            switch (httpMethod.toLowerCase()) {
-                                case "get":
+                            switch (httpMethod) {
+                                case "GET":
                                     ONE_SEG_GET_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "post":
+                                case "POST":
                                     ONE_SEG_POST_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "put":
+                                case "PUT":
                                     ONE_SEG_PUT_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "delete":
+                                case "DELETE":
                                     ONE_SEG_DELETE_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
                                 default:
@@ -368,17 +368,17 @@ public class RouteHandler implements Handler {
 
                             break;
                         case 2:
-                            switch (httpMethod.toLowerCase()) {
-                                case "get":
+                            switch (httpMethod) {
+                                case "GET":
                                     TWO_SEG_GET_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "post":
+                                case "POST":
                                     TWO_SEG_POST_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "put":
+                                case "PUT":
                                     TWO_SEG_PUT_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "delete":
+                                case "DELETE":
                                     TWO_SEG_DELETE_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
                                 default:
@@ -387,17 +387,17 @@ public class RouteHandler implements Handler {
 
                             break;
                         case 3:
-                            switch (httpMethod.toLowerCase()) {
-                                case "get":
+                            switch (httpMethod) {
+                                case "GET":
                                     THREE_SEG_GET_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "post":
+                                case "POST":
                                     THREE_SEG_POST_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "put":
+                                case "PUT":
                                     THREE_SEG_PUT_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "delete":
+                                case "DELETE":
                                     THREE_SEG_DELETE_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
                                 default:
@@ -406,17 +406,17 @@ public class RouteHandler implements Handler {
 
                             break;
                         default:
-                            switch (httpMethod.toLowerCase()) {
-                                case "get":
+                            switch (httpMethod) {
+                                case "GET":
                                     FOUR_MORE_SEG_GET_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "post":
+                                case "POST":
                                     FOUR_MORE_SEG_POST_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "put":
+                                case "PUT":
                                     FOUR_MORE_SEG_PUT_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
-                                case "delete":
+                                case "DELETE":
                                     FOUR_MORE_SEG_DELETE_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                                     break;
                                 default:
