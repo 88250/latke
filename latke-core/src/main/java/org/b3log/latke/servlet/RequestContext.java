@@ -39,7 +39,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.0, Dec 3, 2018
+ * @version 1.3.0.1, Dec 17, 2018
  */
 public final class RequestContext {
 
@@ -381,8 +381,8 @@ public final class RequestContext {
      * @return this context
      */
     public RequestContext renderTrueResult() {
-        if (this.renderer instanceof JsonRenderer) {
-            final JsonRenderer r = (JsonRenderer) this.renderer;
+        if (renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) renderer;
 
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.STATUS_CODE, true);
@@ -397,8 +397,8 @@ public final class RequestContext {
      * @return this context
      */
     public RequestContext renderFalseResult() {
-        if (this.renderer instanceof JsonRenderer) {
-            final JsonRenderer r = (JsonRenderer) this.renderer;
+        if (renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) renderer;
 
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.STATUS_CODE, false);
@@ -414,8 +414,8 @@ public final class RequestContext {
      * @return this context
      */
     public RequestContext renderMsg(final String msg) {
-        if (this.renderer instanceof JsonRenderer) {
-            final JsonRenderer r = (JsonRenderer) this.renderer;
+        if (renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) renderer;
 
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.MSG, msg);
@@ -432,8 +432,8 @@ public final class RequestContext {
      * @return this context
      */
     public RequestContext renderJSONValue(final String name, final Object obj) {
-        if (this.renderer instanceof JsonRenderer) {
-            final JsonRenderer r = (JsonRenderer) this.renderer;
+        if (renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) renderer;
 
             final JSONObject ret = r.getJSONObject();
             ret.put(name, obj);
@@ -451,7 +451,8 @@ public final class RequestContext {
                 handlers.get(handleIndex).handle(this);
             }
         } catch (final Exception e) {
-            this.setRenderer(new Http500Renderer(e));
+            LOGGER.log(Level.ERROR, "Handler process failed", e);
+            setRenderer(new Http500Renderer(e));
         }
     }
 
