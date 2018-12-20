@@ -39,7 +39,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.1, Dec 17, 2018
+ * @version 1.3.0.2, Dec 20, 2018
  */
 public final class RequestContext {
 
@@ -233,7 +233,13 @@ public final class RequestContext {
      * @return parameter, returns {@code null} if not found
      */
     public String param(final String name) {
-        return request.getParameter(name);
+        try {
+            return request.getParameter(name);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Can't parse request parameter [uri=" + request.getRequestURI() + ", method=" + request.getMethod() + ", parameterName=" + name + "]: " + e.getMessage());
+
+            return null;
+        }
     }
 
     /**
