@@ -875,7 +875,7 @@ public final class Latkes {
 
             return ret.getProperty("name");
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Read skin configuration error[msg={0}]", e.getMessage());
+            LOGGER.log(Level.ERROR, "Read skin [" + skinDirName + "]'s  configuration failed: " + e.getMessage());
 
             return null;
         }
