@@ -138,6 +138,20 @@ public final class RequestContext {
     }
 
     /**
+     * Gets the data model of renderer bound with this context.
+     *
+     * @return data model, returns {@code null} if not found
+     */
+    public Map<String, Object> getDataModel() {
+        final AbstractResponseRenderer renderer = getRenderer();
+        if (null == renderer) {
+            return null;
+        }
+
+        return renderer.getRenderDataModel();
+    }
+
+    /**
      * Gets the remote address of request.
      *
      * @return remote address
