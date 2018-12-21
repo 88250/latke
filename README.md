@@ -35,9 +35,7 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 
 ## 控制器层用法
 
-### 请求路由
-
-**注解声明式**
+**注解声明式路由**
 
 ```java
 @RequestProcessing("/")
@@ -47,14 +45,13 @@ public void index(final RequestContext context) {
     dataModel.put("greeting", "Hello, Latke!");
 }
 ```
-**函数式**
+
+**函数式路由**
 
 ```java
 DispatcherServlet.post("/register", registerProcessor::register);
 DispatcherServlet.mapping();
 ```
-
-### 请求参数
 
 **路径变量和查询字符串**
 
@@ -73,7 +70,7 @@ public void paraPathVar(final RequestContext context) {
 final JSONObject requestJSON = context.requestJSON();
 ```
 
-### Servlet 封装
+**Servlet 封装**
 
 ```java
 final String remoteAddr = context.remoteAddr();
@@ -85,7 +82,7 @@ final HttpServletRequest request = context.getRequest();
 final HttpServletResponse response = context.getResponse();
 ```
 
-### 服务层用法
+## 服务层用法
 
 **依赖注入、事务**
 
@@ -120,7 +117,7 @@ public class UserService {
 }
 ```
 
-### 持久层用法
+## 持久层用法
 
 **构造 ORM**
 
