@@ -65,7 +65,7 @@ public void paraPathVar(final RequestContext context) {
 }
 ```
 
-### Servlet Request 封装
+### Servlet 封装
 
 ```java
 final String remoteAddr = context.remoteAddr();
@@ -79,7 +79,7 @@ final HttpServletResponse response = context.getResponse();
 
 ### 服务层用法
 
-** 依赖注入、事务**
+**依赖注入、事务**
 
 ```java
 @Service
@@ -103,7 +103,7 @@ public class UserService {
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Saves user failed", e);
 
-            // Throws an exception to rollback transaction
+            // 抛出异常后框架将回滚事务
             throw new IllegalStateException("Saves user failed");
         }
 
