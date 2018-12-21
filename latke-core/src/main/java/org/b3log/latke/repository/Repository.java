@@ -26,7 +26,7 @@ import java.util.Map;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.4.0.1, Nov 4, 2018
+ * @version 1.5.0.0, Dec 21, 2018
  */
 public interface Repository {
 
@@ -123,7 +123,7 @@ public interface Repository {
     JSONObject get(final Query query) throws RepositoryException;
 
     /**
-     * Gets json objects by the specified query. Calling this interface just returns result object list, no pagination info.
+     * Get json objects by the specified query. Calling this interface just returns result object list, no pagination info.
      *
      * @param query the specified query
      * @return a list of result json object, returns an empty list if not found
@@ -133,6 +133,22 @@ public interface Repository {
         final JSONObject result = get(query);
 
         return CollectionUtils.jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+    }
+
+    /**
+     * Gets the first result json object by the specified query.
+     *
+     * @param query the specified query
+     * @return the first record in the query result list, returns {@code null} if not found
+     * @throws RepositoryException repository exception
+     */
+    default JSONObject getFirst(final Query query) throws RepositoryException {
+        final List<JSONObject> records = getList(query);
+        if (records.isEmpty()) {
+            return null;
+        }
+
+        return records.get(0);
     }
 
     /**
