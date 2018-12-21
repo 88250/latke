@@ -56,6 +56,8 @@ DispatcherServlet.mapping();
 
 ### 请求参数
 
+**路径变量和查询字符串**
+
 ```java
 @RequestProcessing("/var/{pathVar}")
 public void paraPathVar(final RequestContext context) {
@@ -63,6 +65,12 @@ public void paraPathVar(final RequestContext context) {
     final String pathVar = context.pathVar("pathVar");
     context.renderJSON(new JSONObject().put("paraVar", paraVar).put("pathVar", pathVar));
 }
+```
+
+**JSON 解析**
+
+```java
+final JSONObject requestJSON = context.requestJSON();
 ```
 
 ### Servlet 封装
