@@ -33,6 +33,149 @@ Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](htt
 </dependency>
 ```
 
+## 控制器层用法
+
+### 请求路由
+
+**注解声明式**
+
+```java
+@RequestProcessing("/")
+public void index(final RequestContext context) {
+    context.setRenderer(new SimpleFMRenderer("index.ftl"));
+    final Map<String, Object> dataModel = context.getRenderer().getRenderDataModel();
+    dataModel.put("greeting", "Hello, Latke!");
+}
+```
+**函数式**
+
+```java
+DispatcherServlet.post("/register", registerProcessor::register);
+DispatcherServlet.mapping();
+```
+
+### 请求参数
+
+```java
+@RequestProcessing("/var/{pathVar}")
+public void paraPathVar(final RequestContext context) {
+    final String paraVar = context.param("paraVar");
+    final String pathVar = context.pathVar("pathVar");
+    context.renderJSON(new JSONObject().put("paraVar", paraVar).put("pathVar", pathVar));
+}
+```
+
+### Servlet Request 封装
+
+```java
+final String remoteAddr = context.remoteAddr();
+final String requestURI = context.requestURI();
+final Object att = context.attr("name");
+final String method = context.method();
+context.sendRedirect("https://b3log.org");
+final HttpServletRequest request = context.getRequest();
+final HttpServletResponse response = context.getResponse();
+```
+
+### 服务层用法
+
+** 依赖注入、事务**
+
+```java
+@Service
+public class UserService {
+
+    private static final Logger LOGGER = Logger.getLogger(UserService.class);
+
+    @Inject
+    private UserRepository userRepository;
+
+    @Transactional
+    public void saveUser(final String name, final int age) {
+        final JSONObject user = new JSONObject();
+        user.put("name", name);
+        user.put("age", age);
+
+        String userId;
+
+        try {
+            userId = userRepository.add(user);
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Saves user failed", e);
+
+            // Throws an exception to rollback transaction
+            throw new IllegalStateException("Saves user failed");
+        }
+
+        LOGGER.log(Level.INFO, "Saves a user successfully [userId={0}]", userId);
+    }
+}
+```
+
+### 持久层用法
+
+**构造 ORM**
+
+```java
+@Repository
+public class UserRepository extends AbstractRepository {
+
+    public UserRepository() {
+        super("user");
+    }
+}
+```
+
+**单表 CRUD**
+
+```java
+public interface Repository {
+    String add(final JSONObject jsonObject) throws RepositoryException;
+    void update(final String id, final JSONObject jsonObject) throws RepositoryException;
+    void remove(final String id) throws RepositoryException;
+    void remove(final Query query) throws RepositoryException;
+    JSONObject get(final String id) throws RepositoryException;
+    long count(final Query query) throws RepositoryException;
+}
+```
+
+**条件查询**
+
+```java
+public JSONObject getByName(final String name) throws RepositoryException  {
+    final List<JSONObject> records = getList(new Query().setFilter(new PropertyFilter("name", FilterOperator.EQUAL, name)));
+    if (records.isEmpty()) {
+        return null;
+    }
+
+    return records.get(0);
+}
+```
+
+**分页查询**
+
+```java
+new Query().setCurrentPageNum(1).setPageSize(50)
+```
+
+**按字段排序**
+
+```java
+new Query().addSort("name", SortDirection.DESCENDING);
+```
+
+**仅获取需要字段**
+
+```java
+new Query().addProjection("name", String.class);
+```
+
+**原生 SQL**
+
+```java
+final List<JSONObject> records = select("SELECT * FROM `user` WHERE `name` = ?", name);
+```
+
 ## 文档
 
 * [《提问的智慧》精读注解版](https://hacpai.com/article/1536377163156)
