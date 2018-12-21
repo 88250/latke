@@ -142,8 +142,9 @@ public interface Repository {
 **条件查询**
 
 ```java
-public JSONObject getByName(final String name) throws RepositoryException  {
-    final List<JSONObject> records = getList(new Query().setFilter(new PropertyFilter("name", FilterOperator.EQUAL, name)));
+public JSONObject getByName(final String name) throws RepositoryException {
+    final List<JSONObject> records = getList(new Query().
+            setFilter(new PropertyFilter("name", FilterOperator.EQUAL, name)));
     if (records.isEmpty()) {
         return null;
     }
