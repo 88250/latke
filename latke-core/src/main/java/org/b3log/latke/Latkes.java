@@ -42,13 +42,18 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.8.0.6, Oct 22, 2018
+ * @version 2.8.0.7, Dec 25, 2018
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
  * @see #getStaticServePath()
  */
 public final class Latkes {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(Latkes.class);
 
     /**
      * Executor service.
@@ -58,17 +63,7 @@ public final class Latkes {
     /**
      * Version.
      */
-    public static final String VERSION = "2.4.19";
-
-    /**
-     * User Agent.
-     */
-    public static String USER_AGENT = "Latke/" + VERSION + "; +https://github.com/b3log/latke";
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(Latkes.class);
+    public static final String VERSION = "2.4.41";
 
     /**
      * Local properties (local.properties).
@@ -79,11 +74,6 @@ public final class Latkes {
      * Latke configurations (latke.properties).
      */
     private static Properties latkeProps;
-
-    /**
-     * Latke remote interfaces configurations (remote.properties).
-     */
-    private static final Properties REMOTE_PROPS = new Properties();
 
     /**
      * Locale. Initializes this by {@link #setLocale(java.util.Locale)}.
@@ -178,19 +168,6 @@ public final class Latkes {
      * </p>
      */
     private static org.h2.tools.Server h2;
-
-    static {
-        LOGGER.debug("Loading remote.properties");
-        try {
-            final InputStream resourceAsStream = Latkes.class.getResourceAsStream("/remote.properties");
-            if (null != resourceAsStream) {
-                REMOTE_PROPS.load(resourceAsStream);
-                LOGGER.debug("Loaded remote.properties");
-            }
-        } catch (final Exception e) {
-            LOGGER.log(Level.DEBUG, "Not found Latke remote.properties, ignored");
-        }
-    }
 
     /**
      * Sets local.props with the specified props. This method is useful when you want to override behaviours of the default properties.
@@ -798,25 +775,6 @@ public final class Latkes {
         ret = replaceEnvVars(ret);
 
         return ret;
-    }
-
-    /**
-     * Checks whether the remote interfaces are enabled.
-     *
-     * @return {@code true} if the remote interfaces enabled, returns {@code false} otherwise
-     */
-    public static boolean isRemoteEnabled() {
-        return !REMOTE_PROPS.isEmpty();
-    }
-
-    /**
-     * Gets a property specified by the given key from file "remote.properties".
-     *
-     * @param key the given key
-     * @return the value, returns {@code null} if not found
-     */
-    public static String getRemoteProperty(final String key) {
-        return REMOTE_PROPS.getProperty(key);
     }
 
     /**
