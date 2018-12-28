@@ -29,7 +29,7 @@ import java.util.*;
  * Language service implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.2, Sep 29, 2018
+ * @version 1.2.1.3, Dec 28, 2018
  * @since 2.4.18
  */
 @Singleton
@@ -43,7 +43,7 @@ public class LangPropsService {
     /**
      * Language properties.
      */
-    private static final Map<Locale, Map<String, String>> LANGS = new HashMap<Locale, Map<String, String>>();
+    private static final Map<Locale, Map<String, String>> LANGS = new HashMap<>();
 
     /**
      * Gets all language properties as a map by the specified locale.
@@ -53,27 +53,21 @@ public class LangPropsService {
      */
     public Map<String, String> getAll(final Locale locale) {
         Map<String, String> ret = LANGS.get(locale);
-
         if (null == ret) {
             ret = new HashMap<>();
-            ResourceBundle langBundle;
+            final ResourceBundle defaultLangBundle = ResourceBundle.getBundle(Keys.LANGUAGE, Latkes.getLocale());
+            final Enumeration<String> defaultLangKeys = defaultLangBundle.getKeys();
+            while (defaultLangKeys.hasMoreElements()) {
+                final String key = defaultLangKeys.nextElement();
+                final String value = replaceVars(defaultLangBundle.getString(key));
 
-            try {
-                langBundle = ResourceBundle.getBundle(Keys.LANGUAGE, locale);
-            } catch (final MissingResourceException e) {
-                LOGGER.log(Level.WARN, "{0}, using default locale[{1}] instead", new Object[]{e.getMessage(), Latkes.getLocale()});
-
-                try {
-                    langBundle = ResourceBundle.getBundle(Keys.LANGUAGE, Latkes.getLocale());
-                } catch (final MissingResourceException ex) {
-                    LOGGER.log(Level.WARN, "{0}, using default lang.properties instead", new Object[]{e.getMessage()});
-                    langBundle = ResourceBundle.getBundle(Keys.LANGUAGE);
-                }
+                ret.put(key, value);
             }
 
-            final Enumeration<String> keys = langBundle.getKeys();
-            while (keys.hasMoreElements()) {
-                final String key = keys.nextElement();
+            final ResourceBundle langBundle = ResourceBundle.getBundle(Keys.LANGUAGE, locale);
+            final Enumeration<String> langKeys = langBundle.getKeys();
+            while (langKeys.hasMoreElements()) {
+                final String key = langKeys.nextElement();
                 final String value = replaceVars(langBundle.getString(key));
 
                 ret.put(key, value);
@@ -121,7 +115,7 @@ public class LangPropsService {
      */
     private String get(final String baseName, final String key, final Locale locale) {
         if (!Keys.LANGUAGE.equals(baseName)) {
-            final RuntimeException e = new RuntimeException("i18n resource[baseName=" + baseName + "] not found");
+            final RuntimeException e = new RuntimeException("i18n resource [baseName=" + baseName + "] not found");
 
             LOGGER.log(Level.ERROR, e.getMessage(), e);
 
@@ -131,9 +125,9 @@ public class LangPropsService {
         try {
             return replaceVars(ResourceBundle.getBundle(baseName, locale).getString(key));
         } catch (final MissingResourceException e) {
-            LOGGER.log(Level.WARN, "{0}, get it from default locale[{1}]", new Object[]{e.getMessage(), Latkes.getLocale()});
+            LOGGER.log(Level.WARN, "{0}, get it from default locale [{1}]", e.getMessage(), Latkes.getLocale());
 
-            return ResourceBundle.getBundle(baseName, Latkes.getLocale()).getString(key);
+            return replaceVars(ResourceBundle.getBundle(baseName, Latkes.getLocale()).getString(key));
         }
     }
 
