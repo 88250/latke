@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.23, Dec 31, 2018
+    Version: 1.2.2.24, Jan 2, 2019
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -113,7 +113,7 @@
                     </mapping>
                     <useDefaultMapping>true</useDefaultMapping>
                     <properties>
-                        <year>2009-2018</year>
+                        <year>2009-2019</year>
                         <devTeam>b3log.org &amp; hacpai.com</devTeam>
                     </properties>
                     <encoding>UTF-8</encoding>
