@@ -55,7 +55,7 @@ public final class Query {
     private Filter filter;
 
     /**
-     * Projections.
+     * SELECT projections.
      */
     private List<Projection> projections = new ArrayList<>();
 
@@ -91,7 +91,7 @@ public final class Query {
      * Sets the debug flag.
      *
      * @param debug the specified debug flag
-     * @return the currency query object
+     * @return the current query object
      */
     public Query setDebug(final boolean debug) {
         this.debug = debug;
@@ -100,20 +100,26 @@ public final class Query {
     }
 
     /**
-     * Adds a projection with the specified property name and value type.
+     * Set SELECT projections.
      *
-     * @param propertyName the specified property name
-     * @param valueType    the specified value type
+     * @param propertyName  the specified property name
+     * @param propertyNames the specified other property names
      * @return the current query object
      */
-    public Query addProjection(final String propertyName, final Class<?> valueType) {
-        projections.add(new Projection(propertyName, valueType));
+    public Query select(final String propertyName, final String... propertyNames) {
+        projections.add(new Projection(propertyName));
+
+        if (null != propertyNames && 0 < propertyNames.length) {
+            for (int i = 0; i < propertyNames.length; i++) {
+                projections.add(new Projection(propertyNames[i]));
+            }
+        }
 
         return this;
     }
 
     /**
-     * Gets the projections.
+     * Get the SELECT projections.
      *
      * @return projections
      */

@@ -18,10 +18,10 @@ package org.b3log.latke.repository;
 import java.util.Objects;
 
 /**
- * Projection.
+ * SELECT projection.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 21, 2018
+ * @version 1.0.0.1, Jan 15, 2019
  */
 public class Projection {
 
@@ -29,11 +29,6 @@ public class Projection {
      * Key.
      */
     private String key;
-
-    /**
-     * Value type.
-     */
-    private Class<?> type;
 
     /**
      * Gets the key.
@@ -45,23 +40,12 @@ public class Projection {
     }
 
     /**
-     * Gets the value type.
+     * Constructs a projection with the specified key.
      *
-     * @return value type
+     * @param key the specified key
      */
-    public Class<?> getType() {
-        return type;
-    }
-
-    /**
-     * Constructs a projection with the specified key and value type.
-     *
-     * @param key  the specified key
-     * @param type the specified value type
-     */
-    public Projection(final String key, final Class<?> type) {
+    public Projection(final String key) {
         this.key = key;
-        this.type = type;
     }
 
     @Override
@@ -69,21 +53,17 @@ public class Projection {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Projection that = (Projection) o;
-        return Objects.equals(key, that.key) &&
-                Objects.equals(type, that.type);
+
+        return Objects.equals(key, that.key);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, type);
+        return Objects.hash(key);
     }
 
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder("key=");
-
-        stringBuilder.append(key).append(", typeClassName=").append(type.getClass().getName());
-
-        return stringBuilder.toString();
+        return "key=" + key;
     }
 }
