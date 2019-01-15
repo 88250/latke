@@ -65,6 +65,20 @@ public final class Query {
     private boolean debug;
 
     /**
+     * Sets the current page number and page size with the specified current page number and the specified page sieze.
+     *
+     * @param currentPageNum the specified current page number
+     * @param pageSize       the specified page size
+     * @return the current query object
+     */
+    public Query setPage(final int currentPageNum, final int pageSize) {
+        setCurrentPageNum(currentPageNum);
+        setPageSize(pageSize);
+
+        return this;
+    }
+
+    /**
      * Checks whether is debug.
      *
      * @return {@code true} if it is, returns {@code false} otherwise
