@@ -22,7 +22,7 @@ import java.util.Map.Entry;
  * Query.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.1, Nov 4, 2018
+ * @version 1.1.0.2, Jan 15, 2019
  * @see Projection
  * @see Filter
  * @see SortDirection
@@ -58,11 +58,6 @@ public final class Query {
      * Projections.
      */
     private List<Projection> projections = new ArrayList<>();
-
-    /**
-     * Indices.
-     */
-    private Set<String[]> indexes = new HashSet<>();
 
     /**
      * Debug flag. https://github.com/b3log/latke/issues/82
@@ -110,31 +105,6 @@ public final class Query {
      */
     public List<Projection> getProjections() {
         return Collections.unmodifiableList(projections);
-    }
-
-    /**
-     * Indexes the specified properties for future queries.
-     *
-     * @param properties the specified properties
-     * @return the current query object
-     */
-    public Query index(final String... properties) {
-        if (null == properties || 0 == properties.length) {
-            return this;
-        }
-
-        indexes.add(properties);
-
-        return this;
-    }
-
-    /**
-     * Gets the indices.
-     *
-     * @return indices
-     */
-    public Set<String[]> getIndexes() {
-        return Collections.unmodifiableSet(indexes);
     }
 
     /**
@@ -263,13 +233,12 @@ public final class Query {
                 Objects.equals(pageCount, query.pageCount) &&
                 Objects.equals(sorts, query.sorts) &&
                 Objects.equals(filter, query.filter) &&
-                Objects.equals(projections, query.projections) &&
-                Objects.equals(indexes, query.indexes);
+                Objects.equals(projections, query.projections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentPageNum, pageCount, pageSize, sorts, filter, projections, indexes, debug);
+        return Objects.hash(currentPageNum, pageCount, pageSize, sorts, filter, projections, debug);
     }
 
     @Override
