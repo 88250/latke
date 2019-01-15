@@ -32,7 +32,7 @@ import java.util.Enumeration;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 2.0.0.2, Dec 2, 2018
+ * @version 2.0.0.3, Jan 15, 2019
  */
 public final class Requests {
 
@@ -74,6 +74,10 @@ public final class Requests {
      * @return log
      */
     public static String getLog(final HttpServletRequest httpServletRequest) {
+        if (null == httpServletRequest) {
+            return "request is null";
+        }
+
         final String indents = "    ";
         final StringBuilder logBuilder = new StringBuilder("Request [").append(Strings.LINE_SEPARATOR);
 

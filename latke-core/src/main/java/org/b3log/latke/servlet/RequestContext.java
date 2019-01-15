@@ -39,7 +39,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.2, Dec 20, 2018
+ * @version 1.3.0.3, Jan 15, 2019
  */
 public final class RequestContext {
 
@@ -471,7 +471,9 @@ public final class RequestContext {
                 handlers.get(handleIndex).handle(this);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Handler process failed", e);
+            final String requestLog = Requests.getLog(request);
+            LOGGER.log(Level.ERROR, "Handler process failed: " + requestLog, e);
+
             setRenderer(new Http500Renderer(e));
         }
     }
