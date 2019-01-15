@@ -263,17 +263,14 @@ public final class Query {
 
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder("currentPageNum=").append(currentPageNum).append(", pageSize=").append(pageSize).append(", pageCount=").append(pageCount).append(
-                ", sorts=[");
+        final StringBuilder stringBuilder = new StringBuilder("currentPageNum=").append(currentPageNum).append(", pageSize=").
+                append(pageSize).append(", pageCount=").append(pageCount).append(", sorts=[");
 
         final Set<Entry<String, SortDirection>> entrySet = sorts.entrySet();
         final Iterator<Entry<String, SortDirection>> sortsIterator = entrySet.iterator();
-
         while (sortsIterator.hasNext()) {
             final Entry<String, SortDirection> sort = sortsIterator.next();
-
             stringBuilder.append("[key=").append(sort.getKey()).append(", direction=").append(sort.getValue().name()).append("]");
-
             if (sortsIterator.hasNext()) {
                 stringBuilder.append(", ");
             }
@@ -286,12 +283,9 @@ public final class Query {
         stringBuilder.append(", projections=[");
 
         final Iterator<Projection> projectionsIterator = projections.iterator();
-
         while (projectionsIterator.hasNext()) {
             final Projection projection = projectionsIterator.next();
-
             stringBuilder.append('[').append(projection.toString()).append(']');
-
             if (projectionsIterator.hasNext()) {
                 stringBuilder.append(", ");
             }
