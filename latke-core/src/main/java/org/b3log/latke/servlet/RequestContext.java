@@ -39,7 +39,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.3, Jan 15, 2019
+ * @version 1.3.0.4, Jan 24, 2019
  */
 public final class RequestContext {
 
@@ -200,6 +200,15 @@ public final class RequestContext {
      */
     public void setHeader(final String name, final String value) {
         response.setHeader(name, value);
+    }
+
+    /**
+     * Gets the request query string.
+     *
+     * @return query string
+     */
+    public String queryStr() {
+        return request.getQueryString();
     }
 
     /**
