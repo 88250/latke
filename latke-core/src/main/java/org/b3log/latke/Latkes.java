@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.8.0.8, Jan 15, 2019
+ * @version 2.8.0.9, Jan 26, 2019
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -66,6 +66,11 @@ public final class Latkes {
     public static final String VERSION = "2.4.42";
 
     /**
+     * Application startup time millisecond.
+     */
+    public static long startupTimeMillis = System.currentTimeMillis();
+
+    /**
      * Local properties (local.properties).
      */
     private static Properties localProps;
@@ -84,11 +89,6 @@ public final class Latkes {
      * Which mode Latke runs in?
      */
     private static RuntimeMode runtimeMode;
-
-    /**
-     * Application startup time millisecond.
-     */
-    private static String startupTimeMillis = String.valueOf(System.currentTimeMillis());
 
     /**
      * Static resource version.
@@ -259,7 +259,7 @@ public final class Latkes {
         if (null == staticResourceVersion) {
             staticResourceVersion = getLatkeProperty("staticResourceVersion");
             if (null == staticResourceVersion) {
-                staticResourceVersion = startupTimeMillis;
+                staticResourceVersion = String.valueOf(startupTimeMillis);
             }
         }
 
