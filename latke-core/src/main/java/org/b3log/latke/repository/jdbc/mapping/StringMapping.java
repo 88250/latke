@@ -31,25 +31,22 @@ public class StringMapping implements Mapping {
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
         final StringBuilder sql = new StringBuilder();
-
         sql.append(definition.getName());
-
         if (null == definition.getLength()) {
-            definition.setLength(new Integer("0"));
+            definition.setLength(0);
         }
 
         final Integer length = definition.getLength();
-
-        if (length > new Integer("255")) {
-            if (length > new Integer("16777215")) {
+        if (255 < length) {
+            if (16777215 < length) {
                 sql.append(" longtext");
-            } else if (length > new Integer("65535")) {
+            } else if (65535 < length) {
                 sql.append(" mediumtext");
             } else {
                 sql.append(" text");
             }
         } else {
-            sql.append(" varchar(").append(length < 1 ? new Integer("100") : length);
+            sql.append(" varchar(").append(length < 1 ? 128 : length);
             sql.append(")");
         }
 
