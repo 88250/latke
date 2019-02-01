@@ -17,4 +17,7 @@
 
 ### 关于报告安全漏洞
 
-请先到黑客派上[发私信给我们](https://hacpai.com/post?type=1&tags=%E5%B0%8F%E9%BB%91%E5%B1%8B&at=88250)，我们确认过问题并修复后再开 issue。
+* 在黑客派上[私信给我们](https://hacpai.com/chats/88250)
+* 或发邮件至 d@b3log.org
+
+我们确认过问题并修复后再开 issue，谢谢。
