@@ -1,5 +1,12 @@
-Latke [![Build Status](https://travis-ci.org/b3log/latke.png?branch=master)](https://travis-ci.org/b3log/latke) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.b3log/latke-parent/badge.svg)](http://repo1.maven.org/maven2/org/b3log/latke-parent)
-----
+<p align = "center">
+<img alt="Latke" src="https://user-images.githubusercontent.com/873584/52535454-6a60a980-2d89-11e9-9f4c-000bd7e90f9e.png">
+<br><br>
+小而美的博客系统，为未来而构建
+<br><br>
+<a title="Build Status" target="_blank" href="https://travis-ci.org/b3log/latke"><img src="https://img.shields.io/travis/b3log/latke.svg?style=flat-square"></a>
+<a title="Apache2" target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.txt"><img src="http://img.shields.io/badge/license-Apache2-orange.svg?style=flat-square"></a>
+<a title="Maven Central" target="_blank" href="http://repo1.maven.org/maven2/org/b3log/latke-parent"><img src="https://maven-badges.herokuapp.com/maven-central/org.b3log/latke-parent/badge.svg?style=flat-square"></a>
+</p>
 
 ## 简介
 
@@ -194,6 +201,10 @@ final List<JSONObject> records = select("SELECT * FROM `user` WHERE `name` = ?",
 
 * [讨论区](https://hacpai.com/tag/latke)
 * [报告问题](https://github.com/b3log/latke/issues/new/choose)
+
+## 授权
+
+Latke 使用 [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) 开源协议。
 
 ## 鸣谢
 
