@@ -39,7 +39,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.4, Jan 24, 2019
+ * @version 1.3.0.5, Feb 10, 2019
  */
 public final class RequestContext {
 
@@ -405,6 +405,22 @@ public final class RequestContext {
     }
 
     /**
+     * Renders using {@link JsonRenderer} with {"code": int}.
+     *
+     * @param code the specified code
+     * @return this context
+     */
+    public RequestContext renderJSON(final int code) {
+        final JsonRenderer jsonRenderer = new JsonRenderer();
+        final JSONObject ret = new JSONObject().put(Keys.CODE, code);
+        jsonRenderer.setJSONObject(ret);
+
+        this.renderer = jsonRenderer;
+
+        return this;
+    }
+
+    /**
      * Renders with {"sc": true}.
      *
      * @return this context
@@ -437,6 +453,23 @@ public final class RequestContext {
     }
 
     /**
+     * Renders with {"code": int}.
+     *
+     * @param code the specified code
+     * @return this context
+     */
+    public RequestContext renderCode(final int code) {
+        if (renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) renderer;
+
+            final JSONObject ret = r.getJSONObject();
+            ret.put(Keys.CODE, code);
+        }
+
+        return this;
+    }
+
+    /**
      * Renders with {"msg": msg}.
      *
      * @param msg the specified msg
@@ -448,6 +481,37 @@ public final class RequestContext {
 
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.MSG, msg);
+        }
+
+        return this;
+    }
+
+    /**
+     * Renders with {"data": obj}.
+     *
+     * @param data the specified JSON data
+     * @return this context
+     */
+    public RequestContext renderData(final Object data) {
+        if (renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) renderer;
+
+            final JSONObject ret = r.getJSONObject();
+            ret.put(Keys.DATA, data);
+        }
+
+        return this;
+    }
+
+    /**
+     * Pretty renders.
+     *
+     * @return this context
+     */
+    public RequestContext renderPretty() {
+        if (renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) renderer;
+            r.setPretty(true);
         }
 
         return this;

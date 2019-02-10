@@ -25,9 +25,14 @@ import java.util.Map;
  * This class define framework keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.9, Oct 15, 2018
+ * @version 1.2.2.10, Feb 10, 2019
  */
 public final class Keys {
+
+    /**
+     * Key of data.
+     */
+    public static final String DATA = "data";
 
     /**
      * Key of token.
