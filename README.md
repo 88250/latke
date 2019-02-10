@@ -1,7 +1,7 @@
 <p align = "center">
 <img alt="Latke" src="https://user-images.githubusercontent.com/873584/52535454-6a60a980-2d89-11e9-9f4c-000bd7e90f9e.png">
 <br><br>
-小而美的博客系统，为未来而构建
+一款以 JSON 为主的 Java Web 框架
 <br><br>
 <a title="Build Status" target="_blank" href="https://travis-ci.org/b3log/latke"><img src="https://img.shields.io/travis/b3log/latke.svg?style=flat-square"></a>
 <a title="Apache2" target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.txt"><img src="http://img.shields.io/badge/license-Apache2-orange.svg?style=flat-square"></a>
