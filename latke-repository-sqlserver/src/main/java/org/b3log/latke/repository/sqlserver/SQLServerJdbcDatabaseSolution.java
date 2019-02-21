@@ -16,11 +16,14 @@
 package org.b3log.latke.repository.sqlserver;
 
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
 import org.b3log.latke.repository.jdbc.mapping.IntMapping;
 import org.b3log.latke.repository.jdbc.mapping.LongMapping;
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
+import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
@@ -29,6 +32,8 @@ import org.b3log.latke.repository.sqlserver.mapping.DatetimeMapping;
 import org.b3log.latke.repository.sqlserver.mapping.DecimalMapping;
 import org.b3log.latke.repository.sqlserver.mapping.StringMapping;
 
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +47,11 @@ import java.util.List;
 public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(SQLServerJdbcDatabaseSolution.class);
+
+    /**
      * Public constructor.
      */
     public SQLServerJdbcDatabaseSolution() {
@@ -52,6 +62,24 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
         registerType("String", new StringMapping());
         registerType("Date", new DateMapping());
         registerType("Datetime", new DatetimeMapping());
+    }
+
+    @Override
+    public boolean existTable(final String tableName) {
+        try (final Connection connection = Connections.getConnection();
+             final Statement statement = connection.createStatement()) {
+            try {
+                statement.execute("SELECT TOP 1 * FROM " + tableName);
+            } catch (final Throwable e) {
+                return false;
+            }
+
+            return true;
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Checks table [" + tableName + "] existence failed, assumed it existing [true]", e);
+
+            return true;
+        }
     }
 
     @Override

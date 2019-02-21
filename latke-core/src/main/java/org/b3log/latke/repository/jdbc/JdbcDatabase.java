@@ -29,6 +29,15 @@ import java.sql.SQLException;
 public interface JdbcDatabase {
 
     /**
+     * Checks whether a table specified by the given table name exists.
+     *
+     * @param tableName the given table name
+     * @return {@code true} if it exists, returns {@code false} otherwise
+     * @since 2.4.43
+     */
+    boolean existTable(final String tableName);
+
+    /**
      * Creates table with the specified repository definition.
      *
      * @param repositoryDefinition the specified repository definition

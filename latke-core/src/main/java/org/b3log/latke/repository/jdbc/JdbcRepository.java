@@ -566,7 +566,7 @@ public final class JdbcRepository implements Repository {
 
         final int start = (currentPageNum - 1) * pageSize;
         final int end = start + pageSize;
-        sqlBuilder.append(JdbcFactory.createJdbcFactory().
+        sqlBuilder.append(JdbcFactory.getInstance().
                 queryPage(start, end, selectBuilder.toString(), whereBuilder.toString(), orderByBuilder.toString(), getName()));
 
         return ret;
@@ -669,7 +669,7 @@ public final class JdbcRepository implements Repository {
      * @param sql       sql
      */
     private void getRandomly(final int fetchSize, final StringBuilder sql) {
-        sql.append(JdbcFactory.createJdbcFactory().getRandomlySql(getName(), fetchSize));
+        sql.append(JdbcFactory.getInstance().getRandomlySql(getName(), fetchSize));
     }
 
     @Override

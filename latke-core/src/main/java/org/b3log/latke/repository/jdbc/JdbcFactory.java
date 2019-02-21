@@ -44,14 +44,13 @@ public final class JdbcFactory implements JdbcDatabase {
     private AbstractJdbcDatabaseSolution databaseSolution;
 
     /**
-     * the singleton  of jdbcfactory.
+     * the singleton of jdbcfactory.
      */
     private static JdbcFactory jdbcFactory;
 
     /**
      * All JdbcDatabaseSolution class names.
      */
-    @SuppressWarnings("serial")
     private static Map<Latkes.RuntimeDatabase, String> jdbcDatabaseSolutionMap = new HashMap<Latkes.RuntimeDatabase, String>() {
         {
             put(Latkes.RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
@@ -62,16 +61,21 @@ public final class JdbcFactory implements JdbcDatabase {
     };
 
     @Override
+    public boolean existTable(final String tableName) {
+        return databaseSolution.existTable(tableName);
+    }
+
+    @Override
     public boolean createTable(final RepositoryDefinition repositoryDefinition) throws SQLException {
         return databaseSolution.createTable(repositoryDefinition);
     }
 
     /**
-     * singleton way to get jdbcFactory.
+     * Gets the singleton instance of JdbcFactory.
      *
-     * @return JdbcFactory jdbcFactory.
+     * @return JdbcFactory singleton instance
      */
-    public static synchronized JdbcFactory createJdbcFactory() {
+    public static synchronized JdbcFactory getInstance() {
         if (null == jdbcFactory) {
             jdbcFactory = new JdbcFactory();
         }

@@ -173,7 +173,7 @@ public final class JdbcRepositories {
             repositoryDefinitions.add(repositoryDefinition);
             repositoryDefinition.setName(repositoryObject.getString(NAME));
             repositoryDefinition.setDescription(repositoryObject.optString(DESCRIPTION));
-            final List<FieldDefinition> keys = new ArrayList();
+            final List<FieldDefinition> keys = new ArrayList<>();
             repositoryDefinition.setKeys(keys);
             final JSONArray keysJsonArray = repositoryObject.getJSONArray(KEYS);
             FieldDefinition definition;
@@ -264,6 +264,16 @@ public final class JdbcRepositories {
     }
 
     /**
+     * Checks whether a table specified by the given table name exists.
+     *
+     * @param tableName the given table name
+     * @return {@code true} if it exists, returns {@code false} otherwise
+     */
+    public static boolean existTable(final String tableName) {
+        return JdbcFactory.getInstance().existTable(tableName);
+    }
+
+    /**
      * Initializes all tables from repository.json.
      *
      * @return List<CreateTableResult>
@@ -274,7 +284,7 @@ public final class JdbcRepositories {
         boolean isSuccess = false;
         for (final RepositoryDefinition repositoryDef : repositoryDefs) {
             try {
-                isSuccess = JdbcFactory.createJdbcFactory().createTable(repositoryDef);
+                isSuccess = JdbcFactory.getInstance().createTable(repositoryDef);
             } catch (final SQLException e) {
                 LOGGER.log(Level.ERROR, "Creates table [" + repositoryDef.getName() + "] error", e);
             }

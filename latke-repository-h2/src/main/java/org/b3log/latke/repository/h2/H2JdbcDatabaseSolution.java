@@ -16,13 +16,18 @@
 package org.b3log.latke.repository.h2;
 
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.h2.mapping.BooleanMapping;
 import org.b3log.latke.repository.h2.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.*;
+import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +40,11 @@ import java.util.List;
 public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(H2JdbcDatabaseSolution.class);
+
+    /**
      * Public constructor.
      */
     public H2JdbcDatabaseSolution() {
@@ -44,6 +54,24 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
         registerType("double", new NumberMapping());
         registerType("String", new StringMapping());
         registerType("Date", new DateMapping());
+    }
+
+    @Override
+    public boolean existTable(final String tableName) {
+        try (final Connection connection = Connections.getConnection();
+             final Statement statement = connection.createStatement()) {
+            try {
+                statement.execute("SELECT 1 FROM `" + tableName + "` LIMIT 1");
+            } catch (final Throwable e) {
+                return false;
+            }
+
+            return true;
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Checks table [" + tableName + "] existence failed, assumed it existing [true]", e);
+
+            return true;
+        }
     }
 
     @Override
