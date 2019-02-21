@@ -36,7 +36,7 @@ import java.util.List;
  * Microsoft SQL Server database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Mar 15, 2018
+ * @version 2.0.0.1, Feb 21, 2019
  * @since 1.0.8
  */
 public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
@@ -93,19 +93,6 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
                 append(tableName).append(" ORDER BY CHECKSUM(NEWID())");
 
         return sql.toString();
-    }
-
-    @Override
-    protected void createDropTableSql(final StringBuilder dropTableSql, final String tableName) {
-
-        /*
-         IF EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[tablename]')
-         AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
-         DROP TABLE [dbo].[tablename]; 
-         */
-        dropTableSql.append("IF EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").
-                append(tableName).append("]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) DROP TABLE [dbo].[")
-                .append(tableName).append("];");
     }
 
     @Override

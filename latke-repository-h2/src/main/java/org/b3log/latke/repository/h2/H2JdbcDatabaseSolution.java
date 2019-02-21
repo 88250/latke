@@ -30,7 +30,7 @@ import java.util.List;
  * H2 database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Mar 15, 2018
+ * @version 2.0.0.1, Feb 21, 2019
  */
 public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
@@ -67,11 +67,6 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
         sql.append(" SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
         return sql.toString();
-    }
-
-    @Override
-    protected void createDropTableSql(final StringBuilder dropTableSql, final String tableName) {
-        dropTableSql.append("DROP TABLE IF EXISTS ").append(tableName).append(";");
     }
 
     @Override
