@@ -91,31 +91,6 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
      */
     protected abstract void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition);
 
-    @Override
-    public boolean clearTable(final String tableName, final boolean ifdrop) throws SQLException {
-        final Connection connection = Connections.getConnection();
-
-        try {
-            final StringBuilder clearTableSql = new StringBuilder();
-            clearTableSql(clearTableSql, tableName, ifdrop);
-
-            return JdbcUtil.executeSql(clearTableSql.toString(), connection, false);
-        } catch (final SQLException e) {
-            throw e;
-        } finally {
-            connection.close();
-        }
-    }
-
-    /**
-     * the clearTableSql for each Db to impl.
-     *
-     * @param clearTableSql clearTableSql
-     * @param tableName     tableName
-     * @param ifdrop        ifdrop
-     */
-    public abstract void clearTableSql(final StringBuilder clearTableSql, final String tableName, final boolean ifdrop);
-
     /**
      * @return jdbcTypeMapping
      */

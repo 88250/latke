@@ -24,7 +24,7 @@ import java.sql.SQLException;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Mar 15, 2018
+ * @version 2.0.0.1, Feb 21, 2019
  */
 public interface JdbcDatabase {
 
@@ -36,18 +36,6 @@ public interface JdbcDatabase {
      * @throws SQLException SQLException
      */
     boolean createTable(final RepositoryDefinition repositoryDefinition) throws SQLException;
-
-    /**
-     * @param tableName tableName
-     * @param ifdrop    ifdrop
-     *                  <P>
-     *                  ifdrop true: using drop
-     *                  not: using truncate to clear data.
-     *                  </p>
-     * @return if success to clearTable
-     * @throws SQLException SQLException
-     */
-    boolean clearTable(final String tableName, final boolean ifdrop) throws SQLException;
 
     /**
      * queryPage sql.

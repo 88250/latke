@@ -140,13 +140,4 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             createTableSql.append(" COMMENT='" + description + "'");
         }
     }
-
-    @Override
-    public void clearTableSql(final StringBuilder clearTableSq, final String tableName, final boolean ifdrop) {
-        if (ifdrop) {
-            clearTableSq.append("DROP TABLE IF EXISTS ").append(tableName);
-        } else {
-            clearTableSq.append("TRUNCATE TABLE ").append(tableName);
-        }
-    }
 }

@@ -161,13 +161,4 @@ WHERE rownum <= 1000
     protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
         createTableSql.append(")");
     }
-
-    @Override
-    public void clearTableSql(final StringBuilder clearTableSq, final String tableName, final boolean ifdrop) {
-        if (ifdrop) {
-            clearTableSq.append("DROP TABLE IF EXISTS ").append(tableName);
-        } else {
-            clearTableSq.append("TRUNCATE TABLE ").append(tableName);
-        }
-    }
 }

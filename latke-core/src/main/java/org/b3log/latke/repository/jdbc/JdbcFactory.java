@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Mar 15, 2018
+ * @version 2.0.0.1, Feb 21, 2019
  */
 public final class JdbcFactory implements JdbcDatabase {
 
@@ -64,11 +64,6 @@ public final class JdbcFactory implements JdbcDatabase {
     @Override
     public boolean createTable(final RepositoryDefinition repositoryDefinition) throws SQLException {
         return databaseSolution.createTable(repositoryDefinition);
-    }
-
-    @Override
-    public boolean clearTable(final String tableName, final boolean ifdrop) throws SQLException {
-        return databaseSolution.clearTable(tableName, ifdrop);
     }
 
     /**
