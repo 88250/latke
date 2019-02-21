@@ -20,7 +20,7 @@ import org.b3log.latke.servlet.RequestContext;
 /**
  * A handler interface for  {@link org.b3log.latke.servlet.DispatcherServlet} to do the inner process.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Dec 5, 2018
  * @since 2.4.34

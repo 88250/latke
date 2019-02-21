@@ -24,7 +24,7 @@ import javax.servlet.RequestDispatcher;
 /**
  * servlet forward renderer.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.0, Sep 26, 2013
  */
 public class StaticFileRenderer extends AbstractResponseRenderer {

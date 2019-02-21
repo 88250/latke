@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * MysqlJdbcDatabaseSolution, for extend.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 2.0.0.1, Nov 14, 2018
  */

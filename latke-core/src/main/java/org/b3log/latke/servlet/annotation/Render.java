@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 /**
  * The render mark for the parameter of the method, just to set the id of the renderer.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.0, Jan 21, 2013
  */
 @Target({ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD})

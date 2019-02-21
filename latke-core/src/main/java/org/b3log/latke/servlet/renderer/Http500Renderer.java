@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * HTTP {@link HttpServletResponse#SC_INTERNAL_SERVER_ERROR status} renderer.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.0, Sep 26, 2013
  */
 public final class Http500Renderer extends AbstractResponseRenderer {

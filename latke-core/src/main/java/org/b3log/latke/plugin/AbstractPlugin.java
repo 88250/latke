@@ -53,7 +53,7 @@ import java.util.*;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 1.3.2.2, Dec 5, 2018
  * @see PluginManager
  * @see PluginStatus

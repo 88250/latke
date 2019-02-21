@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 /**
  * JDBC repository implementation.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.3.0.4, Nov 4, 2018
  */

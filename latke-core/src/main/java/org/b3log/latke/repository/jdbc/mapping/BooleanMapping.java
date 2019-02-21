@@ -27,7 +27,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
  * '1' for true.
  * </p>
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.1, Dec 27, 2012
  */
 public class BooleanMapping implements Mapping {

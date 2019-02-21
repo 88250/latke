@@ -24,8 +24,8 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +33,7 @@ import java.util.Set;
  * Reflection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.6, Sep 30, 2018
  * @since 2.4.19
  */

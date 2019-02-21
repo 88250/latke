@@ -22,12 +22,12 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**
  * H2 string type mapping.
- * 
+ *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Dec 27, 2012
  */
 public final class StringMapping implements Mapping {
-    
+
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
         final StringBuilder sql = new StringBuilder();

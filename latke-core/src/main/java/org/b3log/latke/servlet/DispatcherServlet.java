@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Dispatch-controller for HTTP request dispatching.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.2, Dec 2, 2018
  */
@@ -117,7 +117,7 @@ public final class DispatcherServlet extends HttpServlet {
      * HTTP DELETE routing.
      *
      * @param uriTemplate the specified request URI template
-     * @param handler    the specified handler
+     * @param handler     the specified handler
      * @return router
      */
     public static Router delete(final String uriTemplate, final ContextHandler handler) {
@@ -128,7 +128,7 @@ public final class DispatcherServlet extends HttpServlet {
      * HTTP PUT routing.
      *
      * @param uriTemplate the specified request URI template
-     * @param handler    the specified handler
+     * @param handler     the specified handler
      * @return router
      */
     public static Router put(final String uriTemplate, final ContextHandler handler) {
@@ -139,7 +139,7 @@ public final class DispatcherServlet extends HttpServlet {
      * HTTP GET routing.
      *
      * @param uriTemplate the specified request URI template
-     * @param handler    the specified handler
+     * @param handler     the specified handler
      * @return router
      */
     public static Router get(final String uriTemplate, final ContextHandler handler) {
@@ -150,7 +150,7 @@ public final class DispatcherServlet extends HttpServlet {
      * HTTP POST routing.
      *
      * @param uriTemplate the specified request URI template
-     * @param handler    the specified handler
+     * @param handler     the specified handler
      * @return router
      */
     public static Router post(final String uriTemplate, final ContextHandler handler) {

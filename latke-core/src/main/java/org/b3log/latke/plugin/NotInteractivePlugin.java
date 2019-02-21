@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * The default plugin for which do not need interact with the server end.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.2.0.0, May 31, 2014
  */

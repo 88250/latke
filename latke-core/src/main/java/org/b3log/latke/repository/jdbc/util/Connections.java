@@ -34,7 +34,7 @@ import java.util.Properties;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="mailto:385321165@qq.com">DASHU</a>
  * @version 2.0.0.1, Sep 25, 2018
  */

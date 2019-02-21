@@ -22,7 +22,7 @@ import org.json.JSONObject;
 /**
  * Exception for process advice.
  *
- * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.0, Oct 14, 2012
  */
 public class RequestProcessAdviceException extends Exception {
