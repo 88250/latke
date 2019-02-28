@@ -12,7 +12,7 @@
 
 [Latke](https://github.com/b3log/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC、事件通知、ORM、插件等组件。
 
-在实体模型上使用 JSON 贯穿前后端，使应用开发更加快捷。这是 Latke 不同于其他框架的地方，非常适合小型应用的快速开发。
+在实体模型上使用 JSON 贯穿前后端，使应用开发更加快捷。这是 Latke 不同于其他框架的地方，比较适合小型应用的快速开发。
 
 ## 特性
 
@@ -207,8 +207,6 @@ final List<JSONObject> records = select("SELECT * FROM `user` WHERE `name` = ?",
 Latke 使用 [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) 开源协议。
 
 ## 鸣谢
-
-Latke 的诞生离不开以下开源项目：
 
 * [FreeMarker](https://github.com/apache/freemarker)：使用广泛的 Java 模版引擎
 * [Commons Lang](https://github.com/apache/commons-lang)：Java 语言相关工具库
