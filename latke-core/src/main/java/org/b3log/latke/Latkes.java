@@ -23,6 +23,7 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.servlet.AbstractServletListener;
+import org.b3log.latke.servlet.RequestContext;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -42,7 +43,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.8.0.9, Jan 26, 2019
+ * @version 2.9.0.0, Feb 28, 2019
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -96,56 +97,6 @@ public final class Latkes {
     private static String staticResourceVersion;
 
     /**
-     * Server scheme.
-     */
-    private static String serverScheme;
-
-    /**
-     * Static server scheme.
-     */
-    private static String staticServerScheme;
-
-    /**
-     * Server host.
-     */
-    private static String serverHost;
-
-    /**
-     * Static server host.
-     */
-    private static String staticServerHost;
-
-    /**
-     * Server port.
-     */
-    private static String serverPort;
-
-    /**
-     * Static server port.
-     */
-    private static String staticServerPort;
-
-    /**
-     * Server. (${serverScheme}://${serverHost}:${serverPort})
-     */
-    private static String server;
-
-    /**
-     * Serve path. (${server}${contextPath})
-     */
-    private static String servePath;
-
-    /**
-     * Static server. (${staticServerScheme}://${staticServerHost}:${staticServerPort})
-     */
-    private static String staticServer;
-
-    /**
-     * Static serve path. (${staticServer}${staticPath})
-     */
-    private static String staticServePath;
-
-    /**
      * Context path.
      */
     private static String contextPath;
@@ -170,12 +121,43 @@ public final class Latkes {
     private static org.h2.tools.Server h2;
 
     /**
+     * Init flag.
+     */
+    private static boolean inited;
+
+    /**
+     * Request context holder.
+     */
+    public static final ThreadLocal<RequestContext> REQUEST_CONTEXT = new InheritableThreadLocal<>();
+
+    /**
      * Sets local.props with the specified props. This method is useful when you want to override behaviours of the default properties.
      *
      * @param props the specified props
      */
     public static void setLocalProps(final Properties props) {
         Latkes.localProps = props;
+    }
+
+    /**
+     * Sets local.props with the specified key and value.
+     *
+     * @param key   the specified key
+     * @param value the specified value
+     */
+    public static void setLocalProperty(final String key, final String value) {
+        if (null == key) {
+            LOGGER.log(Level.WARN, "local.props can not set null key");
+
+            return;
+        }
+        if (null == value) {
+            LOGGER.log(Level.WARN, "local.props can not set null value");
+
+            return;
+        }
+
+        localProps.setProperty(key, value);
     }
 
     /**
@@ -188,9 +170,30 @@ public final class Latkes {
     }
 
     /**
+     * Sets latke.props with the specified key and value.
+     *
+     * @param key   the specified key
+     * @param value the specified value
+     */
+    public static void setLatkeProperty(final String key, final String value) {
+        if (null == key) {
+            LOGGER.log(Level.WARN, "latke.props can not set null key");
+
+            return;
+        }
+        if (null == value) {
+            LOGGER.log(Level.WARN, "latke.props can not set null value");
+
+            return;
+        }
+
+        latkeProps.setProperty(key, value);
+    }
+
+    /**
      * Loads the local.props.
      */
-    public static void loadLocalProps() {
+    private static void loadLocalProps() {
         if (null == localProps) {
             localProps = new Properties();
         }
@@ -218,7 +221,7 @@ public final class Latkes {
     /**
      * Loads the latke.props.
      */
-    public static void loadLatkeProps() {
+    private static void loadLatkeProps() {
         if (null == latkeProps) {
             latkeProps = new Properties();
         }
@@ -277,83 +280,57 @@ public final class Latkes {
 
     /**
      * Gets server scheme.
-     * <p>
-     * Returns the value of "serverScheme" property in latke.properties.
-     * </p>
      *
      * @return server scheme
      */
     public static String getServerScheme() {
-        if (null == serverScheme) {
-            serverScheme = getLatkeProperty("serverScheme");
-            if (null == serverScheme) {
-                throw new IllegalStateException("latke.properties [serverScheme] is empty");
+        String ret = getLatkeProperty("serverScheme");
+        if (null == ret) {
+            final RequestContext requestContext = REQUEST_CONTEXT.get();
+            if (null != requestContext) {
+                ret = requestContext.getRequest().getScheme();
+            } else {
+                ret = "http";
             }
         }
 
-        return serverScheme;
-    }
-
-    /**
-     * Sets server scheme with the specified server scheme.
-     *
-     * @param serverScheme the specified server scheme
-     */
-    public static void setServerScheme(final String serverScheme) {
-        Latkes.serverScheme = serverScheme;
+        return ret;
     }
 
     /**
      * Gets server host.
-     * <p>
-     * Returns the value of "serverHost" property in latke.properties.
-     * </p>
      *
      * @return server host
      */
     public static String getServerHost() {
-        if (null == serverHost) {
-            serverHost = getLatkeProperty("serverHost");
-            if (null == serverHost) {
+        String ret = getLatkeProperty("serverHost");
+        if (null == ret) {
+            final RequestContext requestContext = REQUEST_CONTEXT.get();
+            if (null != requestContext) {
+                ret = requestContext.getRequest().getServerName();
+            } else {
                 throw new IllegalStateException("latke.properties [serverHost] is empty");
             }
         }
 
-        return serverHost;
-    }
-
-    /**
-     * Sets server host with the specified server host.
-     *
-     * @param serverHost the specified server host
-     */
-    public static void setServerHost(final String serverHost) {
-        Latkes.serverHost = serverHost;
+        return ret;
     }
 
     /**
      * Gets server port.
-     * <p>
-     * Returns the value of "serverPort" property in latke.properties.
-     * </p>
      *
      * @return server port
      */
     public static String getServerPort() {
-        if (null == serverPort) {
-            serverPort = getLatkeProperty("serverPort");
+        String ret = getLatkeProperty("serverPort");
+        if (null == ret) {
+            final RequestContext requestContext = REQUEST_CONTEXT.get();
+            if (null != requestContext) {
+                ret = requestContext.getRequest().getServerPort() + "";
+            }
         }
 
-        return serverPort;
-    }
-
-    /**
-     * Sets server port with the specified server port.
-     *
-     * @param serverPort the specified server port
-     */
-    public static void setServerPort(final String serverPort) {
-        Latkes.serverPort = serverPort;
+        return ret;
     }
 
     /**
@@ -362,17 +339,13 @@ public final class Latkes {
      * @return server, ${serverScheme}://${serverHost}:${serverPort}
      */
     public static String getServer() {
-        if (null == server) {
-            final StringBuilder serverBuilder = new StringBuilder(getServerScheme()).append("://").append(getServerHost());
-            final String port = getServerPort();
-            if (StringUtils.isNotBlank(port) && !port.equals("80")) {
-                serverBuilder.append(':').append(port);
-            }
-
-            server = serverBuilder.toString();
+        final StringBuilder serverBuilder = new StringBuilder(getServerScheme()).append("://").append(getServerHost());
+        final String port = getServerPort();
+        if (StringUtils.isNotBlank(port) && !"80".equals(port) && !"443".equals(port)) {
+            serverBuilder.append(':').append(port);
         }
 
-        return server;
+        return serverBuilder.toString();
     }
 
     /**
@@ -381,98 +354,49 @@ public final class Latkes {
      * @return serve path, ${server}${contextPath}
      */
     public static String getServePath() {
-        if (null == servePath) {
-            servePath = getServer() + getContextPath();
-        }
-
-        return servePath;
+        return getServer() + getContextPath();
     }
 
     /**
      * Gets static server scheme.
-     * <p>
-     * Returns the value of "staticServerScheme" property in latke.properties, returns the value of "serverScheme" if
-     * not found.
-     * </p>
      *
      * @return static server scheme
      */
     public static String getStaticServerScheme() {
-        if (null == staticServerScheme) {
-            staticServerScheme = getLatkeProperty("staticServerScheme");
-            if (null == staticServerScheme) {
-                staticServerScheme = getServerScheme();
-            }
+        String ret = getLatkeProperty("staticServerScheme");
+        if (null == ret) {
+            return getServerScheme();
         }
 
-        return staticServerScheme;
-    }
-
-    /**
-     * Sets static server scheme with the specified static server scheme.
-     *
-     * @param staticServerScheme the specified static server scheme
-     */
-    public static void setStaticServerScheme(final String staticServerScheme) {
-        Latkes.staticServerScheme = staticServerScheme;
+        return ret;
     }
 
     /**
      * Gets static server host.
-     * <p>
-     * Returns the value of "staticServerHost" property in latke.properties, returns the value of "serverHost" if not
-     * found.
-     * </p>
      *
      * @return static server host
      */
     public static String getStaticServerHost() {
-        if (null == staticServerHost) {
-            staticServerHost = getLatkeProperty("staticServerHost");
-            if (null == staticServerHost) {
-                staticServerHost = getServerHost();
-            }
+        String ret = getLatkeProperty("staticServerHost");
+        if (null == ret) {
+            return getServerHost();
         }
 
-        return staticServerHost;
-    }
-
-    /**
-     * Sets static server host with the specified static server host.
-     *
-     * @param staticServerHost the specified static server host
-     */
-    public static void setStaticServerHost(final String staticServerHost) {
-        Latkes.staticServerHost = staticServerHost;
+        return ret;
     }
 
     /**
      * Gets static server port.
-     * <p>
-     * Returns the value of "staticServerPort" property in latke.properties, returns the value of "serverPort" if not
-     * found.
-     * </p>
      *
      * @return static server port
      */
     public static String getStaticServerPort() {
-        if (null == staticServerPort) {
-            staticServerPort = getLatkeProperty("staticServerPort");
-            if (null == staticServerPort) {
-                staticServerPort = getServerPort();
-            }
+        String ret = getLatkeProperty("staticServerPort");
+        if (null == ret) {
+            return getServerPort();
         }
 
-        return staticServerPort;
-    }
-
-    /**
-     * Sets static server port with the specified static server port.
-     *
-     * @param staticServerPort the specified static server port
-     */
-    public static void setStaticServerPort(final String staticServerPort) {
-        Latkes.staticServerPort = staticServerPort;
+        return ret;
     }
 
     /**
@@ -481,18 +405,13 @@ public final class Latkes {
      * @return static server, ${staticServerScheme}://${staticServerHost}:${staticServerPort}
      */
     public static String getStaticServer() {
-        if (null == staticServer) {
-            final StringBuilder staticServerBuilder = new StringBuilder(getStaticServerScheme()).append("://").append(getStaticServerHost());
-
-            final String port = getStaticServerPort();
-            if (StringUtils.isNotBlank(port) && !port.equals("80")) {
-                staticServerBuilder.append(':').append(port);
-            }
-
-            staticServer = staticServerBuilder.toString();
+        final StringBuilder staticServerBuilder = new StringBuilder(getStaticServerScheme()).append("://").append(getStaticServerHost());
+        final String port = getStaticServerPort();
+        if (StringUtils.isNotBlank(port) && !"80".equals(port) && !"443".equals(port)) {
+            staticServerBuilder.append(':').append(port);
         }
 
-        return staticServer;
+        return staticServerBuilder.toString();
     }
 
     /**
@@ -501,11 +420,7 @@ public final class Latkes {
      * @return static serve path, ${staticServer}${staticPath}
      */
     public static String getStaticServePath() {
-        if (null == staticServePath) {
-            staticServePath = getStaticServer() + getStaticPath();
-        }
-
-        return staticServePath;
+        return getStaticServer() + getStaticPath();
     }
 
     /**
@@ -591,7 +506,12 @@ public final class Latkes {
     /**
      * Initializes Latke framework.
      */
-    public static void init() {
+    public static synchronized void init() {
+        if (inited) {
+            return;
+        }
+        inited = true;
+
         LOGGER.log(Level.TRACE, "Initializing Latke");
 
         loadLatkeProps();

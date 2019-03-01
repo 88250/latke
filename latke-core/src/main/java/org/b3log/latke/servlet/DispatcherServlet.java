@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet;
 
+import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.function.ContextHandler;
@@ -76,9 +77,17 @@ public final class DispatcherServlet extends HttpServlet {
      * @return context
      */
     public static RequestContext handle(final HttpServletRequest request, final HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Sets request context character encoding failed", e);
+        }
+
         final RequestContext ret = new RequestContext();
         ret.setRequest(request);
         ret.setResponse(response);
+        Latkes.REQUEST_CONTEXT.set(ret);
 
         for (final Handler handler : HANDLERS) {
             ret.addHandler(handler);
@@ -86,6 +95,7 @@ public final class DispatcherServlet extends HttpServlet {
 
         ret.handle();
         result(ret);
+        Latkes.REQUEST_CONTEXT.set(null);
 
         return ret;
     }
