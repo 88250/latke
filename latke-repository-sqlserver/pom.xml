@@ -13,7 +13,7 @@
     <name>Latke Repository (SQL Server)</name>
     <description>Latke Repository on MS SQL Server.</description>
     <inceptionYear>2014</inceptionYear>
-    
+
     <parent>
         <groupId>org.b3log</groupId>
         <artifactId>latke-parent</artifactId>
@@ -39,25 +39,25 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
-            
-            <dependency>         
+
+            <dependency>
                 <groupId>net.sourceforge.jtds</groupId>
                 <artifactId>jtds</artifactId>
                 <version>${jtds.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
-            
+
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-       
+
         <dependency>
             <groupId>org.b3log</groupId>
             <artifactId>latke-core</artifactId>
@@ -68,18 +68,18 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
-        
-        <dependency>         
+
+        <dependency>
             <groupId>net.sourceforge.jtds</groupId>
             <artifactId>jtds</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
 
 </project>
