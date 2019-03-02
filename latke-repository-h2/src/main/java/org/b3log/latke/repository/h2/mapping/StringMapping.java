@@ -15,10 +15,8 @@
  */
 package org.b3log.latke.repository.h2.mapping;
 
-
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-
 
 /**
  * H2 string type mapping.
@@ -31,7 +29,6 @@ public final class StringMapping implements Mapping {
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
         final StringBuilder sql = new StringBuilder();
-
         sql.append(definition.getName());
 
         if (definition.getLength() == null) {

@@ -35,7 +35,7 @@ import java.util.List;
  * H2 database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Feb 21, 2019
+ * @version 2.0.0.2, Mar 2, 2019
  */
 public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
@@ -79,12 +79,12 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
                             final String filterSql, final String orderBySql, final String tableName) {
         final StringBuilder sql = new StringBuilder();
 
-        sql.append(selectSql).append(" from ").append(tableName);
+        sql.append(selectSql).append(" FROM ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {
-            sql.append(" where ").append(filterSql);
+            sql.append(" WHERE ").append(filterSql);
         }
         sql.append(orderBySql);
-        sql.append(" limit ").append(start).append(",").append(end - start);
+        sql.append(" LIMIT ").append(start).append(",").append(end - start);
 
         return sql.toString();
     }
@@ -92,8 +92,8 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
         final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
 
-        sql.append(" SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
         return sql.toString();
     }
 
@@ -118,12 +118,12 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
                     keyDefinitionList.add(fieldDefinition);
                 }
             } else {
-                throw new RuntimeException("the type[" + fieldDefinition.getType() + "] is not register for mapping ");
+                throw new RuntimeException("The type [" + fieldDefinition.getType() + "] is not register for mapping ");
             }
         }
 
         if (keyDefinitionList.size() < 0) {
-            throw new RuntimeException("no key talbe is not allow");
+            throw new RuntimeException("Table must have a primary key");
         } else {
             createTableSql.append(createKeyDefinition(keyDefinitionList));
         }
@@ -158,6 +158,6 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append(");");
+        createTableSql.append(")");
     }
 }
