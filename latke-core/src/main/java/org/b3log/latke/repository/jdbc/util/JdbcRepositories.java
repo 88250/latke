@@ -34,11 +34,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * JdbcRepository utilities.
+ * Jdbc repository utilities.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.2, Sep 1, 2018
+ * @version 2.0.0.3, Mar 2, 2019
  */
 public final class JdbcRepositories {
 
@@ -61,6 +61,16 @@ public final class JdbcRepositories {
      * "name".
      */
     private static final String NAME = "name";
+
+    /**
+     * "character".
+     */
+    private static final String CHARACTER = "character";
+
+    /**
+     * "collate".
+     */
+    private static final String COLLATE = "collate";
 
     /**
      * "keys".
@@ -182,6 +192,8 @@ public final class JdbcRepositories {
                 definition = fillFieldDefinitionData(keyObject);
                 keys.add(definition);
             }
+            repositoryDefinition.setCharset(repositoryObject.optString(CHARACTER));
+            repositoryDefinition.setCollate(repositoryObject.optString(COLLATE));
         }
     }
 
