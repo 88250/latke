@@ -63,9 +63,9 @@ public final class JdbcRepositories {
     private static final String NAME = "name";
 
     /**
-     * "character".
+     * "charset".
      */
-    private static final String CHARACTER = "character";
+    private static final String CHARSET = "charset";
 
     /**
      * "collate".
@@ -192,7 +192,7 @@ public final class JdbcRepositories {
                 definition = fillFieldDefinitionData(keyObject);
                 keys.add(definition);
             }
-            repositoryDefinition.setCharset(repositoryObject.optString(CHARACTER));
+            repositoryDefinition.setCharset(repositoryObject.optString(CHARSET));
             repositoryDefinition.setCollate(repositoryObject.optString(COLLATE));
         }
     }
