@@ -21,7 +21,7 @@ import java.util.List;
  * Repository definition.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Mar 15, 2018
+ * @version 1.1.0.0, Mar 2, 2019
  */
 public class RepositoryDefinition {
 
@@ -39,6 +39,16 @@ public class RepositoryDefinition {
      * Key definitions, mapping to table files.
      */
     private List<FieldDefinition> keys;
+
+    /**
+     * Repository charset.
+     */
+    private String charset;
+
+    /**
+     * Repository collate.
+     */
+    private String collate;
 
     /**
      * Gets the name.
@@ -92,5 +102,41 @@ public class RepositoryDefinition {
      */
     public void setKeys(final List<FieldDefinition> keys) {
         this.keys = keys;
+    }
+
+    /**
+     * Gets the charset.
+     *
+     * @return charset
+     */
+    public String getCharset() {
+        return charset;
+    }
+
+    /**
+     * Sets the charset with the specified charset.
+     *
+     * @param charset the specified charset
+     */
+    public void setCharset(final String charset) {
+        this.charset = charset;
+    }
+
+    /**
+     * Gets the collate.
+     *
+     * @return collate
+     */
+    public String getCollate() {
+        return collate;
+    }
+
+    /**
+     * Sets the collate with the specified collate.
+     *
+     * @param collate the specified collate
+     */
+    public void setCollate(final String collate) {
+        this.collate = collate;
     }
 }
