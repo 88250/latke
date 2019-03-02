@@ -26,7 +26,7 @@ import java.util.Map;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.0.0, Dec 21, 2018
+ * @version 1.5.0.1, Mar 3, 2019
  */
 public interface Repository {
 
@@ -96,7 +96,7 @@ public interface Repository {
      * <p>
      * <h4>Pagination</h4>
      * If the "paginationPageCount" has been specified (not with {@code -1} or {@code null}) by caller (as the argument
-     * {@link Query#pageCount}), the value will be used in the returned value. In other words, the page count result
+     * {@link Query#setPageCount(int)}), the value will be used in the returned value. In other words, the page count result
      * will not be calculated by this interface, otherwise, the returned value pagination.paginationPageCount and
      * pagination.paginationRecordCount will be calculated with query condition.
      * <p>
@@ -143,6 +143,7 @@ public interface Repository {
      * @throws RepositoryException repository exception
      */
     default JSONObject getFirst(final Query query) throws RepositoryException {
+        query.setPageCount(1).setPage(1, 1);
         final List<JSONObject> records = getList(query);
         if (records.isEmpty()) {
             return null;
