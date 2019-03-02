@@ -17,6 +17,7 @@ package org.b3log.latke.repository.jdbc.util;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -35,8 +36,8 @@ import java.util.Properties;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
- * @author <a href="mailto:385321165@qq.com">DASHU</a>
- * @version 2.0.0.1, Sep 25, 2018
+ * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
+ * @version 2.0.0.2, Mar 3, 2019
  */
 public final class Connections {
 
@@ -83,20 +84,23 @@ public final class Connections {
                 final int maxConnCnt = Integer.valueOf(Latkes.getLocalProperty("jdbc.maxConnCnt"));
 
                 final String transactionIsolation = Latkes.getLocalProperty("jdbc.transactionIsolation");
-                if ("NONE".equals(transactionIsolation)) {
-                    transactionIsolationInt = Connection.TRANSACTION_NONE;
-                } else if ("READ_COMMITTED".equals(transactionIsolation)) {
+                if (StringUtils.isBlank(transactionIsolation)) {
                     transactionIsolationInt = Connection.TRANSACTION_READ_COMMITTED;
-                } else if ("READ_UNCOMMITTED".equals(transactionIsolation)) {
-                    transactionIsolationInt = Connection.TRANSACTION_READ_UNCOMMITTED;
-                } else if ("REPEATABLE_READ".equals(transactionIsolation)) {
-                    transactionIsolationInt = Connection.TRANSACTION_REPEATABLE_READ;
-                } else if ("SERIALIZABLE".equals(transactionIsolation)) {
-                    transactionIsolationInt = Connection.TRANSACTION_SERIALIZABLE;
                 } else {
-                    throw new IllegalStateException("Undefined transaction isolation [" + transactionIsolation + ']');
+                    if ("NONE".equals(transactionIsolation)) {
+                        transactionIsolationInt = Connection.TRANSACTION_NONE;
+                    } else if ("READ_COMMITTED".equals(transactionIsolation)) {
+                        transactionIsolationInt = Connection.TRANSACTION_READ_COMMITTED;
+                    } else if ("READ_UNCOMMITTED".equals(transactionIsolation)) {
+                        transactionIsolationInt = Connection.TRANSACTION_READ_UNCOMMITTED;
+                    } else if ("REPEATABLE_READ".equals(transactionIsolation)) {
+                        transactionIsolationInt = Connection.TRANSACTION_REPEATABLE_READ;
+                    } else if ("SERIALIZABLE".equals(transactionIsolation)) {
+                        transactionIsolationInt = Connection.TRANSACTION_SERIALIZABLE;
+                    } else {
+                        throw new IllegalStateException("Undefined transaction isolation [" + transactionIsolation + ']');
+                    }
                 }
-
 
                 LOGGER.log(Level.DEBUG, "Initialing database connection pool [hikari]");
                 final Properties props = new Properties();
