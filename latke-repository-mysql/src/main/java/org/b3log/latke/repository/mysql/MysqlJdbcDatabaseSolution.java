@@ -108,7 +108,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
             final String type = fieldDefinition.getType();
             if (type == null) {
-                throw new RuntimeException("the type of fieldDefinitions should not be null");
+                throw new RuntimeException("The type of fieldDefinitions should not be null");
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (null != mapping) {
@@ -126,11 +126,8 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
         }
 
-        if (keyDefinitionList.size() < 0) {
-            throw new RuntimeException("Table must have a primary key");
-        } else {
-            createTableSql.append(createKeyDefinition(keyDefinitionList));
-        }
+        keyDefinitionList.size();
+        createTableSql.append(createKeyDefinition(keyDefinitionList));
     }
 
     /**
@@ -165,7 +162,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
         final String description = repositoryDefinition.getDescription();
         if (StringUtils.isNotBlank(description)) {
-            createTableSql.append(" COMMENT='" + description + "'");
+            createTableSql.append(" COMMENT='").append(description).append("'");
         }
 
         final String charset = repositoryDefinition.getCharset();

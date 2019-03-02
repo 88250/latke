@@ -136,7 +136,7 @@ WHERE rownum <= 1000
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
             final String type = fieldDefinition.getType();
             if (type == null) {
-                throw new RuntimeException("the type of fieldDefinitions should not be null");
+                throw new RuntimeException("The type of fieldDefinitions should not be null");
             }
 
             final Mapping mapping = getJdbcTypeMapping().get(type);
@@ -147,15 +147,12 @@ WHERE rownum <= 1000
                     keyDefinitionList.add(fieldDefinition);
                 }
             } else {
-                throw new RuntimeException("the type[" + fieldDefinition.getType() + "] is not register for mapping ");
+                throw new RuntimeException("The type [" + fieldDefinition.getType() + "] is not register for mapping ");
             }
         }
 
-        if (keyDefinitionList.size() < 0) {
-            throw new RuntimeException("no key talbe is not allow");
-        } else {
-            createTableSql.append(createKeyDefinition(keyDefinitionList));
-        }
+        keyDefinitionList.size();
+        createTableSql.append(createKeyDefinition(keyDefinitionList));
     }
 
     /**

@@ -122,11 +122,8 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
         }
 
-        if (keyDefinitionList.size() < 0) {
-            throw new RuntimeException("Table must have a primary key");
-        } else {
-            createTableSql.append(createKeyDefinition(keyDefinitionList));
-        }
+        keyDefinitionList.size();
+        createTableSql.append(createKeyDefinition(keyDefinitionList));
     }
 
     /**
