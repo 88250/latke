@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Feb 21, 2019
+ * @version 2.0.0.2, Mar 2, 2019
  */
 public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
@@ -166,6 +166,19 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
         final String description = repositoryDefinition.getDescription();
         if (StringUtils.isNotBlank(description)) {
             createTableSql.append(" COMMENT='" + description + "'");
+        }
+
+        final String charset = repositoryDefinition.getCharset();
+        if (StringUtils.isNotBlank(charset)) {
+            createTableSql.append(" DEFAULT CHARACTER SET ").append(charset);
+        } else {
+            createTableSql.append(" DEFAULT CHARACTER SET ").append("utf8mb4");
+        }
+        final String collate = repositoryDefinition.getCollate();
+        if (StringUtils.isNotBlank(collate)) {
+            createTableSql.append(" COLLATE ").append(collate);
+        } else {
+            createTableSql.append(" COLLATE ").append("utf8mb4_general_ci");
         }
     }
 }
