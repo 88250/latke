@@ -155,20 +155,14 @@ public interface Repository {
 
 ```java
 public JSONObject getByName(final String name) throws RepositoryException {
-    final List<JSONObject> records = getList(new Query().
-            setFilter(new PropertyFilter("name", FilterOperator.EQUAL, name)));
-    if (records.isEmpty()) {
-        return null;
-    }
-
-    return records.get(0);
+    return getFirst(new Query().setFilter(new PropertyFilter("name", FilterOperator.EQUAL, name)));
 }
 ```
 
 **分页查询**
 
 ```java
-new Query().setCurrentPageNum(1).setPageSize(50)
+new Query().setPage(1, 50)
 ```
 
 **按字段排序**
@@ -180,7 +174,7 @@ new Query().addSort("name", SortDirection.DESCENDING);
 **仅获取需要字段**
 
 ```java
-new Query().addProjection("name", String.class);
+new Query().select("name", "age");
 ```
 
 **原生 SQL**
