@@ -25,6 +25,7 @@ import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
 import org.b3log.latke.servlet.renderer.Http500Renderer;
 import org.b3log.latke.servlet.renderer.JsonRenderer;
 import org.b3log.latke.util.Requests;
+import org.b3log.latke.util.URLs;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.5, Feb 10, 2019
+ * @version 1.3.0.6, Mar 17, 2019
  */
 public final class RequestContext {
 
@@ -588,6 +589,10 @@ public final class RequestContext {
             String tmp = IOUtils.toString(reader);
             if (StringUtils.isBlank(tmp)) {
                 tmp = "{}";
+            } else {
+                if (StringUtils.startsWithIgnoreCase(tmp, "%7B%22" /* {" */)) {
+                    tmp = URLs.decode(tmp);
+                }
             }
 
             return new JSONObject(tmp);
