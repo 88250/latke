@@ -25,7 +25,7 @@ import java.net.URLEncoder;
  * URL utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Aug 1, 2018
+ * @version 1.0.0.1, Mar 17, 2019
  * @since 2.4.4
  */
 public final class URLs {
@@ -36,34 +36,34 @@ public final class URLs {
     private static final Logger LOGGER = Logger.getLogger(URLs.class);
 
     /**
-     * Encodes the specified URL.
+     * Encodes the specified string.
      *
-     * @param url the specified URL
-     * @return encoded URL
+     * @param str the specified string
+     * @return URL encoded string
      */
-    public static String encode(final String url) {
+    public static String encode(final String str) {
         try {
-            return URLEncoder.encode(url, "UTF-8");
+            return URLEncoder.encode(str, "UTF-8");
         } catch (final Exception e) {
-            LOGGER.log(Level.WARN, "Encodes URL [" + url + "] failed", e);
+            LOGGER.log(Level.WARN, "Encodes str [" + str + "] failed", e);
 
-            return url;
+            return str;
         }
     }
 
     /**
-     * Decodes the specified URL.
+     * Decodes the specified string.
      *
-     * @param url the specified URL
-     * @return decoded URL
+     * @param str the specified string
+     * @return URL decoded string
      */
-    public static String decode(final String url) {
+    public static String decode(final String str) {
         try {
-            return URLDecoder.decode(url, "UTF-8");
+            return URLDecoder.decode(str, "UTF-8");
         } catch (final Exception e) {
-            LOGGER.log(Level.WARN, "Decodes URL [" + url + "] failed", e);
+            LOGGER.log(Level.WARN, "Decodes str [" + str + "] failed", e);
 
-            return url;
+            return str;
         }
     }
 
