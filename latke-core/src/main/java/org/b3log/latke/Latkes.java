@@ -63,7 +63,7 @@ public final class Latkes {
     /**
      * Version.
      */
-    public static final String VERSION = "2.4.42";
+    public static final String VERSION = "2.4.47";
 
     /**
      * Application startup time millisecond.
@@ -332,9 +332,13 @@ public final class Latkes {
             try (final BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 PUBLIC_IP = in.readLine();
             }
+
+            return;
         } catch (final Exception e) {
             try {
                 PUBLIC_IP = InetAddress.getLocalHost().getHostAddress();
+
+                return;
             } catch (final Exception e2) {
             }
         }
