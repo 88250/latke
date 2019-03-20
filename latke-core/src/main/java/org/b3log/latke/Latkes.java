@@ -26,9 +26,8 @@ import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.servlet.RequestContext;
 
 import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.net.InetAddress;
 import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -43,7 +42,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.9.0.0, Feb 28, 2019
+ * @version 2.10.0.0, Mar 20, 2019
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -309,11 +308,38 @@ public final class Latkes {
             if (null != requestContext) {
                 ret = requestContext.getRequest().getServerName();
             } else {
-                throw new IllegalStateException("latke.properties [serverHost] is empty");
+                initPublicIP();
+
+                return PUBLIC_IP;
             }
         }
 
         return ret;
+    }
+
+    private static String PUBLIC_IP;
+
+    /**
+     * Init public IP.
+     */
+    public synchronized static void initPublicIP() {
+        if (StringUtils.isNotBlank(PUBLIC_IP)) {
+            return;
+        }
+
+        try {
+            final URL url = new URL("http://checkip.amazonaws.com");
+            try (final BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                PUBLIC_IP = in.readLine();
+            }
+        } catch (final Exception e) {
+            try {
+                PUBLIC_IP = InetAddress.getLocalHost().getHostAddress();
+            } catch (final Exception e2) {
+            }
+        }
+
+        PUBLIC_IP = "127.0.0.1";
     }
 
     /**
