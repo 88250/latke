@@ -27,6 +27,7 @@ import org.b3log.latke.servlet.RequestContext;
 
 import javax.servlet.ServletContext;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.sql.Driver;
@@ -329,9 +330,13 @@ public final class Latkes {
 
         try {
             final URL url = new URL("http://checkip.amazonaws.com");
-            try (final BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(3000);
+            urlConnection.setReadTimeout(3000);
+            try (final BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
                 PUBLIC_IP = in.readLine();
             }
+            urlConnection.disconnect();
 
             return;
         } catch (final Exception e) {
