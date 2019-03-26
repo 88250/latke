@@ -43,7 +43,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.10.0.0, Mar 20, 2019
+ * @version 2.10.0.1, Mar 26, 2019
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -648,12 +648,7 @@ public final class Latkes {
             return RuntimeCache.LOCAL_LRU;
         }
 
-        final RuntimeCache ret = RuntimeCache.valueOf(runtimeCache);
-        if (null == ret) {
-            throw new RuntimeException("Please configures a valid runtime cache in local.properties!");
-        }
-
-        return ret;
+        return RuntimeCache.valueOf(runtimeCache);
     }
 
     /**
@@ -876,7 +871,7 @@ public final class Latkes {
          */
         NONE,
         /**
-         * Local LRU memory cache.
+         * Local LRU memory cache (Caffeine).
          */
         LOCAL_LRU,
         /**

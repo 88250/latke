@@ -30,7 +30,7 @@ import java.util.Set;
  * Redis cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Oct 27, 2018
+ * @version 1.0.1.1, Mar 26, 2019
  * @since 2.3.13
  */
 public final class RedisCache extends AbstractCache {
@@ -165,9 +165,5 @@ public final class RedisCache extends AbstractCache {
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdown redis connection pool failed", e);
         }
-    }
-
-    @Override
-    public void collect() {
     }
 }

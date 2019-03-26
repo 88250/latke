@@ -13,44 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.cache;
+package org.b3log.latke.cache.caffeine;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.b3log.latke.cache.AbstractCache;
 import org.json.JSONObject;
 
 import java.util.Collection;
 
 /**
- * None cache.
+ * Caffeine cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Mar 26, 2019
- * @since 2.3.13
+ * @version 1.0.0.0, Mar 26, 2019
+ * @since 2.4.48
  */
-public final class NoneCache extends AbstractCache {
+public final class CaffeineCache extends AbstractCache {
+
+    private Cache<String, JSONObject> cache = Caffeine.newBuilder().build();
 
     @Override
     public boolean contains(final String key) {
-        return false;
+        return null != cache.getIfPresent(key);
     }
 
     @Override
     public void put(final String key, final JSONObject value) {
+        cache.put(key, value);
     }
 
     @Override
     public JSONObject get(final String key) {
-        return null;
+        return cache.getIfPresent(key);
     }
 
     @Override
     public void remove(final String key) {
+        cache.invalidate(key);
     }
 
     @Override
     public void remove(final Collection<String> keys) {
+        cache.invalidateAll(keys);
     }
 
     @Override
     public void clear() {
+        cache.invalidateAll();
     }
 }

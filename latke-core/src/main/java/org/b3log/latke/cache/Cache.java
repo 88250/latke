@@ -26,7 +26,7 @@ import java.util.Collection;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.10, Oct 27, 2018
+ * @version 3.0.0.0, Mar 26, 2019
  */
 public interface Cache {
 
@@ -103,53 +103,4 @@ public interface Cache {
      * Clear all cached objects.
      */
     void clear();
-
-    /**
-     * Gets the maximum objects count of this cache.
-     *
-     * @return the maximum objects count of this cache, returns {@code -1} if
-     * cache is unavailable.
-     */
-    long getMaxCount();
-
-    /**
-     * Sets the maximum objects count of this cache.
-     *
-     * @param maxCount the maximum count of this cache
-     */
-    void setMaxCount(final long maxCount);
-
-    /**
-     * Gets the hit count of this cache.
-     *
-     * @return hit count of this cache, returns {@code -1} if cache is unavailable.
-     */
-    long getHitCount();
-
-    /**
-     * Gets the miss count of this cache.
-     *
-     * @return miss count of this cache, returns {@code -1} if cache is unavailable.
-     */
-    long getMissCount();
-
-    /**
-     * Gets the put count of this cache.
-     *
-     * @return put count of this cache
-     */
-    long getPutCount();
-
-    /**
-     * Gets current cached object count of this cache.
-     *
-     * @return current cached object count of this cache, returns {@code -1}
-     * if cache is unavailable.
-     */
-    long getCachedCount();
-
-    /**
-     * Collects all useless cached objects.
-     */
-    void collect();
 }
