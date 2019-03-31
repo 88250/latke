@@ -20,16 +20,33 @@ import org.apache.commons.lang.time.DateUtils;
 import org.testng.annotations.Test;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * {@link Times} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Apr 2, 2019
+ * @version 1.1.0.0, Apr 4, 2019
  * @since 2.4.49
  */
 public class TimesTestCase {
+
+    @Test
+    public void getDayStartTime() {
+        final long now = System.currentTimeMillis();
+        final long dayStartTime = Times.getDayStartTime(now);
+        final String pattern = "yyyyMMdd HH:mm:ss";
+        final String start = DateFormatUtils.format(dayStartTime, pattern);
+        System.out.println("day start: " + start);
+    }
+
+    @Test
+    public void getDayEndTime() {
+        final long now = System.currentTimeMillis();
+        final long dayEndTime = Times.getDayEndTime(now);
+        final String pattern = "yyyyMMdd HH:mm:ss";
+        final String end = DateFormatUtils.format(dayEndTime, pattern);
+        System.out.println("day end: " + end);
+    }
 
     @Test
     public void getMonthStartTime() {
@@ -37,7 +54,7 @@ public class TimesTestCase {
         final long monthStartTime = Times.getMonthStartTime(now);
         final String pattern = "yyyyMMdd HH:mm:ss";
         final String start = DateFormatUtils.format(monthStartTime, pattern);
-        System.out.println(start);
+        System.out.println("month start: " + start);
 
         final Date lastMonth = DateUtils.addMonths(new Date(), -1);
         final long lastMonthStartTime = Times.getMonthStartTime(lastMonth.getTime());
@@ -50,12 +67,12 @@ public class TimesTestCase {
         final long now = System.currentTimeMillis();
         final long monthEndTime = Times.getMonthEndTime(now);
         final String pattern = "yyyyMMdd HH:mm:ss";
-        final String end = DateFormatUtils.format(monthEndTime, pattern, TimeZone.getTimeZone("UTC+8"));
-        System.out.println("end: " + end);
+        final String end = DateFormatUtils.format(monthEndTime, pattern);
+        System.out.println("month end: " + end);
 
         final Date lastMonth = DateUtils.addMonths(new Date(), -1);
         final long lastMonthEndTime = Times.getMonthEndTime(lastMonth.getTime());
-        final String lastMonthEnd = DateFormatUtils.format(lastMonthEndTime, pattern, TimeZone.getTimeZone("UTC+8"));
+        final String lastMonthEnd = DateFormatUtils.format(lastMonthEndTime, pattern);
         System.out.println("last month end: " + lastMonthEnd);
     }
 }
