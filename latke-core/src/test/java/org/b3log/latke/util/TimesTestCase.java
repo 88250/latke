@@ -16,13 +16,7 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * {@link Times} test case.
