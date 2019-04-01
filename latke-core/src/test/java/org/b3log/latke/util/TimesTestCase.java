@@ -16,7 +16,10 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.testng.annotations.Test;
+
+import java.util.Date;
 
 /**
  * {@link Times} test case.
@@ -31,21 +34,27 @@ public class TimesTestCase {
     public void getMonthStartTime() {
         final long now = System.currentTimeMillis();
         final long monthStartTime = Times.getMonthStartTime(now);
-
         final String pattern = "yyyyMMdd HH:mm:ss";
         final String start = DateFormatUtils.format(monthStartTime, pattern);
-
         System.out.println(start);
+
+        final Date lastMonth = DateUtils.addMonths(new Date(), -1);
+        final long lastMonthStartTime = Times.getMonthStartTime(lastMonth.getTime());
+        final String lastMonthStart = DateFormatUtils.format(lastMonthStartTime, pattern);
+        System.out.println("last month start: " + lastMonthStart);
     }
 
     @Test
     public void getMonthEndTime() {
         final long now = System.currentTimeMillis();
         final long monthEndTime = Times.getMonthEndTime(now);
-
         final String pattern = "yyyyMMdd HH:mm:ss";
         final String end = DateFormatUtils.format(monthEndTime, pattern);
+        System.out.println("end: " + end);
 
-        System.out.println(end);
+        final Date lastMonth = DateUtils.addMonths(new Date(), -1);
+        final long lastMonthEndTime = Times.getMonthEndTime(lastMonth.getTime());
+        final String lastMonthEnd = DateFormatUtils.format(lastMonthEndTime, pattern);
+        System.out.println("last month end: " + lastMonthEnd);
     }
 }
