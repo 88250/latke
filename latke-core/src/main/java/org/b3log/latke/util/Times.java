@@ -18,16 +18,13 @@ package org.b3log.latke.util;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.service.LangPropsService;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Sep 29, 2018
+ * @version 1.0.0.2, Apr 2, 2019
  * @since 2.4.4
  */
 public final class Times {
@@ -180,7 +177,7 @@ public final class Times {
      */
     public static long getDayStartTime(final long time) {
         final Calendar start = Calendar.getInstance();
-
+        start.setTimeZone(TimeZone.getTimeZone("UTC"));
         start.setTimeInMillis(time);
         final int year = start.get(Calendar.YEAR);
         final int month = start.get(Calendar.MONTH);
@@ -188,7 +185,7 @@ public final class Times {
         start.set(year, month, day, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
 
-        return start.getTime().getTime();
+        return start.getTimeInMillis();
     }
 
     /**
@@ -199,7 +196,7 @@ public final class Times {
      */
     public static long getDayEndTime(final long time) {
         final Calendar end = Calendar.getInstance();
-
+        end.setTimeZone(TimeZone.getTimeZone("UTC"));
         end.setTimeInMillis(time);
         final int year = end.get(Calendar.YEAR);
         final int month = end.get(Calendar.MONTH);
@@ -207,7 +204,7 @@ public final class Times {
         end.set(year, month, day, 23, 59, 59);
         end.set(Calendar.MILLISECOND, 999);
 
-        return end.getTime().getTime();
+        return end.getTimeInMillis();
     }
 
     /**
@@ -218,6 +215,7 @@ public final class Times {
      */
     public static int getWeekDay(final long time) {
         final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         calendar.setTimeInMillis(time);
         int ret = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if (ret <= 0) {
@@ -235,9 +233,8 @@ public final class Times {
      */
     public static long getWeekStartTime(final long time) {
         final Calendar start = Calendar.getInstance();
-
+        start.setTimeZone(TimeZone.getTimeZone("UTC"));
         start.setFirstDayOfWeek(Calendar.MONDAY);
-
         start.setTimeInMillis(time);
         start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         start.set(Calendar.HOUR, 0);
@@ -245,7 +242,7 @@ public final class Times {
         start.set(Calendar.SECOND, 0);
         start.set(Calendar.MILLISECOND, 0);
 
-        return start.getTime().getTime();
+        return start.getTimeInMillis();
     }
 
     /**
@@ -256,9 +253,8 @@ public final class Times {
      */
     public static long getWeekEndTime(final long time) {
         final Calendar end = Calendar.getInstance();
-
+        end.setTimeZone(TimeZone.getTimeZone("UTC"));
         end.setFirstDayOfWeek(Calendar.MONDAY);
-
         end.setTimeInMillis(time);
         end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         end.set(Calendar.HOUR, 23);
@@ -266,7 +262,7 @@ public final class Times {
         end.set(Calendar.SECOND, 59);
         end.set(Calendar.MILLISECOND, 999);
 
-        return end.getTime().getTime();
+        return end.getTimeInMillis();
     }
 
     /**
@@ -277,14 +273,14 @@ public final class Times {
      */
     public static long getMonthStartTime(final long time) {
         final Calendar start = Calendar.getInstance();
-
+        start.setTimeZone(TimeZone.getTimeZone("UTC"));
         start.setTimeInMillis(time);
         final int year = start.get(Calendar.YEAR);
         final int month = start.get(Calendar.MONTH);
         start.set(year, month, 1, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
 
-        return start.getTime().getTime();
+        return start.getTimeInMillis();
     }
 
     /**
@@ -295,7 +291,7 @@ public final class Times {
      */
     public static long getMonthEndTime(final long time) {
         final Calendar end = Calendar.getInstance();
-
+        end.setTimeZone(TimeZone.getTimeZone("UTC"));
         end.setTimeInMillis(time);
         end.set(Calendar.DAY_OF_MONTH, end.getActualMaximum(Calendar.DAY_OF_MONTH));
         end.set(Calendar.HOUR, 23);
@@ -303,7 +299,7 @@ public final class Times {
         end.set(Calendar.SECOND, 59);
         end.set(Calendar.MILLISECOND, 999);
 
-        return end.getTime().getTime();
+        return end.getTimeInMillis();
     }
 
     /**
