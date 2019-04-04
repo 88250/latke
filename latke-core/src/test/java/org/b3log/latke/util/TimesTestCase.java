@@ -19,6 +19,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.testng.annotations.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -75,5 +76,22 @@ public class TimesTestCase {
         final long lastMonthEndTime = Times.getMonthEndTime(lastMonth.getTime());
         final String lastMonthEnd = DateFormatUtils.format(lastMonthEndTime, pattern, TimeZone.getTimeZone("UTC"));
         System.out.println("last month end: " + lastMonthEnd);
+
+        final long monthEndTimeWrong = getMonthEndTimeWrong(lastMonth.getTime());
+        final String lastMonthEndWrong = DateFormatUtils.format(monthEndTimeWrong, pattern);
+        System.out.println("last month end wrong: " + lastMonthEndWrong);
     }
+
+    private static long getMonthEndTimeWrong(final long time) {
+        final Calendar end = Calendar.getInstance();
+        end.setTimeInMillis(time);
+        end.set(Calendar.DAY_OF_MONTH, end.getActualMaximum(Calendar.DAY_OF_MONTH));
+        end.set(Calendar.HOUR, 23);
+        end.set(Calendar.MINUTE, 59);
+        end.set(Calendar.SECOND, 59);
+        end.set(Calendar.MILLISECOND, 999);
+
+        return end.getTimeInMillis();
+    }
+
 }
