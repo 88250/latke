@@ -5,7 +5,8 @@
 <br><br>
 <a title="Build Status" target="_blank" href="https://travis-ci.org/b3log/latke"><img src="https://img.shields.io/travis/b3log/latke.svg?style=flat-square"></a>
 <a title="Apache2" target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.txt"><img src="http://img.shields.io/badge/license-Apache2-orange.svg?style=flat-square"></a>
-<a title="Maven Central" target="_blank" href="http://repo1.maven.org/maven2/org/b3log/latke-parent"><img src="https://maven-badges.herokuapp.com/maven-central/org.b3log/latke-parent/badge.svg?style=flat-square"></a>
+<a title="Maven Central" target="_blank" href="http://repo1.maven.org/maven2/org/b3log/latke-parent"><img src="https://maven-badges.herokuapp.com/maven-central/org.b3log/latke-parent/badge.svg?style=flat-square&color=blueviolet"></a>
+<a title="Hits" target="_blank" href="http://hits.dwyl.io/b3log/latke"><img src="http://hits.dwyl.io/b3log/latke.svg"></a>
 </p>
 
 ## 简介
