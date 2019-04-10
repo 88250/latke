@@ -288,7 +288,7 @@ public final class Times {
      */
     public static long getMonthEndTime(final long time) {
         final Calendar end = Calendar.getInstance();
-        end.setTimeInMillis(time);
+        end.setTimeInMillis(getDayStartTime(time));
         end.set(Calendar.DAY_OF_MONTH, end.getActualMaximum(Calendar.DAY_OF_MONTH));
         end.set(Calendar.HOUR, 23);
         end.set(Calendar.MINUTE, 59);
