@@ -66,7 +66,7 @@ public final class Latkes {
     /**
      * Version.
      */
-    public static final String VERSION = "2.4.53";
+    public static final String VERSION = "2.4.54";
 
     /**
      * Application startup time millisecond.
