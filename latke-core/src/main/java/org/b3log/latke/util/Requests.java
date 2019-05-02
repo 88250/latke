@@ -32,7 +32,7 @@ import java.util.Enumeration;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 2.0.0.3, Jan 15, 2019
+ * @version 2.1.0.0, May 2, 2019
  */
 public final class Requests {
 
@@ -125,16 +125,50 @@ public final class Requests {
      * @return the IP address of the end-client sent the specified request
      */
     public static String getRemoteAddr(final HttpServletRequest request) {
-        String ret = request.getHeader("X-forwarded-for");
+        String ret = request.getHeader("X-Forwarded-For");
         if (StringUtils.isBlank(ret)) {
             ret = request.getHeader("X-Real-IP");
-        }
-        if (StringUtils.isBlank(ret)) {
-            return request.getRemoteAddr();
+            if (StringUtils.isBlank(ret)) {
+                return request.getRemoteAddr();
+            }
         }
 
         return ret.split(",")[0];
     }
+
+    /**
+     * Gets the scheme of the end-client that sent the specified request.
+     *
+     * @param request the specified reuqest
+     * @return scheme
+     */
+    public static String getServerScheme(final HttpServletRequest request) {
+        String ret = request.getHeader("X-Forwarded-Scheme");
+        if (StringUtils.isBlank(ret)) {
+            ret = request.getHeader("X-Forwarded-Proto");
+            if (StringUtils.isBlank(ret)) {
+                return request.getScheme();
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Gets the server name of the end-client that sent the specified request.
+     *
+     * @param request the specified reuqest
+     * @return server name
+     */
+    public static String getServerName(final HttpServletRequest request) {
+        String ret = request.getHeader("X-Forwarded-Host");
+        if (StringUtils.isBlank(ret)) {
+            return request.getServerName();
+        }
+
+        return ret;
+    }
+
 
     /**
      * Determines whether the specified request has been served.

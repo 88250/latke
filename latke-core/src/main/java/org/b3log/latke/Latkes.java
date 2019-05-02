@@ -24,8 +24,10 @@ import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.util.Requests;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -43,7 +45,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.10.0.2, Arp 4, 2019
+ * @version 2.10.0.3, May 2, 2019
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -288,7 +290,8 @@ public final class Latkes {
         if (null == ret) {
             final RequestContext requestContext = REQUEST_CONTEXT.get();
             if (null != requestContext) {
-                ret = requestContext.getRequest().getScheme();
+                final HttpServletRequest request = requestContext.getRequest();
+                ret = Requests.getServerScheme(request);
             } else {
                 ret = "http";
             }
@@ -307,7 +310,8 @@ public final class Latkes {
         if (null == ret) {
             final RequestContext requestContext = REQUEST_CONTEXT.get();
             if (null != requestContext) {
-                ret = requestContext.getRequest().getServerName();
+                final HttpServletRequest request = requestContext.getRequest();
+                ret = Requests.getServerName(request);
             } else {
                 initPublicIP();
 
