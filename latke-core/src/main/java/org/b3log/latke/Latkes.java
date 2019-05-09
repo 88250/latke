@@ -158,7 +158,7 @@ public final class Latkes {
      * @param servletContext the specified servlet context
      * @return servlet container info, such as "jetty/9.4.12.v20180830"
      */
-    public String getServletInfo(final ServletContext servletContext) {
+    public static String getServletInfo(final ServletContext servletContext) {
         return servletContext.getServerInfo();
     }
 
@@ -167,7 +167,7 @@ public final class Latkes {
      *
      * @return os name
      */
-    public String getOperatingSystemName() {
+    public static String getOperatingSystemName() {
         return System.getProperty("os.name");
     }
 
