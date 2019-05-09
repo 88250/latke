@@ -45,7 +45,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.10.0.3, May 2, 2019
+ * @version 2.11.0.0, May 9, 2019
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -131,6 +131,45 @@ public final class Latkes {
      * Request context holder.
      */
     public static final ThreadLocal<RequestContext> REQUEST_CONTEXT = new InheritableThreadLocal<>();
+
+    /**
+     * Checks if process is running via docker.
+     *
+     * @return {@code true} it is, returns {@code false} otherwise
+     */
+    public static boolean isDocker() {
+        return 1 == currentPID();
+    }
+
+    /**
+     * Gets the current process's id.
+     *
+     * @return the current process's id
+     */
+    public static long currentPID() {
+        final String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+
+        return Long.parseLong(processName.split("@")[0]);
+    }
+
+    /**
+     * Gets the servlet container info with the specified servlet context.
+     *
+     * @param servletContext the specified servlet context
+     * @return servlet container info, such as "jetty/9.4.12.v20180830"
+     */
+    public String getServletInfo(final ServletContext servletContext) {
+        return servletContext.getServerInfo();
+    }
+
+    /**
+     * Gets operating system name.
+     *
+     * @return os name
+     */
+    public String getOperatingSystemName() {
+        return System.getProperty("os.name");
+    }
 
     /**
      * Sets local.props with the specified props. This method is useful when you want to override behaviours of the default properties.
