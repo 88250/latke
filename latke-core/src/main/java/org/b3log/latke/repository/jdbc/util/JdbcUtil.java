@@ -54,7 +54,7 @@ public final class JdbcUtil {
      * @param sql        the specified SQL
      * @param connection connection the specified connection
      * @param isDebug    the specified debug flag
-     * @return {@code true} if success, returns {@false} otherwise
+     * @return {@code true} if success, returns {@code false} otherwise
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final Connection connection, final boolean isDebug) throws SQLException {
@@ -76,7 +76,7 @@ public final class JdbcUtil {
      * @param paramList  the specified params
      * @param connection the specified connection
      * @param isDebug    the specified debug flag
-     * @return {@code true} if success, returns {@false} otherwise
+     * @return {@code true} if success, returns {@code false} otherwise
      * @throws SQLException SQLException
      */
     public static boolean executeSql(final String sql, final List<Object> paramList, final Connection connection, final boolean isDebug) throws SQLException {
