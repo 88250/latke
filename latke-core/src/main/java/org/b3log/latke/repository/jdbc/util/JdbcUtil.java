@@ -39,7 +39,7 @@ import java.util.Map;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.7, Jun 5, 2018
+ * @version 1.1.2.8, May 17, 2019
  */
 public final class JdbcUtil {
 
@@ -205,10 +205,8 @@ public final class JdbcUtil {
             jsonObject = new JSONObject();
 
             for (int i = 1; i < numColumns + 1; i++) {
-                columnName = resultSetMetaData.getColumnName(i);
-
+                columnName = resultSetMetaData.getColumnLabel(i);
                 final FieldDefinition definition = dMap.get(columnName);
-
                 if (null == definition) { // COUNT(OID)
                     jsonObject.put(columnName, resultSet.getObject(columnName));
                 } else if ("boolean".equals(definition.getType())) {
