@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
@@ -274,7 +275,7 @@ public final class JdbcRepository implements Repository {
      * @param propertyNames the specified property names
      */
     private void buildUpdate(final String id, final JSONObject oldJsonObject, final JSONObject jsonObject, final List<Object> paramList, final StringBuilder sqlBuilder, final String... propertyNames) {
-        final JSONObject needUpdateJsonObject = getNeedUpdateJsonObject(oldJsonObject, jsonObject);
+        final JSONObject needUpdateJsonObject = getDiff(oldJsonObject, jsonObject, propertyNames);
         if (0 == needUpdateJsonObject.length()) {
             LOGGER.log(Level.TRACE, "Nothing to update [{0}] for repository [{1}]", id, getName());
 
@@ -306,18 +307,23 @@ public final class JdbcRepository implements Repository {
      *
      * @param oldJsonObject the specified old json object
      * @param jsonObject    the specified new json object
+     * @param propertyNames the specified property names
      * @return diff object for updating
      */
-    private JSONObject getNeedUpdateJsonObject(final JSONObject oldJsonObject, final JSONObject jsonObject) {
+    private JSONObject getDiff(final JSONObject oldJsonObject, final JSONObject jsonObject, final String... propertyNames) {
         if (null == oldJsonObject) {
             return jsonObject;
         }
 
         final JSONObject ret = new JSONObject();
-        final Iterator<String> keys = jsonObject.keys();
-        String key;
-        while (keys.hasNext()) {
-            key = keys.next();
+        final Set<String> keys = new HashSet<>();
+        if (0 < ArrayUtils.getLength(propertyNames)) {
+            keys.addAll(Arrays.asList(propertyNames));
+        } else {
+            keys.addAll(jsonObject.keySet());
+        }
+
+        for (final String key : keys) {
             final Object oldVal = oldJsonObject.get(key);
             final Object val = jsonObject.get(key);
             if (null == val && null == oldVal) {
