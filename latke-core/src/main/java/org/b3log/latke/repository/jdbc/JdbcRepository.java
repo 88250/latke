@@ -236,8 +236,6 @@ public final class JdbcRepository implements Repository {
             throw new RepositoryException("Invoking update() outside a transaction");
         }
 
-        final JSONObject oldJsonObject = get(id);
-
         final Connection connection = getConnection();
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder sqlBuilder = new StringBuilder();
@@ -246,7 +244,10 @@ public final class JdbcRepository implements Repository {
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 toOracleClobEmpty(jsonObject);
             }
+
+            final JSONObject oldJsonObject = get(id);
             update(id, oldJsonObject, jsonObject, paramList, sqlBuilder);
+
             JdbcUtil.fromOracleClobEmpty(jsonObject);
 
             final String sql = sqlBuilder.toString();
