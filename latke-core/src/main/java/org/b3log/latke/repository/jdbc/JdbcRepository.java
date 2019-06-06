@@ -246,7 +246,7 @@ public final class JdbcRepository implements Repository {
             }
 
             final JSONObject oldJsonObject = get(id);
-            buildUpdate(id, oldJsonObject, jsonObject, paramList, sqlBuilder);
+            buildUpdate(id, oldJsonObject, jsonObject, paramList, sqlBuilder, propertyNames);
 
             JdbcUtil.fromOracleClobEmpty(jsonObject);
 
@@ -271,8 +271,9 @@ public final class JdbcRepository implements Repository {
      * @param jsonObject    the specified new json object
      * @param paramList     the specified param list
      * @param sqlBuilder    the specified SQL builder
+     * @param propertyNames the specified property names
      */
-    private void buildUpdate(final String id, final JSONObject oldJsonObject, final JSONObject jsonObject, final List<Object> paramList, final StringBuilder sqlBuilder)  {
+    private void buildUpdate(final String id, final JSONObject oldJsonObject, final JSONObject jsonObject, final List<Object> paramList, final StringBuilder sqlBuilder, final String... propertyNames) {
         final JSONObject needUpdateJsonObject = getNeedUpdateJsonObject(oldJsonObject, jsonObject);
         if (0 == needUpdateJsonObject.length()) {
             LOGGER.log(Level.TRACE, "Nothing to update [{0}] for repository [{1}]", id, getName());
@@ -306,9 +307,8 @@ public final class JdbcRepository implements Repository {
      * @param oldJsonObject the specified old json object
      * @param jsonObject    the specified new json object
      * @return diff object for updating
-     * @throws JSONException jsonObject
      */
-    private JSONObject getNeedUpdateJsonObject(final JSONObject oldJsonObject, final JSONObject jsonObject) throws JSONException {
+    private JSONObject getNeedUpdateJsonObject(final JSONObject oldJsonObject, final JSONObject jsonObject) {
         if (null == oldJsonObject) {
             return jsonObject;
         }
@@ -318,10 +318,12 @@ public final class JdbcRepository implements Repository {
         String key;
         while (keys.hasNext()) {
             key = keys.next();
-            if (null == jsonObject.get(key) && null == oldJsonObject.get(key)) {
-                ret.put(key, jsonObject.get(key));
+            final Object oldVal = oldJsonObject.get(key);
+            final Object val = jsonObject.get(key);
+            if (null == val && null == oldVal) {
+                ret.put(key, val);
             } else if (!jsonObject.optString(key).equals(oldJsonObject.optString(key))) {
-                ret.put(key, jsonObject.get(key));
+                ret.put(key, val);
             }
         }
 
