@@ -33,7 +33,7 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.3.0.2, Dec 2, 2018
+ * @version 2.3.0.3, Jun 6, 2019
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -101,14 +101,14 @@ public abstract class AbstractRepository implements Repository {
     }
 
     @Override
-    public void update(final String id, final JSONObject jsonObject) throws RepositoryException {
+    public void update(final String id, final JSONObject jsonObject, final String... propertyNames) throws RepositoryException {
         if (!isWritable()) {
             throw new RepositoryException("The repository [name=" + getName() + "] is not writable at present");
         }
 
         Repositories.check(getName(), jsonObject, Keys.OBJECT_ID);
 
-        repository.update(id, jsonObject);
+        repository.update(id, jsonObject, propertyNames);
     }
 
     @Override

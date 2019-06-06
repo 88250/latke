@@ -26,7 +26,7 @@ import java.util.Map;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.0.1, Mar 3, 2019
+ * @version 1.5.0.2, Jun 6, 2019
  */
 public interface Repository {
 
@@ -40,13 +40,14 @@ public interface Repository {
     String add(final JSONObject jsonObject) throws RepositoryException;
 
     /**
-     * Updates a certain json object by the specified id and the specified new json object.
+     * Updates a certain json object specified by the given id with the specified new json object and property names.
      *
-     * @param id         the specified id
-     * @param jsonObject the specified new json object
+     * @param id            the specified id
+     * @param jsonObject    the specified new json object
+     * @param propertyNames the specified property names to update, update all properties if not specified
      * @throws RepositoryException repository exception
      */
-    void update(final String id, final JSONObject jsonObject) throws RepositoryException;
+    void update(final String id, final JSONObject jsonObject, final String... propertyNames) throws RepositoryException;
 
     /**
      * Removes a json object by the specified id.

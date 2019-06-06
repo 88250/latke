@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.4, Nov 4, 2018
+ * @version 1.3.0.5, Jun 6, 2019
  */
 public final class JdbcRepository implements Repository {
 
@@ -226,7 +226,7 @@ public final class JdbcRepository implements Repository {
     }
 
     @Override
-    public void update(final String id, final JSONObject jsonObject) throws RepositoryException {
+    public void update(final String id, final JSONObject jsonObject, final String... propertyNames) throws RepositoryException {
         if (StringUtils.isBlank(id)) {
             return;
         }
@@ -272,8 +272,7 @@ public final class JdbcRepository implements Repository {
      * @param sql           sql
      * @throws JSONException JSONException
      */
-    private void update(final String id, final JSONObject oldJsonObject, final JSONObject jsonObject,
-                        final List<Object> paramList, final StringBuilder sql) throws JSONException {
+    private void update(final String id, final JSONObject oldJsonObject, final JSONObject jsonObject, final List<Object> paramList, final StringBuilder sql) throws JSONException {
         final JSONObject needUpdateJsonObject = getNeedUpdateJsonObject(oldJsonObject, jsonObject);
         if (0 == needUpdateJsonObject.length()) {
             LOGGER.log(Level.TRACE, "Nothing to update [{0}] for repository [{1}]", id, getName());
@@ -281,26 +280,10 @@ public final class JdbcRepository implements Repository {
             return;
         }
 
-        setUpdateProperties(id, needUpdateJsonObject, paramList, sql);
-    }
-
-    /**
-     * setUpdateProperties.
-     *
-     * @param id                   id
-     * @param needUpdateJsonObject needUpdateJsonObject
-     * @param paramList            paramList
-     * @param sql                  sql
-     * @throws JSONException JSONException
-     */
-    private void setUpdateProperties(final String id, final JSONObject needUpdateJsonObject,
-                                     final List<Object> paramList, final StringBuilder sql) throws JSONException {
         final Iterator<String> keys = needUpdateJsonObject.keys();
         String key;
-
         boolean isFirst = true;
         final StringBuilder wildcardString = new StringBuilder();
-
         while (keys.hasNext()) {
             key = keys.next();
 
