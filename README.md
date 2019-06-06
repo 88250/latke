@@ -28,7 +28,7 @@
 ## 案例
 
 * [Demo](https://github.com/b3log/latke-demo)：简单的 Latke 应用示例
-* [Solo](https://github.com/b3log/solo)：一款小而美的 Java 博客系统
+* [Solo](https://github.com/b3log/solo)：一款小而美的 Java 开源博客系统，专为程序员设计
 * [Symphony](https://github.com/b3log/symphony)：一款用 Java 实现的现代化社区（论坛/BBS/社交网络/博客）平台
 
 ## 安装
