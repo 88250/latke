@@ -26,7 +26,7 @@ import java.util.Collection;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 3.0.0.0, Mar 26, 2019
+ * @version 3.1.0.0, Jun 8, 2019
  */
 public interface Cache {
 
@@ -62,17 +62,6 @@ public interface Cache {
      * @param value the specified object
      */
     void put(final String key, final JSONObject value);
-
-    /**
-     * Puts the specified object into this cache asynchronously.
-     * <p>
-     * Throws {@link IllegalArgumentException} if the specified key or value is {@code null}.
-     * </p>
-     *
-     * @param key   the key of the specified object
-     * @param value the specified object
-     */
-    void putAsync(final String key, final JSONObject value);
 
     /**
      * Gets a object by the specified key.

@@ -15,14 +15,11 @@
  */
 package org.b3log.latke.cache;
 
-import org.b3log.latke.Latkes;
-import org.json.JSONObject;
-
 /**
  * Abstract cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.7, Jul 6, 2017
+ * @version 2.1.0.0, Jun 8, 2019
  */
 public abstract class AbstractCache implements Cache {
 
@@ -39,10 +36,5 @@ public abstract class AbstractCache implements Cache {
     @Override
     public void setName(final String name) {
         this.name = name;
-    }
-
-    @Override
-    public void putAsync(final String key, final JSONObject value) {
-        Latkes.EXECUTOR_SERVICE.submit(() -> put(key, value));
     }
 }
