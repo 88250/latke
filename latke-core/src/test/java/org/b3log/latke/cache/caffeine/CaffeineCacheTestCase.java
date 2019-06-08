@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.cache.redis;
+package org.b3log.latke.cache.caffeine;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.Cache;
@@ -24,13 +24,13 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * {@link RedisCache} test case.
+ * {@link CaffeineCache} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Jun 8, 2019
- * @since 2.3.13
+ * @version 1.0.0.0, Jun 8, 2019
+ * @since 2.4.58
  */
-public class RedisCacheTestCase {
+public class CaffeineCacheTestCase {
 
     static {
         Latkes.init();
@@ -38,7 +38,7 @@ public class RedisCacheTestCase {
 
     @Test
     public void put() {
-        if (Latkes.RuntimeCache.REDIS != Latkes.getRuntimeCache()) {
+        if (Latkes.RuntimeCache.LOCAL_LRU != Latkes.getRuntimeCache()) {
             return;
         }
 

@@ -64,7 +64,7 @@ public final class RedisCache extends AbstractCache {
         try {
             jedis = Connections.getJedis();
 
-            jedis.set(getName() + key, value.toString());
+            jedis.setex(getName() + key, EXPIRE_SECONDS, value.toString());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Put data to cache with key [" + key + "] failed", e);
         } finally {

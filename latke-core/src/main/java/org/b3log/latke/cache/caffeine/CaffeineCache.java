@@ -21,6 +21,7 @@ import org.b3log.latke.cache.AbstractCache;
 import org.json.JSONObject;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Caffeine cache.
@@ -31,7 +32,7 @@ import java.util.Collection;
  */
 public final class CaffeineCache extends AbstractCache {
 
-    private Cache<String, JSONObject> cache = Caffeine.newBuilder().build();
+    private Cache<String, JSONObject> cache = Caffeine.newBuilder().expireAfterWrite(EXPIRE_SECONDS, TimeUnit.SECONDS).build();
 
     @Override
     public boolean contains(final String key) {

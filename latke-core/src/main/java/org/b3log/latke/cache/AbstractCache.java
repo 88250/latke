@@ -28,6 +28,11 @@ public abstract class AbstractCache implements Cache {
      */
     private String name;
 
+    /**
+     * Fixed expire seconds after put, 6 hours.
+     */
+    protected static final int EXPIRE_SECONDS = 60 * 60 * 6;
+
     @Override
     public String getName() {
         return name;
