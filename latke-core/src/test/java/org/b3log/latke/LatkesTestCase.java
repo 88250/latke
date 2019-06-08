@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
  * {@link Latkes} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 22, 2018
+ * @version 1.0.0.2, Jun 8, 2019
  * @since 2.3.13
  */
 public class LatkesTestCase {
@@ -32,7 +32,8 @@ public class LatkesTestCase {
         Latkes.init();
 
         final Latkes.RuntimeCache runtimeCache = Latkes.getRuntimeCache();
-        Assert.assertEquals(runtimeCache, Latkes.RuntimeCache.REDIS);
+//        Assert.assertEquals(runtimeCache, Latkes.RuntimeCache.REDIS);
+        Assert.assertEquals(runtimeCache, Latkes.RuntimeCache.LOCAL_LRU);
 
         final String redisHost = Latkes.getLocalProperty("redis.host");
         Assert.assertEquals(redisHost, "localhost");

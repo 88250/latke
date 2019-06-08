@@ -36,7 +36,7 @@ public class RedisCacheTestCase {
         Latkes.init();
     }
 
-    @Test
+    //@Test
     public void put() {
         if (Latkes.RuntimeCache.REDIS != Latkes.getRuntimeCache()) {
             return;
