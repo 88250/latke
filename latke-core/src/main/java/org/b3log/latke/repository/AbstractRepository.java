@@ -33,7 +33,7 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.3.0.3, Jun 6, 2019
+ * @version 2.3.0.4, Jun 10, 2019
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -130,8 +130,8 @@ public abstract class AbstractRepository implements Repository {
     }
 
     @Override
-    public JSONObject get(final String id) throws RepositoryException {
-        return repository.get(id);
+    public JSONObject get(final String id, final String... propertyNames) throws RepositoryException {
+        return repository.get(id, propertyNames);
     }
 
     @Override

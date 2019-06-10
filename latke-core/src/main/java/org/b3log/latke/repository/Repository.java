@@ -26,7 +26,7 @@ import java.util.Map;
  * Repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.0.2, Jun 6, 2019
+ * @version 1.5.0.3, Jun 10, 2019
  */
 public interface Repository {
 
@@ -68,11 +68,12 @@ public interface Repository {
     /**
      * Gets a json object by the specified id.
      *
-     * @param id the specified id
+     * @param id            the specified id
+     * @param propertyNames the specified property names to get, get all properties if not specified
      * @return a json object, returns {@code null} if not found
      * @throws RepositoryException repository exception
      */
-    JSONObject get(final String id) throws RepositoryException;
+    JSONObject get(final String id, final String... propertyNames) throws RepositoryException;
 
     /**
      * Gets json objects by the specified ids.
