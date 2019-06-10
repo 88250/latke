@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.6, Jun 10, 2019
+ * @version 1.3.0.5, Jun 6, 2019
  */
 public final class JdbcRepository implements Repository {
 
@@ -382,24 +382,17 @@ public final class JdbcRepository implements Repository {
     }
 
     @Override
-    public JSONObject get(final String id, final String... propertyNames) throws RepositoryException {
+    public JSONObject get(final String id) throws RepositoryException {
         JSONObject ret;
 
-        final StringBuilder sqlBuilder = new StringBuilder();
+        final StringBuilder sql = new StringBuilder();
         final Connection connection = getConnection();
 
         try {
-            final List<Projection> projections = new ArrayList<>();
-            if (0 < ArrayUtils.getLength(propertyNames)) {
-                for (final String propertyName : propertyNames) {
-                    projections.add(new Projection(propertyName));
-                }
-            }
-            buildSelect(sqlBuilder, projections);
-            sqlBuilder.append(" FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = ?");
+            sql.append("SELECT * FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = ?");
             final ArrayList<Object> paramList = new ArrayList<>();
             paramList.add(id);
-            ret = JdbcUtil.queryJsonObject(sqlBuilder.toString(), paramList, connection, getName(), debug);
+            ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Gets an object by id [" + id + "] failed", e);
 
