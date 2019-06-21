@@ -27,7 +27,7 @@ import java.util.Map;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Apr 10, 2019
+ * @version 1.0.1.0, Jun 21, 2019
  * @since 2.4.4
  */
 public final class Times {
@@ -129,7 +129,10 @@ public final class Times {
         final Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
 
-        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE);
+        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+                && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE);
     }
 
     /**

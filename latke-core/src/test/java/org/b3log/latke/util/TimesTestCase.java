@@ -17,6 +17,7 @@ package org.b3log.latke.util;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Date;
@@ -25,7 +26,7 @@ import java.util.Date;
  * {@link Times} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.1, Apr 10, 2019
+ * @version 1.2.0.0, Jun 21, 2019
  * @since 2.4.49
  */
 public class TimesTestCase {
@@ -74,5 +75,18 @@ public class TimesTestCase {
         final long lastMonthEndTime = Times.getMonthEndTime(lastMonth.getTime());
         final String lastMonthEnd = DateFormatUtils.format(lastMonthEndTime, pattern);
         System.out.println("last month end: " + lastMonthEnd);
+    }
+
+    @Test
+    public void isSameDay() {
+        final Date now1 = new Date();
+        final Date now2 = new Date();
+
+        boolean isSameDay = Times.isSameDay(now1, now2);
+        Assert.assertTrue(isSameDay);
+
+        final Date lastMonth = DateUtils.addMonths(now2, -1);
+        isSameDay = Times.isSameDay(now2, lastMonth);
+        Assert.assertFalse(isSameDay);
     }
 }
