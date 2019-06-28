@@ -181,8 +181,15 @@ public class PluginManager {
             LOGGER.log(Level.ERROR, "Reads [" + props.getProperty("classesDirPath") + "] failed", e);
         }
 
-        final URLClassLoader classLoader = new URLClassLoader(new URL[]{
+        URLClassLoader classLoader=null;
+        if(defaultClassesFileDirURL==null){
+            classLoader = new URLClassLoader(new URL[]{
+                classesFileDirURL}, PluginManager.class.getClassLoader());
+        }
+        else{
+            classLoader = new URLClassLoader(new URL[]{
                 defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
+        }
 
         classLoaders.add(classLoader);
 
