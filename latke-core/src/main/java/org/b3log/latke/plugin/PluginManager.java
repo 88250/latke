@@ -44,7 +44,8 @@ import java.util.*;
  * Plugin loader.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.4, Oct 31, 2018
+ * @author <a href="https://hacpai.com/member/yanxingangsun">yanxingangsun</a>
+ * @version 1.0.3.0, Jun 28, 2019
  */
 @Singleton
 public class PluginManager {
@@ -91,7 +92,6 @@ public class PluginManager {
         }
 
         final List<AbstractPlugin> ret = new ArrayList<>();
-
         for (final Map.Entry<String, HashSet<AbstractPlugin>> entry : pluginCache.entrySet()) {
             ret.addAll(entry.getValue());
         }
@@ -113,7 +113,6 @@ public class PluginManager {
         }
 
         final Set<AbstractPlugin> ret = pluginCache.get(viewName);
-
         if (null == ret) {
             return Collections.emptySet();
         }
@@ -131,16 +130,13 @@ public class PluginManager {
 
         final ServletContext servletContext = AbstractServletListener.getServletContext();
         final Set<String> pluginDirPaths = servletContext.getResourcePaths("/plugins");
-
         final List<AbstractPlugin> plugins = new ArrayList<>();
-
         if (null != pluginDirPaths) {
             for (final String pluginDirPath : pluginDirPaths) {
                 try {
                     LOGGER.log(Level.INFO, "Loading plugin under directory[{0}]", pluginDirPath);
 
                     final AbstractPlugin plugin = load(pluginDirPath, pluginCache);
-
                     if (plugin != null) {
                         plugins.add(plugin);
                     }
@@ -181,14 +177,11 @@ public class PluginManager {
             LOGGER.log(Level.ERROR, "Reads [" + props.getProperty("classesDirPath") + "] failed", e);
         }
 
-        URLClassLoader classLoader=null;
-        if(defaultClassesFileDirURL==null){
-            classLoader = new URLClassLoader(new URL[]{
-                classesFileDirURL}, PluginManager.class.getClassLoader());
-        }
-        else{
-            classLoader = new URLClassLoader(new URL[]{
-                defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
+        URLClassLoader classLoader;
+        if (null == defaultClassesFileDirURL) {
+            classLoader = new URLClassLoader(new URL[]{classesFileDirURL}, PluginManager.class.getClassLoader());
+        } else {
+            classLoader = new URLClassLoader(new URL[]{defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
         }
 
         classLoaders.add(classLoader);
@@ -199,7 +192,6 @@ public class PluginManager {
         }
 
         final String rendererId = props.getProperty(Plugin.PLUGIN_RENDERER_ID);
-
         if (StringUtils.isBlank(rendererId)) {
             LOGGER.log(Level.WARN, "no renderer defined by this plugin[" + plugin + "]，this plugin will be ignore!");
             return null;
@@ -209,7 +201,6 @@ public class PluginManager {
 
         LOGGER.log(Level.TRACE, "Loading plugin class[name={0}]", pluginClassName);
         final AbstractPlugin ret = (AbstractPlugin) pluginClass.newInstance();
-
         ret.setRendererId(rendererId);
 
         setPluginProps(plugin, ret, props);
@@ -296,11 +287,9 @@ public class PluginManager {
      * @param plugin      the specified plugin
      * @throws Exception exception
      */
-    private void registerEventListeners(final Properties props, final URLClassLoader classLoader, final AbstractPlugin plugin)
-            throws Exception {
+    private void registerEventListeners(final Properties props, final URLClassLoader classLoader, final AbstractPlugin plugin) throws Exception {
         final String eventListenerClasses = props.getProperty(Plugin.PLUGIN_EVENT_LISTENER_CLASSES);
         final String[] eventListenerClassArray = eventListenerClasses.split(",");
-
         for (final String eventListenerClassName : eventListenerClassArray) {
             if (StringUtils.isBlank(eventListenerClassName)) {
                 LOGGER.log(Level.INFO, "No event listener to load for plugin[name={0}]", plugin.getName());
