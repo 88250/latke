@@ -70,6 +70,34 @@
         <tag>HEAD</tag>
     </scm>
 
+    <developers>
+        <developer>
+            <id>d@b3log.org</id>
+            <name>Liang Ding</name>
+            <email>d@b3log.org</email>
+            <url>http://88250.b3log.org</url>
+            <roles>
+                <role>Lead</role>
+                <role>Initial Committer</role>
+            </roles>
+            <organization>B3log</organization>
+            <organizationUrl>https://b3log.org</organizationUrl>
+            <timezone>+8</timezone>
+        </developer>
+
+        <developer>
+            <id>mainlove</id>
+            <name>mainlove</name>
+            <url>https://hacpai.com/member/mainlove</url>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <organization>B3log</organization>
+            <organizationUrl>https://b3log.org</organizationUrl>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
     <issueManagement>
         <system>Github Issues</system>
         <url>https://github.com/b3log/latke/issues</url>
