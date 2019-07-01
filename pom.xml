@@ -64,10 +64,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:b3log/latke.git</connection>
-        <developerConnection>scm:git:git@github.com:b3log/latke.git</developerConnection>
-        <url>git@github.com:b3log/latke.git</url>
-        <tag>HEAD</tag>
+        <connection>scm:git:https://github.com/b3log/latke.git</connection>
+        <developerConnection>scm:git:https://github.com/b3log/latke.git</developerConnection>
+        <url>https://github.com/b3log/latke</url>
     </scm>
 
     <developers>
@@ -102,13 +101,6 @@
         <system>Github Issues</system>
         <url>https://github.com/b3log/latke/issues</url>
     </issueManagement>
-
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
     <build>
         <plugins>
@@ -214,5 +206,28 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>central</id>
+            <distributionManagement>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+        <profile>
+            <id>github</id>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub OWNER Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/b3log</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
 </project>
