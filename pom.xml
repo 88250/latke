@@ -64,9 +64,10 @@
     </properties>
 
     <scm>
-        <connection>scm:git:https://github.com/b3log/latke.git</connection>
-        <developerConnection>scm:git:https://github.com/b3log/latke.git</developerConnection>
-        <url>https://github.com/b3log/latke</url>
+        <connection>scm:git:git@github.com:b3log/latke.git</connection>
+        <developerConnection>scm:git:git@github.com:b3log/latke.git</developerConnection>
+        <url>git@github.com:b3log/latke.git</url>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
@@ -104,8 +105,8 @@
 
     <distributionManagement>
         <repository>
-            <id>${release.id}</id>
-            <url>${release.url}</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
@@ -184,56 +185,34 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus-staging-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${maven-gpg-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
-
-    <profiles>
-
-        <profile>
-            <id>central</id>
-            <properties>
-                <release.id>ossrh</release.id>
-                <release.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</release.url>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>${nexus-staging-maven-plugin.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>github</id>
-            <properties>
-                <release.id>github</release.id>
-                <release.url>https://maven.pkg.github.com/b3log</release.url>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>
