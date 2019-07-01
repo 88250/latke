@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.25, Mar 26, 2019
+    Version: 1.2.2.26, Jul 1, 2019
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -160,32 +160,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>linux</id>
-            <activation>
-                <os>
-                    <family>linux</family>
-                </os>
-            </activation>
-            <properties>
-                <jacobeExecutable>
-                    src/main/resources/etc/jacobe/linux/jacobe
-                </jacobeExecutable>
-            </properties>
-        </profile>
-        <profile>
-            <id>windows</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <properties>
-                <jacobeExecutable>
-                    src/main/resources/etc/jacobe/win32/jacobe.exe
-                </jacobeExecutable>
-            </properties>
-        </profile>
-    </profiles>
 </project>
