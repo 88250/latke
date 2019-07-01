@@ -15,12 +15,6 @@
     <description>一款以 JSON 为主的 Java Web 框架。</description>
     <inceptionYear>2009</inceptionYear>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-
     <modules>
         <module>latke-core</module>
         <module>latke-repository-h2</module>
@@ -60,6 +54,7 @@
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <testng.version>6.1.1</testng.version>
 
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -149,12 +144,22 @@
                     <execution>
                         <id>attach-sources</id>
                         <goals>
-                            <goal>
-                                jar
-                            </goal>
+                            <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus-staging-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
 
         </plugins>
