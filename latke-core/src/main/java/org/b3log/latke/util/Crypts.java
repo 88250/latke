@@ -25,13 +25,14 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 /**
  * Cryptology utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Aug 1, 2018
+ * @version 2.0.0.1, Jul 13, 2019
  * @since 2.3.14
  */
 public final class Crypts {
@@ -46,10 +47,10 @@ public final class Crypts {
     public static String signHmacSHA1(final String source, final String secret) {
         try {
             final Mac mac = Mac.getInstance("HmacSHA1");
-            mac.init(new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA1"));
-            final byte[] signData = mac.doFinal(source.getBytes("UTF-8"));
+            mac.init(new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA1"));
+            final byte[] signData = mac.doFinal(source.getBytes(StandardCharsets.UTF_8));
 
-            return new String(Base64.encodeBase64(signData), "UTF-8");
+            return new String(Base64.encodeBase64(signData), StandardCharsets.UTF_8);
         } catch (final Exception e) {
             throw new RuntimeException("HMAC-SHA1 sign failed", e);
         }
@@ -78,7 +79,7 @@ public final class Crypts {
             final byte[] enCodeFormat = secretKey.getEncoded();
             final SecretKeySpec keySpec = new SecretKeySpec(enCodeFormat, "AES");
             final Cipher cipher = Cipher.getInstance("AES");
-            final byte[] byteContent = content.getBytes("UTF-8");
+            final byte[] byteContent = content.getBytes(StandardCharsets.UTF_8);
             cipher.init(Cipher.ENCRYPT_MODE, keySpec);
             final byte[] result = cipher.doFinal(byteContent);
 
@@ -112,7 +113,7 @@ public final class Crypts {
             cipher.init(Cipher.DECRYPT_MODE, keySpec);
             final byte[] result = cipher.doFinal(data);
 
-            return new String(result, "UTF-8");
+            return new String(result, StandardCharsets.UTF_8);
         } catch (final Exception e) {
             LOGGER.log(Level.WARN, "Decrypt failed");
 
