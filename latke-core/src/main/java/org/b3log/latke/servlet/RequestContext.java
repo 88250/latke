@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.6, Mar 17, 2019
+ * @version 1.3.0.7, Jul 13, 2019
  */
 public final class RequestContext {
 
@@ -168,7 +169,7 @@ public final class RequestContext {
      */
     public void sendRedirect(final String location) {
         try {
-            response.sendRedirect(location);
+            response.sendRedirect(new URI(location).toASCIIString());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Sends redirect [" + location + "] failed: " + e.getMessage());
         }
