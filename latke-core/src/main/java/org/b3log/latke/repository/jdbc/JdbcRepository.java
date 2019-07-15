@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.5, Jun 6, 2019
+ * @version 1.3.0.6, Jul 15, 2019
  */
 public final class JdbcRepository implements Repository {
 
@@ -782,11 +782,10 @@ public final class JdbcRepository implements Repository {
      * @param propertyFilter the specified property filter
      * @throws RepositoryException repository exception
      */
-    private void processPropertyFilter(final StringBuilder whereBuilder,
-                                       final List<Object> paramList, final PropertyFilter propertyFilter) throws RepositoryException {
+    private void processPropertyFilter(final StringBuilder whereBuilder, final List<Object> paramList, final PropertyFilter propertyFilter) throws RepositoryException {
         String filterOperator;
-
-        switch (propertyFilter.getOperator()) {
+        final FilterOperator operator = propertyFilter.getOperator();
+        switch (operator) {
             case EQUAL:
                 filterOperator = "=";
 
@@ -815,6 +814,10 @@ public final class JdbcRepository implements Repository {
                 filterOperator = "IN";
 
                 break;
+            case NOT_IN:
+                filterOperator = "NOT IN";
+
+                break;
             case LIKE:
                 filterOperator = "LIKE";
 
@@ -824,22 +827,24 @@ public final class JdbcRepository implements Repository {
 
                 break;
             default:
-                throw new RepositoryException("Unsupported filter operator [" + propertyFilter.getOperator() + "]");
+                throw new RepositoryException("Unsupported filter operator [" + operator + "]");
         }
 
-        if (FilterOperator.IN != propertyFilter.getOperator()) {
+        if (FilterOperator.IN != operator && FilterOperator.NOT_IN != operator) {
             whereBuilder.append(propertyFilter.getKey()).append(" ").append(filterOperator).append(" ?");
             paramList.add(propertyFilter.getValue());
         } else {
             final Collection<Object> objects = (Collection<Object>) propertyFilter.getValue();
+            if (null != objects && !objects.isEmpty()) {
+                whereBuilder.append(propertyFilter.getKey());
+                if (FilterOperator.IN == operator) {
+                    whereBuilder.append(" IN ");
+                } else { // NOT IN
+                    whereBuilder.append(" NOT IN ");
+                }
 
-            boolean isSubFist = true;
-
-            if (objects != null && !objects.isEmpty()) {
-                whereBuilder.append(propertyFilter.getKey()).append(" IN ");
-
+                boolean isSubFist = true;
                 final Iterator<Object> obs = objects.iterator();
-
                 while (obs.hasNext()) {
                     if (isSubFist) {
                         whereBuilder.append("(");
@@ -849,7 +854,6 @@ public final class JdbcRepository implements Repository {
                     }
                     whereBuilder.append("?");
                     paramList.add(obs.next());
-
                     if (!obs.hasNext()) {
                         whereBuilder.append(") ");
                     }
@@ -868,19 +872,16 @@ public final class JdbcRepository implements Repository {
      * @param compositeFilter the specified composite filter
      * @throws RepositoryException repository exception
      */
-    private void processCompositeFilter(final StringBuilder whereBuilder,
-                                        final List<Object> paramList, final CompositeFilter compositeFilter) throws RepositoryException {
+    private void processCompositeFilter(final StringBuilder whereBuilder, final List<Object> paramList, final CompositeFilter compositeFilter) throws RepositoryException {
         final List<Filter> subFilters = compositeFilter.getSubFilters();
         if (2 > subFilters.size()) {
             throw new RepositoryException("At least two sub filters in a composite filter");
         }
 
         whereBuilder.append("(");
-
         final Iterator<Filter> iterator = subFilters.iterator();
         while (iterator.hasNext()) {
             final Filter filter = iterator.next();
-
             if (filter instanceof PropertyFilter) {
                 processPropertyFilter(whereBuilder, paramList, (PropertyFilter) filter);
             } else { // CompositeFilter
@@ -891,12 +892,12 @@ public final class JdbcRepository implements Repository {
                 switch (compositeFilter.getOperator()) {
                     case AND:
                         whereBuilder.append(" AND ");
-                        break;
 
+                        break;
                     case OR:
                         whereBuilder.append(" OR ");
-                        break;
 
+                        break;
                     default:
                         throw new RepositoryException("Unsupported composite filter [operator=" + compositeFilter.getOperator() + "]");
                 }
