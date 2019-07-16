@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.util;
 
+import org.b3log.latke.servlet.RequestContext;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +25,18 @@ import java.util.List;
  * Paginator utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, May 22, 2018
+ * @version 1.2.0.0, Jul 16, 2019
  */
 public final class Paginator {
 
     /**
-     * Private constructor.
+     * Gets the current page number from the query string "p" of the specified context.
+     *
+     * @param context the specified context
+     * @return page number, returns {@code 1} as default
      */
-    private Paginator() {
+    public static int getPage(final RequestContext context) {
+        return getPage(context.getRequest());
     }
 
     /**
@@ -66,10 +72,7 @@ public final class Paginator {
      * @param windowSize     the specified window size
      * @return a list integer pagination page numbers
      */
-    public static List<Integer> paginate(final int currentPageNum,
-                                         final int pageSize,
-                                         final int pageCount,
-                                         final int windowSize) {
+    public static List<Integer> paginate(final int currentPageNum, final int pageSize, final int pageCount, final int windowSize) {
         List<Integer> ret;
         if (pageCount < windowSize) {
             ret = new ArrayList<>(pageCount);
@@ -88,5 +91,11 @@ public final class Paginator {
         }
 
         return ret;
+    }
+
+    /**
+     * Private constructor.
+     */
+    private Paginator() {
     }
 }
