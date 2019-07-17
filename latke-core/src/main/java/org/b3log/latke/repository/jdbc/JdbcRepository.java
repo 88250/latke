@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.6, Jul 15, 2019
+ * @version 1.3.1.0, Jul 17, 2019
  */
 public final class JdbcRepository implements Repository {
 
@@ -839,7 +839,7 @@ public final class JdbcRepository implements Repository {
                 whereBuilder.append(propertyFilter.getKey());
                 if (FilterOperator.IN == operator) {
                     whereBuilder.append(" IN ");
-                } else { // NOT IN
+                } else {
                     whereBuilder.append(" NOT IN ");
                 }
 
@@ -858,8 +858,14 @@ public final class JdbcRepository implements Repository {
                         whereBuilder.append(") ");
                     }
                 }
-            } else { // in () => 1!=1
-                whereBuilder.append("1 != 1");
+            } else {
+                if (FilterOperator.IN == operator) {
+                    // IN () => 1!=1
+                    whereBuilder.append("1 != 1");
+                } else {
+                    // NOT IN () => 1=1
+                    whereBuilder.append("1 = 1");
+                }
             }
         }
     }
