@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.1.0, Jul 17, 2019
+ * @version 1.3.1.1, Jul 22, 2019
  */
 public final class JdbcRepository implements Repository {
 
@@ -289,10 +289,10 @@ public final class JdbcRepository implements Repository {
         while (keys.hasNext()) {
             key = keys.next();
             if (isFirst) {
-                propertyBuilder.append(" SET ").append(key).append(" = ?");
+                propertyBuilder.append(" SET `").append(key).append("` = ?");
                 isFirst = false;
             } else {
-                propertyBuilder.append(", ").append(key).append(" = ?");
+                propertyBuilder.append(", `").append(key).append("` = ?");
             }
 
             paramList.add(needUpdateJsonObject.get(key));
