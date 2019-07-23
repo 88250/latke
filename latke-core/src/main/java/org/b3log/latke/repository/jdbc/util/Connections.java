@@ -37,7 +37,7 @@ import java.util.Properties;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
- * @version 2.0.0.2, Mar 3, 2019
+ * @version 2.0.1.0, Jul 23, 2019
  */
 public final class Connections {
 
@@ -107,7 +107,7 @@ public final class Connections {
                 final InputStream is = Connections.class.getResourceAsStream("/hikari.properties");
                 if (null != is) {
                     props.load(is);
-                    final HikariConfig hikariConfig = new HikariConfig();
+                    final HikariConfig hikariConfig = new HikariConfig(props);
                     hikari = new HikariDataSource(hikariConfig);
                     LOGGER.log(Level.INFO, "Created datasource with hikari.properties");
                 } else {
@@ -121,14 +121,13 @@ public final class Connections {
                     hikari.setValidationTimeout(2000);
                     hikari.setConnectionTimeout(2000);
                     hikari.setLeakDetectionThreshold(300000);
+                    hikari.setUsername(userName);
+                    hikari.setPassword(password);
+                    hikari.setJdbcUrl(url);
+                    hikari.setDriverClassName(driver);
+                    hikari.setMinimumIdle(minConnCnt);
+                    hikari.setMaximumPoolSize(maxConnCnt);
                 }
-
-                hikari.setUsername(userName);
-                hikari.setPassword(password);
-                hikari.setJdbcUrl(url);
-                hikari.setDriverClassName(driver);
-                hikari.setMinimumIdle(minConnCnt);
-                hikari.setMaximumPoolSize(maxConnCnt);
 
                 LOGGER.info("Initialized database connection pool [hikari]");
             }
