@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.1.1, Jul 22, 2019
+ * @version 1.3.2.0, Jul 25, 2019
  */
 public final class JdbcRepository implements Repository {
 
@@ -206,11 +206,11 @@ public final class JdbcRepository implements Repository {
             key = keys.next();
 
             if (isFirst) {
-                insertString.append("(").append(key);
+                insertString.append("(`").append(key).append("`");
                 wildcardString.append("(?");
                 isFirst = false;
             } else {
-                insertString.append(",").append(key);
+                insertString.append(",`").append(key).append("`");
                 wildcardString.append(",?");
             }
 
@@ -223,7 +223,7 @@ public final class JdbcRepository implements Repository {
             }
         }
 
-        sql.append("insert into ").append(getName()).append(insertString).append(" values ").append(wildcardString);
+        sql.append("INSERT INTO ").append(getName()).append(insertString).append(" VALUES ").append(wildcardString);
     }
 
     @Override
