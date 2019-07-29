@@ -18,7 +18,6 @@ package org.b3log.latke.plugin;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.Inject;
@@ -35,7 +34,6 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
@@ -45,7 +43,7 @@ import java.util.*;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/yanxingangsun">yanxingangsun</a>
- * @version 1.0.3.0, Jun 28, 2019
+ * @version 1.0.3.1, Jul 29, 2019
  */
 @Singleton
 public class PluginManager {
@@ -134,14 +132,14 @@ public class PluginManager {
         if (null != pluginDirPaths) {
             for (final String pluginDirPath : pluginDirPaths) {
                 try {
-                    LOGGER.log(Level.INFO, "Loading plugin under directory[{0}]", pluginDirPath);
+                    LOGGER.log(Level.INFO, "Loading plugin under directory [{0}]", pluginDirPath);
 
                     final AbstractPlugin plugin = load(pluginDirPath, pluginCache);
                     if (plugin != null) {
                         plugins.add(plugin);
                     }
                 } catch (final Exception e) {
-                    LOGGER.log(Level.WARN, "Load plugin under directory[" + pluginDirPath + "] failed", e);
+                    LOGGER.log(Level.WARN, "Load plugin under directory [" + pluginDirPath + "] failed", e);
                 }
             }
         }
@@ -170,18 +168,11 @@ public class PluginManager {
         props.load(new FileInputStream(file));
 
         final URL defaultClassesFileDirURL = servletContext.getResource("/plugins/" + plugin + "classes");
-        URL classesFileDirURL = null;
-        try {
-            classesFileDirURL = servletContext.getResource(props.getProperty("classesDirPath"));
-        } catch (final MalformedURLException e) {
-            LOGGER.log(Level.ERROR, "Reads [" + props.getProperty("classesDirPath") + "] failed", e);
-        }
-
-        URLClassLoader classLoader;
-        if (null == defaultClassesFileDirURL) {
-            classLoader = new URLClassLoader(new URL[]{classesFileDirURL}, PluginManager.class.getClassLoader());
+        URLClassLoader classLoader = null;
+        if (null != defaultClassesFileDirURL) {
+            classLoader = new URLClassLoader(new URL[]{defaultClassesFileDirURL}, PluginManager.class.getClassLoader());
         } else {
-            classLoader = new URLClassLoader(new URL[]{defaultClassesFileDirURL, classesFileDirURL}, PluginManager.class.getClassLoader());
+            classLoader = new URLClassLoader(new URL[0], PluginManager.class.getClassLoader());
         }
 
         classLoaders.add(classLoader);
@@ -193,18 +184,17 @@ public class PluginManager {
 
         final String rendererId = props.getProperty(Plugin.PLUGIN_RENDERER_ID);
         if (StringUtils.isBlank(rendererId)) {
-            LOGGER.log(Level.WARN, "no renderer defined by this plugin[" + plugin + "]，this plugin will be ignore!");
+            LOGGER.log(Level.WARN, "no renderer defined by this plugin [" + plugin + "]，this plugin will be ignore!");
             return null;
         }
 
         final Class<?> pluginClass = classLoader.loadClass(pluginClassName);
 
-        LOGGER.log(Level.TRACE, "Loading plugin class[name={0}]", pluginClassName);
-        final AbstractPlugin ret = (AbstractPlugin) pluginClass.newInstance();
+        LOGGER.log(Level.TRACE, "Loading plugin class [name={0}]", pluginClassName);
+        final AbstractPlugin ret = (AbstractPlugin) pluginClass.getDeclaredConstructor().newInstance();
         ret.setRendererId(rendererId);
 
         setPluginProps(plugin, ret, props);
-        registerEventListeners(props, classLoader, ret);
         register(ret, holder);
 
         ret.changeStatus();
@@ -233,7 +223,7 @@ public class PluginManager {
             set.add(plugin);
         }
 
-        LOGGER.log(Level.DEBUG, "Registered plugin[name={0}, version={1}] for rendererId[name={2}], [{3}] plugins totally",
+        LOGGER.log(Level.DEBUG, "Registered plugin [name={0}, version={1}] for rendererId [name={2}], [{3}] plugins totally",
                 plugin.getName(), plugin.getVersion(), rendererId, holder.size());
     }
 
@@ -251,7 +241,7 @@ public class PluginManager {
         final String version = props.getProperty(Plugin.PLUGIN_VERSION);
         final String types = props.getProperty(Plugin.PLUGIN_TYPES);
 
-        LOGGER.log(Level.TRACE, "Plugin[name={0}, author={1}, version={2}, types={3}]", name, author, version, types);
+        LOGGER.log(Level.TRACE, "Plugin [name={0}, author={1}, version={2}, types={3}]", name, author, version, types);
 
         plugin.setAuthor(author);
         plugin.setName(name);
@@ -270,42 +260,13 @@ public class PluginManager {
 
                 plugin.setSetting(jsonObject);
             } catch (final IOException ie) {
-                LOGGER.log(Level.ERROR, "reading the config of the plugin[" + name + "]  failed", ie);
+                LOGGER.log(Level.ERROR, "reading the config of the plugin [" + name + "]  failed", ie);
             } catch (final JSONException e) {
-                LOGGER.log(Level.ERROR, "convert the  config of the plugin[" + name + "] to json failed", e);
+                LOGGER.log(Level.ERROR, "convert the  config of the plugin [" + name + "] to json failed", e);
             }
         }
 
         Arrays.stream(types.split(",")).map(PluginType::valueOf).forEach(plugin::addType);
-    }
-
-    /**
-     * Registers event listeners with the specified plugin properties, class loader and plugin.
-     *
-     * @param props       the specified plugin properties
-     * @param classLoader the specified class loader
-     * @param plugin      the specified plugin
-     * @throws Exception exception
-     */
-    private void registerEventListeners(final Properties props, final URLClassLoader classLoader, final AbstractPlugin plugin) throws Exception {
-        final String eventListenerClasses = props.getProperty(Plugin.PLUGIN_EVENT_LISTENER_CLASSES);
-        final String[] eventListenerClassArray = eventListenerClasses.split(",");
-        for (final String eventListenerClassName : eventListenerClassArray) {
-            if (StringUtils.isBlank(eventListenerClassName)) {
-                LOGGER.log(Level.INFO, "No event listener to load for plugin[name={0}]", plugin.getName());
-                return;
-            }
-
-            LOGGER.log(Level.DEBUG, "Loading event listener[className={0}]", eventListenerClassName);
-
-            final Class<?> eventListenerClass = classLoader.loadClass(eventListenerClassName);
-            final AbstractEventListener<?> eventListener = (AbstractEventListener) eventListenerClass.newInstance();
-
-            plugin.addEventListener(eventListener);
-
-            LOGGER.log(Level.DEBUG, "Registered event listener[class={0}, eventType={1}] for plugin[name={2}]",
-                    eventListener.getClass(), eventListener.getEventType(), plugin.getName());
-        }
     }
 
     /**
