@@ -37,7 +37,7 @@ import java.util.Properties;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
- * @version 2.0.1.0, Jul 23, 2019
+ * @version 2.0.1.1, Jul 29, 2019
  */
 public final class Connections {
 
@@ -118,6 +118,19 @@ public final class Connections {
                         hikari.setConnectionTestQuery("SELECT 1");
                     }
 
+                    if (Latkes.RuntimeDatabase.MYSQL == Latkes.getRuntimeDatabase()) {
+                        // 内置 HikariCP 对 MySQL 的优化配置 https://github.com/b3log/latke/issues/159
+                        hikari.addDataSourceProperty("dataSource.cachePrepStmts", true);
+                        hikari.addDataSourceProperty("dataSource.prepStmtCacheSize", 256);
+                        hikari.addDataSourceProperty("dataSource.prepStmtCacheSqlLimit", 2048);
+                        hikari.addDataSourceProperty("dataSource.useServerPrepStmts", true);
+                        hikari.addDataSourceProperty("dataSource.useLocalSessionState", true);
+                        hikari.addDataSourceProperty("dataSource.rewriteBatchedStatements", true);
+                        hikari.addDataSourceProperty("dataSource.cacheResultSetMetadata", true);
+                        hikari.addDataSourceProperty("dataSource.cacheServerConfiguration", true);
+                        hikari.addDataSourceProperty("dataSource.elideSetAutoCommits", true);
+                        hikari.addDataSourceProperty("dataSource.maintainTimeStats", false);
+                    }
                     hikari.setValidationTimeout(2000);
                     hikari.setConnectionTimeout(2000);
                     hikari.setLeakDetectionThreshold(300000);
