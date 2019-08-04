@@ -166,9 +166,8 @@ public final class JdbcRepository implements Repository {
      * @param paramlist  paramlist
      * @param sql        sql
      * @return id
-     * @throws Exception exception
      */
-    private String buildAddSql(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) throws Exception {
+    private String buildAddSql(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) {
         String ret = null;
 
         if (!jsonObject.has(Keys.OBJECT_ID)) {
