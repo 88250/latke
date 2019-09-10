@@ -310,6 +310,7 @@ public final class DispatcherServlet extends HttpServlet {
             final Class clazz = handler.getClass();
             try {
                 final Serializable lambda = handler;
+                // Latke 框架中 "writeReplace" 是个什么魔数？ https://hacpai.com/article/1568102022352
                 final Method m = clazz.getDeclaredMethod("writeReplace");
                 m.setAccessible(true);
                 final SerializedLambda sl = (SerializedLambda) m.invoke(lambda);
