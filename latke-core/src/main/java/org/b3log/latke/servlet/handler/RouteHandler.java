@@ -54,6 +54,8 @@ public class RouteHandler implements Handler {
      */
     public static final String MATCH_RESULT = "MATCH_RESULT";
 
+    // 以下 Map 按照分隔符 / 数量和 HTTP 请求方法分开，主要是为了让每种 Map 都比较小，这样查找更快。
+
     /**
      * One segment concrete URI context handler metas holder.
      */
@@ -173,7 +175,6 @@ public class RouteHandler implements Handler {
      * Four more segments other HTTP methods path var URI context handler metas holder.
      */
     private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
-
 
     /**
      * Public constructor..
