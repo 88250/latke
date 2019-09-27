@@ -28,10 +28,10 @@ import redis.clients.jedis.Protocol;
  * Redis connection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Oct 25, 2018
+ * @version 1.0.1.1, Sep 27, 2019
  * @since 2.3.13
  */
-final class Connections {
+public final class Connections {
 
     /**
      * Logger.
@@ -74,7 +74,7 @@ final class Connections {
      *
      * @return jedis
      */
-    static Jedis getJedis() {
+    public static Jedis getJedis() {
         return pool.getResource();
     }
 
