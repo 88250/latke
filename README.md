@@ -31,7 +31,9 @@
 * [Solo](https://github.com/b3log/solo)：一款小而美的 Java 开源博客系统，专为程序员设计
 * [Symphony](https://github.com/b3log/symphony)：一款用 Java 实现的现代化社区（论坛/BBS/社交网络/博客）平台
 
-## 安装
+## 使用
+
+### Maven
 
 ```xml
 <dependency>
@@ -41,7 +43,7 @@
 </dependency>
 ```
 
-## 控制器层用法
+### 控制器层用法
 
 **注解声明式路由**
 
@@ -90,7 +92,7 @@ final HttpServletRequest request = context.getRequest();
 final HttpServletResponse response = context.getResponse();
 ```
 
-## 服务层用法
+### 服务层用法
 
 **依赖注入、事务**
 
@@ -125,7 +127,7 @@ public class UserService {
 }
 ```
 
-## 持久层用法
+### 持久层用法
 
 **构造 ORM**
 
@@ -190,7 +192,6 @@ final List<JSONObject> records = select("SELECT * FROM `user` WHERE `name` = ?",
 * [为什么又要造一个叫 Latke 的轮子](https://hacpai.com/article/1403847528022)
 * [Latke 快速上手指南](https://hacpai.com/article/1466870492857)
 * [Latke 配置剖析](https://hacpai.com/article/1474087427032)
-* [Latke 贡献指南](https://github.com/b3log/latke/blob/master/CONTRIBUTING.md)
 
 ## 社区
 
