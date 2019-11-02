@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.28, Oct 5, 2019
+    Version: 1.2.2.29, Nov 2, 2019
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -43,6 +43,7 @@
         <commons-codec.version>1.12</commons-codec.version>
         <javassist.version>3.26.0-GA</javassist.version>
         <slf4j.version>1.7.28</slf4j.version>
+        <netty.version>4.1.43.Final</netty.version>
 
         <mysql-connector-java.version>8.0.12</mysql-connector-java.version>
         <h2.version>1.4.199</h2.version>
