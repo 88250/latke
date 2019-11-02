@@ -18,6 +18,7 @@ package org.b3log.latke.util;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.http.Request;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.w3c.dom.Document;
@@ -65,7 +66,7 @@ public final class StaticResources {
      * @param request the specified request
      * @return {@code true} if the client requests a static resource, returns {@code false} otherwise
      */
-    public static boolean isStatic(final HttpServletRequest request) {
+    public static boolean isStatic(final Request request) {
         final boolean requestStaticResourceChecked = null == request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED)
                 ? false
                 : (Boolean) request.getAttribute(Keys.HttpRequest.REQUEST_STATIC_RESOURCE_CHECKED);

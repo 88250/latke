@@ -70,7 +70,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void a() {
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        final MockRequest request = new MockRequest();
         request.setRequestURI("/a");
         final MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -80,7 +80,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void a1() {
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        final MockRequest request = new MockRequest();
         request.setRequestURI("/a/88250/D");
         final MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -91,7 +91,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void abefore() {
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        final MockRequest request = new MockRequest();
         request.setRequestURI("/a/before");
         final MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -102,7 +102,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void l() {
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        final MockRequest request = new MockRequest();
         request.setRequestURI("/l");
         final MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -112,7 +112,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void lbefore() {
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        final MockRequest request = new MockRequest();
         request.setRequestURI("/lbefore");
         final MockHttpServletResponse response = new MockHttpServletResponse();
 

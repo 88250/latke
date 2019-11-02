@@ -18,6 +18,7 @@ package org.b3log.latke;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cache.redis.RedisCache;
+import org.b3log.latke.http.Request;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -329,7 +330,7 @@ public final class Latkes {
         if (null == ret) {
             final RequestContext requestContext = REQUEST_CONTEXT.get();
             if (null != requestContext) {
-                final HttpServletRequest request = requestContext.getRequest();
+                final Request request = requestContext.getRequest();
                 ret = Requests.getServerScheme(request);
             } else {
                 ret = "http";
@@ -349,7 +350,7 @@ public final class Latkes {
         if (null == ret) {
             final RequestContext requestContext = REQUEST_CONTEXT.get();
             if (null != requestContext) {
-                final HttpServletRequest request = requestContext.getRequest();
+                final Request request = requestContext.getRequest();
                 ret = Requests.getServerName(request);
             } else {
                 initPublicIP();

@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.handler;
 
+import org.b3log.latke.http.Request;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
@@ -78,31 +79,14 @@ public class StaticResourceHandler implements Handler {
 
     /**
      * Public construct with specified servlet context.
-     *
-     * @param servletContext the specified servlet context
      */
-    public StaticResourceHandler(final ServletContext servletContext) {
-        for (final String servletName : OPTION_SERVLET_NAME) {
-            requestDispatcher = servletContext.getNamedDispatcher(servletName);
-            if (null != requestDispatcher) {
-                defaultServletName = servletName;
-
-                break;
-            }
-        }
-
-        if (null == requestDispatcher) {
-            throw new IllegalStateException(
-                    "Unable to locate the default servlet for serving static content. "
-                            + "Please report this issue on https://github.com/b3log/latke/issues/new");
-        }
-
+    public StaticResourceHandler() {
         LOGGER.log(Level.DEBUG, "The default servlet for serving static resource is [{0}]", defaultServletName);
     }
 
     @Override
     public void handle(final RequestContext context) {
-        final HttpServletRequest request = context.getRequest();
+        final Request request = context.getRequest();
         if (StaticResources.isStatic(request)) {
             if (null == requestDispatcher) {
                 throw new IllegalStateException("A RequestDispatcher could not be located for the default servlet ["

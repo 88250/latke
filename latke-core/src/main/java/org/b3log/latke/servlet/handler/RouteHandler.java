@@ -18,6 +18,7 @@ package org.b3log.latke.servlet.handler;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.http.Request;
 import org.b3log.latke.ioc.Bean;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
@@ -28,7 +29,6 @@ import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.util.UriTemplates;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
@@ -187,7 +187,7 @@ public class RouteHandler implements Handler {
 
     @Override
     public void handle(final RequestContext context) {
-        final HttpServletRequest request = context.getRequest();
+        final Request request = context.getRequest();
 
         final long startTimeMillis = System.currentTimeMillis();
         request.setAttribute(Keys.HttpRequest.START_TIME_MILLIS, startTimeMillis);
@@ -464,7 +464,7 @@ public class RouteHandler implements Handler {
      * @param request the specified request
      * @return HTTP method
      */
-    private String getHttpMethod(final HttpServletRequest request) {
+    private String getHttpMethod(final Request request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_METHOD);
         if (StringUtils.isBlank(ret)) {
             ret = request.getMethod();
@@ -479,7 +479,7 @@ public class RouteHandler implements Handler {
      * @param request the specified request
      * @return requestURI
      */
-    private String getRequestURI(final HttpServletRequest request) {
+    private String getRequestURI(final Request request) {
         String ret = (String) request.getAttribute(Keys.HttpRequest.REQUEST_URI);
         if (StringUtils.isBlank(ret)) {
             ret = request.getRequestURI();

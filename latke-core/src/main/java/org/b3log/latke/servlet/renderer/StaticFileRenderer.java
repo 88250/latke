@@ -51,7 +51,8 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
     @Override
     public void render(final RequestContext context) {
         try {
-            requestDispatcher.forward(context.getRequest(), context.getResponse());
+// TODO: Netty
+//            requestDispatcher.forward(context.getRequest(), context.getResponse());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Default servlet forward error", e);
         }

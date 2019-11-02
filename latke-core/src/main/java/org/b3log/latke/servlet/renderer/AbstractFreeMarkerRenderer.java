@@ -18,6 +18,7 @@ package org.b3log.latke.servlet.renderer;
 import freemarker.template.Template;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.http.Request;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
@@ -102,7 +103,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
             return;
         }
 
-        final HttpServletRequest request = context.getRequest();
+        final Request request = context.getRequest();
         final Template template = getTemplate();
         if (null == template) {
             LOGGER.log(Level.ERROR, "Not found template [{0}]", templateName);
@@ -147,7 +148,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
      * @return generated HTML
      * @throws Exception exception
      */
-    protected String genHTML(final HttpServletRequest request, final Map<String, Object> dataModel, final Template template)
+    protected String genHTML(final Request request, final Map<String, Object> dataModel, final Template template)
             throws Exception {
         final StringWriter stringWriter = new StringWriter();
         template.setOutputEncoding("UTF-8");
@@ -176,7 +177,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
      * @param response the specified response
      * @throws Exception exception
      */
-    protected void doRender(final String html, final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+    protected void doRender(final String html, final Request request, final HttpServletResponse response) throws Exception {
         PrintWriter writer;
         try {
             writer = response.getWriter();

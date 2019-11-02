@@ -16,7 +16,8 @@
 package org.b3log.latke.util;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.servlet.mock.MockHttpServletRequest;
+import org.b3log.latke.http.Request;
+import org.b3log.latke.servlet.mock.MockRequest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,29 +36,29 @@ public class StaticResourcesTestCase {
     }
 
     /**
-     * Tests method {@link StaticResources#isStatic(HttpServletRequest)}.
+     * Tests method {@link StaticResources#isStatic(Request)}.
      */
     @Test
     public void isStatic() {
-        HttpServletRequest request = new MockHttpServletRequest();
+        Request request = new MockRequest();
 
-        ((MockHttpServletRequest) request).setRequestURI("/css/test.css");
+        ((MockRequest) request).setRequestURI("/css/test.css");
         Assert.assertTrue(StaticResources.isStatic(request));
 
-        request = new MockHttpServletRequest();
-        ((MockHttpServletRequest) request).setRequestURI("/images/test.jpg");
+        request = new MockRequest();
+        ((MockRequest) request).setRequestURI("/images/test.jpg");
         Assert.assertTrue(StaticResources.isStatic(request));
 
-        request = new MockHttpServletRequest();
-        ((MockHttpServletRequest) request).setRequestURI("/js/lib/jquery/jquery.min.js");
+        request = new MockRequest();
+        ((MockRequest) request).setRequestURI("/js/lib/jquery/jquery.min.js");
         Assert.assertTrue(StaticResources.isStatic(request));
 
-        request = new MockHttpServletRequest();
-        ((MockHttpServletRequest) request).setRequestURI("/test.notExist");
+        request = new MockRequest();
+        ((MockRequest) request).setRequestURI("/test.notExist");
         Assert.assertFalse(StaticResources.isStatic(request));
 
-        request = new MockHttpServletRequest();
-        ((MockHttpServletRequest) request).setRequestURI("/images/test");
+        request = new MockRequest();
+        ((MockRequest) request).setRequestURI("/images/test");
         Assert.assertFalse(StaticResources.isStatic(request));
     }
 }

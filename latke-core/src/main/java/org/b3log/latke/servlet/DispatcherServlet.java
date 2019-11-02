@@ -16,6 +16,7 @@
 package org.b3log.latke.servlet;
 
 import org.b3log.latke.Latkes;
+import org.b3log.latke.http.Request;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.function.ContextHandler;
@@ -23,8 +24,6 @@ import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
 import org.b3log.latke.servlet.renderer.Http404Renderer;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
@@ -39,7 +38,7 @@ import java.util.List;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.2, Dec 2, 2018
  */
-public final class DispatcherServlet extends HttpServlet {
+public final class DispatcherServlet {
 
     /**
      * Logger.
@@ -58,14 +57,12 @@ public final class DispatcherServlet extends HttpServlet {
         HANDLERS.add(new AfterHandleHandler());
     }
 
-    @Override
     public void init() {
         // static resource handling must be the first one
-        HANDLERS.add(0, new StaticResourceHandler(getServletContext()));
+        HANDLERS.add(0, new StaticResourceHandler());
     }
 
-    @Override
-    protected void service(final HttpServletRequest request, final HttpServletResponse response) {
+    protected void service(final Request request, final HttpServletResponse response) {
         handle(request, response);
     }
 
@@ -76,9 +73,8 @@ public final class DispatcherServlet extends HttpServlet {
      * @param response the specified response
      * @return context
      */
-    public static RequestContext handle(final HttpServletRequest request, final HttpServletResponse response) {
+    public static RequestContext handle(final Request request, final HttpServletResponse response) {
         try {
-            request.setCharacterEncoding("UTF-8");
             response.setCharacterEncoding("UTF-8");
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Sets request context character encoding failed", e);

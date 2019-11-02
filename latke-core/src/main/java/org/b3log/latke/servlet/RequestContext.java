@@ -18,6 +18,7 @@ package org.b3log.latke.servlet;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.http.Request;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.handler.Handler;
@@ -28,10 +29,8 @@ import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.URLs;
 import org.json.JSONObject;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,7 @@ public final class RequestContext {
     /**
      * Request.
      */
-    private HttpServletRequest request;
+    private Request request;
 
     /**
      * Response.
@@ -108,7 +107,7 @@ public final class RequestContext {
      *
      * @return request
      */
-    public HttpServletRequest getRequest() {
+    public Request getRequest() {
         return request;
     }
 
@@ -117,7 +116,7 @@ public final class RequestContext {
      *
      * @param request the specified request
      */
-    public void setRequest(final HttpServletRequest request) {
+    public void setRequest(final Request request) {
         this.request = request;
     }
 
@@ -202,15 +201,6 @@ public final class RequestContext {
      */
     public void setHeader(final String name, final String value) {
         response.setHeader(name, value);
-    }
-
-    /**
-     * Gets the request query string.
-     *
-     * @return query string
-     */
-    public String queryStr() {
-        return request.getQueryString();
     }
 
     /**
@@ -576,16 +566,17 @@ public final class RequestContext {
      * @param response the specified response, sets its content type with "application/json"
      * @return a json object
      */
-    private static JSONObject parseRequestJSONObject(final HttpServletRequest request, final HttpServletResponse response) {
+    private static JSONObject parseRequestJSONObject(final Request request, final HttpServletResponse response) {
         response.setContentType("application/json");
 
         try {
-            BufferedReader reader;
-            try {
-                reader = request.getReader();
-            } catch (final IllegalStateException illegalStateException) {
-                reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-            }
+            BufferedReader reader = null;
+// TODO: Netty
+//            try {
+//                reader = request.getReader();
+//            } catch (final IllegalStateException illegalStateException) {
+//                reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+//            }
 
             String tmp = IOUtils.toString(reader);
             if (StringUtils.isBlank(tmp)) {

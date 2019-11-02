@@ -41,7 +41,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * @version 1.0.0.0, Nov 2, 2019
  * @since 2.5.9
  */
-public final class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
+public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
 
     /**
      * Request.
@@ -187,7 +187,7 @@ public final class HttpServerHandler extends SimpleChannelInboundHandler<Object>
     }
 
     private static void send100Continue(final ChannelHandlerContext ctx) {
-        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, CONTINUE, Unpooled.EMPTY_BUFFER);
+        final FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, CONTINUE, Unpooled.EMPTY_BUFFER);
         ctx.write(response);
     }
 

@@ -15,9 +15,9 @@
  */
 package org.b3log.latke.util;
 
+import org.b3log.latke.http.Request;
 import org.b3log.latke.servlet.RequestContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +45,7 @@ public final class Paginator {
      * @param request the specified request
      * @return page number, returns {@code 1} as default
      */
-    public static int getPage(final HttpServletRequest request) {
+    public static int getPage(final Request request) {
         int ret = 1;
         final String p = request.getParameter("p");
         if (Strings.isNumeric(p)) {

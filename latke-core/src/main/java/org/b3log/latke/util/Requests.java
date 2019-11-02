@@ -16,6 +16,7 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.http.Request;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.json.JSONArray;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  * Request utilities.
@@ -59,7 +60,7 @@ public final class Requests {
      * @param level              the specified logging level
      * @param logger             the specified logger
      */
-    public static void log(final HttpServletRequest httpServletRequest, final Level level, final Logger logger) {
+    public static void log(final Request httpServletRequest, final Level level, final Logger logger) {
         if (!logger.isLoggable(level)) {
             return;
         }
@@ -73,7 +74,7 @@ public final class Requests {
      * @param httpServletRequest the specified request
      * @return log
      */
-    public static String getLog(final HttpServletRequest httpServletRequest) {
+    public static String getLog(final Request httpServletRequest) {
         if (null == httpServletRequest) {
             return "request is null";
         }
@@ -82,30 +83,20 @@ public final class Requests {
         final StringBuilder logBuilder = new StringBuilder("Request [").append(Strings.LINE_SEPARATOR);
 
         logBuilder.append(indents).append("method=").append(httpServletRequest.getMethod()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("URL=").append(httpServletRequest.getRequestURL()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("URI=").append(httpServletRequest.getRequestURI()).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("contentType=").append(httpServletRequest.getContentType()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("characterEncoding=").append(httpServletRequest.getCharacterEncoding()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("local=[").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("addr=").append(httpServletRequest.getLocalAddr()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getLocalPort()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("name=").append(httpServletRequest.getLocalName()).append("],").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("remote=[").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("addr=").append(getRemoteAddr(httpServletRequest)).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("port=").append(httpServletRequest.getRemotePort()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("host=").append(httpServletRequest.getRemoteHost()).append("],").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("remoteAddr=").append(getRemoteAddr(httpServletRequest)).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("headers=[");
-        final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+        final Iterator<String> headerNames = httpServletRequest.getHeaderNames();
         final StringBuilder headerLogBuilder = new StringBuilder();
-        if (null != headerNames) {
-            logBuilder.append(Strings.LINE_SEPARATOR);
-            while (headerNames.hasMoreElements()) {
-                final String name = headerNames.nextElement();
-                final String value = httpServletRequest.getHeader(name);
-                headerLogBuilder.append(indents).append(indents).append(name).append("=").append(value);
-                headerLogBuilder.append(Strings.LINE_SEPARATOR);
-            }
-            headerLogBuilder.append(indents);
+        logBuilder.append(Strings.LINE_SEPARATOR);
+        while (headerNames.hasNext()) {
+            final String name = headerNames.next();
+            final String value = httpServletRequest.getHeader(name);
+            headerLogBuilder.append(indents).append(indents).append(name).append("=").append(value);
+            headerLogBuilder.append(Strings.LINE_SEPARATOR);
         }
+        headerLogBuilder.append(indents);
         headerLogBuilder.append("]");
         logBuilder.append(headerLogBuilder.toString());
 
@@ -124,7 +115,7 @@ public final class Requests {
      * @param request the specified request
      * @return the IP address of the end-client sent the specified request
      */
-    public static String getRemoteAddr(final HttpServletRequest request) {
+    public static String getRemoteAddr(final Request request) {
         String ret = request.getHeader("X-Forwarded-For");
         if (StringUtils.isBlank(ret)) {
             ret = request.getHeader("X-Real-IP");
@@ -142,7 +133,7 @@ public final class Requests {
      * @param request the specified reuqest
      * @return scheme
      */
-    public static String getServerScheme(final HttpServletRequest request) {
+    public static String getServerScheme(final Request request) {
         String ret = request.getHeader("X-Forwarded-Scheme");
         if (StringUtils.isBlank(ret)) {
             ret = request.getHeader("X-Forwarded-Proto");
@@ -160,7 +151,7 @@ public final class Requests {
      * @param request the specified reuqest
      * @return server name
      */
-    public static String getServerName(final HttpServletRequest request) {
+    public static String getServerName(final Request request) {
         String ret = request.getHeader("X-Forwarded-Host");
         if (StringUtils.isBlank(ret)) {
             return request.getServerName();
