@@ -15,12 +15,13 @@
  */
 package org.b3log.latke.http;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
-import io.netty.util.CharsetUtil;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -40,6 +41,7 @@ public class Response {
     private HttpRequest req;
     private HttpResponse res;
     private boolean commited;
+    private byte[] content;
 
     public Response(final ChannelHandlerContext ctx, final HttpRequest req, final HttpResponse res) {
         this.ctx = ctx;
@@ -90,10 +92,17 @@ public class Response {
         writeResponse();
     }
 
-    private boolean writeResponse() {
-        final FullHttpResponse response = new DefaultFullHttpResponse(
-                HTTP_1_1, res.status(), Unpooled.copiedBuffer("buf.toString()", CharsetUtil.UTF_8),
-                res.headers(), null);
+    public void sendContent(final byte[] content) {
+        this.content = content;
+        writeResponse();
+    }
+
+    private void writeResponse() {
+        ByteBuf contentBuf = Unpooled.EMPTY_BUFFER;
+        if (null != content) {
+            contentBuf = Unpooled.copiedBuffer(content);
+        }
+        final FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, res.status(), contentBuf, res.headers(), res.headers());
         final boolean keepAlive = HttpUtil.isKeepAlive(req);
         if (keepAlive) {
             // Add 'Content-Length' header only for a keep-alive connection.
@@ -120,9 +129,12 @@ public class Response {
         }
 
         commited = true;
-        ctx.write(response);
-        ctx.flush();
 
-        return keepAlive;
+        if (null != ctx) {
+            ctx.write(response);
+            if (!keepAlive) {
+                ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+            }
+        }
     }
 }

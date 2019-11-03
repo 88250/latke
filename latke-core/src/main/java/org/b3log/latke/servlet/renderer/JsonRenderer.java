@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+import org.apache.commons.codec.binary.StringUtils;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
@@ -28,14 +30,9 @@ import java.io.PrintWriter;
  * <a href="http://json.org">JSON</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.1, Mar 5, 2017
+ * @version 2.0.0., Nov 3, 2019
  */
 public final class JsonRenderer extends AbstractResponseRenderer {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(JsonRenderer.class);
 
     /**
      * Pretty output.
@@ -131,32 +128,14 @@ public final class JsonRenderer extends AbstractResponseRenderer {
 
     @Override
     public void render(final RequestContext context) {
-        final HttpServletResponse response = context.getResponse();
-        response.setCharacterEncoding("UTF-8");
-
-        try {
-            final PrintWriter writer = response.getWriter();
-
-            final int indent = 4;
-            final String output = pretty ? jsonObject.toString(indent) : jsonObject.toString();
-
-            if (!jsonp) {
-                response.setContentType("application/json");
-                writer.println(output);
-            } else {
-                response.setContentType("application/javascript");
-                writer.print(callback + "(" + output + ")");
-            }
-
-            writer.close();
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "FreeMarker renders error", e);
-
-            try {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            } catch (final IOException ex) {
-                LOGGER.log(Level.ERROR, "Can not send error 500!", ex);
-            }
+        final Response response = context.getResponse();
+        final int indent = 4;
+        final String output = pretty ? jsonObject.toString(indent) : jsonObject.toString();
+        if (!jsonp) {
+            response.setContentType("application/json");
+        } else {
+            response.setContentType("application/javascript");
         }
+        response.sendContent(StringUtils.getBytesUtf8(output));
     }
 }

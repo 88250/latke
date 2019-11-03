@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
@@ -27,7 +28,7 @@ import java.io.OutputStream;
  * PNG HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Aug 2, 2018
+ * @version 2.0.0.0, Nov 3, 2019
  */
 public final class PngRenderer extends AbstractResponseRenderer {
 
@@ -52,15 +53,8 @@ public final class PngRenderer extends AbstractResponseRenderer {
 
     @Override
     public void render(final RequestContext context) {
-        try {
-            final HttpServletResponse response = context.getResponse();
-            response.setContentType("image/png");
-
-            final OutputStream outputStream = response.getOutputStream();
-            outputStream.write(data);
-            outputStream.close();
-        } catch (final IOException e) {
-            LOGGER.log(Level.ERROR, "Render PNG failed", e);
-        }
+        final Response response = context.getResponse();
+        response.setContentType("image/png");
+        response.sendContent(data);
     }
 }

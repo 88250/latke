@@ -15,9 +15,13 @@
  */
 package org.b3log.latke.util;
 
+import io.netty.handler.codec.http.DefaultHttpRequest;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpVersion;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.http.Request;
 import org.b3log.latke.http.MockRequest;
+import org.b3log.latke.http.Request;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -25,7 +29,7 @@ import org.testng.annotations.Test;
  * {@link StaticResources} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Mar 31, 2012
+ * @version 2.0.0.0, Nov 3, 2019
  */
 public class StaticResourcesTestCase {
 
@@ -38,25 +42,25 @@ public class StaticResourcesTestCase {
      */
     @Test
     public void isStatic() {
-        Request request = new MockRequest();
+        HttpRequest req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/css/test.css");
+        MockRequest request = new MockRequest(req);
 
-        ((MockRequest) request).setRequestURI("/css/test.css");
         Assert.assertTrue(StaticResources.isStatic(request));
 
-        request = new MockRequest();
-        ((MockRequest) request).setRequestURI("/images/test.jpg");
+        req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/images/test.jpg");
+        request = new MockRequest(req);
         Assert.assertTrue(StaticResources.isStatic(request));
 
-        request = new MockRequest();
-        ((MockRequest) request).setRequestURI("/js/lib/jquery/jquery.min.js");
+        req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/js/lib/jquery/jquery.min.js");
+        request = new MockRequest(req);
         Assert.assertTrue(StaticResources.isStatic(request));
 
-        request = new MockRequest();
-        ((MockRequest) request).setRequestURI("/test.notExist");
+        req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/test.notExist");
+        request = new MockRequest(req);
         Assert.assertFalse(StaticResources.isStatic(request));
 
-        request = new MockRequest();
-        ((MockRequest) request).setRequestURI("/images/test");
+        req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/images/test");
+        request = new MockRequest(req);
         Assert.assertFalse(StaticResources.isStatic(request));
     }
 }

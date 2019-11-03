@@ -15,26 +15,17 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.b3log.latke.http.Response;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
-
-import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * XML HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 22, 2011
+ * @version 2.0.0.0, Nov 3, 2019
  */
 public final class TextXmlRenderer extends AbstractResponseRenderer {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(TextXmlRenderer.class);
 
     /**
      * Content to render.
@@ -52,14 +43,8 @@ public final class TextXmlRenderer extends AbstractResponseRenderer {
 
     @Override
     public void render(final RequestContext context) {
-        try {
-            final Response response = context.getResponse();
-            response.setContentType("text/xml");
-            final PrintWriter writer = response.getWriter();
-            writer.write(content);
-            writer.close();
-        } catch (final IOException e) {
-            LOGGER.log(Level.ERROR, "Render failed", e);
-        }
+        final Response response = context.getResponse();
+        response.setContentType("text/xml");
+        response.sendContent(StringUtils.getBytesUtf8(content));
     }
 }

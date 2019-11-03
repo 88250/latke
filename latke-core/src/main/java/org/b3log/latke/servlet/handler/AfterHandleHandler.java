@@ -16,6 +16,7 @@
 package org.b3log.latke.servlet.handler;
 
 import org.b3log.latke.Keys;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
@@ -32,7 +33,7 @@ import java.util.List;
  * After processing method ({@link org.b3log.latke.servlet.function.ContextHandler#handle(RequestContext)} or method annotated {@link org.b3log.latke.servlet.annotation.RequestProcessing}).
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Dec 8, 2018
+ * @version 2.0.0.0, Nov 3, 2019
  * @since 2.4.34
  */
 public class AfterHandleHandler implements Handler {
@@ -65,8 +66,8 @@ public class AfterHandleHandler implements Handler {
 
             final int statusCode = exception.optInt(Keys.STATUS_CODE, -1);
             if (-1 != statusCode && HttpServletResponse.SC_OK != statusCode) {
-                final HttpServletResponse response = context.getResponse();
-                response.sendError(statusCode, msg);
+                final Response response = context.getResponse();
+                response.sendError(statusCode);
             } else {
                 final JsonRenderer ret = new JsonRenderer();
                 ret.setJSONObject(exception);

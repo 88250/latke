@@ -16,18 +16,17 @@
 package org.b3log.latke.servlet.renderer;
 
 import freemarker.template.Template;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.http.Request;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.util.Requests;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +35,7 @@ import java.util.Map;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.15, Nov 28, 2018
+ * @version 2.0.0.0, Nov 3, 2019
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRenderer {
 
@@ -80,26 +79,9 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
 
     @Override
     public void render(final RequestContext context) {
-        final HttpServletResponse response = context.getResponse();
+        final Response response = context.getResponse();
         response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-
-        PrintWriter writer;
-        try {
-            writer = response.getWriter();
-        } catch (final Exception e) {
-            try {
-                writer = new PrintWriter(response.getOutputStream());
-            } catch (final IOException ex) {
-                LOGGER.log(Level.ERROR, "Can not get response writer", ex);
-                return;
-            }
-        }
-
         if (response.isCommitted()) { // response has been sent redirect
-            writer.flush();
-            writer.close();
-
             return;
         }
 
@@ -107,12 +89,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         final Template template = getTemplate();
         if (null == template) {
             LOGGER.log(Level.ERROR, "Not found template [{0}]", templateName);
-
-            try {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            } catch (final IOException ex) {
-                LOGGER.log(Level.ERROR, "Can not send error 404!", ex);
-            }
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
 
             return;
         }
@@ -130,12 +107,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         } catch (final Exception e) {
             final String requestLog = Requests.getLog(request);
             LOGGER.log(Level.ERROR, "Renders template [" + templateName + "] failed [" + requestLog + "]", e);
-
-            try {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            } catch (final IOException ex) {
-                LOGGER.log(Level.ERROR, "Sends error 500 failed", ex);
-            }
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -175,30 +147,12 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
      * @param html     the specified HTML content
      * @param request  the specified request
      * @param response the specified response
-     * @throws Exception exception
      */
-    protected void doRender(final String html, final Request request, final HttpServletResponse response) throws Exception {
-        PrintWriter writer;
-        try {
-            writer = response.getWriter();
-        } catch (final Exception e) {
-            writer = new PrintWriter(response.getOutputStream());
+    protected void doRender(final String html, final Request request, final Response response) {
+        if (response.isCommitted()) { // response has been sent redirect
+            return;
         }
-
-        try {
-            if (response.isCommitted()) { // response has been sent redirect
-                writer.flush();
-                writer.close();
-
-                return;
-            }
-
-            writer.write(html);
-            writer.flush();
-            writer.close();
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Writes pipe failed: " + e.getMessage());
-        }
+        response.sendContent(StringUtils.getBytesUtf8(html));
     }
 
     /**

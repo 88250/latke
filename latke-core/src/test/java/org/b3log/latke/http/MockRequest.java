@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.http;
 
-import org.b3log.latke.http.Request;
+import io.netty.handler.codec.http.HttpRequest;
 
 /**
  * Mock HTTP request.
@@ -26,18 +26,7 @@ import org.b3log.latke.http.Request;
  */
 public class MockRequest extends Request {
 
-    private String requestURI;
-
-    public MockRequest() {
-        super(null, null);
+    public MockRequest(final HttpRequest req) {
+        super(null, req);
     }
-
-    public String getRequestURI() {
-        return requestURI;
-    }
-
-    public void setRequestURI(final String requestURI) {
-        this.requestURI = requestURI;
-    }
-
 }

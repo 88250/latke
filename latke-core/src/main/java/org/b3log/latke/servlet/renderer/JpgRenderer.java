@@ -15,26 +15,16 @@
  */
 package org.b3log.latke.servlet.renderer;
 
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.servlet.RequestContext;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * JPEG HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Aug 2, 2018
+ * @version 2.0.0.0, Nov 3, 2019
  */
 public final class JpgRenderer extends AbstractResponseRenderer {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(JpgRenderer.class);
 
     /**
      * Image data to render.
@@ -52,15 +42,8 @@ public final class JpgRenderer extends AbstractResponseRenderer {
 
     @Override
     public void render(final RequestContext context) {
-        try {
-            final HttpServletResponse response = context.getResponse();
-            response.setContentType("image/jpeg");
-
-            final OutputStream outputStream = response.getOutputStream();
-            outputStream.write(data);
-            outputStream.close();
-        } catch (final IOException e) {
-            LOGGER.log(Level.ERROR, "Render JPG failed", e);
-        }
+        final Response response = context.getResponse();
+        response.setContentType("image/jpeg");
+        response.sendContent(data);
     }
 }

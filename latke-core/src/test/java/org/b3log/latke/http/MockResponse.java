@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.http;
 
+import io.netty.handler.codec.http.*;
 import org.b3log.latke.http.Response;
 
 /**
@@ -26,7 +27,7 @@ import org.b3log.latke.http.Response;
  */
 public class MockResponse extends Response {
 
-    public MockResponse() {
-        super(null, null);
+    public MockResponse(final HttpRequest req, final HttpResponse res) {
+        super(null, req, res);
     }
 }
