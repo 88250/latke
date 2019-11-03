@@ -15,17 +15,20 @@
  */
 package org.b3log.latke.http.renderer;
 
+import org.b3log.latke.http.RequestContext;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.http.RequestContext;
 
-import javax.servlet.RequestDispatcher;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
- * servlet forward renderer.
+ * Static file renderer.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
- * @version 1.0.0.0, Sep 26, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 2.0.0.0, Nov 3, 2019
  */
 public class StaticFileRenderer extends AbstractResponseRenderer {
 
@@ -34,27 +37,19 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
      */
     private static final Logger LOGGER = Logger.getLogger(StaticFileRenderer.class);
 
-    /**
-     * Request dispatcher.
-     */
-    private RequestDispatcher requestDispatcher;
-
-    /**
-     * Request dispatcher.
-     *
-     * @param requestDispatcher request dispatcher
-     */
-    public StaticFileRenderer(final RequestDispatcher requestDispatcher) {
-        this.requestDispatcher = requestDispatcher;
-    }
-
     @Override
     public void render(final RequestContext context) {
         try {
-// TODO: Netty
-//            requestDispatcher.forward(context.getRequest(), context.getResponse());
+            final String uri = context.requestURI();
+            final URL resource = StaticFileRenderer.class.getResource(uri);
+            final Path path = Path.of(resource.toURI());
+            final String contentType = Files.probeContentType(path);
+            final byte[] bytes = Files.readAllBytes(path);
+            final Response response = context.getResponse();
+            response.setContentType(contentType);
+            response.sendContent(bytes);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Default servlet forward error", e);
+            LOGGER.log(Level.ERROR, "Renders static final fialed", e);
         }
     }
 }

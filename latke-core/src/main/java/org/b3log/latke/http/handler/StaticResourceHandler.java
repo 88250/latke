@@ -16,20 +16,17 @@
 package org.b3log.latke.http.handler;
 
 import org.b3log.latke.http.Request;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.renderer.StaticFileRenderer;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.StaticResources;
-
-import javax.servlet.RequestDispatcher;
 
 /**
  * Static resource handler.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.2, Mar 3, 2018
+ * @version 3.0.0.0, Nov 3, 2019
  */
 public class StaticResourceHandler implements Handler {
 
@@ -38,60 +35,11 @@ public class StaticResourceHandler implements Handler {
      */
     private static final Logger LOGGER = Logger.getLogger(StaticResourceHandler.class);
 
-    /**
-     * Default Servlet name used by Tomcat, Jetty, JBoss, and GlassFish.
-     */
-    private static final String COMMON_DEFAULT_SERVLET_NAME = "default";
-
-    /**
-     * Default Servlet name used by Resin.
-     */
-    private static final String RESIN_DEFAULT_SERVLET_NAME = "resin-file";
-
-    /**
-     * Default Servlet name used by WebLogic.
-     */
-    private static final String WEBLOGIC_DEFAULT_SERVLET_NAME = "FileServlet";
-
-    /**
-     * Default Servlet name used by WebSphere.
-     */
-    private static final String WEBSPHERE_DEFAULT_SERVLET_NAME = "SimpleFileServlet";
-
-    /**
-     * the holder of All option Servlet Name.
-     */
-    private static final String[] OPTION_SERVLET_NAME = new String[]{
-            COMMON_DEFAULT_SERVLET_NAME, RESIN_DEFAULT_SERVLET_NAME, WEBLOGIC_DEFAULT_SERVLET_NAME,
-            WEBSPHERE_DEFAULT_SERVLET_NAME};
-
-    /**
-     * default servlet which container provide to resolve static resource.
-     */
-    private RequestDispatcher requestDispatcher;
-
-    /**
-     * default-servlet name for logger.
-     */
-    private String defaultServletName;
-
-    /**
-     * Public construct with specified servlet context.
-     */
-    public StaticResourceHandler() {
-        LOGGER.log(Level.DEBUG, "The default servlet for serving static resource is [{0}]", defaultServletName);
-    }
-
     @Override
     public void handle(final RequestContext context) {
         final Request request = context.getRequest();
         if (StaticResources.isStatic(request)) {
-            if (null == requestDispatcher) {
-                throw new IllegalStateException("A RequestDispatcher could not be located for the default servlet ["
-                        + this.defaultServletName + "]");
-            }
-
-            context.setRenderer(new StaticFileRenderer(requestDispatcher));
+            context.setRenderer(new StaticFileRenderer());
             context.abort();
 
             return;
