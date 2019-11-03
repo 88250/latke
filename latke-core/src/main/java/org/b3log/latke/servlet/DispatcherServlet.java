@@ -25,7 +25,6 @@ import org.b3log.latke.servlet.handler.*;
 import org.b3log.latke.servlet.renderer.AbstractResponseRenderer;
 import org.b3log.latke.servlet.renderer.Http404Renderer;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
@@ -97,7 +96,7 @@ public final class DispatcherServlet {
      * @param context {@link RequestContext}
      */
     public static void result(final RequestContext context) {
-        final HttpServletResponse response = context.getResponse();
+        final Response response = context.getResponse();
         if (response.isCommitted()) { // Response sends redirect or error
             return;
         }

@@ -15,11 +15,11 @@
  */
 package org.b3log.latke.servlet.renderer;
 
+import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.RequestContext;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -53,10 +53,8 @@ public final class TextXmlRenderer extends AbstractResponseRenderer {
     @Override
     public void render(final RequestContext context) {
         try {
-            final HttpServletResponse response = context.getResponse();
+            final Response response = context.getResponse();
             response.setContentType("text/xml");
-            response.setCharacterEncoding("UTF-8");
-
             final PrintWriter writer = response.getWriter();
             writer.write(content);
             writer.close();
