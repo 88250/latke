@@ -34,14 +34,12 @@ public class InheritTest {
     private C0 c0;
 
     @BeforeTest
-    public void beforeTest() throws Exception {
+    public void beforeTest() {
         System.out.println("before " + InheritTest.class.getSimpleName());
 
+        Latkes.setScanPath("org.b3log.latke.ioc.inherit");
         Latkes.init();
         beanManager = BeanManager.getInstance();
-
-        final Collection<Class<?>> beanClasses = Discoverer.discover("org.b3log.latke.ioc.inherit");
-        BeanManager.start(beanClasses);
 
         anInterface = beanManager.getReference(InterfaceImpl.class);
         c0 = beanManager.getReference(C0.class);

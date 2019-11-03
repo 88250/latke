@@ -569,6 +569,10 @@ public final class Latkes {
     public static String getScanPath() {
         if (null == scanPath) {
             scanPath = getLatkeProperty("scanPath");
+            if (StringUtils.isBlank(scanPath)) {
+                scanPath = "org.b3log";
+                LOGGER.log(Level.INFO, "IoC scan path is empty, uses \"org.b3log\" as default scan path");
+            }
         }
 
         return scanPath;

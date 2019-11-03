@@ -89,10 +89,9 @@ class FeedProcessor {
      * Tag articles Atom output.
      *
      * @param context the specified context
-     * @throws IOException io exception
      */
     @RequestProcessing(value = {"/tag-articles-feed.do"}, method = {HttpMethod.GET, HttpMethod.HEAD})
-    public void tagArticlesAtom(final RequestContext context) throws IOException {
+    public void tagArticlesAtom(final RequestContext context) {
     }
 
     /**
@@ -108,9 +107,8 @@ class FeedProcessor {
      * Tag articles RSS output.
      *
      * @param context the specified context
-     * @throws IOException io exception
      */
     @RequestProcessing(value = {"/tag-articles-rss.do"}, method = {HttpMethod.GET, HttpMethod.HEAD})
-    public void tagArticlesRSS(final RequestContext context) throws IOException {
+    public void tagArticlesRSS(final RequestContext context) {
     }
 }

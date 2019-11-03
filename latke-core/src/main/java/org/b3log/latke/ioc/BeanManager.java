@@ -30,7 +30,7 @@ import java.util.*;
  * Latke bean manager implementation.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Sep 29, 2018
+ * @version 2.0.0.1, Nov 3, 2019
  * @since 2.4.18
  */
 @Singleton
@@ -166,7 +166,7 @@ public class BeanManager {
 
     private <T> Bean<T> getBean(final Type beanType) {
         for (final Bean<?> bean : beans) {
-            if (bean.getBeanClass().equals(beanType)) {
+            if (bean.getTypes().contains(beanType)) {
                 return (Bean<T>) bean;
             }
         }
