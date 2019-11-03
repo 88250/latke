@@ -13,16 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.http;
+package org.b3log.latke.http.annotation;
 
-import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.http.advice.ProcessAdvice;
 
-@Singleton
-public class TestAfterAdvice extends ProcessAdvice {
+import java.lang.annotation.*;
 
-    @Override
-    public void doAdvice(final RequestContext context) {
-        context.attr("after", "after");
-    }
+
+/**
+ * The render mark for the parameter of the method, just to set the id of the renderer.
+ *
+ * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
+ * @version 1.0.0.0, Jan 21, 2013
+ */
+@Target({ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Render {
+
+    /**
+     * The id of the render, for plugin to identify.
+     *
+     * @return value
+     */
+    String value();
 }

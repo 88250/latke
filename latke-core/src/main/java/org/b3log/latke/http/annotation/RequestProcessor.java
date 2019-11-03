@@ -13,16 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.http;
+package org.b3log.latke.http.annotation;
 
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.http.advice.ProcessAdvice;
+import org.b3log.latke.ioc.Stereotype;
 
+import java.lang.annotation.*;
+
+/**
+ * Indicates that an annotated type for HTTP request processing.
+ *
+ * <p>
+ * A request processor is the C (controller) of MVC pattern, which has some methods for requests processing,
+ * see {@link RequestProcessing} for more details.
+ * </p>
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Sep 29, 2018
+ * @see RequestProcessing
+ * @since 2.4.18
+ */
 @Singleton
-public class TestAfterAdvice extends ProcessAdvice {
-
-    @Override
-    public void doAdvice(final RequestContext context) {
-        context.attr("after", "after");
-    }
+@Stereotype
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface RequestProcessor {
 }

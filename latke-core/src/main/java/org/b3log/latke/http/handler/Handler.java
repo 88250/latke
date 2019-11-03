@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.plugin;
+package org.b3log.latke.http.handler;
 
+import org.b3log.latke.http.DispatcherServlet;
 import org.b3log.latke.http.RequestContext;
 
-import java.util.Map;
-
 /**
- * The default plugin for which do not need interact with the server end.
+ * A handler interface for  {@link DispatcherServlet} to do the inner process.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, May 31, 2014
+ * @version 1.0.0.2, Dec 5, 2018
+ * @since 2.4.34
  */
-@SuppressWarnings("serial")
-public class NotInteractivePlugin extends AbstractPlugin {
+public interface Handler {
 
-    @Override
-    public void prePlug(final RequestContext context) {
-    }
-
-    @Override
-    public void postPlug(final Map<String, Object> dataModel, final RequestContext context) {
-    }
+    /**
+     * Handle.
+     *
+     * @param context the specified request context
+     * @throws Exception exception
+     */
+    void handle(final RequestContext context) throws Exception;
 }

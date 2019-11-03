@@ -13,27 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.plugin;
+package org.b3log.latke.http.annotation;
 
-import org.b3log.latke.http.RequestContext;
+import org.b3log.latke.http.advice.ProcessAdvice;
 
-import java.util.Map;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * The default plugin for which do not need interact with the server end.
+ * Indicates invoking process advices after an annotated method.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, May 31, 2014
+ * @version 1.0.0.0, Dec 5, 2018
+ * @since 2.4.34
  */
-@SuppressWarnings("serial")
-public class NotInteractivePlugin extends AbstractPlugin {
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface After {
 
-    @Override
-    public void prePlug(final RequestContext context) {
-    }
-
-    @Override
-    public void postPlug(final Map<String, Object> dataModel, final RequestContext context) {
-    }
+    /**
+     * The after advice classes.
+     *
+     * @return after advice classes
+     */
+    Class<? extends ProcessAdvice>[] value() default ProcessAdvice.class;
 }

@@ -16,7 +16,7 @@
 package org.b3log.latke.util;
 
 import org.b3log.latke.http.Request;
-import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.http.RequestContext;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,27 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.plugin;
+package org.b3log.latke.http.renderer;
 
+import org.b3log.latke.http.Response;
 import org.b3log.latke.http.RequestContext;
 
-import java.util.Map;
-
 /**
- * The default plugin for which do not need interact with the server end.
+ * JPEG HTTP response renderer.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, May 31, 2014
+ * @version 2.0.0.0, Nov 3, 2019
  */
-@SuppressWarnings("serial")
-public class NotInteractivePlugin extends AbstractPlugin {
+public final class JpgRenderer extends AbstractResponseRenderer {
 
-    @Override
-    public void prePlug(final RequestContext context) {
+    /**
+     * Image data to render.
+     */
+    private byte[] data;
+
+    /**
+     * Sets the image with the specified image.
+     *
+     * @param data the specified image data
+     */
+    public void setImage(final byte[] data) {
+        this.data = data;
     }
 
     @Override
-    public void postPlug(final Map<String, Object> dataModel, final RequestContext context) {
+    public void render(final RequestContext context) {
+        final Response response = context.getResponse();
+        response.setContentType("image/jpeg");
+        response.sendContent(data);
     }
 }

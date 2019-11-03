@@ -26,8 +26,7 @@ import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
-import org.b3log.latke.servlet.AbstractServletListener;
-import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.http.RequestContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 

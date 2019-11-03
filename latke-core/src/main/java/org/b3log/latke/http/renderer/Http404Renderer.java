@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.http;
+package org.b3log.latke.http.renderer;
 
-import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.http.advice.ProcessAdvice;
+import org.b3log.latke.http.RequestContext;
+import org.b3log.latke.http.Response;
 
-@Singleton
-public class TestAfterAdvice extends ProcessAdvice {
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * HTTP {@link HttpServletResponse#SC_NOT_FOUND 404 status} renderer.
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 2.0.0.0, Nov 3, 2019
+ */
+public final class Http404Renderer extends AbstractResponseRenderer {
 
     @Override
-    public void doAdvice(final RequestContext context) {
-        context.attr("after", "after");
+    public void render(final RequestContext context) {
+        final Response response = context.getResponse();
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 }

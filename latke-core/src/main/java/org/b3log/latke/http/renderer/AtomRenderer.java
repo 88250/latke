@@ -13,27 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.plugin;
+package org.b3log.latke.http.renderer;
 
+import org.apache.commons.codec.binary.StringUtils;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.http.RequestContext;
 
-import java.util.Map;
-
 /**
- * The default plugin for which do not need interact with the server end.
+ * Atom HTTP response renderer.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, May 31, 2014
+ * @version 2.0.0.0, Nov 3, 2019
  */
-@SuppressWarnings("serial")
-public class NotInteractivePlugin extends AbstractPlugin {
+public final class AtomRenderer extends AbstractResponseRenderer {
 
-    @Override
-    public void prePlug(final RequestContext context) {
+    /**
+     * Content to render.
+     */
+    private String content;
+
+    /**
+     * Sets the content with the specified content.
+     *
+     * @param content the specified content
+     */
+    public void setContent(final String content) {
+        this.content = content;
     }
 
     @Override
-    public void postPlug(final Map<String, Object> dataModel, final RequestContext context) {
+    public void render(final RequestContext context) {
+        final Response response = context.getResponse();
+        response.sendContent(StringUtils.getBytesUtf8(content));
     }
 }

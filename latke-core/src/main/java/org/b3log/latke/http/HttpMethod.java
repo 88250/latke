@@ -15,14 +15,40 @@
  */
 package org.b3log.latke.http;
 
-import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.http.advice.ProcessAdvice;
+/**
+ * Enumerations of HTTP request methods.
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.2, Dec 4, 2018
+ */
+public enum HttpMethod {
 
-@Singleton
-public class TestAfterAdvice extends ProcessAdvice {
-
-    @Override
-    public void doAdvice(final RequestContext context) {
-        context.attr("after", "after");
-    }
+    /**
+     * Indicates HTTP GET method.
+     */
+    GET,
+    /**
+     * Indicates HTTP HEAD method.
+     */
+    HEAD,
+    /**
+     * Indicates HTTP POST method.
+     */
+    POST,
+    /**
+     * Indicates HTTP PUT method.
+     */
+    PUT,
+    /**
+     * Indicates HTTP DELETE method.
+     */
+    DELETE,
+    /**
+     * Indicates HTTP OPTIONS method.
+     */
+    OPTIONS,
+    /**
+     * Indicates HTTP TRACE method.
+     */
+    TRACE;
 }

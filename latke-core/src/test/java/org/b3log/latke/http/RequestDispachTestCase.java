@@ -15,15 +15,14 @@
  */
 package org.b3log.latke.http;
 
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.*;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.http.handler.AfterHandleHandler;
+import org.b3log.latke.http.handler.ContextHandleHandler;
+import org.b3log.latke.http.handler.Handler;
+import org.b3log.latke.http.handler.RouteHandler;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.servlet.DispatcherServlet;
-import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.handler.AfterHandleHandler;
-import org.b3log.latke.servlet.handler.ContextHandleHandler;
-import org.b3log.latke.servlet.handler.Handler;
-import org.b3log.latke.servlet.handler.RouteHandler;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;

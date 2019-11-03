@@ -24,8 +24,7 @@ import org.b3log.latke.ioc.Discoverer;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
-import org.b3log.latke.servlet.AbstractServletListener;
-import org.b3log.latke.servlet.RequestContext;
+import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.util.Requests;
 
 import javax.servlet.ServletContext;

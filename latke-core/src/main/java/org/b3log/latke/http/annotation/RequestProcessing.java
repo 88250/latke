@@ -13,27 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.plugin;
+package org.b3log.latke.http.annotation;
 
-import org.b3log.latke.http.RequestContext;
+import org.b3log.latke.http.HttpMethod;
 
-import java.util.Map;
+import java.lang.annotation.*;
 
 /**
- * The default plugin for which do not need interact with the server end.
+ * Indicates that an annotated method for HTTP request processing.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, May 31, 2014
+ * @version 1.0.0.7, Dec 10, 2018
+ * @see RequestProcessor
  */
-@SuppressWarnings("serial")
-public class NotInteractivePlugin extends AbstractPlugin {
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface RequestProcessing {
 
-    @Override
-    public void prePlug(final RequestContext context) {
-    }
+    /**
+     * The dispatching URI templates of a request.
+     *
+     * @return values
+     */
+    String[] value() default {};
 
-    @Override
-    public void postPlug(final Map<String, Object> dataModel, final RequestContext context) {
-    }
+    /**
+     * The HTTP request methods the annotated method should process.
+     *
+     * @return HTTP methods
+     */
+    HttpMethod[] method() default {HttpMethod.GET};
 }

@@ -13,16 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.http;
+package org.b3log.latke.http.advice;
 
+import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.http.advice.ProcessAdvice;
 
+/**
+ * Process advice.
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.0, Dec 4, 2018
+ * @since 2.4.34
+ */
 @Singleton
-public class TestAfterAdvice extends ProcessAdvice {
+public class ProcessAdvice {
 
-    @Override
-    public void doAdvice(final RequestContext context) {
-        context.attr("after", "after");
+    /**
+     * Do advice.
+     *
+     * @param context the specified request context
+     * @throws RequestProcessAdviceException if advice failed
+     */
+    public void doAdvice(final RequestContext context) throws RequestProcessAdviceException {
     }
 }
