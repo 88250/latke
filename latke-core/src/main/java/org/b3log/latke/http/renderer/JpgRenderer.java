@@ -24,26 +24,12 @@ import org.b3log.latke.http.RequestContext;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 2.0.0.0, Nov 3, 2019
  */
-public final class JpgRenderer extends AbstractResponseRenderer {
+public final class JpgRenderer extends BinaryRenderer {
 
     /**
-     * Image data to render.
+     * Constructs a JPEG HTTP response renderer.
      */
-    private byte[] data;
-
-    /**
-     * Sets the image with the specified image.
-     *
-     * @param data the specified image data
-     */
-    public void setImage(final byte[] data) {
-        this.data = data;
-    }
-
-    @Override
-    public void render(final RequestContext context) {
-        final Response response = context.getResponse();
-        response.setContentType("image/jpeg");
-        response.sendContent(data);
+    public JpgRenderer() {
+        super("image/jpeg");
     }
 }

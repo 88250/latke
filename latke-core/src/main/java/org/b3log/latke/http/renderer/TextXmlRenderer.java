@@ -15,36 +15,18 @@
  */
 package org.b3log.latke.http.renderer;
 
-import org.apache.commons.codec.binary.StringUtils;
-import org.b3log.latke.http.Response;
-import org.b3log.latke.http.RequestContext;
-
 /**
  * XML HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 2.0.0.0, Nov 3, 2019
  */
-public final class TextXmlRenderer extends AbstractResponseRenderer {
+public final class TextXmlRenderer extends TextResponseRenderer {
 
     /**
-     * Content to render.
+     * Constructs a XML HTTP response renderer.
      */
-    private String content;
-
-    /**
-     * Sets the content with the specified content.
-     *
-     * @param content the specified content
-     */
-    public void setContent(final String content) {
-        this.content = content;
-    }
-
-    @Override
-    public void render(final RequestContext context) {
-        final Response response = context.getResponse();
-        response.setContentType("text/xml");
-        response.sendContent(StringUtils.getBytesUtf8(content));
+    public TextXmlRenderer() {
+        super("text/xml");
     }
 }
