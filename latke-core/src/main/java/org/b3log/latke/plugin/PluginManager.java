@@ -29,7 +29,6 @@ import org.b3log.latke.util.Stopwatchs;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -125,8 +124,9 @@ public class PluginManager {
 
         classLoaders.clear();
 
-        final ServletContext servletContext = AbstractServletListener.getServletContext();
-        final Set<String> pluginDirPaths = servletContext.getResourcePaths("/plugins");
+        // TODO: load plugin
+        final URL resource = PluginManager.class.getResource("/plguins");
+        final Set<String> pluginDirPaths = new HashSet<>();
         final List<AbstractPlugin> plugins = new ArrayList<>();
         if (null != pluginDirPaths) {
             for (final String pluginDirPath : pluginDirPaths) {
@@ -158,7 +158,6 @@ public class PluginManager {
      */
     private AbstractPlugin load(final String pluginDirPath, final Map<String, HashSet<AbstractPlugin>> holder) throws Exception {
         final Properties props = new Properties();
-        final ServletContext servletContext = AbstractServletListener.getServletContext();
 
         String plugin = StringUtils.substringAfter(pluginDirPath, "/plugins");
         plugin = plugin.replace("/", "");
@@ -166,7 +165,7 @@ public class PluginManager {
         final File file = Latkes.getWebFile("/plugins/" + plugin + "/plugin.properties");
         props.load(new FileInputStream(file));
 
-        final URL defaultClassesFileDirURL = servletContext.getResource("/plugins/" + plugin + "classes");
+        final URL defaultClassesFileDirURL = PluginManager.class.getResource("/plugins/" + plugin + "classes");
         URLClassLoader classLoader = null;
         if (null != defaultClassesFileDirURL) {
             classLoader = new URLClassLoader(new URL[]{defaultClassesFileDirURL}, PluginManager.class.getClassLoader());
@@ -232,9 +231,8 @@ public class PluginManager {
      * @param pluginDirName the specified plugin directory
      * @param plugin        the specified plugin
      * @param props         the specified properties file
-     * @throws Exception exception
      */
-    private static void setPluginProps(final String pluginDirName, final AbstractPlugin plugin, final Properties props) throws Exception {
+    private static void setPluginProps(final String pluginDirName, final AbstractPlugin plugin, final Properties props) {
         final String author = props.getProperty(Plugin.PLUGIN_AUTHOR);
         final String name = props.getProperty(Plugin.PLUGIN_NAME);
         final String version = props.getProperty(Plugin.PLUGIN_VERSION);

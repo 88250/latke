@@ -22,26 +22,26 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
-import org.b3log.latke.http.RequestContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.*;
 
 /**
  * Abstract plugin.
  *
  * <p>
- * Id of a plugin is {@linkplain #name name}_{@linkplain #version version}. See {@link PluginManager#setPluginProps} for more details.
+ * Id of a plugin is {@linkplain #name name}_{@linkplain #version version}. See {@link PluginManager#setPluginProps(String, AbstractPlugin, Properties)} for more details.
  * If the id of one plugin {@linkplain #equals(java.lang.Object) equals} to another's, considering they are the same.
  * </p>
  *
@@ -171,9 +171,7 @@ public abstract class AbstractPlugin implements Serializable {
     private void initTemplateEngineCfg() {
         configuration = new Configuration();
         configuration.setDefaultEncoding("UTF-8");
-        final ServletContext servletContext = AbstractServletListener.getServletContext();
-
-        configuration.setServletContextForTemplateLoading(servletContext, "/plugins/" + dirName);
+        configuration.setClassForTemplateLoading(AbstractPlugin.class, "/plugins/" + dirName);
         LOGGER.log(Level.DEBUG, "Initialized template configuration");
     }
 
@@ -181,9 +179,9 @@ public abstract class AbstractPlugin implements Serializable {
      * Reads lang_xx.properties into field {@link #langs langs}.
      */
     public void readLangs() {
-        final ServletContext servletContext = AbstractServletListener.getServletContext();
-
-        @SuppressWarnings("unchecked") final Set<String> resourcePaths = servletContext.getResourcePaths("/plugins/" + dirName);
+        // TODO: read plugin langs
+        final URL resource = AbstractPlugin.class.getResource("/plugins/" + dirName);
+        final Set<String> resourcePaths = new HashSet<>();
 
         for (final String resourcePath : resourcePaths) {
             if (resourcePath.contains("lang_") && resourcePath.endsWith(".properties")) {
@@ -194,13 +192,10 @@ public abstract class AbstractPlugin implements Serializable {
 
                 try {
                     final File file = Latkes.getWebFile(resourcePath);
-
                     props.load(new FileInputStream(file));
-
                     langs.put(key, props);
                 } catch (final Exception e) {
-                    Logger.getLogger(getClass().getName()).log(Level.ERROR, "Get plugin[name=" + name + "]'s language configuration failed",
-                            e);
+                    LOGGER.log(Level.ERROR, "Get plugin [name=" + name + "]'s language configuration failed", e);
                 }
             }
         }

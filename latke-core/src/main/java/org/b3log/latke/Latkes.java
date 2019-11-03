@@ -19,12 +19,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cache.redis.RedisCache;
 import org.b3log.latke.http.Request;
+import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Discoverer;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
-import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.util.Requests;
 
 import javax.servlet.ServletContext;
@@ -46,7 +46,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.0.8, Oct 5, 2019
+ * @version 2.11.0.9, Nov 3, 2019
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -519,9 +519,7 @@ public final class Latkes {
             return contextPath;
         }
 
-        final ServletContext servletContext = AbstractServletListener.getServletContext();
-        contextPath = servletContext.getContextPath();
-
+        contextPath = "";
         return contextPath;
     }
 
@@ -849,12 +847,10 @@ public final class Latkes {
      * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
      */
     public static File getWebFile(final String path) {
-        final ServletContext servletContext = AbstractServletListener.getServletContext();
-
         File ret;
 
         try {
-            final URL resource = servletContext.getResource(path);
+            final URL resource = Latkes.class.getResource(path);
             if (null == resource) {
                 return null;
             }
@@ -862,7 +858,7 @@ public final class Latkes {
             ret = FileUtils.toFile(resource);
 
             if (null == ret) {
-                final File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+                final File tempdir = FileUtils.getTempDirectory();
                 ret = new File(tempdir.getPath() + path);
                 FileUtils.copyURLToFile(resource, ret);
                 ret.deleteOnExit();
