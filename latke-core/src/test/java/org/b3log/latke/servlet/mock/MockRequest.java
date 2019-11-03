@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.servlet.mock;
 
-import io.netty.handler.codec.http.HttpRequest;
 import org.b3log.latke.http.Request;
 
 /**
@@ -29,7 +28,7 @@ public class MockRequest extends Request {
     private String requestURI;
 
     public MockRequest() {
-        super(null);
+        super(null, null);
     }
 
     public String getRequestURI() {

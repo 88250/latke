@@ -35,9 +35,9 @@ import io.netty.handler.logging.LoggingHandler;
  * @version 1.0.0.0, Nov 2, 2019
  * @since 2.5.9
  */
-public final class Server {
+public abstract class BaseServer {
 
-    public static void main(final String[] args) throws Exception {
+    public void start() throws Exception {
         final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         final EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {

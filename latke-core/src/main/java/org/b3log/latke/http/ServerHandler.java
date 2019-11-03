@@ -148,9 +148,9 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
 
     private boolean writeResponse(final HttpObject currentObj, final ChannelHandlerContext ctx) {
         // Decide whether to close the connection or not.
-        boolean keepAlive = HttpUtil.isKeepAlive(request);
+        final boolean keepAlive = HttpUtil.isKeepAlive(request);
         // Build the response object.
-        FullHttpResponse response = new DefaultFullHttpResponse(
+        final FullHttpResponse response = new DefaultFullHttpResponse(
                 HTTP_1_1, currentObj.decoderResult().isSuccess() ? OK : BAD_REQUEST,
                 Unpooled.copiedBuffer(buf.toString(), CharsetUtil.UTF_8));
 
@@ -165,7 +165,7 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
         }
 
         // Encode the cookie.
-        String cookieString = request.headers().get(HttpHeaderNames.COOKIE);
+        final String cookieString = request.headers().get(HttpHeaderNames.COOKIE);
         if (cookieString != null) {
             Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieString);
             if (!cookies.isEmpty()) {
