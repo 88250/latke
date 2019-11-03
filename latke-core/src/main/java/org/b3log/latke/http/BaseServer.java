@@ -16,7 +16,6 @@
 package org.b3log.latke.http;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
@@ -27,6 +26,12 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.netty.util.internal.logging.Log4J2LoggerFactory;
+import io.netty.util.internal.logging.Slf4JLoggerFactory;
+import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 /**
  * Http Server based on Netty 4.
@@ -37,26 +42,39 @@ import io.netty.handler.logging.LoggingHandler;
  */
 public abstract class BaseServer {
 
-    public void start() throws Exception {
-        final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private static final Logger LOGGER = Logger.getLogger(BaseServer.class);
+
+    private static final EventLoopGroup BOSS_GROUP = new NioEventLoopGroup(1);
+    private static final EventLoopGroup WORKER_GROUP = new NioEventLoopGroup();
+
+    public void start(final int listenPort) {
+        Latkes.init();
+        startServer(listenPort);
+    }
+
+    public void shutdown() {
+        Latkes.shutdown();
+        shutdownServer();
+    }
+
+    private void startServer(final int listenPort) {
         try {
-            final ServerBootstrap b = new ServerBootstrap().
-                    group(bossGroup, workerGroup).
+            InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE);
+            new ServerBootstrap().
+                    group(BOSS_GROUP, WORKER_GROUP).
                     channel(NioServerSocketChannel.class).
                     handler(new LoggingHandler(LogLevel.INFO)).
-                    childHandler(new HttpServerInitializer());
-
-            int PORT = 8080;
-            Channel ch = b.bind(PORT).sync().channel();
-
-            System.err.println("Open your web browser and navigate to http://127.0.0.1:" + PORT + '/');
-
-            ch.closeFuture().sync();
-        } finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
+                    childHandler(new HttpServerInitializer()).
+                    bind(listenPort).sync().channel().closeFuture().sync();
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Start server failed, exit process", e);
+            System.exit(-1);
         }
+    }
+
+    private void shutdownServer() {
+        BOSS_GROUP.shutdownGracefully();
+        WORKER_GROUP.shutdownGracefully();
     }
 
     private static final class HttpServerInitializer extends ChannelInitializer<SocketChannel> {

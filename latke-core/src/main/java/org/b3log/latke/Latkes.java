@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cache.redis.RedisCache;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.ioc.Discoverer;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
@@ -28,7 +29,6 @@ import org.b3log.latke.servlet.RequestContext;
 import org.b3log.latke.util.Requests;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -36,6 +36,7 @@ import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
@@ -652,7 +653,10 @@ public final class Latkes {
         final RuntimeCache runtimeCache = getRuntimeCache();
         LOGGER.log(Level.INFO, "Runtime cache is [{0}]", runtimeCache);
 
-        locale = new Locale("en_US");
+        setLocale(Locale.SIMPLIFIED_CHINESE);
+
+        final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
+        BeanManager.start(beanClasses);
 
         LOGGER.log(Level.INFO, "Initialized Latke");
     }
