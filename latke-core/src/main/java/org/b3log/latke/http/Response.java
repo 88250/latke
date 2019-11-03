@@ -23,10 +23,10 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-
-import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 /**
  * HTTP response.
@@ -39,14 +39,16 @@ public class Response {
 
     private ChannelHandlerContext ctx;
     private HttpRequest req;
-    private FullHttpResponse res;
+    private HttpResponse res;
     private boolean commited;
     private byte[] content;
+    private List<Cookie> cookies;
 
-    public Response(final ChannelHandlerContext ctx, final HttpRequest req, final FullHttpResponse res) {
+    public Response(final ChannelHandlerContext ctx, final HttpRequest req, final HttpResponse res) {
         this.ctx = ctx;
         this.req = req;
         this.res = res;
+        cookies = new ArrayList<>();
     }
 
     public boolean isCommitted() {
@@ -81,6 +83,10 @@ public class Response {
         return res.headers().names().iterator();
     }
 
+    public void addCookie(final Cookie cookie) {
+        cookies.add(cookie);
+    }
+
     public void sendError(final int status) {
         setStatus(status);
         writeResponse();
@@ -102,11 +108,11 @@ public class Response {
         if (null != content) {
             contentBuf = Unpooled.copiedBuffer(content);
         }
-        res = res.replace(contentBuf);
+        res = ((FullHttpResponse) res).replace(contentBuf);
         final boolean keepAlive = HttpUtil.isKeepAlive(req);
         if (keepAlive) {
             // Add 'Content-Length' header only for a keep-alive connection.
-            res.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, res.content().readableBytes());
+            res.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, ((FullHttpResponse) res).content().readableBytes());
             // Add keep alive header as per:
             // - http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Connection
             res.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);

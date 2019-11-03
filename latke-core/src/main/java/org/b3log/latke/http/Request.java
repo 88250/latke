@@ -39,6 +39,7 @@ public class Request {
 
     private Map<String, List<String>> params;
     private Map<String, Object> attrs;
+    private Cookie[] cookies;
 
     public Request(final ChannelHandlerContext ctx, final HttpRequest req) {
         this.ctx = ctx;
@@ -97,5 +98,9 @@ public class Request {
 
     public int getServerPort() {
         return 8080;
+    }
+
+    public Cookie[] getCookies() {
+        return cookies;
     }
 }

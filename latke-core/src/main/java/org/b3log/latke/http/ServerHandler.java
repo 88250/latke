@@ -21,16 +21,16 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
+import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.util.CharsetUtil;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static io.netty.handler.codec.http.HttpResponseStatus.*;
+import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 /**
@@ -126,9 +126,18 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                     buf.append("\r\n");
                 }
 
+                final DefaultFullHttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+
+                final String cookieString = req.headers().get(HttpHeaderNames.COOKIE);
+                if (cookieString != null) {
+                    final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieString);
+                    for (Cookie cookie : cookies) {
+                        res.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
+                    }
+                }
+
                 final Request request = new Request(ctx, req);
 
-                final DefaultFullHttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
                 final Response response = new Response(ctx, req, res);
                 Dispatcher.handle(request, response);
             }
