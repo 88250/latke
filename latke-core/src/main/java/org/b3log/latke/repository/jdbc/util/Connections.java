@@ -216,7 +216,7 @@ public final class Connections {
     public static void shutdownConnectionPool() {
         if (null != hikari) {
             hikari.close();
-            LOGGER.info("Closed database connection pool");
+            LOGGER.debug("Closed database connection pool");
         }
     }
 

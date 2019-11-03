@@ -782,8 +782,7 @@ public final class Latkes {
                 if ("true".equals(newTCPServer)) {
                     h2.stop();
                     h2.shutdown();
-
-                    LOGGER.log(Level.INFO, "Closed H2 TCP server");
+                    LOGGER.log(Level.DEBUG, "Closed H2 TCP server");
                 }
             }
         } catch (final Exception e) {

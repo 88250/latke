@@ -162,6 +162,7 @@ public final class RedisCache extends AbstractCache {
     public static void shutdown() {
         try {
             Connections.shutdown();
+            LOGGER.debug("Closed Redis connection pool");
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdown redis connection pool failed", e);
         }

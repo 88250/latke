@@ -29,6 +29,10 @@ public class Server extends BaseServer {
     public static void main(final String[] args) {
         Latkes.init();
         final Server server = new Server();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            server.shutdown();
+            Latkes.shutdown();
+        }));
         server.start(8080);
     }
 }
