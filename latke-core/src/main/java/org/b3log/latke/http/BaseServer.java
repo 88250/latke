@@ -27,7 +27,6 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.internal.logging.InternalLoggerFactory;
-import io.netty.util.internal.logging.Log4J2LoggerFactory;
 import io.netty.util.internal.logging.Slf4JLoggerFactory;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
@@ -48,7 +47,6 @@ public abstract class BaseServer {
     private static final EventLoopGroup WORKER_GROUP = new NioEventLoopGroup();
 
     public void start(final int listenPort) {
-        Latkes.init();
         startServer(listenPort);
     }
 

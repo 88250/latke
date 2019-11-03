@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.http;
 
+import org.b3log.latke.Latkes;
+
 /**
  * Server test.
  *
@@ -25,6 +27,7 @@ package org.b3log.latke.http;
 public class Server extends BaseServer {
 
     public static void main(final String[] args) {
+        Latkes.init();
         final Server server = new Server();
         server.start(8080);
     }
