@@ -18,11 +18,10 @@ package org.b3log.latke.http;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
+import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -39,13 +38,22 @@ public class Request {
 
     private Map<String, List<String>> params;
     private Map<String, Object> attrs;
-    private Cookie[] cookies;
+    private List<Cookie> cookies;
 
     public Request(final ChannelHandlerContext ctx, final HttpRequest req) {
         this.ctx = ctx;
         this.req = req;
         params = new ConcurrentHashMap<>();
         attrs = new ConcurrentHashMap<>();
+
+        cookies = new ArrayList<>();
+        final String cookieString = req.headers().get(HttpHeaderNames.COOKIE);
+        if (cookieString != null) {
+            final Set<io.netty.handler.codec.http.cookie.Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieString);
+            for (final io.netty.handler.codec.http.cookie.Cookie cookie : cookies) {
+                this.cookies.add(new Cookie(cookie.name(), cookie.value()));
+            }
+        }
     }
 
     public String getHeader(final String name) {
@@ -100,7 +108,7 @@ public class Request {
         return 8080;
     }
 
-    public Cookie[] getCookies() {
+    public List<Cookie> getCookies() {
         return cookies;
     }
 }

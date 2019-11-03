@@ -15,8 +15,6 @@
  */
 package org.b3log.latke.http;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 
 /**
@@ -28,8 +26,6 @@ import io.netty.handler.codec.http.cookie.DefaultCookie;
  */
 public class Cookie {
 
-    private ChannelHandlerContext ctx;
-    private HttpRequest req;
     private io.netty.handler.codec.http.cookie.Cookie cookie;
 
     public Cookie(final String name, final String value) {

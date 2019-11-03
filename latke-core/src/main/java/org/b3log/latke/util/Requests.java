@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Request utilities.
@@ -178,20 +179,17 @@ public final class Requests {
      * @return {@code true} if the specified request has been served, returns {@code false} otherwise
      */
     public static boolean hasBeenServed(final Request request, final Response response) {
-        final Cookie[] cookies = request.getCookies();
-        if (null == cookies || 0 == cookies.length) {
+        final List<Cookie> cookies = request.getCookies();
+        if (cookies.isEmpty()) {
             return false;
         }
 
-        Cookie cookie;
         boolean needToCreate = true;
         boolean needToAppend = true;
         JSONArray cookieJSONArray = null;
 
         try {
-            for (int i = 0; i < cookies.length; i++) {
-                cookie = cookies[i];
-
+            for (final Cookie cookie : cookies) {
                 if (!"visited".equals(cookie.getName())) {
                     continue;
                 }
