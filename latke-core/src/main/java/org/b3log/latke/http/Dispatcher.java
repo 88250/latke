@@ -16,12 +16,12 @@
 package org.b3log.latke.http;
 
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.http.function.ContextHandler;
 import org.b3log.latke.http.handler.*;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 import org.b3log.latke.http.renderer.Http404Renderer;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
@@ -36,12 +36,12 @@ import java.util.List;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.2.2, Dec 2, 2018
  */
-public final class DispatcherServlet {
+public final class Dispatcher {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(DispatcherServlet.class);
+    private static final Logger LOGGER = Logger.getLogger(Dispatcher.class);
 
     /**
      * Handlers.
@@ -49,19 +49,11 @@ public final class DispatcherServlet {
     public static final List<Handler> HANDLERS = new ArrayList<>();
 
     static {
+        HANDLERS.add(new StaticResourceHandler());
         HANDLERS.add(new RouteHandler());
         HANDLERS.add(new BeforeHandleHandler());
         HANDLERS.add(new ContextHandleHandler());
         HANDLERS.add(new AfterHandleHandler());
-    }
-
-    public void init() {
-        // static resource handling must be the first one
-        HANDLERS.add(0, new StaticResourceHandler());
-    }
-
-    protected void service(final Request request, final Response response) {
-        handle(request, response);
     }
 
     /**
@@ -82,18 +74,18 @@ public final class DispatcherServlet {
         }
 
         ret.handle();
-        result(ret);
+        renderResponse(ret);
         Latkes.REQUEST_CONTEXT.set(null);
 
         return ret;
     }
 
     /**
-     * Do HTTP response.
+     * Renders HTTP response.
      *
      * @param context {@link RequestContext}
      */
-    public static void result(final RequestContext context) {
+    public static void renderResponse(final RequestContext context) {
         final Response response = context.getResponse();
         if (response.isCommitted()) { // Response sends redirect or error
             return;

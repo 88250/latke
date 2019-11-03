@@ -18,8 +18,6 @@ package org.b3log.latke.http.handler;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.renderer.StaticFileRenderer;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.StaticResources;
 
 /**
@@ -29,11 +27,6 @@ import org.b3log.latke.util.StaticResources;
  * @version 3.0.0.0, Nov 3, 2019
  */
 public class StaticResourceHandler implements Handler {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(StaticResourceHandler.class);
 
     @Override
     public void handle(final RequestContext context) {

@@ -55,9 +55,9 @@ public class RequestDispachTestCase {
         BeanManager.start(classes);
 
         final TestRequestProcessor testRequestProcessor = BeanManager.getInstance().getReference(TestRequestProcessor.class);
-        DispatcherServlet.get("/l", testRequestProcessor::l);
-        DispatcherServlet.get("/lbefore", testRequestProcessor::lbefore);
-        DispatcherServlet.mapping();
+        Dispatcher.get("/l", testRequestProcessor::l);
+        Dispatcher.get("/lbefore", testRequestProcessor::lbefore);
+        Dispatcher.mapping();
 
         handlerList.add(new RouteHandler());
         handlerList.add(new AfterHandleHandler());
@@ -77,7 +77,7 @@ public class RequestDispachTestCase {
         final MockRequest request = new MockRequest(req);
         final MockResponse response = new MockResponse(req, res);
 
-        final RequestContext context = DispatcherServlet.handle(request, response);
+        final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("a"), "a");
     }
 
@@ -89,7 +89,7 @@ public class RequestDispachTestCase {
         final MockRequest request = new MockRequest(req);
         final MockResponse response = new MockResponse(req, res);
 
-        final RequestContext context = DispatcherServlet.handle(request, response);
+        final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("id"), "88250");
         Assert.assertEquals(context.attr("name"), "D");
     }
@@ -102,7 +102,7 @@ public class RequestDispachTestCase {
         final MockRequest request = new MockRequest(req);
         final MockResponse response = new MockResponse(req, res);
 
-        final RequestContext context = DispatcherServlet.handle(request, response);
+        final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("before"), "before");
         Assert.assertEquals(context.attr("abefore"), "abefore");
     }
@@ -115,7 +115,7 @@ public class RequestDispachTestCase {
         final MockRequest request = new MockRequest(req);
         final MockResponse response = new MockResponse(req, res);
 
-        final RequestContext context = DispatcherServlet.handle(request, response);
+        final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("l"), "l");
     }
 
@@ -127,7 +127,7 @@ public class RequestDispachTestCase {
         final MockRequest request = new MockRequest(req);
         final MockResponse response = new MockResponse(req, res);
 
-        final RequestContext context = DispatcherServlet.handle(request, response);
+        final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("before"), "before");
         Assert.assertEquals(context.attr("after"), "after");
         Assert.assertEquals(context.attr("lbefore"), "lbefore");

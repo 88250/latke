@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
  * Locale utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.2, Oct 27, 2016
+ * @version 2.0.0.0, Nov 3, 2019
  */
 public final class Locales {
 

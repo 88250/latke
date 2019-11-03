@@ -39,11 +39,11 @@ public class Response {
 
     private ChannelHandlerContext ctx;
     private HttpRequest req;
-    private HttpResponse res;
+    private FullHttpResponse res;
     private boolean commited;
     private byte[] content;
 
-    public Response(final ChannelHandlerContext ctx, final HttpRequest req, final HttpResponse res) {
+    public Response(final ChannelHandlerContext ctx, final HttpRequest req, final FullHttpResponse res) {
         this.ctx = ctx;
         this.req = req;
         this.res = res;
@@ -102,14 +102,14 @@ public class Response {
         if (null != content) {
             contentBuf = Unpooled.copiedBuffer(content);
         }
-        final FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, res.status(), contentBuf, res.headers(), res.headers());
+        res = res.replace(contentBuf);
         final boolean keepAlive = HttpUtil.isKeepAlive(req);
         if (keepAlive) {
             // Add 'Content-Length' header only for a keep-alive connection.
-            response.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
+            res.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, res.content().readableBytes());
             // Add keep alive header as per:
             // - http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Connection
-            response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+            res.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         }
 
         // Encode the cookie.
@@ -119,19 +119,19 @@ public class Response {
             if (!cookies.isEmpty()) {
                 // Reset the cookies if necessary.
                 for (io.netty.handler.codec.http.cookie.Cookie cookie : cookies) {
-                    response.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode(cookie));
+                    res.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode(cookie));
                 }
             }
         } else {
             // Browser sent no cookie.  Add some.
-            response.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode("key1", "value1"));
-            response.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode("key2", "value2"));
+            res.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode("key1", "value1"));
+            res.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode("key2", "value2"));
         }
 
         commited = true;
 
         if (null != ctx) {
-            ctx.write(response);
+            ctx.write(res);
             if (!keepAlive) {
                 ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             }

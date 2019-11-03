@@ -15,11 +15,11 @@
  */
 package org.b3log.latke.http.handler;
 
-import org.b3log.latke.http.DispatcherServlet;
+import org.b3log.latke.http.Dispatcher;
 import org.b3log.latke.http.RequestContext;
 
 /**
- * A handler interface for  {@link DispatcherServlet} to do the inner process.
+ * A handler interface for  {@link Dispatcher} to do the inner process.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
