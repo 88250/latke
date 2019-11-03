@@ -44,12 +44,16 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
     @Override
     public void render(final RequestContext context) {
         try {
+            final Response response = context.getResponse();
             final String uri = context.requestURI();
             final URL resource = StaticFileRenderer.class.getResource(uri);
+            if (null == resource) {
+                response.sendError(404);
+                return;
+            }
             final Path path = getPath(resource.toURI());
             final String contentType = Files.probeContentType(path);
             final byte[] bytes = Files.readAllBytes(path);
-            final Response response = context.getResponse();
             response.setContentType(contentType);
             response.sendContent(bytes);
         } catch (final Exception e) {
