@@ -28,7 +28,6 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.Slf4JLoggerFactory;
-import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
@@ -51,7 +50,6 @@ public abstract class BaseServer {
     }
 
     public void shutdown() {
-        Latkes.shutdown();
         shutdownServer();
     }
 
