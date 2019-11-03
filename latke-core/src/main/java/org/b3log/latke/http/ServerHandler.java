@@ -19,16 +19,15 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
-import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
-import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.util.CharsetUtil;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
+import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -43,13 +42,16 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
 
     /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(ServerHandler.class);
+
+    /**
      * Request.
      */
     private HttpRequest req;
 
-    /**
-     * Buffer that stores the response content
-     */
+    private final Map<String, String> params = new HashMap<>();
     private final StringBuilder buf = new StringBuilder();
 
     @Override
@@ -66,83 +68,53 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                 send100Continue(ctx);
             }
 
-            buf.setLength(0);
-            buf.append("WELCOME TO THE WILD WILD WEB SERVER\r\n");
-            buf.append("===================================\r\n");
-
-            buf.append("VERSION: ").append(req.protocolVersion()).append("\r\n");
-            buf.append("HOSTNAME: ").append(req.headers().get(HttpHeaderNames.HOST, "unknown")).append("\r\n");
-            buf.append("REQUEST_URI: ").append(req.uri()).append("\r\n\r\n");
-
-            final HttpHeaders headers = req.headers();
-            if (!headers.isEmpty()) {
-                for (Map.Entry<String, String> h : headers) {
-                    CharSequence key = h.getKey();
-                    CharSequence value = h.getValue();
-                    buf.append("HEADER: ").append(key).append(" = ").append(value).append("\r\n");
-                }
-                buf.append("\r\n");
-            }
 
             final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(req.uri());
             final Map<String, List<String>> params = queryStringDecoder.parameters();
             if (!params.isEmpty()) {
-                for (Map.Entry<String, List<String>> p : params.entrySet()) {
-                    String key = p.getKey();
-                    List<String> vals = p.getValue();
-                    for (String val : vals) {
-                        buf.append("PARAM: ").append(key).append(" = ").append(val).append("\r\n");
+                for (final Map.Entry<String, List<String>> p : params.entrySet()) {
+                    final String key = p.getKey();
+                    final List<String> vals = p.getValue();
+                    for (final String val : vals) {
+                        this.params.put(key, val);
                     }
                 }
-                buf.append("\r\n");
             }
-
-            appendDecoderResult(buf, req);
-        }
-
-        if (msg instanceof HttpContent) {
-            final HttpContent httpContent = (HttpContent) msg;
-
-            final ByteBuf content = httpContent.content();
-            if (content.isReadable()) {
-                buf.append("CONTENT: ");
-                buf.append(content.toString(CharsetUtil.UTF_8));
-                buf.append("\r\n");
-                appendDecoderResult(buf, req);
-            }
+        } else if (msg instanceof HttpContent) {
+            final ByteBuf content = ((HttpContent) msg).content();
+            buf.append(content.toString(CharsetUtil.UTF_8));
 
             if (msg instanceof LastHttpContent) {
-                buf.append("END OF CONTENT\r\n");
+                final Request request = new Request(ctx, req);
 
-                LastHttpContent trailer = (LastHttpContent) msg;
-                if (!trailer.trailingHeaders().isEmpty()) {
-                    buf.append("\r\n");
-                    for (CharSequence name : trailer.trailingHeaders().names()) {
-                        for (CharSequence value : trailer.trailingHeaders().getAll(name)) {
-                            buf.append("TRAILING HEADER: ");
-                            buf.append(name).append(" = ").append(value).append("\r\n");
+                final String contentType = req.headers().get(HttpHeaderNames.CONTENT_TYPE);
+                switch (contentType) {
+                    case "application/json":
+                        final JSONObject json = new JSONObject(buf.toString());
+                        request.setJSON(json);
+                        break;
+                    case "application/x-www-form-urlencoded":
+                        final QueryStringDecoder queryDecoder = new QueryStringDecoder(content.toString(CharsetUtil.UTF_8), false);
+                        final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
+                        for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
+                            final String key = p.getKey();
+                            final List<String> vals = p.getValue();
+                            for (String val : vals) {
+                                request.setParameter(key, val);
+                            }
                         }
-                    }
-                    buf.append("\r\n");
+                        break;
+                    case "multipart/form-data":
+                        // TODO: 文件上传
+                        LOGGER.log(Level.WARN, "TODO: handle file upload");
+                        break;
                 }
 
-                final DefaultFullHttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-                final Request request = new Request(ctx, req);
+                final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
                 final Response response = new Response(ctx, req, res);
                 Dispatcher.handle(request, response);
             }
         }
-    }
-
-    private static void appendDecoderResult(StringBuilder buf, HttpObject o) {
-        final DecoderResult result = o.decoderResult();
-        if (result.isSuccess()) {
-            return;
-        }
-
-        buf.append(".. WITH DECODER FAILURE: ");
-        buf.append(result.cause());
-        buf.append("\r\n");
     }
 
     private static void send100Continue(final ChannelHandlerContext ctx) {

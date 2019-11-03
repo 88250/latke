@@ -19,7 +19,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
-import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
+import org.json.JSONObject;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +36,8 @@ public class Request {
     private ChannelHandlerContext ctx;
     private HttpRequest req;
 
-    private Map<String, List<String>> params;
+    private Map<String, String> params;
+    private JSONObject json;
     private Map<String, Object> attrs;
     private List<Cookie> cookies;
 
@@ -76,12 +77,20 @@ public class Request {
         return req.headers().names().iterator();
     }
 
+    public void setParameter(final String name, final String value) {
+        params.put(name, value);
+    }
+
     public String getParameter(final String name) {
-        final List<String> list = params.getOrDefault(name, Collections.emptyList());
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
+        return params.get(name);
+    }
+
+    public void setJSON(final JSONObject json) {
+        this.json = json;
+    }
+
+    public JSONObject getJSON() {
+        return json;
     }
 
     public Object getAttribute(final String name) {

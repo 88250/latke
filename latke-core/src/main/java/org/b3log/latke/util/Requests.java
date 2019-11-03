@@ -160,7 +160,6 @@ public final class Requests {
         return ret;
     }
 
-
     /**
      * Determines whether the specified request has been served.
      * <p>
