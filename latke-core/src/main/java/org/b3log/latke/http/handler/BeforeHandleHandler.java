@@ -16,17 +16,16 @@
 package org.b3log.latke.http.handler;
 
 import org.b3log.latke.Keys;
-import org.b3log.latke.http.Response;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.http.RequestContext;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.http.advice.ProcessAdvice;
 import org.b3log.latke.http.advice.RequestProcessAdviceException;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 import org.b3log.latke.http.renderer.JsonRenderer;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.json.JSONObject;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -61,7 +60,7 @@ public class BeforeHandleHandler implements Handler {
             LOGGER.log(Level.WARN, "Occurred an exception before request processing: " + msg);
 
             final int statusCode = exception.optInt(Keys.STATUS_CODE, -1);
-            if (-1 != statusCode && HttpServletResponse.SC_OK != statusCode) {
+            if (-1 != statusCode && 200 != statusCode) {
                 final Response response = context.getResponse();
                 response.sendError(statusCode);
             } else {

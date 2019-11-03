@@ -27,7 +27,6 @@ import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.util.Requests;
 
-import javax.servlet.ServletContext;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -151,16 +150,6 @@ public final class Latkes {
         final String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 
         return Long.parseLong(processName.split("@")[0]);
-    }
-
-    /**
-     * Gets the servlet container info with the specified servlet context.
-     *
-     * @param servletContext the specified servlet context
-     * @return servlet container info, such as "jetty/9.4.12.v20180830"
-     */
-    public static String getServletInfo(final ServletContext servletContext) {
-        return servletContext.getServerInfo();
     }
 
     /**
@@ -842,9 +831,7 @@ public final class Latkes {
      * Gets a file in web application with the specified path.
      *
      * @param path the specified path
-     * @return file,
-     * @see javax.servlet.ServletContext#getResource(java.lang.String)
-     * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
+     * @return file
      */
     public static File getWebFile(final String path) {
         File ret;

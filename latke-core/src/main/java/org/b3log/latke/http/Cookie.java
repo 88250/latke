@@ -13,22 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.http.renderer;
+package org.b3log.latke.http;
 
-import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.http.Response;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.HttpRequest;
 
 /**
- * HTTP 404 status renderer.
+ * HTTP cookie.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Nov 3, 2019
+ * @version 1.0.0.0, Nov 3, 2019
+ * @since 2.5.9
  */
-public final class Http404Renderer extends AbstractResponseRenderer {
+public class Cookie {
 
-    @Override
-    public void render(final RequestContext context) {
-        final Response response = context.getResponse();
-        response.sendError(404);
+    private ChannelHandlerContext ctx;
+    private HttpRequest req;
+    private io.netty.handler.codec.http.cookie.Cookie cookie;
+
+    public String getName() {
+        return cookie.name();
+    }
+
+    public String getValue() {
+        return cookie.value();
+    }
+
+    public void setMaxAge(final long maxAge) {
+        cookie.setMaxAge(maxAge);
+    }
+
+    public void setPath(final String path) {
+        cookie.setPath(path);
     }
 }

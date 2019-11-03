@@ -16,14 +16,13 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.http.Cookie;
 import org.b3log.latke.http.Request;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.json.JSONArray;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -33,7 +32,7 @@ import java.util.Iterator;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 2.1.0.0, May 2, 2019
+ * @version 3.0.0.0, Nov 3, 2019
  */
 public final class Requests {
 
@@ -56,43 +55,43 @@ public final class Requests {
      * <li>headers</li>
      * </ul>
      *
-     * @param httpServletRequest the specified HTTP servlet request
-     * @param level              the specified logging level
-     * @param logger             the specified logger
+     * @param request the specified HTTP request
+     * @param level   the specified logging level
+     * @param logger  the specified logger
      */
-    public static void log(final Request httpServletRequest, final Level level, final Logger logger) {
+    public static void log(final Request request, final Level level, final Logger logger) {
         if (!logger.isLoggable(level)) {
             return;
         }
 
-        logger.log(level, getLog(httpServletRequest));
+        logger.log(level, getLog(request));
     }
 
     /**
      * Gets log of the specified request.
      *
-     * @param httpServletRequest the specified request
+     * @param request the specified request
      * @return log
      */
-    public static String getLog(final Request httpServletRequest) {
-        if (null == httpServletRequest) {
+    public static String getLog(final Request request) {
+        if (null == request) {
             return "request is null";
         }
 
         final String indents = "    ";
         final StringBuilder logBuilder = new StringBuilder("Request [").append(Strings.LINE_SEPARATOR);
 
-        logBuilder.append(indents).append("method=").append(httpServletRequest.getMethod()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("URI=").append(httpServletRequest.getRequestURI()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append("contentType=").append(httpServletRequest.getContentType()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("remoteAddr=").append(getRemoteAddr(httpServletRequest)).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("method=").append(request.getMethod()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("URI=").append(request.getRequestURI()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("contentType=").append(request.getContentType()).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append(indents).append("remoteAddr=").append(getRemoteAddr(request)).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("headers=[");
-        final Iterator<String> headerNames = httpServletRequest.getHeaderNames();
+        final Iterator<String> headerNames = request.getHeaderNames();
         final StringBuilder headerLogBuilder = new StringBuilder();
         logBuilder.append(Strings.LINE_SEPARATOR);
         while (headerNames.hasNext()) {
             final String name = headerNames.next();
-            final String value = httpServletRequest.getHeader(name);
+            final String value = request.getHeader(name);
             headerLogBuilder.append(indents).append(indents).append(name).append("=").append(value);
             headerLogBuilder.append(Strings.LINE_SEPARATOR);
         }
@@ -109,7 +108,7 @@ public final class Requests {
      * Gets the Internet Protocol (IP) address of the end-client that sent the specified request.
      * <p>
      * It will try to get HTTP head "X-forwarded-for" or "X-Real-IP" from the last proxy to get the request first, if not found, try to get
-     * it directly by {@link HttpServletRequest#getRemoteAddr()}.
+     * it directly by {@link Request#getRemoteAddr()}.
      * </p>
      *
      * @param request the specified request
@@ -178,7 +177,7 @@ public final class Requests {
      * @param response the specified response
      * @return {@code true} if the specified request has been served, returns {@code false} otherwise
      */
-    public static boolean hasBeenServed(final HttpServletRequest request, final HttpServletResponse response) {
+    public static boolean hasBeenServed(final Request request, final Response response) {
         final Cookie[] cookies = request.getCookies();
         if (null == cookies || 0 == cookies.length) {
             return false;

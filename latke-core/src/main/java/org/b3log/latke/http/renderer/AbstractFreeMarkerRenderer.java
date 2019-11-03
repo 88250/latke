@@ -20,13 +20,12 @@ import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.http.Request;
+import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.util.Requests;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +88,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         final Template template = getTemplate();
         if (null == template) {
             LOGGER.log(Level.ERROR, "Not found template [{0}]", templateName);
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            response.sendError(404);
 
             return;
         }
@@ -107,7 +106,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         } catch (final Exception e) {
             final String requestLog = Requests.getLog(request);
             LOGGER.log(Level.ERROR, "Renders template [" + templateName + "] failed [" + requestLog + "]", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.sendError(500);
         }
     }
 

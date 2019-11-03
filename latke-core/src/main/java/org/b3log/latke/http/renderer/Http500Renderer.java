@@ -18,10 +18,8 @@ package org.b3log.latke.http.renderer;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
 
-import javax.servlet.http.HttpServletResponse;
-
 /**
- * HTTP {@link HttpServletResponse#SC_INTERNAL_SERVER_ERROR status} renderer.
+ * HTTP 500 status renderer.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 2.0.0.0, Nov 3, 2019
@@ -45,6 +43,6 @@ public final class Http500Renderer extends AbstractResponseRenderer {
     @Override
     public void render(final RequestContext context) {
         final Response response = context.getResponse();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        response.sendError(500);
     }
 }

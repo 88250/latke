@@ -18,11 +18,10 @@ package org.b3log.latke.util;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.http.Request;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -84,44 +83,23 @@ public final class Locales {
      * @param request the specified request
      * @return locale
      */
-    public static Locale getLocale(final HttpServletRequest request) {
-        Locale locale = null;
-
-        // Gets from session
-        final HttpSession session = request.getSession(false);
-
-        if (session != null) {
-            locale = (Locale) session.getAttribute(Keys.LOCALE);
+    public static Locale getLocale(final Request request) {
+        Locale ret;
+        String language = "zh";
+        String country = "CN";
+        final String languageHeader = request.getHeader("Accept-Language");
+        if (StringUtils.isNotBlank(languageHeader)) {
+            language = getLanguage(languageHeader);
+            country = getCountry(languageHeader);
         }
 
-        if (null == locale) {
-            // Gets from request header
-            final String languageHeader = request.getHeader("Accept-Language");
-
-            LOGGER.log(Level.DEBUG, "[Accept-Language={0}]", languageHeader);
-
-            String language = "zh";
-            String country = "CN";
-
-            if (StringUtils.isNotBlank(languageHeader)) {
-                language = getLanguage(languageHeader);
-                country = getCountry(languageHeader);
-            }
-
-            locale = new Locale(language, country);
-
-            if (!hasLocale(locale)) {
-                // Uses default
-                locale = Latkes.getLocale();
-                LOGGER.log(Level.DEBUG, "Using the default locale[{0}]", locale.toString());
-            } else {
-                LOGGER.log(Level.DEBUG, "Got locale[{0}] from request.", locale.toString());
-            }
-        } else {
-            LOGGER.log(Level.DEBUG, "Got locale[{0}] from session.", locale.toString());
+        ret = new Locale(language, country);
+        if (!hasLocale(ret)) {
+            ret = Latkes.getLocale();
+            LOGGER.log(Level.DEBUG, "Using the default locale [{0}]", ret.toString());
         }
 
-        return locale;
+        return ret;
     }
 
     /**
@@ -138,38 +116,6 @@ public final class Locales {
         } catch (final MissingResourceException e) {
             return false;
         }
-    }
-
-    /**
-     * Sets the specified locale into session of the specified request.
-     *
-     * <p>
-     * If no session of the specified request, do nothing.
-     * </p>
-     *
-     * @param request the specified request
-     * @param locale  a new locale
-     */
-    public static void setLocale(final HttpServletRequest request, final Locale locale) {
-        final HttpSession session = request.getSession(false);
-
-        if (null == session) {
-            LOGGER.warn("Ignores set locale caused by no session");
-
-            return;
-        }
-
-        session.setAttribute(Keys.LOCALE, locale);
-        LOGGER.log(Level.DEBUG, "Client[sessionId={0}] sets locale to [{1}]", new Object[]{session.getId(), locale.toString()});
-    }
-
-    /**
-     * Sets locale.
-     *
-     * @param locale the specified locale
-     */
-    public static void setLocale(final Locale locale) {
-        LOCALE.set(locale);
     }
 
     /**

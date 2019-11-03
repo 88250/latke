@@ -192,7 +192,7 @@ public class RouteHandler implements Handler {
         final long startTimeMillis = System.currentTimeMillis();
         request.setAttribute(Keys.HttpRequest.START_TIME_MILLIS, startTimeMillis);
         String requestURI = getRequestURI(request);
-        requestURI = StringUtils.substringAfter(requestURI, Latkes.getContextPath()); // remove servlet container context path
+        requestURI = StringUtils.substringAfter(requestURI, Latkes.getContextPath()); // remove context path
         final String httpMethod = getHttpMethod(request);
         LOGGER.log(Level.DEBUG, "Request [requestURI={0}, method={1}]", requestURI, httpMethod);
 
