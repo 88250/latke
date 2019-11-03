@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.servlet;
+package org.b3log.latke.http;
 
-import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.advice.ProcessAdvice;
+import org.b3log.latke.http.Response;
 
-@Singleton
-public class TestAfterAdvice extends ProcessAdvice {
+/**
+ * Mock HTTP response.
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 2.0.0.0, Nov 3, 2019
+ * @since 2.4.34
+ */
+public class MockResponse extends Response {
 
-    @Override
-    public void doAdvice(final RequestContext context) {
-        context.attr("after", "after");
+    public MockResponse() {
+        super(null, null);
     }
 }

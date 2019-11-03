@@ -13,17 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.servlet;
+package org.b3log.latke.http;
 
-import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.servlet.RequestContext;
-import org.b3log.latke.servlet.advice.ProcessAdvice;
+import org.b3log.latke.http.Request;
 
-@Singleton
-public class TestBeforeAdvice extends ProcessAdvice {
+/**
+ * Mock HTTP request.
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 2.0.0.0, Nov 2, 2019
+ * @since 2.4.34
+ */
+public class MockRequest extends Request {
 
-    @Override
-    public void doAdvice(final RequestContext context) {
-        context.attr("before", "before");
+    private String requestURI;
+
+    public MockRequest() {
+        super(null, null);
     }
+
+    public String getRequestURI() {
+        return requestURI;
+    }
+
+    public void setRequestURI(final String requestURI) {
+        this.requestURI = requestURI;
+    }
+
 }

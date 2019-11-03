@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.http.Request;
+import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.handler.Handler;
@@ -29,7 +30,6 @@ import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.URLs;
 import org.json.JSONObject;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.net.URI;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.7, Jul 13, 2019
+ * @version 2.0.0.0, Nov 3, 2019
  */
 public final class RequestContext {
 
@@ -57,7 +57,7 @@ public final class RequestContext {
     /**
      * Response.
      */
-    private HttpServletResponse response;
+    private Response response;
 
     /**
      * Request json.
@@ -125,7 +125,7 @@ public final class RequestContext {
      *
      * @return response
      */
-    public HttpServletResponse getResponse() {
+    public Response getResponse() {
         return response;
     }
 
@@ -134,7 +134,7 @@ public final class RequestContext {
      *
      * @param response the specified response
      */
-    public void setResponse(final HttpServletResponse response) {
+    public void setResponse(final Response response) {
         this.response = response;
     }
 
@@ -566,7 +566,7 @@ public final class RequestContext {
      * @param response the specified response, sets its content type with "application/json"
      * @return a json object
      */
-    private static JSONObject parseRequestJSONObject(final Request request, final HttpServletResponse response) {
+    private static JSONObject parseRequestJSONObject(final Request request, final Response response) {
         response.setContentType("application/json");
 
         try {
