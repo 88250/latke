@@ -19,6 +19,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
@@ -42,6 +43,7 @@ public class Request {
     private Set<Cookie> cookies;
     private Session session;
     private boolean staticResource;
+    private StringBuilder contentBuilder;
 
     public Request(final ChannelHandlerContext ctx, final HttpRequest req) {
         this.ctx = ctx;
@@ -49,6 +51,33 @@ public class Request {
         attrs = new HashMap<>();
         cookies = new HashSet<>();
         params = new HashMap<>();
+        contentBuilder = new StringBuilder();
+    }
+
+    public void appendContent(final String content) {
+        contentBuilder.append(content);
+    }
+
+    public void parseJSON() {
+        final String jsonStr = contentBuilder.toString();
+        json = new JSONObject(jsonStr);
+    }
+
+    public void parseForm() {
+        final String jsonStr = contentBuilder.toString();
+        if (StringUtils.startsWithIgnoreCase(jsonStr, "{\"")) {
+            json = new JSONObject(jsonStr);
+        } else {
+            final QueryStringDecoder queryDecoder = new QueryStringDecoder(jsonStr, false);
+            final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
+            for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
+                final String key = p.getKey();
+                final List<String> vals = p.getValue();
+                for (String val : vals) {
+                    params.put(key, val);
+                }
+            }
+        }
     }
 
     public String getHeader(final String name) {
@@ -92,7 +121,6 @@ public class Request {
     public void setParams(final Map<String, String> params) {
         this.params = params;
     }
-
 
     public void setJSON(final JSONObject json) {
         this.json = json;

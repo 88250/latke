@@ -27,7 +27,6 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.StaticResources;
-import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,6 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
     private static final Logger LOGGER = Logger.getLogger(ServerHandler.class);
 
     private Request request;
-    private final StringBuilder buf = new StringBuilder();
 
     @Override
     public void channelReadComplete(final ChannelHandlerContext ctx) {
@@ -80,7 +78,7 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
             }
         } else if (msg instanceof HttpContent) {
             final ByteBuf content = ((HttpContent) msg).content();
-            buf.append(content.toString(CharsetUtil.UTF_8));
+            request.appendContent(content.toString(CharsetUtil.UTF_8));
 
             if (msg instanceof LastHttpContent) {
                 String contentType = request.getHeader(HttpHeaderNames.CONTENT_TYPE.toString());
@@ -88,19 +86,10 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                     contentType = StringUtils.substringBefore(contentType, ";");
                     switch (contentType) {
                         case "application/json":
-                            final JSONObject json = new JSONObject(buf.toString());
-                            request.setJSON(json);
+                            request.parseJSON();
                             break;
                         case "application/x-www-form-urlencoded":
-                            final QueryStringDecoder queryDecoder = new QueryStringDecoder(buf.toString(), false);
-                            final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
-                            for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
-                                final String key = p.getKey();
-                                final List<String> vals = p.getValue();
-                                for (String val : vals) {
-                                    request.setParameter(key, val);
-                                }
-                            }
+                            request.parseForm();
                             break;
                         case "multipart/form-data":
                             // TODO: 文件上传
