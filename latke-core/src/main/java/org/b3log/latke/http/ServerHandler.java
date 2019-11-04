@@ -76,7 +76,9 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                     }
                 }
             }
-        } else if (msg instanceof HttpContent) {
+        }
+
+        if (msg instanceof HttpContent) {
             final ByteBuf content = ((HttpContent) msg).content();
             request.appendContent(content.toString(CharsetUtil.UTF_8));
 
@@ -122,7 +124,6 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
             }
         }
     }
-
 
     private static void send100Continue(final ChannelHandlerContext ctx) {
         final FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, CONTINUE, Unpooled.EMPTY_BUFFER);

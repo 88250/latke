@@ -21,13 +21,9 @@ import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.URLs;
 
-import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.spi.FileSystemProvider;
 
 /**
  * Static file renderer.
@@ -48,7 +44,8 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
     public void render(final RequestContext context) {
         try {
             final Response response = context.getResponse();
-            final String uri = context.requestURI();
+            String uri = context.requestURI();
+            uri = URLs.decode(uri);
             final URL resource = StaticFileRenderer.class.getResource(uri);
             if (null == resource) {
                 response.sendError(404);
@@ -62,24 +59,5 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Renders static final fialed", e);
         }
-    }
-
-    private static Path getPath(final URI uri) {
-        final String scheme = uri.getScheme();
-        if (scheme == null)
-            throw new IllegalArgumentException("Missing scheme");
-
-        // check for default provider to avoid loading of installed providers
-        if (scheme.equalsIgnoreCase("file"))
-            return FileSystems.getDefault().provider().getPath(uri);
-
-        // try to find provider
-        for (FileSystemProvider provider : FileSystemProvider.installedProviders()) {
-            if (provider.getScheme().equalsIgnoreCase(scheme)) {
-                return provider.getPath(uri);
-            }
-        }
-
-        throw new FileSystemNotFoundException("Provider \"" + scheme + "\" not installed");
     }
 }
