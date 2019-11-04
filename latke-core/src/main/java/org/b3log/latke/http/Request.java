@@ -33,8 +33,8 @@ import java.util.*;
  */
 public class Request {
 
-    private ChannelHandlerContext ctx;
-    private HttpRequest req;
+    ChannelHandlerContext ctx;
+    HttpRequest req;
 
     private Map<String, String> params;
     private JSONObject json;
@@ -48,6 +48,7 @@ public class Request {
         this.req = req;
         attrs = new HashMap<>();
         cookies = new HashSet<>();
+        params = new HashMap<>();
     }
 
     public String getHeader(final String name) {
@@ -91,6 +92,7 @@ public class Request {
     public void setParams(final Map<String, String> params) {
         this.params = params;
     }
+
 
     public void setJSON(final JSONObject json) {
         this.json = json;
@@ -138,7 +140,6 @@ public class Request {
 
     public void addCookie(final String name, final String value) {
         final Cookie cookie = new Cookie(name, value);
-        cookie.setPath("/");
         addCookie(cookie);
     }
 

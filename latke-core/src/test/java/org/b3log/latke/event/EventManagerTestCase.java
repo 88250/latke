@@ -26,11 +26,8 @@ import org.testng.annotations.Test;
  */
 public final class EventManagerTestCase {
 
-    /**
-     * @throws Exception exception
-     */
     @Test
-    public void test() throws Exception {
+    public void test() {
         final EventManager eventManager = new EventManager();
         final TestEventListener1 testEventListener1 = new TestEventListener1();
         eventManager.registerListener(testEventListener1);
@@ -47,8 +44,8 @@ public final class EventManagerTestCase {
 
         eventManager.<String>fireEventAsynchronously(new Event<JSONObject>("Test async listener1", eventData));
         System.out.println("Doing somthing in simplest thread....");
-        final long sleepTime = 101;
-        final long loopCnt = 40;
+        final long sleepTime = 51;
+        final long loopCnt = 20;
         try {
             for (int i = 0; i < loopCnt; i++) {
                 System.out.println("In simplest thread: " + i);
@@ -109,8 +106,8 @@ public final class EventManagerTestCase {
         @Override
         public void action(final Event<JSONObject> event) {
             System.out.println("Asynchonous listener1 is processing a event[type=" + event.getType() + ", data=" + event.getData() + "]");
-            final long sleepTime = 100;
-            final long loopCnt = 40;
+            final long sleepTime = 50;
+            final long loopCnt = 20;
             try {
                 for (int i = 0; i < loopCnt; i++) {
                     System.out.println("In listener: " + i);

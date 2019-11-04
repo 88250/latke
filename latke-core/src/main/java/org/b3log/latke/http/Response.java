@@ -139,6 +139,8 @@ public class Response {
 
 
         for (final Cookie cookie : cookies) {
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
             res.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie.cookie));
         }
 
