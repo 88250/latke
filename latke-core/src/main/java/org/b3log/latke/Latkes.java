@@ -34,10 +34,7 @@ import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -854,6 +851,29 @@ public final class Latkes {
             return null;
         }
     }
+
+    /**
+     * Lists file names under the specified path
+     *
+     * @param path the specified path
+     * @return file names
+     */
+    public static List<String> listFiles(final String path) {
+        final List<String> ret = new ArrayList<>();
+
+        try (final InputStream in = Latkes.class.getResourceAsStream(path);
+             final BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            String resource;
+            while ((resource = br.readLine()) != null) {
+                ret.add(path + "/" + resource);
+            }
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Read file names [path=" + path + "] failed", e);
+        }
+
+        return ret;
+    }
+
 
     /**
      * Latke runtime JDBC database specified in the configuration file local.properties.

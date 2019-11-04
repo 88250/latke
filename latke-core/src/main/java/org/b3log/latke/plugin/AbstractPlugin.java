@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -169,7 +168,7 @@ public abstract class AbstractPlugin implements Serializable {
      * Initializes template engine configuration.
      */
     private void initTemplateEngineCfg() {
-        configuration = new Configuration();
+        configuration = new Configuration(Configuration.VERSION_2_3_29);
         configuration.setDefaultEncoding("UTF-8");
         configuration.setClassForTemplateLoading(AbstractPlugin.class, "/plugins/" + dirName);
         LOGGER.log(Level.DEBUG, "Initialized template configuration");
@@ -179,10 +178,7 @@ public abstract class AbstractPlugin implements Serializable {
      * Reads lang_xx.properties into field {@link #langs langs}.
      */
     public void readLangs() {
-        // TODO: read plugin langs
-        final URL resource = AbstractPlugin.class.getResource("/plugins/" + dirName);
-        final Set<String> resourcePaths = new HashSet<>();
-
+        final List<String> resourcePaths = Latkes.listFiles("/plugins/" + dirName);
         for (final String resourcePath : resourcePaths) {
             if (resourcePath.contains("lang_") && resourcePath.endsWith(".properties")) {
                 final String langFileName = StringUtils.substringAfter(resourcePath, "/plugins/" + dirName + "/");

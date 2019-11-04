@@ -124,9 +124,7 @@ public class PluginManager {
 
         classLoaders.clear();
 
-        // TODO: load plugin
-        final URL resource = PluginManager.class.getResource("/plguins");
-        final Set<String> pluginDirPaths = new HashSet<>();
+        final List<String> pluginDirPaths = Latkes.listFiles("/plugins");
         final List<AbstractPlugin> plugins = new ArrayList<>();
         if (null != pluginDirPaths) {
             for (final String pluginDirPath : pluginDirPaths) {
@@ -232,7 +230,7 @@ public class PluginManager {
      * @param plugin        the specified plugin
      * @param props         the specified properties file
      */
-    private static void setPluginProps(final String pluginDirName, final AbstractPlugin plugin, final Properties props) {
+    static void setPluginProps(final String pluginDirName, final AbstractPlugin plugin, final Properties props) {
         final String author = props.getProperty(Plugin.PLUGIN_AUTHOR);
         final String name = props.getProperty(Plugin.PLUGIN_NAME);
         final String version = props.getProperty(Plugin.PLUGIN_VERSION);
