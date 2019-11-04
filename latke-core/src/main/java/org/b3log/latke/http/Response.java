@@ -20,13 +20,12 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
+import io.netty.util.CharsetUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * HTTP response.
@@ -38,17 +37,20 @@ import java.util.Set;
 public class Response {
 
     private ChannelHandlerContext ctx;
-    private HttpRequest req;
     private HttpResponse res;
     private boolean commited;
+    private boolean keepAlive;
     private byte[] content;
     private List<Cookie> cookies;
 
-    public Response(final ChannelHandlerContext ctx, final HttpRequest req, final HttpResponse res) {
+    public Response(final ChannelHandlerContext ctx, final HttpResponse res) {
         this.ctx = ctx;
-        this.req = req;
         this.res = res;
         cookies = new ArrayList<>();
+    }
+
+    public void setKeepAlive(final boolean keepAlive) {
+        this.keepAlive = keepAlive;
     }
 
     public boolean isCommitted() {
@@ -87,6 +89,18 @@ public class Response {
         cookies.add(cookie);
     }
 
+    public List<Cookie> getCookies() {
+        return cookies;
+    }
+
+    public String getContentStr() {
+        return new String(content, CharsetUtil.UTF_8);
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
     public void sendError(final int status) {
         setStatus(status);
         writeResponse();
@@ -109,7 +123,6 @@ public class Response {
             contentBuf = Unpooled.copiedBuffer(content);
         }
         res = ((FullHttpResponse) res).replace(contentBuf);
-        final boolean keepAlive = HttpUtil.isKeepAlive(req);
         if (keepAlive) {
             // Add 'Content-Length' header only for a keep-alive connection.
             res.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, ((FullHttpResponse) res).content().readableBytes());
@@ -118,20 +131,9 @@ public class Response {
             res.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         }
 
-        // Encode the cookie.
-        final String cookieString = req.headers().get(HttpHeaderNames.COOKIE);
-        if (cookieString != null) {
-            Set<io.netty.handler.codec.http.cookie.Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieString);
-            if (!cookies.isEmpty()) {
-                // Reset the cookies if necessary.
-                for (io.netty.handler.codec.http.cookie.Cookie cookie : cookies) {
-                    res.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode(cookie));
-                }
-            }
-        } else {
-            // Browser sent no cookie.  Add some.
-            res.headers().add(HttpHeaderNames.SET_COOKIE, io.netty.handler.codec.http.cookie.ServerCookieEncoder.STRICT.encode("key1", "value1"));
-            res.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode("key2", "value2"));
+
+        for (final Cookie cookie : cookies) {
+            res.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie.getName(), cookie.getValue()));
         }
 
         commited = true;

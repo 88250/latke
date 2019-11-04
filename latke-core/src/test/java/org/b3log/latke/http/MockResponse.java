@@ -27,7 +27,7 @@ import org.b3log.latke.http.Response;
  */
 public class MockResponse extends Response {
 
-    public MockResponse(final HttpRequest req, final HttpResponse res) {
-        super(null, req, res);
+    public MockResponse(final HttpResponse res) {
+        super(null, res);
     }
 }

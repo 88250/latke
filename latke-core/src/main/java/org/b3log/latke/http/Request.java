@@ -17,6 +17,7 @@ package org.b3log.latke.http;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import org.json.JSONObject;
@@ -40,6 +41,7 @@ public class Request {
     private JSONObject json;
     private Map<String, Object> attrs;
     private List<Cookie> cookies;
+    private Session session;
 
     public Request(final ChannelHandlerContext ctx, final HttpRequest req) {
         this.ctx = ctx;
@@ -65,8 +67,16 @@ public class Request {
         return req.method().name();
     }
 
+    public void setMethod(final String method) {
+        req.setMethod(HttpMethod.valueOf(method));
+    }
+
     public String getRequestURI() {
         return req.uri();
+    }
+
+    public void setRequestURI(final String uri) {
+        req.setUri(uri);
     }
 
     public String getContentType() {
@@ -119,5 +129,17 @@ public class Request {
 
     public List<Cookie> getCookies() {
         return cookies;
+    }
+
+    public void addCookie(final Cookie cookie) {
+        cookies.add(cookie);
+    }
+
+    public void setSession(final Session session) {
+        this.session = session;
+    }
+
+    public Session getSession() {
+        return session;
     }
 }

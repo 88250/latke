@@ -15,40 +15,39 @@
  */
 package org.b3log.latke.http;
 
-import io.netty.handler.codec.http.cookie.DefaultCookie;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * HTTP cookie.
+ * HTTP session.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 3, 2019
  * @since 2.5.9
  */
-public class Cookie {
+public class Session {
 
-    private io.netty.handler.codec.http.cookie.Cookie cookie;
+    private String id;
 
-    public Cookie(final String name, final String value) {
-        cookie = new DefaultCookie(name, value);
+    private Map<String, Object> attributes = new ConcurrentHashMap<>();
+
+    public Session(final String id) {
+        this.id = id;
     }
 
-    public String getName() {
-        return cookie.name();
+    public Object getAttribute(final String name) {
+        return attributes.get(name);
     }
 
-    public String getValue() {
-        return cookie.value();
+    public void setAttribute(final String name, final Object value) {
+        attributes.put(name, value);
     }
 
-    public void setMaxAge(final long maxAge) {
-        cookie.setMaxAge(maxAge);
+    public void setId(final String id) {
+        this.id = id;
     }
 
-    public void setPath(final String path) {
-        cookie.setPath(path);
-    }
-
-    public void setHttpOnly(final boolean httpOnly) {
-        cookie.setHttpOnly(httpOnly);
+    public String getId() {
+        return id;
     }
 }

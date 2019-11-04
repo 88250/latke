@@ -15,40 +15,34 @@
  */
 package org.b3log.latke.http;
 
-import io.netty.handler.codec.http.cookie.DefaultCookie;
+import org.apache.commons.lang.RandomStringUtils;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * HTTP cookie.
+ * HTTP session utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 3, 2019
  * @since 2.5.9
  */
-public class Cookie {
+public class Sessions {
 
-    private io.netty.handler.codec.http.cookie.Cookie cookie;
+    private static final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
 
-    public Cookie(final String name, final String value) {
-        cookie = new DefaultCookie(name, value);
+    public static Session add() {
+        final String sessionId = RandomStringUtils.randomAlphanumeric(16);
+        final Session ret = new Session(sessionId);
+        sessionMap.put(sessionId, ret);
+        return ret;
     }
 
-    public String getName() {
-        return cookie.name();
+    public static boolean contains(final String sessionId) {
+        return sessionMap.containsKey(sessionId);
     }
 
-    public String getValue() {
-        return cookie.value();
-    }
-
-    public void setMaxAge(final long maxAge) {
-        cookie.setMaxAge(maxAge);
-    }
-
-    public void setPath(final String path) {
-        cookie.setPath(path);
-    }
-
-    public void setHttpOnly(final boolean httpOnly) {
-        cookie.setHttpOnly(httpOnly);
+    public static Session get(String sessionId) {
+        return sessionMap.get(sessionId);
     }
 }

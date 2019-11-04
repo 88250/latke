@@ -20,7 +20,10 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.util.CharsetUtil;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.json.JSONObject;
@@ -28,6 +31,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -111,10 +115,30 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                 }
 
                 final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-                final Response response = new Response(ctx, req, res);
+                final Response response = new Response(ctx, res);
+                response.setKeepAlive(HttpUtil.isKeepAlive(req));
+
+                if (msg instanceof FullHttpRequest && !hasSessionId((FullHttpRequest) msg)) {
+                    final Session session = Sessions.add();
+                    final org.b3log.latke.http.Cookie cookie = new org.b3log.latke.http.Cookie(HttpHeaderNames.COOKIE.toString(), session.getId());
+                    cookie.setPath("/");
+                    cookie.setHttpOnly(true);
+                    request.addCookie(cookie);
+                }
+
                 Dispatcher.handle(request, response);
             }
         }
+    }
+
+    private boolean hasSessionId(final FullHttpRequest request) {
+        final String cookieStr = request.headers().get(HttpHeaderNames.COOKIE);
+        if (StringUtils.isBlank(cookieStr)) {
+            return false;
+        }
+
+        final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
+        return cookies.stream().anyMatch(cookie -> HttpHeaderNames.COOKIE.toString().equals(cookie.name()) && Sessions.contains(cookie.value()));
     }
 
     private static void send100Continue(final ChannelHandlerContext ctx) {

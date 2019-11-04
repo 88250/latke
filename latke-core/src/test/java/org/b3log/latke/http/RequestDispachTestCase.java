@@ -75,7 +75,7 @@ public class RequestDispachTestCase {
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
-        final MockResponse response = new MockResponse(req, res);
+        final MockResponse response = new MockResponse(res);
 
         final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("a"), "a");
@@ -87,7 +87,7 @@ public class RequestDispachTestCase {
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
-        final MockResponse response = new MockResponse(req, res);
+        final MockResponse response = new MockResponse(res);
 
         final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("id"), "88250");
@@ -100,7 +100,7 @@ public class RequestDispachTestCase {
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
-        final MockResponse response = new MockResponse(req, res);
+        final MockResponse response = new MockResponse(res);
 
         final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("before"), "before");
@@ -113,7 +113,7 @@ public class RequestDispachTestCase {
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
-        final MockResponse response = new MockResponse(req, res);
+        final MockResponse response = new MockResponse(res);
 
         final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("l"), "l");
@@ -125,7 +125,7 @@ public class RequestDispachTestCase {
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
-        final MockResponse response = new MockResponse(req, res);
+        final MockResponse response = new MockResponse(res);
 
         final RequestContext context = Dispatcher.handle(request, response);
         Assert.assertEquals(context.attr("before"), "before");
