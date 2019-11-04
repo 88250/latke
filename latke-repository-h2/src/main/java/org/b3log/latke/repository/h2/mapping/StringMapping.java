@@ -32,13 +32,13 @@ public final class StringMapping implements Mapping {
         sql.append(definition.getName());
 
         if (definition.getLength() == null) {
-            definition.setLength(new Integer("0"));
+            definition.setLength(0);
         }
 
-        if (definition.getLength() > new Integer("1024")) {
+        if (definition.getLength() > 1024) {
             sql.append(" text");
         } else {
-            sql.append(" varchar(").append(definition.getLength() < 1 ? new Integer("100") : definition.getLength());
+            sql.append(" varchar(").append(definition.getLength() < 1 ? 255 : definition.getLength());
             sql.append(")");
         }
 

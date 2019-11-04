@@ -27,14 +27,14 @@ import java.util.List;
 public class Main {
 
     @Inject
-    DependencyA dependencyA;
+    private DependencyA dependencyA;
 
     /**
      * Classes package.
      */
     public static final List<Class<?>> packageClasses = Arrays.asList(Main.class, DependencyA.class);
 
-    public static final void main(String[] args) {
+    public static void main(String[] args) {
         BeanManager.start(packageClasses);
 
         final BeanManager beanManager = BeanManager.getInstance();

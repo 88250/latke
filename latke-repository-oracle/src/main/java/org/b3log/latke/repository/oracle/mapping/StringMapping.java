@@ -33,15 +33,15 @@ public class StringMapping implements Mapping {
         sql.append(definition.getName());
 
         if (definition.getLength() == null) {
-            definition.setLength(new Integer("0"));
+            definition.setLength(0);
         }
 
         final Integer length = definition.getLength();
 
-        if (length > new Integer("255")) {
+        if (length > 255) {
             sql.append(" clob");
         } else {
-            sql.append(" varchar2(").append(length < 1 ? new Integer("255") : length).append(')');
+            sql.append(" varchar2(").append(length < 1 ? 255 : length).append(')');
         }
 
         if (!definition.getNullable()) {

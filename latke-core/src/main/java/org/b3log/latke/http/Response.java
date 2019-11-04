@@ -86,6 +86,8 @@ public class Response {
     }
 
     public void addCookie(final Cookie cookie) {
+        final String name = cookie.getName();
+        cookies.removeIf(c -> c.getName().equals(cookie.getName()));
         cookies.add(cookie);
     }
 

@@ -69,7 +69,7 @@ public class JdbcRepositoryTestCase {
     public static Object[][] createJsonData() {
 
         final JSONObject jsonObject = new JSONObject();
-        jsonObject.put("col1", new Integer("100"));
+        jsonObject.put("col1", 100);
         jsonObject.put("col2", "a测试中文a");
         jsonObject.put("col3", "1.4");
         jsonObject.put("col4", false);
@@ -258,22 +258,22 @@ public class JdbcRepositoryTestCase {
         final Query query = new Query();
 
         final ArrayList<Integer> inList = new ArrayList<Integer>();
-        inList.add(new Integer("1"));
-        inList.add(new Integer("2"));
-        inList.add(new Integer("3"));
+        inList.add(1);
+        inList.add(2);
+        inList.add(3);
 
         query.setFilter(CompositeFilterOperator.and(
-                new PropertyFilter("col1", FilterOperator.EQUAL, new Integer("1")),
-                new PropertyFilter("col1", FilterOperator.GREATER_THAN, new Integer("1")),
-                new PropertyFilter("col1", FilterOperator.GREATER_THAN_OR_EQUAL, new Integer("1")),
-                new PropertyFilter("col1", FilterOperator.LESS_THAN, new Integer("1")),
-                new PropertyFilter("col1", FilterOperator.LESS_THAN_OR_EQUAL, new Integer("1")),
-                new PropertyFilter("col1", FilterOperator.NOT_EQUAL, new Integer("1")),
+                new PropertyFilter("col1", FilterOperator.EQUAL, 1),
+                new PropertyFilter("col1", FilterOperator.GREATER_THAN, 1),
+                new PropertyFilter("col1", FilterOperator.GREATER_THAN_OR_EQUAL, 1),
+                new PropertyFilter("col1", FilterOperator.LESS_THAN, 1),
+                new PropertyFilter("col1", FilterOperator.LESS_THAN_OR_EQUAL, 1),
+                new PropertyFilter("col1", FilterOperator.NOT_EQUAL, 1),
                 new PropertyFilter("col1", FilterOperator.IN, inList),
                 new CompositeFilter(
                         CompositeFilterOperator.OR,
-                        Arrays.<Filter>asList(new PropertyFilter("col1", FilterOperator.EQUAL, new Integer("1")),
-                                new PropertyFilter("col1", FilterOperator.LESS_THAN_OR_EQUAL, new Integer("1"))))));
+                        Arrays.<Filter>asList(new PropertyFilter("col1", FilterOperator.EQUAL, 1),
+                                new PropertyFilter("col1", FilterOperator.LESS_THAN_OR_EQUAL, 1)))));
 
         jdbcRepository.get(query);
     }
@@ -343,10 +343,10 @@ public class JdbcRepositoryTestCase {
         transaction.commit();
 
         final Query query = new Query();
-        query.setFilter(new PropertyFilter("col1", FilterOperator.EQUAL, new Integer("100")));
+        query.setFilter(new PropertyFilter("col1", FilterOperator.EQUAL, 100));
         query.select("col1", "col2");
         query.addSort("oId", SortDirection.ASCENDING);
-        query.setPageSize(new Integer("4"));
+        query.setPageSize(4);
         query.setCurrentPageNum(2);
 
         final JSONObject ret = jdbcRepository.get(query);

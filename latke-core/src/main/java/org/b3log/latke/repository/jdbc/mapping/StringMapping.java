@@ -46,7 +46,7 @@ public class StringMapping implements Mapping {
                 sql.append(" text");
             }
         } else {
-            sql.append(" varchar(").append(length < 1 ? 128 : length);
+            sql.append(" varchar(").append(length < 1 ? 255 : length);
             sql.append(")");
         }
 

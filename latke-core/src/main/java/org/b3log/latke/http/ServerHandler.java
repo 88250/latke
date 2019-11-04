@@ -91,8 +91,9 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                 final Request request = new Request(ctx, req);
                 request.setParams(params);
 
-                final String contentType = req.headers().get(HttpHeaderNames.CONTENT_TYPE);
+                String contentType = req.headers().get(HttpHeaderNames.CONTENT_TYPE);
                 if (StringUtils.isNotBlank(contentType)) {
+                    contentType = StringUtils.substringBefore(contentType, ";");
                     switch (contentType) {
                         case "application/json":
                             final JSONObject json = new JSONObject(buf.toString());
