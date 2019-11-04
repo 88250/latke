@@ -92,26 +92,28 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                 final Request request = new Request(ctx, req);
 
                 final String contentType = req.headers().get(HttpHeaderNames.CONTENT_TYPE);
-                switch (contentType) {
-                    case "application/json":
-                        final JSONObject json = new JSONObject(buf.toString());
-                        request.setJSON(json);
-                        break;
-                    case "application/x-www-form-urlencoded":
-                        final QueryStringDecoder queryDecoder = new QueryStringDecoder(content.toString(CharsetUtil.UTF_8), false);
-                        final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
-                        for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
-                            final String key = p.getKey();
-                            final List<String> vals = p.getValue();
-                            for (String val : vals) {
-                                request.setParameter(key, val);
+                if (StringUtils.isNotBlank(contentType)) {
+                    switch (contentType) {
+                        case "application/json":
+                            final JSONObject json = new JSONObject(buf.toString());
+                            request.setJSON(json);
+                            break;
+                        case "application/x-www-form-urlencoded":
+                            final QueryStringDecoder queryDecoder = new QueryStringDecoder(content.toString(CharsetUtil.UTF_8), false);
+                            final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
+                            for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
+                                final String key = p.getKey();
+                                final List<String> vals = p.getValue();
+                                for (String val : vals) {
+                                    request.setParameter(key, val);
+                                }
                             }
-                        }
-                        break;
-                    case "multipart/form-data":
-                        // TODO: 文件上传
-                        LOGGER.log(Level.WARN, "TODO: handle file upload");
-                        break;
+                            break;
+                        case "multipart/form-data":
+                            // TODO: 文件上传
+                            LOGGER.log(Level.WARN, "TODO: handle file upload");
+                            break;
+                    }
                 }
 
                 final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
@@ -122,7 +124,6 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                     final Session session = Sessions.add();
                     final org.b3log.latke.http.Cookie cookie = new org.b3log.latke.http.Cookie(HttpHeaderNames.COOKIE.toString(), session.getId());
                     cookie.setPath("/");
-                    cookie.setHttpOnly(true);
                     request.addCookie(cookie);
                 }
 

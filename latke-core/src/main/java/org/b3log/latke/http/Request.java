@@ -20,6 +20,7 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -72,7 +73,9 @@ public class Request {
     }
 
     public String getRequestURI() {
-        return req.uri();
+        String ret = req.uri();
+        ret = StringUtils.substringBefore(ret, "?");
+        return ret;
     }
 
     public void setRequestURI(final String uri) {
@@ -133,6 +136,12 @@ public class Request {
 
     public void addCookie(final Cookie cookie) {
         cookies.add(cookie);
+    }
+
+    public void addCookie(final String name, final String value) {
+        final Cookie cookie = new Cookie(name, value);
+        cookie.setPath("/");
+        addCookie(cookie);
     }
 
     public void setSession(final Session session) {

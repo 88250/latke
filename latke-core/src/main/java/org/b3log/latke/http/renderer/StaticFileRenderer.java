@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.http.renderer;
 
+import org.apache.tika.Tika;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
@@ -41,6 +42,8 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
      */
     private static final Logger LOGGER = Logger.getLogger(StaticFileRenderer.class);
 
+    private static final Tika TIKA = new Tika();
+
     @Override
     public void render(final RequestContext context) {
         try {
@@ -51,8 +54,9 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
                 response.sendError(404);
                 return;
             }
+
             final Path path = getPath(resource.toURI());
-            final String contentType = Files.probeContentType(path);
+            final String contentType =  TIKA.detect(path);
             final byte[] bytes = Files.readAllBytes(path);
             response.setContentType(contentType);
             response.sendContent(bytes);
