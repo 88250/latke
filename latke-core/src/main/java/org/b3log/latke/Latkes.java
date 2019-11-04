@@ -815,7 +815,7 @@ public final class Latkes {
     public static String getSkinName(final String skinDirName) {
         try {
             final Properties ret = new Properties();
-            final File file = getWebFile("/skins/" + skinDirName + "/skin.properties");
+            final File file = getFile("/skins/" + skinDirName + "/skin.properties");
             ret.load(new FileInputStream(file));
 
             return ret.getProperty("name");
@@ -827,22 +827,19 @@ public final class Latkes {
     }
 
     /**
-     * Gets a file in web application with the specified path.
+     * Gets a file with the specified path.
      *
      * @param path the specified path
      * @return file
      */
-    public static File getWebFile(final String path) {
-        File ret;
-
+    public static File getFile(final String path) {
         try {
             final URL resource = Latkes.class.getResource(path);
             if (null == resource) {
                 return null;
             }
 
-            ret = FileUtils.toFile(resource);
-
+            File ret = FileUtils.toFile(resource);
             if (null == ret) {
                 final File tempdir = FileUtils.getTempDirectory();
                 ret = new File(tempdir.getPath() + path);

@@ -191,7 +191,7 @@ public abstract class AbstractPlugin implements Serializable {
                 final Properties props = new Properties();
 
                 try {
-                    final File file = Latkes.getWebFile(resourcePath);
+                    final File file = Latkes.getFile(resourcePath);
                     props.load(new FileInputStream(file));
                     langs.put(key, props);
                 } catch (final Exception e) {

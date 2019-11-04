@@ -162,11 +162,11 @@ public class PluginManager {
         String plugin = StringUtils.substringAfter(pluginDirPath, "/plugins");
         plugin = plugin.replace("/", "");
 
-        final File file = Latkes.getWebFile("/plugins/" + plugin + "/plugin.properties");
+        final File file = Latkes.getFile("/plugins/" + plugin + "/plugin.properties");
         props.load(new FileInputStream(file));
 
         final URL defaultClassesFileDirURL = PluginManager.class.getResource("/plugins/" + plugin + "classes");
-        URLClassLoader classLoader = null;
+        URLClassLoader classLoader;
         if (null != defaultClassesFileDirURL) {
             classLoader = new URLClassLoader(new URL[]{defaultClassesFileDirURL}, PluginManager.class.getClassLoader());
         } else {
@@ -248,7 +248,7 @@ public class PluginManager {
         plugin.readLangs();
 
         // try to find the setting config.json
-        final File settingFile = Latkes.getWebFile("/plugins/" + pluginDirName + "/config.json");
+        final File settingFile = Latkes.getFile("/plugins/" + pluginDirName + "/config.json");
 
         if (null != settingFile && settingFile.exists()) {
             try {

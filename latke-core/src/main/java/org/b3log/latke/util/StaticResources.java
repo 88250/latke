@@ -99,7 +99,7 @@ public final class StaticResources {
     private static synchronized void init() {
         LOGGER.trace("Reads static resources definition from [static-resources.xml]");
 
-        final File staticResources = Latkes.getWebFile("/static-resources.xml");
+        final File staticResources = Latkes.getFile("/static-resources.xml");
         if (null == staticResources || !staticResources.exists()) {
             throw new IllegalStateException("Not found static resources definition from [static-resources.xml]");
         }

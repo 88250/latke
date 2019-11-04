@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.http.renderer;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
@@ -25,7 +26,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
 
@@ -55,9 +55,8 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
                 return;
             }
 
-            final Path path = getPath(resource.toURI());
-            final String contentType = TIKA.detect(path);
-            final byte[] bytes = Files.readAllBytes(path);
+            final String contentType = TIKA.detect(resource);
+            final byte[] bytes = IOUtils.toByteArray(resource);
             response.setContentType(contentType);
             response.sendContent(bytes);
         } catch (final Exception e) {
