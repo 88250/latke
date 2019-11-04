@@ -47,7 +47,6 @@ public class Request {
     public Request(final ChannelHandlerContext ctx, final HttpRequest req) {
         this.ctx = ctx;
         this.req = req;
-        params = new ConcurrentHashMap<>();
         attrs = new ConcurrentHashMap<>();
 
         cookies = new ArrayList<>();
@@ -96,6 +95,10 @@ public class Request {
 
     public String getParameter(final String name) {
         return params.get(name);
+    }
+
+    public void setParams(final Map<String, String> params) {
+        this.params = params;
     }
 
     public void setJSON(final JSONObject json) {

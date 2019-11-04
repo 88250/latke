@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -55,7 +56,7 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
      */
     private HttpRequest req;
 
-    private final Map<String, String> params = new HashMap<>();
+    private final Map<String, String> params = new ConcurrentHashMap<>();
     private final StringBuilder buf = new StringBuilder();
 
     @Override
@@ -90,6 +91,7 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
 
             if (msg instanceof LastHttpContent) {
                 final Request request = new Request(ctx, req);
+                request.setParams(params);
 
                 final String contentType = req.headers().get(HttpHeaderNames.CONTENT_TYPE);
                 if (StringUtils.isNotBlank(contentType)) {
