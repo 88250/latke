@@ -19,12 +19,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * HTTP request.
@@ -41,22 +39,15 @@ public class Request {
     private Map<String, String> params;
     private JSONObject json;
     private Map<String, Object> attrs;
-    private List<Cookie> cookies;
+    private Set<Cookie> cookies;
     private Session session;
+    private boolean staticResource;
 
     public Request(final ChannelHandlerContext ctx, final HttpRequest req) {
         this.ctx = ctx;
         this.req = req;
-        attrs = new ConcurrentHashMap<>();
-
-        cookies = new ArrayList<>();
-        final String cookieString = req.headers().get(HttpHeaderNames.COOKIE);
-        if (cookieString != null) {
-            final Set<io.netty.handler.codec.http.cookie.Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieString);
-            for (final io.netty.handler.codec.http.cookie.Cookie cookie : cookies) {
-                this.cookies.add(new Cookie(cookie.name(), cookie.value()));
-            }
-        }
+        attrs = new HashMap<>();
+        cookies = new HashSet<>();
     }
 
     public String getHeader(final String name) {
@@ -133,8 +124,12 @@ public class Request {
         return 8080;
     }
 
-    public List<Cookie> getCookies() {
+    public Set<Cookie> getCookies() {
         return cookies;
+    }
+
+    public void setCookies(final Set<Cookie> cookies) {
+        this.cookies = cookies;
     }
 
     public void addCookie(final Cookie cookie) {
@@ -153,5 +148,13 @@ public class Request {
 
     public Session getSession() {
         return session;
+    }
+
+    public boolean isStaticResource() {
+        return staticResource;
+    }
+
+    public void setStaticResource(boolean staticResource) {
+        this.staticResource = staticResource;
     }
 }

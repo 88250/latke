@@ -18,7 +18,6 @@ package org.b3log.latke.http.handler;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.renderer.StaticFileRenderer;
-import org.b3log.latke.util.StaticResources;
 
 /**
  * Static resource handler.
@@ -31,7 +30,7 @@ public class StaticResourceHandler implements Handler {
     @Override
     public void handle(final RequestContext context) {
         final Request request = context.getRequest();
-        if (StaticResources.isStatic(request)) {
+        if (request.isStaticResource()) {
             context.setRenderer(new StaticFileRenderer());
             context.abort();
 

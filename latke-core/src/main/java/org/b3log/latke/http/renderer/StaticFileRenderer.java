@@ -56,7 +56,7 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
             }
 
             final Path path = getPath(resource.toURI());
-            final String contentType =  TIKA.detect(path);
+            final String contentType = TIKA.detect(path);
             final byte[] bytes = Files.readAllBytes(path);
             response.setContentType(contentType);
             response.sendContent(bytes);

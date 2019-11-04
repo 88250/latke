@@ -20,11 +20,11 @@ import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.annotation.Repository;
 import org.b3log.latke.service.annotation.Service;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.util.ArrayUtils;
 
 import java.io.DataInputStream;

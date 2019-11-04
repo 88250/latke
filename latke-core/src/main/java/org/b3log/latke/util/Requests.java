@@ -26,7 +26,7 @@ import org.json.JSONArray;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Request utilities.
@@ -178,7 +178,7 @@ public final class Requests {
      * @return {@code true} if the specified request has been served, returns {@code false} otherwise
      */
     public static boolean hasBeenServed(final Request request, final Response response) {
-        final List<Cookie> cookies = request.getCookies();
+        final Set<Cookie> cookies = request.getCookies();
         if (cookies.isEmpty()) {
             return false;
         }

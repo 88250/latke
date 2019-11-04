@@ -26,13 +26,10 @@ import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.StaticResources;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -56,7 +53,8 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
      */
     private HttpRequest req;
 
-    private final Map<String, String> params = new ConcurrentHashMap<>();
+    private final Map<String, String> params = new HashMap<>();
+    private Set<Cookie> cookies = new HashSet<>();
     private final StringBuilder buf = new StringBuilder();
 
     @Override
@@ -122,11 +120,17 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
                 final Response response = new Response(ctx, res);
                 response.setKeepAlive(HttpUtil.isKeepAlive(req));
 
-                if (msg instanceof FullHttpRequest && !hasSessionId((FullHttpRequest) msg)) {
-                    final Session session = Sessions.add();
-                    final org.b3log.latke.http.Cookie cookie = new org.b3log.latke.http.Cookie(HttpHeaderNames.COOKIE.toString(), session.getId());
-                    cookie.setPath("/");
-                    request.addCookie(cookie);
+                if (!StaticResources.isStatic(request)) {
+                    handleCookie();
+                    for (final Cookie cookie : cookies) {
+                        request.addCookie(new org.b3log.latke.http.Cookie(cookie));
+                    }
+                    if (!request.getCookies().stream().anyMatch(cookie -> "LATKE_SESSION_ID".equals(cookie.getName()) && !Sessions.contains(cookie.getValue()))) {
+                        request.addCookie("LATKE_SESSION_ID", Sessions.add().getId());
+                    }
+                    response.setCookies(request.getCookies());
+                } else {
+                    request.setStaticResource(true);
                 }
 
                 Dispatcher.handle(request, response);
@@ -134,14 +138,13 @@ public final class ServerHandler extends SimpleChannelInboundHandler<Object> {
         }
     }
 
-    private boolean hasSessionId(final FullHttpRequest request) {
-        final String cookieStr = request.headers().get(HttpHeaderNames.COOKIE);
+    private void handleCookie() {
+        final String cookieStr = req.headers().get(HttpHeaderNames.COOKIE);
         if (StringUtils.isBlank(cookieStr)) {
-            return false;
+            return;
         }
 
-        final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
-        return cookies.stream().anyMatch(cookie -> HttpHeaderNames.COOKIE.toString().equals(cookie.name()) && Sessions.contains(cookie.value()));
+        cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
     }
 
     private static void send100Continue(final ChannelHandlerContext ctx) {

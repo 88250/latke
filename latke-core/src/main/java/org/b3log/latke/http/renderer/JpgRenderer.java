@@ -15,9 +15,6 @@
  */
 package org.b3log.latke.http.renderer;
 
-import org.b3log.latke.http.Response;
-import org.b3log.latke.http.RequestContext;
-
 /**
  * JPEG HTTP response renderer.
  *

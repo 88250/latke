@@ -16,11 +16,11 @@
 package org.b3log.latke.ioc;
 
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.http.advice.ProcessAdvice;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
 import org.b3log.latke.service.LangPropsService;
-import org.b3log.latke.http.advice.ProcessAdvice;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

@@ -26,10 +26,14 @@ import io.netty.handler.codec.http.cookie.DefaultCookie;
  */
 public class Cookie {
 
-    private io.netty.handler.codec.http.cookie.Cookie cookie;
+    io.netty.handler.codec.http.cookie.Cookie cookie;
 
     public Cookie(final String name, final String value) {
         cookie = new DefaultCookie(name, value);
+    }
+
+    public Cookie(final io.netty.handler.codec.http.cookie.Cookie cookie) {
+        this.cookie = cookie;
     }
 
     public String getName() {

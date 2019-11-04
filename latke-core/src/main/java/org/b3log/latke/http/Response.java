@@ -23,9 +23,9 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import io.netty.util.CharsetUtil;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 /**
  * HTTP response.
@@ -41,12 +41,12 @@ public class Response {
     private boolean commited;
     private boolean keepAlive;
     private byte[] content;
-    private List<Cookie> cookies;
+    private Set<Cookie> cookies;
 
     public Response(final ChannelHandlerContext ctx, final HttpResponse res) {
         this.ctx = ctx;
         this.res = res;
-        cookies = new ArrayList<>();
+        cookies = new HashSet<>();
     }
 
     public void setKeepAlive(final boolean keepAlive) {
@@ -89,8 +89,12 @@ public class Response {
         cookies.add(cookie);
     }
 
-    public List<Cookie> getCookies() {
+    public Set<Cookie> getCookies() {
         return cookies;
+    }
+
+    public void setCookies(final Set<Cookie> cookies) {
+        this.cookies = cookies;
     }
 
     public String getContentStr() {
@@ -133,7 +137,7 @@ public class Response {
 
 
         for (final Cookie cookie : cookies) {
-            res.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie.getName(), cookie.getValue()));
+            res.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie.cookie));
         }
 
         commited = true;

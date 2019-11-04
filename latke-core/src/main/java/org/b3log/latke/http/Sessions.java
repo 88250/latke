@@ -29,20 +29,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Sessions {
 
-    private static final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
+    private static final Map<String, Session> SESSIONS = new ConcurrentHashMap<>();
 
     public static Session add() {
         final String sessionId = RandomStringUtils.randomAlphanumeric(16);
         final Session ret = new Session(sessionId);
-        sessionMap.put(sessionId, ret);
+        SESSIONS.put(sessionId, ret);
         return ret;
     }
 
     public static boolean contains(final String sessionId) {
-        return sessionMap.containsKey(sessionId);
+        return SESSIONS.containsKey(sessionId);
     }
 
     public static Session get(String sessionId) {
-        return sessionMap.get(sessionId);
+        return SESSIONS.get(sessionId);
     }
 }
