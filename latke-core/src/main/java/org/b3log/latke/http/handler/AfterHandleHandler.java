@@ -75,5 +75,7 @@ public class AfterHandleHandler implements Handler {
 
             context.abort();
         }
+
+        context.handle();
     }
 }

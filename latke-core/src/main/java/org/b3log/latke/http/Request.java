@@ -206,7 +206,7 @@ public class Request {
                 if (InterfaceHttpData.HttpDataType.FileUpload == data.getHttpDataType()) {
                     final FileUpload fileUpload = new FileUpload();
                     fileUpload.fileUpload = (io.netty.handler.codec.http.multipart.FileUpload) data;
-                    files.putIfAbsent(fileUpload.getName(), new ArrayList<>()).add(fileUpload);
+                    files.computeIfAbsent(fileUpload.getName(), k -> new ArrayList<>()).add(fileUpload);
                 } else {
                     final Attribute attribute = (Attribute) data;
                     params.put(attribute.getName(), attribute.getValue());
