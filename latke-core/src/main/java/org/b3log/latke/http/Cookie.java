@@ -55,4 +55,8 @@ public class Cookie {
     public void setHttpOnly(final boolean httpOnly) {
         cookie.setHttpOnly(httpOnly);
     }
+
+    public void setSecure(boolean secure) {
+        cookie.setSecure(secure);
+    }
 }

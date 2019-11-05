@@ -104,6 +104,10 @@ public class Request {
         this.params = params;
     }
 
+    public Set<String> getParameterNames() {
+        return params.keySet();
+    }
+
     public void setJSON(final JSONObject json) {
         this.json = json;
     }
