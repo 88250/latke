@@ -117,6 +117,11 @@ public class Response {
         return content;
     }
 
+    public void sendError0(final int status) {
+        setStatus(status);
+        writeResponse();
+    }
+
     public void sendError(final int status) {
         setStatus(status);
         if (null != Dispatcher.errorHandleRouter) {

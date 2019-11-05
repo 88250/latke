@@ -88,7 +88,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         final Template template = getTemplate();
         if (null == template) {
             LOGGER.log(Level.ERROR, "Not found template [{0}]", templateName);
-            response.sendError(404);
+            response.sendError0(404);
 
             return;
         }
@@ -106,7 +106,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         } catch (final Exception e) {
             final String requestLog = Requests.getLog(request);
             LOGGER.log(Level.ERROR, "Renders template [" + templateName + "] failed [" + requestLog + "]", e);
-            response.sendError(500);
+            response.sendError0(500);
         }
     }
 

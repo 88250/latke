@@ -292,7 +292,7 @@ public final class RequestContext {
      */
     public void sendError(final int sc) {
         try {
-            response.sendError(sc);
+            response.sendError0(sc);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Sends error status code [" + sc + "] failed: " + e.getMessage());
         }

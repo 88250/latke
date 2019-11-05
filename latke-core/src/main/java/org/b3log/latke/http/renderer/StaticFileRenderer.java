@@ -60,8 +60,8 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
             response.setContentType(contentType);
             response.sendContent(bytes);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Renders static final fialed", e);
-            response.sendError(404);
+            LOGGER.log(Level.ERROR, "Renders static file failed", e);
+            response.sendError0(500);
         }
     }
 }
