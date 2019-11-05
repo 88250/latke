@@ -22,8 +22,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.internal.logging.InternalLoggerFactory;
@@ -78,8 +78,8 @@ public abstract class BaseServer {
         @Override
         public void initChannel(final SocketChannel ch) {
             final ChannelPipeline p = ch.pipeline();
-            p.addLast(new HttpRequestDecoder());
-            p.addLast(new HttpResponseEncoder());
+            p.addLast(new HttpServerCodec(4096, 8192, 1024 * 1024 * 10));
+            p.addLast(new HttpObjectAggregator(1024 * 10));
             p.addLast(new ServerHandler());
         }
     }

@@ -43,7 +43,6 @@ public class Request {
     private Set<Cookie> cookies;
     private Session session;
     private boolean staticResource;
-    private StringBuilder contentBuilder;
 
     public Request(final ChannelHandlerContext ctx, final HttpRequest req) {
         this.ctx = ctx;
@@ -51,20 +50,13 @@ public class Request {
         attrs = new HashMap<>();
         cookies = new HashSet<>();
         params = new HashMap<>();
-        contentBuilder = new StringBuilder();
     }
 
-    public void appendContent(final String content) {
-        contentBuilder.append(content);
-    }
-
-    public void parseJSON() {
-        final String jsonStr = contentBuilder.toString();
+    public void parseJSON(final String jsonStr) {
         json = new JSONObject(jsonStr);
     }
 
-    public void parseForm() {
-        final String jsonStr = contentBuilder.toString();
+    public void parseForm(final String jsonStr) {
         if (StringUtils.startsWithIgnoreCase(jsonStr, "{\"")) {
             json = new JSONObject(jsonStr);
         } else {
