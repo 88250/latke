@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.http;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
@@ -24,7 +23,6 @@ import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
-import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -38,7 +36,7 @@ import java.util.Set;
  * Http server handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Nov 2, 2019
+ * @version 1.0.0.1, Nov 5, 2019
  * @since 3.0.0
  */
 public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -73,17 +71,15 @@ public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpReq
         }
 
         // 解析请求体
-        final ByteBuf content = fullHttpRequest.content();
-
         String contentType = request.getHeader(HttpHeaderNames.CONTENT_TYPE.toString());
         if (StringUtils.isNotBlank(contentType)) {
             contentType = StringUtils.substringBefore(contentType, ";");
             switch (contentType) {
                 case "application/json":
-                    request.parseJSON((content.toString(CharsetUtil.UTF_8)));
+                    request.parseJSON(fullHttpRequest);
                     break;
                 case "application/x-www-form-urlencoded":
-                    request.parseForm((content.toString(CharsetUtil.UTF_8)));
+                    request.parseForm(fullHttpRequest);
                     break;
                 case "multipart/form-data":
                     request.httpDecoder = new HttpPostRequestDecoder(HTTP_DATA_FACTORY, request.req);
@@ -118,6 +114,10 @@ public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpReq
 
         // 分发处理
         Dispatcher.handle(request, response);
+
+        if (null != request.httpDecoder) {
+            request.httpDecoder.destroy();
+        }
     }
 
     @Override

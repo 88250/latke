@@ -35,7 +35,7 @@ import org.b3log.latke.logging.Logger;
  * Http Server based on Netty 4.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Nov 2, 2019
+ * @version 1.0.0.1, Nov 5, 2019
  * @since 3.0.0
  */
 public abstract class BaseServer {
@@ -78,8 +78,8 @@ public abstract class BaseServer {
         @Override
         public void initChannel(final SocketChannel ch) {
             final ChannelPipeline p = ch.pipeline();
-            p.addLast(new HttpServerCodec(4096, 8192, 1024 * 1024 * 10));
-            p.addLast(new HttpObjectAggregator(1024 * 10));
+            p.addLast(new HttpServerCodec());
+            p.addLast(new HttpObjectAggregator(1024 * 1024 * 64));
             p.addLast(new ServerHandler());
         }
     }

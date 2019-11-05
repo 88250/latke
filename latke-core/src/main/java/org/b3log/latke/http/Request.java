@@ -16,28 +16,29 @@
 package org.b3log.latke.http;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.multipart.Attribute;
-import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.*;
 
 /**
  * HTTP request.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Nov 2, 2019
+ * @version 1.0.0.1, Nov 5, 2019
  * @since 3.0.0
  */
 public class Request {
+
+    private static final Logger LOGGER = Logger.getLogger(Request.class);
 
     ChannelHandlerContext ctx;
     HttpRequest req;
@@ -47,7 +48,7 @@ public class Request {
     private Map<String, String> params;
     private JSONObject json;
     private Map<String, Object> attrs;
-    private List<File> files;
+    private Map<String, List<org.b3log.latke.http.FileUpload>> files;
     private Set<Cookie> cookies;
     private Session session;
     private boolean staticResource;
@@ -56,47 +57,9 @@ public class Request {
         this.ctx = ctx;
         this.req = req;
         attrs = new HashMap<>();
-        files = new ArrayList<>();
+        files = new HashMap<>();
         cookies = new HashSet<>();
         params = new HashMap<>();
-    }
-
-    public void parseJSON(final String jsonStr) {
-        json = new JSONObject(jsonStr);
-    }
-
-    public void parseForm(final String jsonStr) {
-        if (StringUtils.startsWithIgnoreCase(jsonStr, "{\"")) {
-            json = new JSONObject(jsonStr);
-        } else {
-            final QueryStringDecoder queryDecoder = new QueryStringDecoder(jsonStr, false);
-            final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
-            for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
-                final String key = p.getKey();
-                final List<String> vals = p.getValue();
-                for (String val : vals) {
-                    params.put(key, val);
-                }
-            }
-        }
-    }
-
-    public void parseFormData() {
-        try {
-            while (httpDecoder.hasNext()) {
-                final InterfaceHttpData data = httpDecoder.next();
-                if (InterfaceHttpData.HttpDataType.FileUpload == data.getHttpDataType()) {
-                    final FileUpload fileUpload = (FileUpload) data;
-                    files.add(fileUpload.getFile());
-                } else {
-                    final Attribute attribute = (Attribute) data;
-                    params.put(attribute.getName(), attribute.getValue());
-                }
-            }
-        } catch (final Exception e) {
-
-        }
-        httpDecoder.destroy();
     }
 
     public String getHeader(final String name) {
@@ -204,5 +167,51 @@ public class Request {
 
     public void setStaticResource(boolean staticResource) {
         this.staticResource = staticResource;
+    }
+
+    public List<FileUpload> getFileUploads(final String name) {
+        return files.getOrDefault(name, Collections.emptyList());
+    }
+
+    void parseJSON(final FullHttpRequest fullHttpRequest) {
+        json = new JSONObject((fullHttpRequest.content().toString(CharsetUtil.UTF_8)));
+    }
+
+    void parseForm(final FullHttpRequest fullHttpRequest) {
+        final String content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
+        if (StringUtils.startsWithIgnoreCase(content, "{\"")) {
+            json = new JSONObject(content);
+        } else {
+            final QueryStringDecoder queryDecoder = new QueryStringDecoder(content, false);
+            final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
+            for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
+                final String key = p.getKey();
+                final List<String> vals = p.getValue();
+                // 这里没有实现 name -> List，主要是为了兼容老应用，等有空需要改造一下，按照规范来
+                for (final String val : vals) {
+                    params.put(key, val);
+                }
+            }
+        }
+    }
+
+    void parseFormData() {
+        try {
+            while (httpDecoder.hasNext()) {
+                final InterfaceHttpData data = httpDecoder.next();
+                if (InterfaceHttpData.HttpDataType.FileUpload == data.getHttpDataType()) {
+                    final FileUpload fileUpload = new FileUpload();
+                    fileUpload.fileUpload = (io.netty.handler.codec.http.multipart.FileUpload) data;
+                    files.putIfAbsent(fileUpload.getName(), new ArrayList<>()).add(fileUpload);
+                } else {
+                    final Attribute attribute = (Attribute) data;
+                    params.put(attribute.getName(), attribute.getValue());
+                }
+            }
+        } catch (final HttpPostRequestDecoder.EndOfDataDecoderException e) {
+            // ignore
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Parse form data failed", e);
+        }
     }
 }
