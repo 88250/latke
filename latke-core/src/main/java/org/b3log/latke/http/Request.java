@@ -20,9 +20,14 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.multipart.Attribute;
+import io.netty.handler.codec.http.multipart.FileUpload;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -36,11 +41,13 @@ public class Request {
 
     ChannelHandlerContext ctx;
     HttpRequest req;
+    HttpPostRequestDecoder httpDecoder;
     RequestContext context;
 
     private Map<String, String> params;
     private JSONObject json;
     private Map<String, Object> attrs;
+    private List<File> files;
     private Set<Cookie> cookies;
     private Session session;
     private boolean staticResource;
@@ -49,6 +56,7 @@ public class Request {
         this.ctx = ctx;
         this.req = req;
         attrs = new HashMap<>();
+        files = new ArrayList<>();
         cookies = new HashSet<>();
         params = new HashMap<>();
     }
@@ -71,6 +79,24 @@ public class Request {
                 }
             }
         }
+    }
+
+    public void parseFormData() {
+        try {
+            while (httpDecoder.hasNext()) {
+                final InterfaceHttpData data = httpDecoder.next();
+                if (InterfaceHttpData.HttpDataType.FileUpload == data.getHttpDataType()) {
+                    final FileUpload fileUpload = (FileUpload) data;
+                    files.add(fileUpload.getFile());
+                } else {
+                    final Attribute attribute = (Attribute) data;
+                    params.put(attribute.getName(), attribute.getValue());
+                }
+            }
+        } catch (final Exception e) {
+
+        }
+        httpDecoder.destroy();
     }
 
     public String getHeader(final String name) {

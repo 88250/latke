@@ -21,6 +21,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
+import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
+import io.netty.handler.codec.http.multipart.HttpDataFactory;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
@@ -44,6 +47,8 @@ public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpReq
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(ServerHandler.class);
+
+    private static final HttpDataFactory HTTP_DATA_FACTORY = new DefaultHttpDataFactory(true);
 
     @Override
     public void channelReadComplete(final ChannelHandlerContext ctx) {
@@ -69,20 +74,22 @@ public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpReq
 
         // 解析请求体
         final ByteBuf content = fullHttpRequest.content();
-        final String contentText = (content.toString(CharsetUtil.UTF_8));
+
         String contentType = request.getHeader(HttpHeaderNames.CONTENT_TYPE.toString());
         if (StringUtils.isNotBlank(contentType)) {
             contentType = StringUtils.substringBefore(contentType, ";");
             switch (contentType) {
                 case "application/json":
-                    request.parseJSON(contentText);
+                    request.parseJSON((content.toString(CharsetUtil.UTF_8)));
                     break;
                 case "application/x-www-form-urlencoded":
-                    request.parseForm(contentText);
+                    request.parseForm((content.toString(CharsetUtil.UTF_8)));
                     break;
                 case "multipart/form-data":
-                    // TODO: 文件上传
-                    LOGGER.log(Level.WARN, "TODO: handle file upload");
+                    request.httpDecoder = new HttpPostRequestDecoder(HTTP_DATA_FACTORY, request.req);
+                    request.httpDecoder.setDiscardThreshold(0);
+                    request.httpDecoder.offer(fullHttpRequest);
+                    request.parseFormData();
                     break;
             }
         }

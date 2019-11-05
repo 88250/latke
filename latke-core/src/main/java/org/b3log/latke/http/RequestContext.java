@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public final class RequestContext {
     /**
      * Path vars.
      */
-    private Map<String, String> pathVars;
+    private Map<String, String> pathVars = new HashMap<>();
 
     /**
      * Process flow index.
