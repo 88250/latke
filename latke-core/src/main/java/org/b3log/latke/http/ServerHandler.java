@@ -24,7 +24,6 @@ import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.StaticResources;
 
@@ -122,7 +121,7 @@ public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpReq
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-        LOGGER.log(Level.ERROR, "Server handle failed", cause);
+//        LOGGER.log(Level.WARN, "Server handle failed", cause);
         ctx.close();
     }
 }

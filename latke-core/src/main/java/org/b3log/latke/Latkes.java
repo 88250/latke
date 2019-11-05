@@ -18,14 +18,11 @@ package org.b3log.latke;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.cache.redis.RedisCache;
-import org.b3log.latke.http.Request;
-import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Discoverer;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
-import org.b3log.latke.util.Requests;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -42,7 +39,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.0.9, Nov 3, 2019
+ * @version 2.11.0.10, Nov 5, 2019
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -79,11 +76,6 @@ public final class Latkes {
      * Latke configurations (latke.properties).
      */
     private static Properties latkeProps;
-
-    /**
-     * Locale. Initializes this by {@link #setLocale(java.util.Locale)}.
-     */
-    private static Locale locale;
 
     /**
      * Which mode Latke runs in?
@@ -123,11 +115,6 @@ public final class Latkes {
      * Init flag.
      */
     private static boolean inited;
-
-    /**
-     * Request context holder.
-     */
-    public static final ThreadLocal<RequestContext> REQUEST_CONTEXT = new InheritableThreadLocal<>();
 
     /**
      * Checks if process is running via docker.
@@ -314,13 +301,7 @@ public final class Latkes {
     public static String getServerScheme() {
         String ret = getLatkeProperty("serverScheme");
         if (null == ret) {
-            final RequestContext requestContext = REQUEST_CONTEXT.get();
-            if (null != requestContext) {
-                final Request request = requestContext.getRequest();
-                ret = Requests.getServerScheme(request);
-            } else {
-                ret = "http";
-            }
+            ret = "http";
         }
 
         return ret;
@@ -334,18 +315,22 @@ public final class Latkes {
     public static String getServerHost() {
         String ret = getLatkeProperty("serverHost");
         if (null == ret) {
-            final RequestContext requestContext = REQUEST_CONTEXT.get();
-            if (null != requestContext) {
-                final Request request = requestContext.getRequest();
-                ret = Requests.getServerName(request);
-            } else {
-                initPublicIP();
-
-                return PUBLIC_IP;
-            }
+            ret = "localhost";
         }
 
         return ret;
+    }
+
+    /**
+     * Gets public IP.
+     *
+     * @return public IP
+     */
+    public static String getPublicIP() {
+        if (StringUtils.isBlank(PUBLIC_IP)) {
+            initPublicIP();
+        }
+        return PUBLIC_IP;
     }
 
     private static String PUBLIC_IP;
@@ -389,10 +374,7 @@ public final class Latkes {
     public static String getServerPort() {
         String ret = getLatkeProperty("serverPort");
         if (null == ret) {
-            final RequestContext requestContext = REQUEST_CONTEXT.get();
-            if (null != requestContext) {
-                ret = requestContext.getRequest().getServerPort() + "";
-            }
+            ret = "8080";
         }
 
         return ret;
@@ -640,7 +622,7 @@ public final class Latkes {
         final RuntimeCache runtimeCache = getRuntimeCache();
         LOGGER.log(Level.INFO, "Runtime cache is [{0}]", runtimeCache);
 
-        setLocale(Locale.SIMPLIFIED_CHINESE);
+        Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
 
         final Collection<Class<?>> beanClasses = Discoverer.discover(Latkes.getScanPath());
         BeanManager.start(beanClasses);
@@ -706,17 +688,12 @@ public final class Latkes {
     }
 
     /**
-     * Gets the locale. If the {@link #locale} has not been initialized, invoking this method will throw
-     * {@link RuntimeException}.
+     * Gets the locale.
      *
      * @return the locale
      */
     public static Locale getLocale() {
-        if (null == locale) {
-            throw new RuntimeException("Default locale has not been initialized!");
-        }
-
-        return locale;
+        return Locale.getDefault();
     }
 
     /**
@@ -725,7 +702,7 @@ public final class Latkes {
      * @param locale the specified locale
      */
     public static void setLocale(final Locale locale) {
-        Latkes.locale = locale;
+        Locale.setDefault(locale);
     }
 
     /**

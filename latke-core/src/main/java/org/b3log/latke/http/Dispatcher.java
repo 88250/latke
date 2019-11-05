@@ -69,7 +69,6 @@ public final class Dispatcher {
         request.context = ret;
         ret.setResponse(response);
         response.context = ret;
-        Latkes.REQUEST_CONTEXT.set(ret);
 
         for (final Handler handler : HANDLERS) {
             ret.addHandler(handler);
@@ -77,7 +76,6 @@ public final class Dispatcher {
 
         ret.handle();
         renderResponse(ret);
-        Latkes.REQUEST_CONTEXT.set(null);
 
         return ret;
     }
