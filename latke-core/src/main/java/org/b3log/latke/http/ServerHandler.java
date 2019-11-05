@@ -36,7 +36,7 @@ import java.util.Set;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 2, 2019
- * @since 2.5.9
+ * @since 3.0.0
  */
 public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
@@ -115,7 +115,7 @@ public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpReq
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-        cause.printStackTrace();
+        LOGGER.log(Level.ERROR, "Server handle failed", cause);
         ctx.close();
     }
 }

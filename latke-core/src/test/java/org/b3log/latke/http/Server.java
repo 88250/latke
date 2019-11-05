@@ -22,7 +22,7 @@ import org.b3log.latke.Latkes;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 2, 2019
- * @since 2.5.9
+ * @since 3.0.0
  */
 public class Server extends BaseServer {
 

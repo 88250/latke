@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.http.renderer;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
 import org.b3log.latke.http.RequestContext;

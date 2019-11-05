@@ -32,7 +32,7 @@ import java.util.Set;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 3, 2019
- * @since 2.5.9
+ * @since 3.0.0
  */
 public class Response {
 
@@ -124,19 +124,12 @@ public class Response {
     }
 
     private void writeResponse() {
-        ByteBuf contentBuf = Unpooled.EMPTY_BUFFER;
-        if (null != content) {
-            contentBuf = Unpooled.copiedBuffer(content);
-        }
+        final ByteBuf contentBuf = null != content ? Unpooled.copiedBuffer(content) : Unpooled.EMPTY_BUFFER;
         res = ((FullHttpResponse) res).replace(contentBuf);
         if (keepAlive) {
-            // Add 'Content-Length' header only for a keep-alive connection.
             res.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, ((FullHttpResponse) res).content().readableBytes());
-            // Add keep alive header as per:
-            // - http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Connection
             res.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         }
-
 
         for (final Cookie cookie : cookies) {
             res.headers().add(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie.cookie));
@@ -147,8 +140,9 @@ public class Response {
         if (null != ctx) {
             ctx.write(res);
             if (!keepAlive) {
-                ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+                ctx.write(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             }
+            ctx.flush();
         }
     }
 }
