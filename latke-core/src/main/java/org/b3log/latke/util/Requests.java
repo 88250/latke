@@ -16,17 +16,11 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.http.Cookie;
 import org.b3log.latke.http.Request;
-import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.json.JSONArray;
 
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Request utilities.
@@ -36,11 +30,6 @@ import java.util.Set;
  * @version 3.0.0.0, Nov 3, 2019
  */
 public final class Requests {
-
-    /**
-     * Cookie expiry of "visited".
-     */
-    private static final int COOKIE_EXPIRY = 60 * 60 * 24; // 24 hours
 
     /**
      * Logs the specified request with the specified level and logger.
@@ -158,82 +147,6 @@ public final class Requests {
         }
 
         return ret;
-    }
-
-    /**
-     * Determines whether the specified request has been served.
-     * <p>
-     * A "served request" is a request a URI as former one. For example, if a client is request "/test", all requests from the client
-     * subsequent in 24 hours will be treated as served requests, requested URIs save in client cookie (name: "visited").
-     * </p>
-     * <p>
-     * If the specified request has not been served, appends the request URI in client cookie.
-     * </p>
-     * <p>
-     * Sees this issue (https://github.com/b3log/solo/issues/44) for more details.
-     * </p>
-     *
-     * @param request  the specified request
-     * @param response the specified response
-     * @return {@code true} if the specified request has been served, returns {@code false} otherwise
-     */
-    public static boolean hasBeenServed(final Request request, final Response response) {
-        final Set<Cookie> cookies = request.getCookies();
-        if (cookies.isEmpty()) {
-            return false;
-        }
-
-        boolean needToCreate = true;
-        boolean needToAppend = true;
-        JSONArray cookieJSONArray = null;
-
-        try {
-            for (final Cookie cookie : cookies) {
-                if (!"visited".equals(cookie.getName())) {
-                    continue;
-                }
-
-                final String value = URLDecoder.decode(cookie.getValue(), "UTF-8");
-                cookieJSONArray = new JSONArray(value);
-                if (null == cookieJSONArray || 0 == cookieJSONArray.length()) {
-                    return false;
-                }
-
-                needToCreate = false;
-
-                for (int j = 0; j < cookieJSONArray.length(); j++) {
-                    final String visitedURL = cookieJSONArray.optString(j);
-
-                    if (request.getRequestURI().equals(visitedURL)) {
-                        needToAppend = false;
-                        return true;
-                    }
-                }
-            }
-
-            if (needToCreate) {
-                final StringBuilder builder = new StringBuilder("[").append("\"").append(request.getRequestURI()).append("\"]");
-                final Cookie c = new Cookie("visited", URLEncoder.encode(builder.toString(), "UTF-8"));
-                c.setMaxAge(COOKIE_EXPIRY);
-                c.setPath("/");
-                response.addCookie(c);
-            } else if (needToAppend) {
-                cookieJSONArray.put(request.getRequestURI());
-
-                final Cookie c = new Cookie("visited", URLEncoder.encode(cookieJSONArray.toString(), "UTF-8"));
-                c.setMaxAge(COOKIE_EXPIRY);
-                c.setPath("/");
-                response.addCookie(c);
-            }
-        } catch (final Exception e) {
-            final Cookie c = new Cookie("visited", null);
-            c.setMaxAge(0);
-            c.setPath("/");
-
-            response.addCookie(c);
-        }
-
-        return false;
     }
 
     /**
