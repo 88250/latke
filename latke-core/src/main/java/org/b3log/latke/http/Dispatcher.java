@@ -66,7 +66,9 @@ public final class Dispatcher {
     public static RequestContext handle(final Request request, final Response response) {
         final RequestContext ret = new RequestContext();
         ret.setRequest(request);
+        request.context = ret;
         ret.setResponse(response);
+        response.context = ret;
         Latkes.REQUEST_CONTEXT.set(ret);
 
         for (final Handler handler : HANDLERS) {
@@ -157,6 +159,21 @@ public final class Dispatcher {
         routers.add(ret);
 
         return ret;
+    }
+
+    /**
+     * Error handle router.
+     */
+    static Router errorHandleRouter;
+
+    /**
+     * Error status routing.
+     *
+     * @param uriTemplate the specified request URI template
+     * @param handler     the specified handler
+     */
+    public static void error(final String uriTemplate, final ContextHandler handler) {
+        errorHandleRouter = new Router().get(uriTemplate, handler);
     }
 
     /**

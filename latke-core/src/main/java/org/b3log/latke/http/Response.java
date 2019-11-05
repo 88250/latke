@@ -22,7 +22,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import io.netty.util.CharsetUtil;
+import org.b3log.latke.http.handler.ContextHandlerMeta;
+import org.b3log.latke.http.renderer.AbstractResponseRenderer;
+import org.b3log.latke.ioc.BeanManager;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -36,7 +42,11 @@ import java.util.Set;
  */
 public class Response {
 
-    private ChannelHandlerContext ctx;
+    private static final Logger LOGGER = Logger.getLogger(Response.class);
+
+    ChannelHandlerContext ctx;
+    RequestContext context;
+
     private HttpResponse res;
     private boolean commited;
     private boolean keepAlive;
@@ -109,6 +119,21 @@ public class Response {
 
     public void sendError(final int status) {
         setStatus(status);
+        if (null != Dispatcher.errorHandleRouter) {
+            try {
+                final ContextHandlerMeta contextHandlerMeta = Dispatcher.errorHandleRouter.toContextHandlerMeta();
+                final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
+                final BeanManager beanManager = BeanManager.getInstance();
+                final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
+                context.pathVar("statusCode", String.valueOf(status));
+                invokeHolder.invoke(classHolder, context);
+                final AbstractResponseRenderer renderer = context.getRenderer();
+                renderer.render(context);
+                return;
+            } catch (final Exception e) {
+                LOGGER.log(Level.ERROR, "Use error handler failed", e);
+            }
+        }
         writeResponse();
     }
 

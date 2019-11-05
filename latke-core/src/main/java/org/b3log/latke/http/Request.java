@@ -36,6 +36,7 @@ public class Request {
 
     ChannelHandlerContext ctx;
     HttpRequest req;
+    RequestContext context;
 
     private Map<String, String> params;
     private JSONObject json;
