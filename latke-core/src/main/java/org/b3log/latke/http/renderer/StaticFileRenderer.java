@@ -16,7 +16,7 @@
 package org.b3log.latke.http.renderer;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tika.Tika;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
@@ -24,7 +24,7 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.URLs;
 
-import java.net.URL;
+import java.io.File;
 
 /**
  * Static file renderer.
@@ -43,22 +43,25 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
 
     @Override
     public void render(final RequestContext context) {
+        final Response response = context.getResponse();
         try {
-            final Response response = context.getResponse();
             String uri = context.requestURI();
             uri = URLs.decode(uri);
-            final URL resource = StaticFileRenderer.class.getResource(uri);
-            if (null == resource) {
-                response.sendError(404);
-                return;
-            }
 
-            final String contentType = TIKA.detect(resource);
-            final byte[] bytes = IOUtils.toByteArray(resource);
+            String path = StaticFileRenderer.class.getResource("/").getPath();
+            if (StringUtils.contains(path, "/target/classes/") || StringUtils.contains(path, "/target/test-classes/")) {
+                // 开发时使用源码目录
+                path = StringUtils.replace(path, "/target/classes/", "/src/main/resources/");
+                path = StringUtils.replace(path, "/target/test-classes/", "/src/main/resources/");
+            }
+            path += uri;
+            final byte[] bytes = FileUtils.readFileToByteArray(new File(path));
+            final String contentType = TIKA.detect(path);
             response.setContentType(contentType);
             response.sendContent(bytes);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Renders static final fialed", e);
+            response.sendError(404);
         }
     }
 }

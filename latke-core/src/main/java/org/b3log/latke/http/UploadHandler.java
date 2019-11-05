@@ -66,7 +66,6 @@ public class UploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                 httpDecoder = new HttpPostRequestDecoder(factory, request);
                 httpDecoder.setDiscardThreshold(0);
             } else {
-                //传递给下一个Handler
                 ctx.fireChannelRead(httpObject);
             }
         }
@@ -76,7 +75,6 @@ public class UploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                 httpDecoder.offer(chunk);
                 if (chunk instanceof LastHttpContent) {
                     writeChunk(ctx);
-                    //关闭httpDecoder
                     httpDecoder.destroy();
                     httpDecoder = null;
                 }
@@ -85,10 +83,9 @@ public class UploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                 ctx.fireChannelRead(httpObject);
             }
         }
-
     }
 
-    private void writeChunk(ChannelHandlerContext ctx) throws IOException {
+    private void writeChunk(final ChannelHandlerContext ctx) throws IOException {
         while (httpDecoder.hasNext()) {
             InterfaceHttpData data = httpDecoder.next();
             if (data != null && HttpDataType.FileUpload.equals(data.getHttpDataType())) {
@@ -98,12 +95,11 @@ public class UploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                 try (FileChannel inputChannel = new FileInputStream(fileUpload.getFile()).getChannel();
                      FileChannel outputChannel = new FileOutputStream(file).getChannel()) {
                     outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
-                    // write response
+                    // TODO: write response
                 }
             }
         }
     }
-
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
