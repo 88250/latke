@@ -91,16 +91,30 @@ public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpReq
 
         if (!StaticResources.isStatic(request)) {
             // 非静态资源文件处理 Cookie
+            Session session = null;
             final String cookieStr = request.getHeader(HttpHeaderNames.COOKIE.toString());
             if (StringUtils.isNotBlank(cookieStr)) {
                 final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
                 for (final Cookie cookie : cookies) {
                     request.addCookie(new org.b3log.latke.http.Cookie(cookie));
+                    if (cookie.name().equals("LATKE_SESSION_ID")) {
+                        final String cookieSessionId = cookie.value();
+                        if (!Sessions.contains(cookieSessionId)) {
+                            session = Sessions.add();
+                            request.addCookie("LATKE_SESSION_ID", session.getId());
+                        } else {
+                            session = Sessions.get(cookieSessionId);
+                        }
+                    }
                 }
-            }
-            if (!request.getCookies().stream().anyMatch(cookie -> "LATKE_SESSION_ID".equals(cookie.getName()) && !Sessions.contains(cookie.getValue()))) {
+            } else {
                 request.addCookie("LATKE_SESSION_ID", Sessions.add().getId());
             }
+            if (null == session) {
+                session = Sessions.add();
+                request.addCookie("LATKE_SESSION_ID", session.getId());
+            }
+            request.setSession(session);
         } else {
             // 标识为静态资源文件
             request.setStaticResource(true);
