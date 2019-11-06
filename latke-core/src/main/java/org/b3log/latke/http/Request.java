@@ -82,6 +82,11 @@ public class Request {
         return ret;
     }
 
+    public String getQueryString() {
+        String ret = req.uri();
+        return StringUtils.substringAfter(ret, "?");
+    }
+
     public String getContent() {
         return content;
     }
