@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.http;
 
-import org.b3log.latke.Latkes;
 import org.b3log.latke.http.function.ContextHandler;
 import org.b3log.latke.http.handler.*;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
@@ -28,6 +27,8 @@ import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Dispatch-controller for HTTP request dispatching.
@@ -172,6 +173,21 @@ public final class Dispatcher {
      */
     public static void error(final String uriTemplate, final ContextHandler handler) {
         errorHandleRouter = new Router().get(uriTemplate, handler);
+    }
+
+    /**
+     * WebSocket channels.
+     */
+    static Map<String, WebSocketChannel> webSocketChannels = new ConcurrentHashMap<>();
+
+    /**
+     * WebSocket channel routing.
+     *
+     * @param uri              the specified URI
+     * @param webSocketChannel the specified WebSocket channel
+     */
+    public static void webSocket(final String uri, final WebSocketChannel webSocketChannel) {
+        webSocketChannels.put(uri, webSocketChannel);
     }
 
     /**

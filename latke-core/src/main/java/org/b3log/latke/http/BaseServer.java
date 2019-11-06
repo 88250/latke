@@ -77,10 +77,11 @@ public abstract class BaseServer {
 
         @Override
         public void initChannel(final SocketChannel ch) {
-            final ChannelPipeline p = ch.pipeline();
-            p.addLast(new HttpServerCodec());
-            p.addLast(new HttpObjectAggregator(1024 * 1024 * 64));
-            p.addLast(new ServerHandler());
+            final ChannelPipeline pipeline = ch.pipeline();
+            pipeline.addLast(new HttpServerCodec());
+            pipeline.addLast(new WebSocketHandler());
+            pipeline.addLast(new HttpObjectAggregator(1024 * 1024 * 64));
+            pipeline.addLast(new ServerHandler());
         }
     }
 }

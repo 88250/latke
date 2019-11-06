@@ -38,7 +38,7 @@ import java.util.Set;
  * @version 1.0.0.1, Nov 5, 2019
  * @since 3.0.0
  */
-public final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     /**
      * Logger.
