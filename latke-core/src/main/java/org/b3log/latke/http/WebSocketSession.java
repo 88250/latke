@@ -16,6 +16,7 @@
 package org.b3log.latke.http;
 
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.apache.commons.lang.RandomStringUtils;
 
 /**
@@ -28,14 +29,26 @@ import org.apache.commons.lang.RandomStringUtils;
 public class WebSocketSession {
 
     String id;
-    ChannelHandlerContext handlerContext;
+    ChannelHandlerContext ctx;
+    /**
+     * 关联的 HTTP 会话.
+     */
+    Session session;
 
-    WebSocketSession(final ChannelHandlerContext handlerContext) {
-        this.handlerContext = handlerContext;
+    WebSocketSession(final ChannelHandlerContext ctx) {
+        this.ctx = ctx;
         this.id = RandomStringUtils.randomAlphanumeric(16);
+    }
+
+    public void sendText(final String text) {
+        ctx.writeAndFlush(new TextWebSocketFrame(text));
     }
 
     public String getId() {
         return id;
+    }
+
+    public Session getHttpSession() {
+        return session;
     }
 }

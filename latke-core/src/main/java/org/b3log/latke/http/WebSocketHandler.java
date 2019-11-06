@@ -17,10 +17,15 @@ package org.b3log.latke.http;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.ReferenceCountUtil;
+import org.apache.commons.lang.StringUtils;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -33,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
 final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
     private WebSocketServerHandshaker handshaker;
-    private WebSocketSession session;
+    private WebSocketSession webSocketSession;
     private WebSocketChannel webSocketChannel;
     private String uri;
 
@@ -62,9 +67,32 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
                 WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
             } else {
                 handshaker.handshake(ctx.channel(), req);
-                session = new WebSocketSession(ctx);
+                webSocketSession = new WebSocketSession(ctx);
                 uri = req.uri();
-                CompletableFuture.completedFuture(session).thenAcceptAsync(webSocketChannel::onConnect, ctx.executor());
+
+                // 关联处理 HTTP 会话
+                Session session = null;
+                final String cookieStr = req.headers().get(HttpHeaderNames.COOKIE.toString());
+                if (StringUtils.isNotBlank(cookieStr)) {
+                    final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
+                    for (final io.netty.handler.codec.http.cookie.Cookie cookie : cookies) {
+                        if (cookie.name().equals("LATKE_SESSION_ID")) {
+                            final String cookieSessionId = cookie.value();
+                            if (!Sessions.contains(cookieSessionId)) {
+                                session = Sessions.add();
+                            } else {
+                                session = Sessions.get(cookieSessionId);
+                            }
+                        }
+                    }
+                }
+                if (null == session) {
+                    session = Sessions.add();
+                }
+
+                webSocketSession.session = session;
+
+                CompletableFuture.completedFuture(webSocketSession).thenAcceptAsync(webSocketChannel::onConnect, ctx.executor());
             }
         } else {
             ReferenceCountUtil.retain(req);
@@ -76,7 +104,7 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
         if (frame instanceof CloseWebSocketFrame) {
             handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
-            CompletableFuture.completedFuture(session).thenAcceptAsync(webSocketChannel::onClose);
+            CompletableFuture.completedFuture(webSocketSession).thenAcceptAsync(webSocketChannel::onClose);
             return;
         }
         if (frame instanceof PingWebSocketFrame) {
@@ -87,7 +115,7 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
             throw new UnsupportedOperationException("unsupported frame type: " + frame.getClass().getName());
         }
 
-        CompletableFuture.completedFuture(new WebSocketChannel.Message(((TextWebSocketFrame) frame).text(), session))
+        CompletableFuture.completedFuture(new WebSocketChannel.Message(((TextWebSocketFrame) frame).text(), webSocketSession))
                 .thenAcceptAsync(webSocketChannel::onMessage, ctx.executor());
     }
 
