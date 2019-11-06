@@ -105,7 +105,6 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                         } else {
                             session = Sessions.get(cookieSessionId);
                         }
-                        break;
                     }
                 }
             } else {
