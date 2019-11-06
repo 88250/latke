@@ -49,6 +49,7 @@ public class Request {
     private Map<String, String> params;
     private JSONObject json;
     private Map<String, Object> attrs;
+    private String content;
     private Map<String, List<org.b3log.latke.http.FileUpload>> files;
     private Set<Cookie> cookies;
     private Session session;
@@ -79,6 +80,10 @@ public class Request {
         String ret = req.uri();
         ret = StringUtils.substringBefore(ret, "?");
         return ret;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public void setRequestURI(final String uri) {
@@ -186,11 +191,12 @@ public class Request {
     }
 
     void parseJSON(final FullHttpRequest fullHttpRequest) {
-        json = new JSONObject((fullHttpRequest.content().toString(CharsetUtil.UTF_8)));
+        content = fullHttpRequest.content().toString(CharsetUtil.UTF_8);
+        json = new JSONObject(content);
     }
 
     void parseForm(final FullHttpRequest fullHttpRequest) {
-        final String content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
+        content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
         if (StringUtils.startsWithIgnoreCase(content, "{\"")) {
             json = new JSONObject(content);
         } else {
