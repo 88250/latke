@@ -15,28 +15,27 @@
  */
 package org.b3log.latke.http;
 
+import io.netty.channel.ChannelHandlerContext;
+import org.apache.commons.lang.RandomStringUtils;
+
 /**
- * Websocket channel.
+ * Websocket session.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 6, 2019
  * @since 3.0.2
  */
-public interface WebSocketChannel {
+public class WebSocketSession {
 
-    void onConnect(final WebSocketSession session);
+    String id;
+    ChannelHandlerContext handlerContext;
 
-    void onMessage(final Message message);
+    WebSocketSession(final ChannelHandlerContext handlerContext) {
+        this.handlerContext = handlerContext;
+        this.id = RandomStringUtils.randomAlphanumeric(16);
+    }
 
-    void onClose(final WebSocketSession session);
-
-    class Message {
-        public String text;
-        public WebSocketSession session;
-
-        public Message(final String text, final WebSocketSession session) {
-            this.text = text;
-            this.session = session;
-        }
+    public String getId() {
+        return id;
     }
 }
