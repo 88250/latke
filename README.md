@@ -59,8 +59,8 @@ public void index(final RequestContext context) {
 **函数式路由**
 
 ```java
-DispatcherServlet.post("/register", registerProcessor::register);
-DispatcherServlet.mapping();
+Dispatcher.post("/register", registerProcessor::register);
+Dispatcher.mapping();
 ```
 
 **路径变量和查询字符串**
@@ -80,7 +80,7 @@ public void paraPathVar(final RequestContext context) {
 final JSONObject requestJSON = context.requestJSON();
 ```
 
-**Servlet 封装**
+**HTTP 封装**
 
 ```java
 final String remoteAddr = context.remoteAddr();
@@ -88,8 +88,8 @@ final String requestURI = context.requestURI();
 final Object att = context.attr("name");
 final String method = context.method();
 context.sendRedirect("https://b3log.org");
-final HttpServletRequest request = context.getRequest();
-final HttpServletResponse response = context.getResponse();
+final Request request = context.getRequest();
+final Response response = context.getResponse();
 ```
 
 ### 服务层用法
