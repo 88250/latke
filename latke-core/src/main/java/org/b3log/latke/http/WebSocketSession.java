@@ -19,6 +19,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Websocket session.
  *
@@ -35,6 +38,8 @@ public class WebSocketSession {
      */
     Session session;
 
+    Map<String, String> params = new HashMap<>();
+
     WebSocketSession(final ChannelHandlerContext ctx) {
         this.ctx = ctx;
         this.id = RandomStringUtils.randomAlphanumeric(16);
@@ -46,6 +51,10 @@ public class WebSocketSession {
 
     public String getId() {
         return id;
+    }
+
+    public String getParameter(final String name) {
+        return params.get(name);
     }
 
     public Session getHttpSession() {

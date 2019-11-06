@@ -19,12 +19,15 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.ReferenceCountUtil;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -68,7 +71,19 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
             } else {
                 handshaker.handshake(ctx.channel(), req);
                 webSocketSession = new WebSocketSession(ctx);
-                uri = req.uri();
+
+                // 解析查询字符串
+                final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(req.uri());
+                final Map<String, List<String>> params = queryStringDecoder.parameters();
+                if (!params.isEmpty()) {
+                    for (final Map.Entry<String, List<String>> p : params.entrySet()) {
+                        final String key = p.getKey();
+                        final List<String> vals = p.getValue();
+                        for (final String val : vals) {
+                            webSocketSession.params.put(key, val);
+                        }
+                    }
+                }
 
                 // 关联处理 HTTP 会话
                 Session session = null;
@@ -83,6 +98,7 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
                             } else {
                                 session = Sessions.get(cookieSessionId);
                             }
+                            break;
                         }
                     }
                 }
@@ -121,8 +137,10 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
 
     private boolean isWebSocketRequest(final HttpRequest req) {
-        return req != null
-                && (webSocketChannel = Dispatcher.webSocketChannels.get(req.uri())) != null
+        uri = req.uri();
+        uri = StringUtils.substringBefore(uri, "?");
+
+        return (webSocketChannel = Dispatcher.webSocketChannels.get(uri)) != null
                 && req.decoderResult().isSuccess()
                 && "websocket".equals(req.headers().get("Upgrade"));
     }
