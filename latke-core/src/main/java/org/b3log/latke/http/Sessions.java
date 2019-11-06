@@ -50,13 +50,6 @@ public class Sessions {
             return null;
         }
 
-        final Session ret = new Session(session.optString("id"));
-        final JSONArray attrs = session.optJSONArray("attrs");
-        for (int i = 0; i < attrs.length(); i++) {
-            final JSONObject attr = attrs.optJSONObject(i);
-            ret.setAttribute(attr.optString("n"), attr.optString("v"));
-        }
-
-        return ret;
+        return new Session(session.optString("id"));
     }
 }
