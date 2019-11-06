@@ -195,6 +195,15 @@ public class Request {
         return files.getOrDefault(name, Collections.emptyList());
     }
 
+    public FileUpload getFileUpload(final String name) {
+        final List<FileUpload> fileUploads = getFileUploads(name);
+        if (fileUploads.isEmpty()) {
+            return null;
+        }
+
+        return fileUploads.get(0);
+    }
+
     void parseJSON(final FullHttpRequest fullHttpRequest) {
         content = fullHttpRequest.content().toString(CharsetUtil.UTF_8);
         json = new JSONObject(content);
