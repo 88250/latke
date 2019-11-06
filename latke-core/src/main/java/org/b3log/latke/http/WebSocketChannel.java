@@ -24,17 +24,17 @@ package org.b3log.latke.http;
  */
 public interface WebSocketChannel {
 
-    void onConnect(final WebSocketSession session);
+    void onConnect(final Session session);
 
     void onMessage(final Message message);
 
-    void onClose(final WebSocketSession session);
+    void onClose(final Session session);
 
     class Message {
         public String text;
-        public WebSocketSession session;
+        public Session session;
 
-        public Message(final String text, final WebSocketSession session) {
+        public Message(final String text, final Session session) {
             this.text = text;
             this.session = session;
         }
