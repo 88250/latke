@@ -15,6 +15,9 @@
  */
 package org.b3log.latke.http;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,24 +32,50 @@ public class Session {
 
     public static final String LATKE_SESSION_ID = "LATKE_SESSION_ID";
 
-    private String id;
-
-    private Map<String, Object> attributes = new ConcurrentHashMap<>();
+    String id;
+    private Map<String, String> attributes = new ConcurrentHashMap<>();
 
     public Session(final String id) {
         this.id = id;
     }
 
-    public Object getAttribute(final String name) {
+    public String getAttribute(final String name) {
+        final JSONObject session = Sessions.CACHE.get(id);
+        if (null != session) {
+            final JSONArray attrs = session.optJSONArray("attrs");
+            for (int i = 0; i < attrs.length(); i++) {
+                final JSONObject attr = attrs.optJSONObject(i);
+                if (attr.optString("n").equals(name)) {
+                    return attr.optString("v");
+                }
+            }
+
+        }
+
         return attributes.get(name);
     }
 
-    public void setAttribute(final String name, final Object value) {
-        attributes.put(name, value);
-    }
+    public void setAttribute(final String name, final String value) {
+        final JSONObject session = Sessions.CACHE.get(id);
+        if (null != session) {
+            final JSONArray attrs = session.optJSONArray("attrs");
+            boolean exist = false;
+            for (int i = 0; i < attrs.length(); i++) {
+                final JSONObject attr = attrs.optJSONObject(i);
+                if (attr.optString("n").equals(name)) {
+                    attr.put(name, value);
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                attrs.put(new JSONObject().put(name, value));
+            }
+            session.put("attrs", attrs);
+            Sessions.CACHE.put(id, session);
+        }
 
-    public void setId(final String id) {
-        this.id = id;
+        attributes.put(name, value);
     }
 
     public String getId() {

@@ -16,9 +16,10 @@
 package org.b3log.latke.http;
 
 import org.apache.commons.lang.RandomStringUtils;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.b3log.latke.cache.Cache;
+import org.b3log.latke.cache.CacheFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * HTTP session utilities.
@@ -29,20 +30,33 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Sessions {
 
-    private static final Map<String, Session> SESSIONS = new ConcurrentHashMap<>();
+    public static final Cache CACHE = CacheFactory.getCache("LATKE_SESSIONS");
 
     public static Session add() {
         final String sessionId = RandomStringUtils.randomAlphanumeric(16);
         final Session ret = new Session(sessionId);
-        SESSIONS.put(sessionId, ret);
+        CACHE.put(sessionId, new JSONObject().put("id", sessionId));
+
         return ret;
     }
 
     public static boolean contains(final String sessionId) {
-        return SESSIONS.containsKey(sessionId);
+        return CACHE.contains(sessionId);
     }
 
     public static Session get(String sessionId) {
-        return SESSIONS.get(sessionId);
+        final JSONObject session = CACHE.get(sessionId);
+        if (null == session) {
+            return null;
+        }
+
+        final Session ret = new Session(session.optString("id"));
+        final JSONArray attrs = session.optJSONArray("attrs");
+        for (int i = 0; i < attrs.length(); i++) {
+            final JSONObject attr = attrs.optJSONObject(i);
+            ret.setAttribute(attr.optString("n"), attr.optString("v"));
+        }
+
+        return ret;
     }
 }

@@ -87,11 +87,9 @@ public final class Locales {
     public static Locale getLocale(final Request request) {
         Locale locale = null;
 
-        // Gets from session
         final Session session = request.getSession();
-
         if (session != null) {
-            locale = (Locale) session.getAttribute(Keys.LOCALE);
+            locale = getLocale(session.getAttribute(Keys.LOCALE));
         }
 
         if (null == locale) {
@@ -152,15 +150,14 @@ public final class Locales {
      */
     public static void setLocale(final Request request, final Locale locale) {
         final Session session = request.getSession();
-
         if (null == session) {
             LOGGER.warn("Ignores set locale caused by no session");
 
             return;
         }
 
-        session.setAttribute(Keys.LOCALE, locale);
-        LOGGER.log(Level.DEBUG, "Client[sessionId={0}] sets locale to [{1}]", new Object[]{session.getId(), locale.toString()});
+        session.setAttribute(Keys.LOCALE, locale.toString());
+        LOGGER.log(Level.DEBUG, "Client [sessionId={0}] sets locale to [{1}]", session.getId(), locale.toString());
     }
 
     /**
@@ -221,10 +218,10 @@ public final class Locales {
      * @return locale
      */
     public static Locale getLocale(final String localeString) {
-        final String language = getLanguage(localeString);
-        final String country = getCountry(localeString);
+        if (StringUtils.isBlank(localeString)) {
+            return null;
+        }
 
-        // // XXX: variant
-        return new Locale(language, country);
+        return new Locale(getLanguage(localeString), getCountry(localeString));
     }
 }
