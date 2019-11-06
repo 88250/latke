@@ -52,6 +52,10 @@ public class Cookie {
         cookie.setPath(path);
     }
 
+    public String getPath() {
+        return cookie.path();
+    }
+
     public void setHttpOnly(final boolean httpOnly) {
         cookie.setHttpOnly(httpOnly);
     }

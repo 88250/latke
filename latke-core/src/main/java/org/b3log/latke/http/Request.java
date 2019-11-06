@@ -23,6 +23,7 @@ import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.json.JSONObject;
@@ -149,11 +150,18 @@ public class Request {
     }
 
     public void addCookie(final Cookie cookie) {
+        if (StringUtils.isBlank(cookie.getPath())) {
+            cookie.setPath(Latkes.getContextPath());
+        }
+        if (StringUtils.isBlank(cookie.getPath())) {
+            cookie.setPath("/");
+        }
         cookies.add(cookie);
     }
 
     public void addCookie(final String name, final String value) {
         final Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
         addCookie(cookie);
     }
 

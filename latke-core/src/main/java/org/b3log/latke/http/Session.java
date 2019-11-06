@@ -27,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Session {
 
+    public static final String LATKE_SESSION_ID = "LATKE_SESSION_ID";
+
     private String id;
 
     private Map<String, Object> attributes = new ConcurrentHashMap<>();

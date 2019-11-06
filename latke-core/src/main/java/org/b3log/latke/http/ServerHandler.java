@@ -97,22 +97,22 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                 final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
                 for (final Cookie cookie : cookies) {
                     request.addCookie(new org.b3log.latke.http.Cookie(cookie));
-                    if (cookie.name().equals("LATKE_SESSION_ID")) {
+                    if (cookie.name().equals(Session.LATKE_SESSION_ID)) {
                         final String cookieSessionId = cookie.value();
                         if (!Sessions.contains(cookieSessionId)) {
                             session = Sessions.add();
-                            request.addCookie("LATKE_SESSION_ID", session.getId());
+                            request.addCookie(Session.LATKE_SESSION_ID, session.getId());
                         } else {
                             session = Sessions.get(cookieSessionId);
                         }
                     }
                 }
             } else {
-                request.addCookie("LATKE_SESSION_ID", Sessions.add().getId());
+                request.addCookie(Session.LATKE_SESSION_ID, Sessions.add().getId());
             }
             if (null == session) {
                 session = Sessions.add();
-                request.addCookie("LATKE_SESSION_ID", session.getId());
+                request.addCookie(Session.LATKE_SESSION_ID, session.getId());
             }
             request.setSession(session);
         } else {
