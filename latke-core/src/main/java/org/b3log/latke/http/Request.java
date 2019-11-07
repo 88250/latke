@@ -210,24 +210,27 @@ public class Request {
     }
 
     void parseForm(final FullHttpRequest fullHttpRequest) {
-        content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
-        if (StringUtils.startsWithIgnoreCase(content, "%7B")) {
-            json = new JSONObject(URLs.decode(content));
-        } else if (StringUtils.startsWithIgnoreCase(content, "{")) {
-            json = new JSONObject(content);
-        } else {
-            final QueryStringDecoder queryDecoder = new QueryStringDecoder(content, false);
-            final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
-            for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
-                final String key = p.getKey();
-                final List<String> vals = p.getValue();
-                // 这里没有实现 name -> List，主要是为了兼容老应用，等有空需要改造一下，按照规范来
-                for (final String val : vals) {
-                    params.put(key, val);
+        try {
+            content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
+            if (StringUtils.startsWithIgnoreCase(content, "%7B")) {
+                json = new JSONObject(URLs.decode(content));
+            } else if (StringUtils.startsWithIgnoreCase(content, "{")) {
+                json = new JSONObject(content);
+            } else {
+                final QueryStringDecoder queryDecoder = new QueryStringDecoder(content, false);
+                final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
+                for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
+                    final String key = p.getKey();
+                    final List<String> vals = p.getValue();
+                    // 这里没有实现 name -> List，主要是为了兼容老应用，等有空需要改造一下，按照规范来
+                    for (final String val : vals) {
+                        params.put(key, val);
+                    }
                 }
             }
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Parses request body [" + content + "] failed: " + e.getMessage());
         }
-
     }
 
     void parseFormData() {
