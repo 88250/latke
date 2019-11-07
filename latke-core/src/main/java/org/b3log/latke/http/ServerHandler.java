@@ -20,16 +20,11 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
-import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
-import io.netty.handler.codec.http.multipart.HttpDataFactory;
-import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.StaticResources;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -46,8 +41,6 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
      */
     private static final Logger LOGGER = Logger.getLogger(ServerHandler.class);
 
-    private static final HttpDataFactory HTTP_DATA_FACTORY = new DefaultHttpDataFactory(true);
-
     @Override
     public void channelReadComplete(final ChannelHandlerContext ctx) {
         ctx.flush();
@@ -58,68 +51,24 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         final Request request = new Request(ctx, fullHttpRequest);
 
         // 解析查询字符串
-        final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.req.uri());
-        final Map<String, List<String>> params = queryStringDecoder.parameters();
-        if (!params.isEmpty()) {
-            for (final Map.Entry<String, List<String>> p : params.entrySet()) {
-                final String key = p.getKey();
-                final List<String> vals = p.getValue();
-                for (final String val : vals) {
-                    request.setParameter(key, val);
-                }
-            }
-        }
+        request.parseQueryStr();
 
         // 解析请求体
         String contentType = request.getHeader(HttpHeaderNames.CONTENT_TYPE.toString());
         if (StringUtils.isNotBlank(contentType)) {
             contentType = StringUtils.substringBefore(contentType, ";");
-            switch (contentType) {
-                case "multipart/form-data":
-                    request.httpDecoder = new HttpPostRequestDecoder(HTTP_DATA_FACTORY, request.req);
-                    request.httpDecoder.setDiscardThreshold(0);
-                    request.httpDecoder.offer(fullHttpRequest);
-                    request.parseFormData();
-                    break;
-                default:
-                    request.parseForm(fullHttpRequest);
-                    break;
+            if (StringUtils.equalsIgnoreCase(contentType, "multipart/form-data")) {
+                request.parseFormData();
+            } else {
+                request.parseForm();
             }
         } else {
-            request.parseForm(fullHttpRequest);
+            request.parseForm();
         }
 
         if (!StaticResources.isStatic(request)) {
-            final boolean secure = StringUtils.equalsIgnoreCase(Latkes.getServerScheme(), "https");
-
             // 非静态资源文件处理 Cookie
-            Session session = null;
-            final String cookieStr = request.getHeader(HttpHeaderNames.COOKIE.toString());
-            if (StringUtils.isNotBlank(cookieStr)) {
-                final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
-                for (final Cookie cookie : cookies) {
-                    if (cookie.name().equals(Session.LATKE_SESSION_ID)) {
-                        final String cookieSessionId = cookie.value();
-                        if (!Sessions.contains(cookieSessionId)) {
-                            session = createSessionCookie(request, secure);
-                        } else {
-                            session = Sessions.get(cookieSessionId);
-                            final org.b3log.latke.http.Cookie c = new org.b3log.latke.http.Cookie(Session.LATKE_SESSION_ID, session.getId());
-                            c.setHttpOnly(true);
-                            c.setSecure(secure);
-                            request.addCookie(c);
-                        }
-                    } else {
-                        request.addCookie(new org.b3log.latke.http.Cookie(cookie));
-                    }
-                }
-            } else {
-                session = createSessionCookie(request, secure);
-            }
-            if (null == session) {
-                session = createSessionCookie(request, secure);
-            }
-            request.setSession(session);
+            handleCookie(request);
         } else {
             // 标识为静态资源文件
             request.setStaticResource(true);
@@ -132,10 +81,46 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
         // 分发处理
         Dispatcher.handle(request, response);
+    }
 
-        if (null != request.httpDecoder) {
-            request.httpDecoder.destroy();
+    private void handleCookie(Request request) {
+        final boolean secure = StringUtils.equalsIgnoreCase(Latkes.getServerScheme(), "https");
+        Session session = null;
+        final boolean enabledSession = Latkes.isEnabledSession();
+        final String cookieStr = request.getHeader(HttpHeaderNames.COOKIE.toString());
+        if (StringUtils.isNotBlank(cookieStr)) {
+            final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
+            for (final Cookie cookie : cookies) {
+                if (!enabledSession) {
+                    request.addCookie(new org.b3log.latke.http.Cookie(cookie));
+                    continue;
+                }
+
+                if (cookie.name().equals(Session.LATKE_SESSION_ID)) {
+                    final String cookieSessionId = cookie.value();
+                    if (!Sessions.contains(cookieSessionId)) {
+                        session = createSessionCookie(request, secure);
+                    } else {
+                        session = Sessions.get(cookieSessionId);
+                        final org.b3log.latke.http.Cookie c = new org.b3log.latke.http.Cookie(Session.LATKE_SESSION_ID, session.getId());
+                        c.setHttpOnly(true);
+                        c.setSecure(secure);
+                        request.addCookie(c);
+                    }
+                } else {
+                    request.addCookie(new org.b3log.latke.http.Cookie(cookie));
+                }
+            }
+        } else {
+            if (enabledSession) {
+                session = createSessionCookie(request, secure);
+            }
         }
+
+        if (null == session && enabledSession) {
+            session = createSessionCookie(request, secure);
+        }
+        request.setSession(session);
     }
 
     private Session createSessionCookie(final Request request, final boolean secure) {

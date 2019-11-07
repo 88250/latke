@@ -117,6 +117,29 @@ public final class Latkes {
     private static boolean inited;
 
     /**
+     * Indicates whether HTTP session is enabled.
+     */
+    private static boolean enabledSession = true;
+
+    /**
+     * Whether enables HTTP session. Default is enabled.
+     *
+     * @param enabled {@code true} if enable it
+     */
+    public static void setEnabledSession(final boolean enabled) {
+        enabledSession = enabled;
+    }
+
+    /**
+     * Is enabled HTTP session.
+     *
+     * @return {@true} if enabled it, returns {@code false} otherwise
+     */
+    public static boolean isEnabledSession() {
+        return enabledSession;
+    }
+
+    /**
      * Checks if process is running via docker.
      *
      * @return {@code true} it is, returns {@code false} otherwise

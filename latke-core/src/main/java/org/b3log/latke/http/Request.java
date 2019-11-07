@@ -16,11 +16,11 @@
 package org.b3log.latke.http;
 
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.multipart.Attribute;
-import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
-import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.multipart.*;
 import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
@@ -42,8 +42,10 @@ public class Request {
 
     private static final Logger LOGGER = Logger.getLogger(Request.class);
 
+    private static final HttpDataFactory HTTP_DATA_FACTORY = new DefaultHttpDataFactory(true);
+
     ChannelHandlerContext ctx;
-    HttpRequest req;
+    FullHttpRequest req;
     HttpPostRequestDecoder httpDecoder;
     RequestContext context;
 
@@ -56,7 +58,7 @@ public class Request {
     private Session session;
     private boolean staticResource;
 
-    public Request(final ChannelHandlerContext ctx, final HttpRequest req) {
+    public Request(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         this.ctx = ctx;
         this.req = req;
         attrs = new HashMap<>();
@@ -208,24 +210,19 @@ public class Request {
         return fileUploads.get(0);
     }
 
-    void parseForm(final FullHttpRequest fullHttpRequest) {
+    void parseQueryStr() {
+        parseAttrs(req.uri());
+    }
+
+    void parseForm() {
         try {
-            content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
+            content = (req.content().toString(CharsetUtil.UTF_8));
             if (StringUtils.startsWithIgnoreCase(content, "%7B")) {
                 json = new JSONObject(URLs.decode(content));
             } else if (StringUtils.startsWithIgnoreCase(content, "{")) {
                 json = new JSONObject(content);
             } else {
-                final QueryStringDecoder queryDecoder = new QueryStringDecoder(content, false);
-                final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
-                for (final Map.Entry<String, List<String>> p : uriAttributes.entrySet()) {
-                    final String key = p.getKey();
-                    final List<String> vals = p.getValue();
-                    // 这里没有实现 name -> List，主要是为了兼容老应用，等有空需要改造一下，按照规范来
-                    for (final String val : vals) {
-                        params.put(key, val);
-                    }
-                }
+                parseAttrs(content);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Parses request body [" + content + "] failed: " + e.getMessage());
@@ -233,6 +230,9 @@ public class Request {
     }
 
     void parseFormData() {
+        httpDecoder = new HttpPostRequestDecoder(HTTP_DATA_FACTORY, req);
+        httpDecoder.setDiscardThreshold(0);
+        httpDecoder.offer(req);
         try {
             while (httpDecoder.hasNext()) {
                 final InterfaceHttpData data = httpDecoder.next();
@@ -248,7 +248,21 @@ public class Request {
         } catch (final HttpPostRequestDecoder.EndOfDataDecoderException e) {
             // ignore
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Parse form data failed", e);
+            LOGGER.log(Level.ERROR, "Parse form data failed:" + e.getMessage());
         }
     }
+
+    private void parseAttrs(final String paris) {
+        final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(paris);
+        final Map<String, List<String>> parameters = queryStringDecoder.parameters();
+        for (final Map.Entry<String, List<String>> p : parameters.entrySet()) {
+            final String key = p.getKey();
+            final List<String> vals = p.getValue();
+            // 这里没有实现 name -> List，主要是为了兼容老应用，等有空需要改造一下，按照规范来
+            for (final String val : vals) {
+                params.put(key, val);
+            }
+        }
+    }
+
 }

@@ -16,10 +16,11 @@
 package org.b3log.latke.http;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
-import org.b3log.latke.cache.caffeine.CaffeineCache;
-import org.json.JSONArray;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.json.JSONObject;
 
 /**
@@ -31,9 +32,17 @@ import org.json.JSONObject;
  */
 public class Sessions {
 
+    private static final Logger LOGGER = Logger.getLogger(Sessions.class);
+
     public static final Cache CACHE = CacheFactory.getCache("LATKE_SESSIONS");
 
     public static Session add() {
+        if (!Latkes.isEnabledSession()) {
+            LOGGER.log(Level.WARN, "Session management is disabled");
+
+            return null;
+        }
+
         final String sessionId = RandomStringUtils.randomAlphanumeric(16);
         final Session ret = new Session(sessionId);
         CACHE.put(sessionId, new JSONObject().put("id", sessionId));

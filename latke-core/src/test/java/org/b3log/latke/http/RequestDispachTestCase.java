@@ -71,7 +71,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void a() {
-        final HttpRequest req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/a");
+        final FullHttpRequest req = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/a");
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
@@ -83,7 +83,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void a1() {
-        final HttpRequest req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/a/88250/D");
+        final FullHttpRequest req = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/a/88250/D");
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
@@ -96,7 +96,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void abefore() {
-        final HttpRequest req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/a/before");
+        final FullHttpRequest req = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/a/before");
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
@@ -109,7 +109,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void l() {
-        final HttpRequest req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/l");
+        final FullHttpRequest req = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/l");
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);
@@ -121,7 +121,7 @@ public class RequestDispachTestCase {
 
     @Test
     public void lbefore() {
-        final HttpRequest req = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/lbefore");
+        final FullHttpRequest req = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/lbefore");
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
         final MockRequest request = new MockRequest(req);

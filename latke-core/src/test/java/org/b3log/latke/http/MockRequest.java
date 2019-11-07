@@ -15,7 +15,7 @@
  */
 package org.b3log.latke.http;
 
-import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.FullHttpRequest;
 
 /**
  * Mock HTTP request.
@@ -26,7 +26,7 @@ import io.netty.handler.codec.http.HttpRequest;
  */
 public class MockRequest extends Request {
 
-    public MockRequest(final HttpRequest req) {
+    public MockRequest(final FullHttpRequest req) {
         super(null, req);
     }
 }
