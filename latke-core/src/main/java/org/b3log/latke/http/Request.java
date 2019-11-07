@@ -92,6 +92,10 @@ public class Request {
         return content;
     }
 
+    public void setContent(final String content) {
+        this.content = content;
+    }
+
     public void setRequestURI(final String uri) {
         req.setUri(uri);
     }

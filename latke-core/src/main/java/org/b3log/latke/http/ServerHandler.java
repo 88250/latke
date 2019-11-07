@@ -23,6 +23,7 @@ import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.StaticResources;
@@ -90,6 +91,8 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                     request.parseForm(fullHttpRequest);
                     break;
             }
+        } else {
+            request.setContent(fullHttpRequest.content().toString(CharsetUtil.UTF_8));
         }
 
         if (!StaticResources.isStatic(request)) {
