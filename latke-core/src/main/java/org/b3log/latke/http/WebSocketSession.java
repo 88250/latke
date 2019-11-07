@@ -33,6 +33,8 @@ public class WebSocketSession {
 
     String id;
     ChannelHandlerContext ctx;
+
+    WebSocketChannel webSocketChannel;
     /**
      * 关联的 HTTP 会话.
      */
@@ -47,6 +49,12 @@ public class WebSocketSession {
 
     public void sendText(final String text) {
         ctx.writeAndFlush(new TextWebSocketFrame(text));
+    }
+
+    public void close() {
+        webSocketChannel.onClose(this);
+        ctx.close();
+
     }
 
     public String getId() {

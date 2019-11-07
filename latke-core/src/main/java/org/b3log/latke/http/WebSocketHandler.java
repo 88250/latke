@@ -107,6 +107,7 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
                 }
 
                 webSocketSession.session = session;
+                webSocketSession.webSocketChannel = webSocketChannel;
 
                 CompletableFuture.completedFuture(webSocketSession).thenAcceptAsync(webSocketChannel::onConnect, ctx.executor());
             }
@@ -116,8 +117,7 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
         }
     }
 
-
-    private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
+    private void handleWebSocketFrame(final ChannelHandlerContext ctx, final WebSocketFrame frame) {
         if (frame instanceof CloseWebSocketFrame) {
             handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
             CompletableFuture.completedFuture(webSocketSession).thenAcceptAsync(webSocketChannel::onClose);
@@ -135,7 +135,6 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
                 .thenAcceptAsync(webSocketChannel::onMessage, ctx.executor());
     }
 
-
     private boolean isWebSocketRequest(final HttpRequest req) {
         uri = req.uri();
         uri = StringUtils.substringBefore(uri, "?");
@@ -143,5 +142,11 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
         return (webSocketChannel = Dispatcher.webSocketChannels.get(uri)) != null
                 && req.decoderResult().isSuccess()
                 && "websocket".equals(req.headers().get("Upgrade"));
+    }
+
+    @Override
+    public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
+        CompletableFuture.completedFuture(webSocketSession).thenAcceptAsync(webSocketChannel::onClose);
+        ctx.close();
     }
 }
