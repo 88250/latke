@@ -18,6 +18,7 @@ package org.b3log.latke.http;
 import org.apache.commons.lang.RandomStringUtils;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
+import org.b3log.latke.cache.caffeine.CaffeineCache;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,7 +31,9 @@ import org.json.JSONObject;
  */
 public class Sessions {
 
-    public static final Cache CACHE = CacheFactory.getCache("LATKE_SESSIONS");
+//    public static final Cache CACHE = CacheFactory.getCache("LATKE_SESSIONS");
+
+    public static final Cache CACHE = new CaffeineCache();
 
     public static Session add() {
         final String sessionId = RandomStringUtils.randomAlphanumeric(16);
