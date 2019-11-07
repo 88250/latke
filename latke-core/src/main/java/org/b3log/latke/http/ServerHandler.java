@@ -24,6 +24,7 @@ import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.StaticResources;
 
@@ -89,6 +90,8 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         }
 
         if (!StaticResources.isStatic(request)) {
+            final boolean secure = StringUtils.equalsIgnoreCase(Latkes.getServerScheme(), "https");
+
             // 非静态资源文件处理 Cookie
             Session session = null;
             final String cookieStr = request.getHeader(HttpHeaderNames.COOKIE.toString());
@@ -99,19 +102,18 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                     if (cookie.name().equals(Session.LATKE_SESSION_ID)) {
                         final String cookieSessionId = cookie.value();
                         if (!Sessions.contains(cookieSessionId)) {
-                            session = Sessions.add();
-                            request.addCookie(Session.LATKE_SESSION_ID, session.getId());
+                            session = createSessionCookie(request, secure);
                         } else {
                             session = Sessions.get(cookieSessionId);
                         }
                     }
                 }
             } else {
+                session = createSessionCookie(request, secure);
                 request.addCookie(Session.LATKE_SESSION_ID, Sessions.add().getId());
             }
             if (null == session) {
-                session = Sessions.add();
-                request.addCookie(Session.LATKE_SESSION_ID, session.getId());
+                session = createSessionCookie(request, secure);
             }
             request.setSession(session);
         } else {
@@ -130,6 +132,16 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         if (null != request.httpDecoder) {
             request.httpDecoder.destroy();
         }
+    }
+
+    private Session createSessionCookie(final Request request, final boolean secure) {
+        final Session ret = Sessions.add();
+        final org.b3log.latke.http.Cookie c = new org.b3log.latke.http.Cookie(Session.LATKE_SESSION_ID, ret.getId());
+        c.setHttpOnly(true);
+        c.setSecure(secure);
+        request.addCookie(c);
+
+        return ret;
     }
 
     @Override
