@@ -46,7 +46,7 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
     private String uri;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
+    protected void channelRead0(final ChannelHandlerContext ctx, final Object msg) {
         if (msg instanceof HttpRequest) {
             handleHttpRequest(ctx, (HttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
@@ -58,13 +58,13 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) {
+    public void channelReadComplete(final ChannelHandlerContext ctx) {
         ctx.flush();
     }
 
-    private void handleHttpRequest(ChannelHandlerContext ctx, HttpRequest req) {
+    private void handleHttpRequest(final ChannelHandlerContext ctx, final HttpRequest req) {
         if (isWebSocketRequest(req)) {
-            WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(req.uri(), null, true);
+            final WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(req.uri(), null, true);
             handshaker = wsFactory.newHandshaker(req);
             if (handshaker == null) {
                 WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
@@ -146,7 +146,6 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-        CompletableFuture.completedFuture(webSocketSession).thenAcceptAsync(webSocketChannel::onClose);
         ctx.close();
     }
 }
