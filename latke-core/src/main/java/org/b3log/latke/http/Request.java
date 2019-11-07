@@ -209,15 +209,12 @@ public class Request {
         return fileUploads.get(0);
     }
 
-    void parseJSON(final FullHttpRequest fullHttpRequest) {
-        content = fullHttpRequest.content().toString(CharsetUtil.UTF_8);
-        json = new JSONObject(content);
-    }
-
     void parseForm(final FullHttpRequest fullHttpRequest) {
         content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
-        if (StringUtils.startsWithIgnoreCase(content, "%7B") || StringUtils.startsWithIgnoreCase(content, "{")) {
+        if (StringUtils.startsWithIgnoreCase(content, "%7B")) {
             json = new JSONObject(URLs.decode(content));
+        } else if (StringUtils.startsWithIgnoreCase(content, "{")) {
+            json = new JSONObject(content);
         } else {
             final QueryStringDecoder queryDecoder = new QueryStringDecoder(content, false);
             final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
@@ -230,6 +227,7 @@ public class Request {
                 }
             }
         }
+
     }
 
     void parseFormData() {

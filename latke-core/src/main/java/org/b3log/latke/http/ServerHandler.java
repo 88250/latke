@@ -74,12 +74,6 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         if (StringUtils.isNotBlank(contentType)) {
             contentType = StringUtils.substringBefore(contentType, ";");
             switch (contentType) {
-                case "application/json":
-                    request.parseJSON(fullHttpRequest);
-                    break;
-                case "application/x-www-form-urlencoded":
-                    request.parseForm(fullHttpRequest);
-                    break;
                 case "multipart/form-data":
                     request.httpDecoder = new HttpPostRequestDecoder(HTTP_DATA_FACTORY, request.req);
                     request.httpDecoder.setDiscardThreshold(0);
