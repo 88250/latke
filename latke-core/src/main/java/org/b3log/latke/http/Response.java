@@ -153,6 +153,10 @@ public class Response {
         writeResponse();
     }
 
+    public void send() {
+        writeResponse();
+    }
+
     private void writeResponse() {
         final ByteBuf contentBuf = null != content ? Unpooled.copiedBuffer(content) : Unpooled.EMPTY_BUFFER;
         res = ((FullHttpResponse) res).replace(contentBuf);
