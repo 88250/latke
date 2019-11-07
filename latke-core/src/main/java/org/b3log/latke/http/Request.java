@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.URLs;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -211,8 +212,8 @@ public class Request {
 
     void parseForm(final FullHttpRequest fullHttpRequest) {
         content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
-        if (StringUtils.startsWithIgnoreCase(content, "{\"")) {
-            json = new JSONObject(content);
+        if (StringUtils.startsWithIgnoreCase(content, "%7B%22")) {
+            json = new JSONObject(URLs.decode(content));
         } else {
             final QueryStringDecoder queryDecoder = new QueryStringDecoder(content, false);
             final Map<String, List<String>> uriAttributes = queryDecoder.parameters();
