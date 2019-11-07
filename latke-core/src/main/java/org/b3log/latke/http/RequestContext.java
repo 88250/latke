@@ -291,11 +291,17 @@ public final class RequestContext {
      * @param sc the specified error status code
      */
     public void sendError(final int sc) {
-        try {
-            response.sendError(sc);
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Sends error status code [" + sc + "] failed: " + e.getMessage());
-        }
+        response.sendError(sc);
+    }
+
+    /**
+     * Sends the specified status code.
+     *
+     * @param sc the specified status code
+     */
+    public void sendStatus(final int sc) {
+        response.setStatus(sc);
+        response.send();
     }
 
     /**
@@ -304,11 +310,7 @@ public final class RequestContext {
      * @param sc the specified status code
      */
     public void setStatus(final int sc) {
-        try {
-            response.setStatus(sc);
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Sends status code [" + sc + "] failed: " + e.getMessage());
-        }
+        response.setStatus(sc);
     }
 
     /**
