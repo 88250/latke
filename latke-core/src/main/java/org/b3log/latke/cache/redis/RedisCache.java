@@ -30,7 +30,7 @@ import java.util.Set;
  * Redis cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Mar 26, 2019
+ * @version 1.0.2.0, Nov 7, 2019
  * @since 2.3.13
  */
 public final class RedisCache extends AbstractCache {
@@ -43,7 +43,7 @@ public final class RedisCache extends AbstractCache {
     @Override
     public boolean contains(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            return jedis.exists(key);
+            return jedis.exists(getName() + key);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Contains key [" + key + "] failed", e);
 

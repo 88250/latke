@@ -31,9 +31,7 @@ import org.json.JSONObject;
  */
 public class Sessions {
 
-//    public static final Cache CACHE = CacheFactory.getCache("LATKE_SESSIONS");
-
-    public static final Cache CACHE = new CaffeineCache();
+    public static final Cache CACHE = CacheFactory.getCache("LATKE_SESSIONS");
 
     public static Session add() {
         final String sessionId = RandomStringUtils.randomAlphanumeric(16);
