@@ -49,6 +49,16 @@ public final class Dispatcher {
      */
     public static final List<Handler> HANDLERS = new ArrayList<>();
 
+    /**
+     * Start request handler, handle before all handlers.
+     */
+    public static Handler startRequestHandler;
+
+    /**
+     * End request handler, handle after all handlers.
+     */
+    public static Handler endRequestHandler;
+
     static {
         HANDLERS.add(new StaticResourceHandler());
         HANDLERS.add(new RouteHandler());
@@ -71,12 +81,27 @@ public final class Dispatcher {
         ret.setResponse(response);
         response.context = ret;
 
+        if (null != startRequestHandler) {
+            try {
+                startRequestHandler.handle(ret);
+            } catch (final Exception e) {
+                LOGGER.log(Level.ERROR, "Start request handle failed", e);
+            }
+        }
+
         for (final Handler handler : HANDLERS) {
             ret.addHandler(handler);
         }
-
         ret.handle();
         renderResponse(ret);
+
+        if (null != endRequestHandler) {
+            try {
+                endRequestHandler.handle(ret);
+            } catch (final Exception e) {
+                LOGGER.log(Level.ERROR, "End request handle failed", e);
+            }
+        }
 
         return ret;
     }

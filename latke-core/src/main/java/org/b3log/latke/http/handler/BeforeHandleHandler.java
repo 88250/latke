@@ -43,12 +43,11 @@ public class BeforeHandleHandler implements Handler {
     private static final Logger LOGGER = Logger.getLogger(BeforeHandleHandler.class);
 
     @Override
-    public void handle(final RequestContext context) throws Exception {
+    public void handle(final RequestContext context) {
         final MatchResult result = (MatchResult) context.attr(RouteHandler.MATCH_RESULT);
 
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final List<AbstractResponseRenderer> rendererList = result.getRendererList();
-
         try {
             final List<ProcessAdvice> beforeRequestProcessAdvices = contextHandlerMeta.getBeforeRequestProcessAdvices();
             for (final ProcessAdvice beforeRequestProcessAdvice : beforeRequestProcessAdvices) {
