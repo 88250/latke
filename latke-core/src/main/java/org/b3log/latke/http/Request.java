@@ -176,7 +176,6 @@ public class Request {
 
     public void addCookie(final String name, final String value) {
         final Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true);
         addCookie(cookie);
     }
 
