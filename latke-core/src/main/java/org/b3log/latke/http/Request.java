@@ -212,7 +212,7 @@ public class Request {
 
     void parseForm(final FullHttpRequest fullHttpRequest) {
         content = (fullHttpRequest.content().toString(CharsetUtil.UTF_8));
-        if (StringUtils.startsWithIgnoreCase(content, "%7B%22")) {
+        if (StringUtils.startsWithIgnoreCase(content, "%7B%22") || StringUtils.startsWithIgnoreCase(content, "{\"")) {
             json = new JSONObject(URLs.decode(content));
         } else {
             final QueryStringDecoder queryDecoder = new QueryStringDecoder(content, false);
