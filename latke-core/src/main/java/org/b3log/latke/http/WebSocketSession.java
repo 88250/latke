@@ -18,9 +18,13 @@ package org.b3log.latke.http;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Websocket session.
@@ -35,11 +39,9 @@ public class WebSocketSession {
     ChannelHandlerContext ctx;
 
     WebSocketChannel webSocketChannel;
-    /**
-     * 关联的 HTTP 会话.
-     */
-    Session session;
 
+    Session session;
+    Set<Cookie> cookies = new HashSet<>();
     Map<String, String> params = new HashMap<>();
 
     WebSocketSession(final ChannelHandlerContext ctx) {
@@ -67,5 +69,19 @@ public class WebSocketSession {
 
     public Session getHttpSession() {
         return session;
+    }
+
+    public Set<Cookie> getCookies() {
+        return cookies;
+    }
+
+    public void addCookie(final Cookie cookie) {
+        if (StringUtils.isBlank(cookie.getPath())) {
+            cookie.setPath(Latkes.getContextPath());
+        }
+        if (StringUtils.isBlank(cookie.getPath())) {
+            cookie.setPath("/");
+        }
+        cookies.add(cookie);
     }
 }

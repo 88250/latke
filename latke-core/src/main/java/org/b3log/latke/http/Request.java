@@ -49,14 +49,14 @@ public class Request {
     HttpPostRequestDecoder httpDecoder;
     RequestContext context;
 
-    private Map<String, String> params;
-    private JSONObject json;
-    private Map<String, Object> attrs;
-    private String content;
-    private Map<String, List<org.b3log.latke.http.FileUpload>> files;
-    private Set<Cookie> cookies;
-    private Session session;
-    private boolean staticResource;
+     Map<String, String> params;
+     JSONObject json;
+     Map<String, Object> attrs;
+     String content;
+     Map<String, List<org.b3log.latke.http.FileUpload>> files;
+     Set<Cookie> cookies;
+     Session session;
+     boolean staticResource;
 
     public Request(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         this.ctx = ctx;

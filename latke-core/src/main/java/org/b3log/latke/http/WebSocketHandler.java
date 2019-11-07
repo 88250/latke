@@ -25,6 +25,7 @@ import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.ReferenceCountUtil;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
 
 import java.util.List;
 import java.util.Map;
@@ -75,46 +76,74 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
                 // 解析查询字符串
                 final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(req.uri());
                 final Map<String, List<String>> params = queryStringDecoder.parameters();
-                if (!params.isEmpty()) {
-                    for (final Map.Entry<String, List<String>> p : params.entrySet()) {
-                        final String key = p.getKey();
-                        final List<String> vals = p.getValue();
-                        for (final String val : vals) {
-                            webSocketSession.params.put(key, val);
-                        }
+                for (final Map.Entry<String, List<String>> p : params.entrySet()) {
+                    final String key = p.getKey();
+                    final List<String> vals = p.getValue();
+                    for (final String val : vals) {
+                        webSocketSession.params.put(key, val);
                     }
                 }
 
-                // 关联处理 HTTP 会话
-                Session session = null;
-                final String cookieStr = req.headers().get(HttpHeaderNames.COOKIE.toString());
-                if (StringUtils.isNotBlank(cookieStr)) {
-                    final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
-                    for (final io.netty.handler.codec.http.cookie.Cookie cookie : cookies) {
-                        if (cookie.name().equals("LATKE_SESSION_ID")) {
-                            final String cookieSessionId = cookie.value();
-                            if (!Sessions.contains(cookieSessionId)) {
-                                session = Sessions.add();
-                            } else {
-                                session = Sessions.get(cookieSessionId);
-                            }
-                            break;
-                        }
-                    }
-                }
-                if (null == session) {
-                    session = Sessions.add();
-                }
+                // 处理 HTTP 会话和 Cookie
+                handleCookie(req, webSocketSession);
 
-                webSocketSession.session = session;
                 webSocketSession.webSocketChannel = webSocketChannel;
-
                 CompletableFuture.completedFuture(webSocketSession).thenAcceptAsync(webSocketChannel::onConnect, ctx.executor());
             }
         } else {
             ReferenceCountUtil.retain(req);
             ctx.fireChannelRead(req);
         }
+    }
+
+    private void handleCookie(final HttpRequest req, final WebSocketSession webSocketSession) {
+        final boolean secure = StringUtils.equalsIgnoreCase(Latkes.getServerScheme(), "https");
+        Session session = null;
+        final boolean enabledSession = Latkes.isEnabledSession();
+        final String cookieStr = req.headers().get(HttpHeaderNames.COOKIE.toString());
+        if (StringUtils.isNotBlank(cookieStr)) {
+            final Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(cookieStr);
+            for (final Cookie cookie : cookies) {
+                if (!enabledSession) {
+                    webSocketSession.addCookie(new org.b3log.latke.http.Cookie(cookie));
+                    continue;
+                }
+
+                if (cookie.name().equals(Session.LATKE_SESSION_ID)) {
+                    final String cookieSessionId = cookie.value();
+                    if (!Sessions.contains(cookieSessionId)) {
+                        session = createSessionCookie(webSocketSession, secure);
+                    } else {
+                        session = Sessions.get(cookieSessionId);
+                        final org.b3log.latke.http.Cookie c = new org.b3log.latke.http.Cookie(Session.LATKE_SESSION_ID, session.getId());
+                        c.setHttpOnly(true);
+                        c.setSecure(secure);
+                        webSocketSession.addCookie(c);
+                    }
+                } else {
+                    webSocketSession.addCookie(new org.b3log.latke.http.Cookie(cookie));
+                }
+            }
+        } else {
+            if (enabledSession) {
+                session = createSessionCookie(webSocketSession, secure);
+            }
+        }
+
+        if (null == session && enabledSession) {
+            session = createSessionCookie(webSocketSession, secure);
+        }
+        webSocketSession.session = session;
+    }
+
+    private Session createSessionCookie(final WebSocketSession webSocketSession, final boolean secure) {
+        final Session ret = Sessions.add();
+        final org.b3log.latke.http.Cookie c = new org.b3log.latke.http.Cookie(Session.LATKE_SESSION_ID, ret.getId());
+        c.setHttpOnly(true);
+        c.setSecure(secure);
+        webSocketSession.addCookie(c);
+
+        return ret;
     }
 
     private void handleWebSocketFrame(final ChannelHandlerContext ctx, final WebSocketFrame frame) {

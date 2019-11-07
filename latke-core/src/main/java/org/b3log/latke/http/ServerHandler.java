@@ -83,7 +83,7 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         Dispatcher.handle(request, response);
     }
 
-    private void handleCookie(Request request) {
+    private void handleCookie(final Request request) {
         final boolean secure = StringUtils.equalsIgnoreCase(Latkes.getServerScheme(), "https");
         Session session = null;
         final boolean enabledSession = Latkes.isEnabledSession();
@@ -120,7 +120,7 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         if (null == session && enabledSession) {
             session = createSessionCookie(request, secure);
         }
-        request.setSession(session);
+        request.session = session;
     }
 
     private Session createSessionCookie(final Request request, final boolean secure) {
