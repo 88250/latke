@@ -50,24 +50,24 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest fullHttpRequest) {
         final Request request = new Request(ctx, fullHttpRequest);
 
-        // 解析查询字符串
-        request.parseQueryStr();
+        if (!StaticResources.isStatic(request)) {
+            // 解析查询字符串
+            request.parseQueryStr();
 
-        // 解析请求体
-        String contentType = request.getHeader(HttpHeaderNames.CONTENT_TYPE.toString());
-        if (StringUtils.isNotBlank(contentType)) {
-            contentType = StringUtils.substringBefore(contentType, ";");
-            if (StringUtils.equalsIgnoreCase(contentType, "multipart/form-data")) {
-                request.parseFormData();
+            // 解析请求体
+            String contentType = request.getHeader(HttpHeaderNames.CONTENT_TYPE.toString());
+            if (StringUtils.isNotBlank(contentType)) {
+                contentType = StringUtils.substringBefore(contentType, ";");
+                if (StringUtils.equalsIgnoreCase(contentType, "multipart/form-data")) {
+                    request.parseFormData();
+                } else {
+                    request.parseForm();
+                }
             } else {
                 request.parseForm();
             }
-        } else {
-            request.parseForm();
-        }
 
-        if (!StaticResources.isStatic(request)) {
-            // 非静态资源文件处理 Cookie
+            // 处理 Cookie
             handleCookie(request);
         } else {
             // 标识为静态资源文件

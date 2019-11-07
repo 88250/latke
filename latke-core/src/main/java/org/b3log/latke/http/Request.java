@@ -49,14 +49,14 @@ public class Request {
     HttpPostRequestDecoder httpDecoder;
     RequestContext context;
 
-     Map<String, String> params;
-     JSONObject json;
-     Map<String, Object> attrs;
-     String content;
-     Map<String, List<org.b3log.latke.http.FileUpload>> files;
-     Set<Cookie> cookies;
-     Session session;
-     boolean staticResource;
+    Map<String, String> params;
+    JSONObject json;
+    Map<String, Object> attrs;
+    String content;
+    Map<String, List<org.b3log.latke.http.FileUpload>> files;
+    Set<Cookie> cookies;
+    Session session;
+    boolean staticResource;
 
     public Request(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         this.ctx = ctx;
@@ -211,7 +211,7 @@ public class Request {
     }
 
     void parseQueryStr() {
-        parseAttrs(req.uri());
+        parseAttrs(req.uri(), true);
     }
 
     void parseForm() {
@@ -222,7 +222,7 @@ public class Request {
             } else if (StringUtils.startsWithIgnoreCase(content, "{")) {
                 json = new JSONObject(content);
             } else {
-                parseAttrs(content);
+                parseAttrs(content, false);
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Parses request body [" + content + "] failed: " + e.getMessage());
@@ -252,8 +252,8 @@ public class Request {
         }
     }
 
-    private void parseAttrs(final String paris) {
-        final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(paris);
+    private void parseAttrs(final String paris, final boolean hasPath) {
+        final QueryStringDecoder queryStringDecoder = new QueryStringDecoder(paris, hasPath);
         final Map<String, List<String>> parameters = queryStringDecoder.parameters();
         for (final Map.Entry<String, List<String>> p : parameters.entrySet()) {
             final String key = p.getKey();
