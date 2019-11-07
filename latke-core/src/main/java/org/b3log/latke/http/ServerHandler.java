@@ -86,6 +86,9 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                     request.httpDecoder.offer(fullHttpRequest);
                     request.parseFormData();
                     break;
+                default:
+                    request.parseForm(fullHttpRequest);
+                    break;
             }
         }
 
