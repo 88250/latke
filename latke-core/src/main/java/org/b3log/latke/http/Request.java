@@ -49,22 +49,18 @@ public class Request {
     HttpPostRequestDecoder httpDecoder;
     RequestContext context;
 
-    Map<String, String> params;
-    JSONObject json;
-    Map<String, Object> attrs;
+    Map<String, String> params = new HashMap<>();
+    JSONObject json = new JSONObject();
+    Map<String, Object> attrs = new HashMap<>();
     String content;
-    Map<String, List<org.b3log.latke.http.FileUpload>> files;
-    Set<Cookie> cookies;
+    Map<String, List<org.b3log.latke.http.FileUpload>> files = new HashMap<>();
+    Set<Cookie> cookies = new HashSet<>();
     Session session;
     boolean staticResource;
 
     public Request(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         this.ctx = ctx;
         this.req = req;
-        attrs = new HashMap<>();
-        files = new HashMap<>();
-        cookies = new HashSet<>();
-        params = new HashMap<>();
     }
 
     public String getHeader(final String name) {
