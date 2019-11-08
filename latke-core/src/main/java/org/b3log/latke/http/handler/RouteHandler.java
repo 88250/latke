@@ -197,11 +197,15 @@ public class RouteHandler implements Handler {
         LOGGER.log(Level.DEBUG, "Request [requestURI={0}, method={1}]", requestURI, httpMethod);
 
         final MatchResult result = doMatch(requestURI, httpMethod);
-        if (result != null) {
-            context.pathVars(result.getPathVars());
-            context.attr(MATCH_RESULT, result);
-            context.handle();
+        if (null == result) {
+            context.abort();
+
+            return;
         }
+
+        context.pathVars(result.getPathVars());
+        context.attr(MATCH_RESULT, result);
+        context.handle();
     }
 
     /**
