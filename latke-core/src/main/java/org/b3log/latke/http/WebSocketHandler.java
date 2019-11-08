@@ -44,7 +44,6 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
     private WebSocketServerHandshaker handshaker;
     private WebSocketSession webSocketSession;
     private WebSocketChannel webSocketChannel;
-    private String uri;
 
     @Override
     protected void channelRead0(final ChannelHandlerContext ctx, final Object msg) {
@@ -165,12 +164,11 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     private boolean isWebSocketRequest(final HttpRequest req) {
-        uri = req.uri();
-        uri = StringUtils.substringBefore(uri, "?");
+        final String uri = StringUtils.substringBefore(req.uri(), "?");
 
         return (webSocketChannel = Dispatcher.webSocketChannels.get(uri)) != null
-                && req.decoderResult().isSuccess()
-                && "websocket".equals(req.headers().get("Upgrade"));
+                && "Upgrade".equalsIgnoreCase(req.headers().get(HttpHeaderNames.CONNECTION))
+                && "WebSocket".equalsIgnoreCase(req.headers().get(HttpHeaderNames.UPGRADE));
     }
 
     @Override
