@@ -80,7 +80,17 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         response.setCookies(request.getCookies());
 
         // 分发处理
-        Dispatcher.handle(request, response);
+        final RequestContext context = Dispatcher.handle(request, response);
+
+        // 释放资源
+        release(context);
+    }
+
+    private void release(final RequestContext context) {
+        final Request request = context.getRequest();
+        if (null != request.httpDecoder) {
+            request.httpDecoder.destroy();
+        }
     }
 
     private void handleCookie(final Request request) {
