@@ -56,7 +56,6 @@ public class WebSocketSession {
     public void close() {
         webSocketChannel.onClose(this);
         ctx.close();
-
     }
 
     public String getId() {

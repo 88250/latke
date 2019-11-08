@@ -30,12 +30,24 @@ public interface WebSocketChannel {
 
     void onClose(final WebSocketSession session);
 
+    void onError(final Error error);
+
     class Message {
         public String text;
         public WebSocketSession session;
 
-        public Message(final String text, final WebSocketSession session) {
+        Message(final String text, final WebSocketSession session) {
             this.text = text;
+            this.session = session;
+        }
+    }
+
+    class Error {
+        public Throwable cause;
+        public WebSocketSession session;
+
+        Error(final Throwable cause, final WebSocketSession session) {
+            this.cause = cause;
             this.session = session;
         }
     }

@@ -173,6 +173,11 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
+        if (null != webSocketSession && null != webSocketChannel) {
+            CompletableFuture.completedFuture(new WebSocketChannel.Error(cause, webSocketSession))
+                    .thenAcceptAsync(webSocketChannel::onError, ctx.executor());
+        }
+
         ctx.close();
     }
 }
