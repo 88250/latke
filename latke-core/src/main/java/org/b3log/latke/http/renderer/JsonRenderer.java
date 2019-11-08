@@ -126,7 +126,7 @@ public final class JsonRenderer extends AbstractResponseRenderer {
         final int indent = 4;
         final String output = pretty ? jsonObject.toString(indent) : jsonObject.toString();
         if (!jsonp) {
-            response.setContentType("application/json");
+            response.setContentType("application/json; charset=utf-8");
         } else {
             response.setContentType("application/javascript");
         }

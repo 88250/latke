@@ -27,6 +27,6 @@ public final class AtomRenderer extends TextResponseRenderer {
      * Constructs a Atom HTTP response renderer.
      */
     public AtomRenderer() {
-        super("application/atom+xml");
+        super("application/atom+xml; charset=utf-8");
     }
 }

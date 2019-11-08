@@ -27,6 +27,6 @@ public final class TextHtmlRenderer extends TextResponseRenderer {
      * Constructs a HTML HTTP response renderer.
      */
     public TextHtmlRenderer() {
-        super("text/html");
+        super("text/html; charset=utf-8");
     }
 }

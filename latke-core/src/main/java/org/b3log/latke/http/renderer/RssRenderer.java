@@ -27,6 +27,6 @@ public final class RssRenderer extends TextResponseRenderer {
      * Constructs a RSS HTTP response renderer.
      */
     public RssRenderer() {
-        super("application/rss+xml");
+        super("application/rss+xml; charset=utf-8");
     }
 }
