@@ -128,7 +128,7 @@ public final class JsonRenderer extends AbstractResponseRenderer {
         if (!jsonp) {
             response.setContentType("application/json; charset=utf-8");
         } else {
-            response.setContentType("application/javascript");
+            response.setContentType("application/javascript; charset=utf-8");
         }
         response.sendContent(StringUtils.getBytesUtf8(output));
     }
