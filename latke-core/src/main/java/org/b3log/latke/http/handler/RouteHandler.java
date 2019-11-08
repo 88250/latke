@@ -202,8 +202,6 @@ public class RouteHandler implements Handler {
             context.attr(MATCH_RESULT, result);
             context.handle();
         }
-
-        context.abort();
     }
 
     /**
