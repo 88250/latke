@@ -156,7 +156,11 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
             return;
         }
         if (!(frame instanceof TextWebSocketFrame)) {
-            throw new UnsupportedOperationException("unsupported frame type: " + frame.getClass().getName());
+            final RuntimeException throwable = new UnsupportedOperationException("Unsupported frame type [" + frame.getClass().getName() + "]");
+            handshaker.close(ctx.channel(), new CloseWebSocketFrame());
+            CompletableFuture.completedFuture(new WebSocketChannel.Error(throwable, webSocketSession))
+                    .thenAcceptAsync(webSocketChannel::onError, ctx.executor());
+            return;
         }
 
         CompletableFuture.completedFuture(new WebSocketChannel.Message(((TextWebSocketFrame) frame).text(), webSocketSession))
