@@ -184,4 +184,12 @@ final class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
         ctx.close();
     }
+
+    @Override
+    public void channelInactive(final ChannelHandlerContext ctx) {
+        if (null != webSocketSession && null != webSocketChannel) {
+            CompletableFuture.completedFuture(webSocketSession).thenAcceptAsync(webSocketChannel::onClose);
+        }
+        ctx.fireChannelInactive();
+    }
 }
