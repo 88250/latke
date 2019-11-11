@@ -21,6 +21,7 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.multipart.*;
+import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
@@ -215,15 +216,15 @@ public class Request {
 
     void parseForm() {
         try {
-            bytes = req.content().array();
-            final String content = getString();
+            final String content = (req.content().toString(CharsetUtil.UTF_8));
             if (StringUtils.startsWithIgnoreCase(content, "%7B")) {
                 json = new JSONObject(URLs.decode(content));
             } else if (StringUtils.startsWithIgnoreCase(content, "{")) {
-                json = new JSONObject(bytes);
+                json = new JSONObject(content);
             } else {
                 parseAttrs(content, false);
             }
+            bytes = org.apache.commons.codec.binary.StringUtils.getBytesUtf8(content);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Parses request body [" + bytes + "] failed: " + e.getMessage());
         }
