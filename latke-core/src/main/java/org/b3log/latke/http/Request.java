@@ -21,7 +21,6 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.multipart.*;
-import io.netty.util.CharsetUtil;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
@@ -35,7 +34,7 @@ import java.util.*;
  * HTTP request.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Nov 5, 2019
+ * @version 1.0.0.2, Nov 11, 2019
  * @since 3.0.0
  */
 public class Request {
@@ -52,7 +51,7 @@ public class Request {
     Map<String, String> params = new HashMap<>();
     JSONObject json = new JSONObject();
     Map<String, Object> attrs = new HashMap<>();
-    String content;
+    byte[] bytes;
     Map<String, List<org.b3log.latke.http.FileUpload>> files = new HashMap<>();
     Set<Cookie> cookies = new HashSet<>();
     Session session;
@@ -86,12 +85,16 @@ public class Request {
         return StringUtils.substringAfter(ret, "?");
     }
 
-    public String getContent() {
-        return content;
+    public String getString() {
+        return org.apache.commons.codec.binary.StringUtils.newStringUtf8(bytes);
     }
 
-    public void setContent(final String content) {
-        this.content = content;
+    public void setBytes(final byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
     }
 
     public void setRequestURI(final String uri) {
@@ -212,16 +215,17 @@ public class Request {
 
     void parseForm() {
         try {
-            content = (req.content().toString(CharsetUtil.UTF_8));
+            bytes = req.content().array();
+            final String content = getString();
             if (StringUtils.startsWithIgnoreCase(content, "%7B")) {
                 json = new JSONObject(URLs.decode(content));
             } else if (StringUtils.startsWithIgnoreCase(content, "{")) {
-                json = new JSONObject(content);
+                json = new JSONObject(bytes);
             } else {
                 parseAttrs(content, false);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Parses request body [" + content + "] failed: " + e.getMessage());
+            LOGGER.log(Level.ERROR, "Parses request body [" + bytes + "] failed: " + e.getMessage());
         }
     }
 

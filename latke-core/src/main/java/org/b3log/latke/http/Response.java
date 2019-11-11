@@ -21,7 +21,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
-import io.netty.util.CharsetUtil;
+import org.apache.commons.codec.binary.StringUtils;
 import org.b3log.latke.http.handler.ContextHandlerMeta;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 import org.b3log.latke.ioc.BeanManager;
@@ -37,7 +37,7 @@ import java.util.Set;
  * HTTP response.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Nov 3, 2019
+ * @version 1.0.0.1, Nov 11, 2019
  * @since 3.0.0
  */
 public class Response {
@@ -109,11 +109,11 @@ public class Response {
         this.cookies = cookies;
     }
 
-    public String getContentStr() {
-        return new String(content, CharsetUtil.UTF_8);
+    public String getString() {
+        return StringUtils.newStringUtf8(content);
     }
 
-    public byte[] getContent() {
+    public byte[] getBytes() {
         return content;
     }
 
@@ -148,8 +148,13 @@ public class Response {
         writeResponse();
     }
 
-    public void sendContent(final byte[] content) {
-        this.content = content;
+    public void sendBytes(final byte[] bytes) {
+        this.content = bytes;
+        writeResponse();
+    }
+
+    public void sendString(final String string) {
+        this.content = StringUtils.getBytesUtf8(string);
         writeResponse();
     }
 

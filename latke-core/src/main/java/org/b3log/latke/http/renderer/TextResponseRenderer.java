@@ -15,7 +15,6 @@
  */
 package org.b3log.latke.http.renderer;
 
-import org.apache.commons.codec.binary.StringUtils;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
 
@@ -23,7 +22,7 @@ import org.b3log.latke.http.Response;
  * Text-like HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Nov 3, 2019
+ * @version 2.0.0.1, Nov 11, 2019
  * @since 3.0.0
  */
 public class TextResponseRenderer extends AbstractResponseRenderer {
@@ -60,6 +59,6 @@ public class TextResponseRenderer extends AbstractResponseRenderer {
     public void render(final RequestContext context) {
         final Response response = context.getResponse();
         response.setContentType(contentType);
-        response.sendContent(StringUtils.getBytesUtf8(content));
+        response.sendString(content);
     }
 }

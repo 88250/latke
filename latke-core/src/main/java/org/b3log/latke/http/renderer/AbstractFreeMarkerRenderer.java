@@ -16,7 +16,6 @@
 package org.b3log.latke.http.renderer;
 
 import freemarker.template.Template;
-import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.http.Request;
@@ -34,7 +33,7 @@ import java.util.Map;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Nov 3, 2019
+ * @version 2.0.0.1, Nov 11, 2019
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRenderer {
 
@@ -79,7 +78,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
     @Override
     public void render(final RequestContext context) {
         final Response response = context.getResponse();
-        response.setContentType("text/html");
+        response.setContentType("text/html; charset=utf-8");
         if (response.isCommitted()) { // response has been sent redirect
             return;
         }
@@ -151,7 +150,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         if (response.isCommitted()) { // response has been sent redirect
             return;
         }
-        response.sendContent(StringUtils.getBytesUtf8(html));
+        response.sendString(html);
     }
 
     /**

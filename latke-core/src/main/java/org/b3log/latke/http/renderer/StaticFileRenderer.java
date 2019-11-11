@@ -30,7 +30,7 @@ import java.io.File;
  * Static file renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Nov 3, 2019
+ * @version 2.0.0.1, Nov 11, 2019
  */
 public class StaticFileRenderer extends AbstractResponseRenderer {
 
@@ -58,7 +58,7 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
             final byte[] bytes = FileUtils.readFileToByteArray(new File(path));
             final String contentType = TIKA.detect(path);
             response.setContentType(contentType);
-            response.sendContent(bytes);
+            response.sendBytes(bytes);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Renders static file failed", e);
             response.sendError0(500);

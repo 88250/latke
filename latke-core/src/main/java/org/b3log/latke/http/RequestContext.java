@@ -35,7 +35,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Nov 3, 2019
+ * @version 2.1.0.0, Nov 11, 2019
  */
 public final class RequestContext {
 
@@ -152,19 +152,6 @@ public final class RequestContext {
     }
 
     /**
-     * Sends redirect to the specified location.
-     *
-     * @param location the specified location
-     */
-    public void sendRedirect(final String location) {
-        try {
-            response.sendRedirect(new URI(location).toASCIIString());
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Sends redirect [" + location + "] failed: " + e.getMessage());
-        }
-    }
-
-    /**
      * Gets the value of a header specified by the given name
      *
      * @param name the given name
@@ -247,6 +234,14 @@ public final class RequestContext {
         }
     }
 
+    public byte[] requestBytes() {
+        return request.getBytes();
+    }
+
+    public String requestString() {
+        return request.getString();
+    }
+
     /**
      * Gets a path var specified by the given name from request URI.
      *
@@ -302,6 +297,37 @@ public final class RequestContext {
     public void sendStatus(final int sc) {
         response.setStatus(sc);
         response.send();
+    }
+
+    /**
+     * Sends redirect to the specified location.
+     *
+     * @param location the specified location
+     */
+    public void sendRedirect(final String location) {
+        try {
+            response.sendRedirect(new URI(location).toASCIIString());
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Sends redirect [" + location + "] failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Sends the specified bytes.
+     *
+     * @param bytes the specified bytes
+     */
+    public void sendBytes(final byte[] bytes) {
+        response.sendBytes(bytes);
+    }
+
+    /**
+     * Sends the specified string.
+     *
+     * @param string the specified string
+     */
+    public void sendString(final String string) {
+        response.sendString(string);
     }
 
     /**
