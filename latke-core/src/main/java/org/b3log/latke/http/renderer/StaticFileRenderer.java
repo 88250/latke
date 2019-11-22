@@ -16,6 +16,7 @@
 package org.b3log.latke.http.renderer;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tika.Tika;
 import org.b3log.latke.http.RequestContext;
@@ -25,12 +26,14 @@ import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.URLs;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
 
 /**
  * Static file renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Nov 11, 2019
+ * @version 2.0.0.2, Nov 22, 2019
  */
 public class StaticFileRenderer extends AbstractResponseRenderer {
 
@@ -41,22 +44,42 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
 
     private static final Tika TIKA = new Tika();
 
+    private static boolean inJar;
+
+    static {
+        try {
+            final URI ROOT_URI = StaticFileRenderer.class.getResource("").toURI();
+            inJar = "jar".equals(ROOT_URI.getScheme());
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Checks filesystem failed, exit", e);
+            System.exit(-1);
+        }
+    }
+
     @Override
     public void render(final RequestContext context) {
         final Response response = context.getResponse();
         try {
             String uri = context.requestURI();
             uri = URLs.decode(uri);
+            byte[] bytes;
 
-            String path = StaticFileRenderer.class.getResource("/").getPath();
-            if (StringUtils.contains(path, "/target/classes/") || StringUtils.contains(path, "/target/test-classes/")) {
-                // 开发时使用源码目录
-                path = StringUtils.replace(path, "/target/classes/", "/src/main/resources/");
-                path = StringUtils.replace(path, "/target/test-classes/", "/src/main/resources/");
+            if (!inJar) {
+                String path = StaticFileRenderer.class.getResource("/").getPath();
+                if (StringUtils.contains(path, "/target/classes/") || StringUtils.contains(path, "/target/test-classes/")) {
+                    // 开发时使用源码目录
+                    path = StringUtils.replace(path, "/target/classes/", "/src/main/resources/");
+                    path = StringUtils.replace(path, "/target/test-classes/", "/src/main/resources/");
+                }
+                path += uri;
+                bytes = FileUtils.readFileToByteArray(new File(path));
+            } else {
+                try (final InputStream inputStream = StaticFileRenderer.class.getResourceAsStream(uri)) {
+                    bytes = IOUtils.toByteArray(inputStream);
+                }
             }
-            path += uri;
-            final byte[] bytes = FileUtils.readFileToByteArray(new File(path));
-            final String contentType = TIKA.detect(path);
+
+            final String contentType = TIKA.detect(uri);
             response.setContentType(contentType);
             response.sendBytes(bytes);
         } catch (final Exception e) {
