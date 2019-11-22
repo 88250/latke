@@ -19,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tika.Tika;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
 import org.b3log.latke.logging.Level;
@@ -27,7 +28,7 @@ import org.b3log.latke.util.URLs;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.URL;
 
 /**
  * Static file renderer.
@@ -44,18 +45,6 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
 
     private static final Tika TIKA = new Tika();
 
-    private static boolean inJar;
-
-    static {
-        try {
-            final URI ROOT_URI = StaticFileRenderer.class.getResource("").toURI();
-            inJar = "jar".equals(ROOT_URI.getScheme());
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Checks filesystem failed, exit", e);
-            System.exit(-1);
-        }
-    }
-
     @Override
     public void render(final RequestContext context) {
         final Response response = context.getResponse();
@@ -64,7 +53,7 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
             uri = URLs.decode(uri);
             byte[] bytes;
 
-            if (!inJar) {
+            if (!Latkes.isInJar()) {
                 String path = StaticFileRenderer.class.getResource("/").getPath();
                 if (StringUtils.contains(path, "/target/classes/") || StringUtils.contains(path, "/target/test-classes/")) {
                     // 开发时使用源码目录
