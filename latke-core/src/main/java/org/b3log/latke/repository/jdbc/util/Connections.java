@@ -37,7 +37,7 @@ import java.util.Properties;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
- * @version 2.0.1.1, Jul 29, 2019
+ * @version 2.1.0.0, Nov 23, 2019
  */
 public final class Connections {
 
@@ -214,10 +214,25 @@ public final class Connections {
      * Shutdowns the connection pool.
      */
     public static void shutdownConnectionPool() {
-        if (null != hikari) {
-            hikari.close();
-            LOGGER.debug("Closed database connection pool");
+        if (null == hikari) {
+            return;
         }
+
+        hikari.close();
+        LOGGER.debug("Closed database connection pool");
+    }
+
+    /**
+     * Checks whether the connection pool is closed.
+     *
+     * @return {@code true} if it is, returns {@code false} otherwise
+     */
+    public static boolean isClosed() {
+        if (null == hikari) {
+            return true;
+        }
+
+        return hikari.isClosed();
     }
 
     /**
