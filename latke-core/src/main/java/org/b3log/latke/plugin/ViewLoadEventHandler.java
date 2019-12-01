@@ -68,7 +68,7 @@ public final class ViewLoadEventHandler extends AbstractEventListener<ViewLoadEv
 
                     break;
                 default:
-                    throw new AssertionError("Plugin state error, this is a bug! Please report this bug (https://github.com/b3log/latke/issues/new)!");
+                    throw new AssertionError("Plugin state error, this is a bug! Please report this bug (https://github.com/88250/latke/issues/new)!");
             }
         }
     }
