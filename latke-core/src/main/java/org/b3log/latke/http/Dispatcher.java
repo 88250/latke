@@ -15,6 +15,7 @@
  */
 package org.b3log.latke.http;
 
+import org.b3log.latke.Latkes;
 import org.b3log.latke.http.function.ContextHandler;
 import org.b3log.latke.http.handler.*;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
@@ -212,7 +213,7 @@ public final class Dispatcher {
      * @param webSocketChannel the specified WebSocket channel
      */
     public static void webSocket(final String uri, final WebSocketChannel webSocketChannel) {
-        webSocketChannels.put(uri, webSocketChannel);
+        webSocketChannels.put(Latkes.getContextPath() + uri, webSocketChannel);
     }
 
     /**
