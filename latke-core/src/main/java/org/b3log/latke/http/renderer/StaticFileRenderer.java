@@ -28,13 +28,12 @@ import org.b3log.latke.util.URLs;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
 
 /**
  * Static file renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.2, Nov 22, 2019
+ * @version 2.0.1.0, Dec 3, 2019
  */
 public class StaticFileRenderer extends AbstractResponseRenderer {
 
@@ -51,6 +50,7 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
         try {
             String uri = context.requestURI();
             uri = URLs.decode(uri);
+            uri = StringUtils.substringAfter(uri, Latkes.getStaticPath());
             byte[] bytes;
 
             if (!Latkes.isInJar()) {
