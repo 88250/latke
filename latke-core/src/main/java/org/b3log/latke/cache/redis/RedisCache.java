@@ -15,6 +15,8 @@
  */
 package org.b3log.latke.cache.redis;
 
+import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.AbstractCache;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -30,7 +32,7 @@ import java.util.Set;
  * Redis cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.0, Nov 7, 2019
+ * @version 1.1.0.0, Dec 8, 2019
  * @since 2.3.13
  */
 public final class RedisCache extends AbstractCache {
@@ -40,10 +42,23 @@ public final class RedisCache extends AbstractCache {
      */
     private static final Logger LOGGER = Logger.getLogger(RedisCache.class);
 
+    /**
+     * Key prefix.
+     */
+    private static final String KEY_PREFIX;
+
+    static {
+        String keyPrefix = Latkes.getLocalProperty("redis.keyPrefix");
+        if (StringUtils.isBlank(keyPrefix)) {
+            keyPrefix = "latke";
+        }
+        KEY_PREFIX = keyPrefix;
+    }
+
     @Override
     public boolean contains(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            return jedis.exists(getName() + key);
+            return jedis.exists(getKeyPrefix() + key);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Contains key [" + key + "] failed", e);
 
@@ -54,7 +69,7 @@ public final class RedisCache extends AbstractCache {
     @Override
     public void put(final String key, final JSONObject value) {
         try (final Jedis jedis = Connections.getJedis()) {
-            jedis.setex(getName() + key, EXPIRE_SECONDS, value.toString());
+            jedis.setex(getKeyPrefix() + key, EXPIRE_SECONDS, value.toString());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Put data to cache with key [" + key + "] failed", e);
         }
@@ -63,7 +78,7 @@ public final class RedisCache extends AbstractCache {
     @Override
     public JSONObject get(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            final String s = jedis.get(getName() + key);
+            final String s = jedis.get(getKeyPrefix() + key);
             if (null == s) {
                 return null;
             }
@@ -79,7 +94,7 @@ public final class RedisCache extends AbstractCache {
     @Override
     public void remove(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
-            jedis.del(getName() + key);
+            jedis.del(getKeyPrefix() + key);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove data to cache with key [" + key + "] failed", e);
         }
@@ -88,9 +103,9 @@ public final class RedisCache extends AbstractCache {
     @Override
     public void remove(final Collection<String> keys) {
         final List<String> cacheKeys = new ArrayList<>(keys.size());
-        final String cacheName = getName();
+        final String keyPrefix = getKeyPrefix();
         for (final String key : keys) {
-            cacheKeys.add(cacheName + key);
+            cacheKeys.add(keyPrefix + key);
         }
 
         try (final Jedis jedis = Connections.getJedis()) {
@@ -103,7 +118,7 @@ public final class RedisCache extends AbstractCache {
     @Override
     public void clear() {
         try (final Jedis jedis = Connections.getJedis()) {
-            final Set<String> keys = jedis.keys(getName() + "*");
+            final Set<String> keys = jedis.keys(getKeyPrefix() + "*");
             if (keys.isEmpty()) {
                 return;
             }
@@ -124,5 +139,9 @@ public final class RedisCache extends AbstractCache {
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdown redis connection pool failed", e);
         }
+    }
+
+    private String getKeyPrefix() {
+        return KEY_PREFIX + getName();
     }
 }
