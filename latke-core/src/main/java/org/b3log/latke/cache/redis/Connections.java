@@ -63,7 +63,7 @@ public final class Connections {
                 if (StringUtils.isNotBlank(masterName)) {
                     final String[] sentinelArray = Latkes.getLocalProperty("redis.sentinels").split(",");
                     final Set<String> sentinels = CollectionUtils.arrayToSet(sentinelArray);
-                    pool = new JedisSentinelPool(masterName, sentinels, jedisPoolConfig);
+                    pool = new JedisSentinelPool(masterName, sentinels, jedisPoolConfig, password);
                 } else {
                     final String host = Latkes.getLocalProperty("redis.host");
                     final int port = Integer.valueOf(Latkes.getLocalProperty("redis.port"));
