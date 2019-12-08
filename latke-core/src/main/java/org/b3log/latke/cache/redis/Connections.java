@@ -19,16 +19,16 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Protocol;
+import org.b3log.latke.util.CollectionUtils;
+import redis.clients.jedis.*;
+
+import java.util.Set;
 
 /**
  * Redis connection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Sep 27, 2019
+ * @version 1.1.0.0, Dec 8, 2019
  * @since 2.3.13
  */
 public final class Connections {
@@ -41,20 +41,17 @@ public final class Connections {
     /**
      * Pool.
      */
-    private static JedisPool pool;
+    private static JedisPoolAbstract pool;
 
     static {
         try {
-            final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-
             final Latkes.RuntimeCache runtimeCache = Latkes.getRuntimeCache();
             if (Latkes.RuntimeCache.REDIS == runtimeCache) {
+                final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
                 final int minConnCnt = Integer.valueOf(Latkes.getLocalProperty("redis.minConnCnt"));
                 jedisPoolConfig.setMinIdle(minConnCnt);
                 final int maxConnCnt = Integer.valueOf(Latkes.getLocalProperty("redis.maxConnCnt"));
                 jedisPoolConfig.setMaxTotal(maxConnCnt);
-                final String host = Latkes.getLocalProperty("redis.host");
-                final int port = Integer.valueOf(Latkes.getLocalProperty("redis.port"));
                 String password = Latkes.getLocalProperty("redis.password");
                 if (StringUtils.isBlank(password)) {
                     password = null;
@@ -62,7 +59,16 @@ public final class Connections {
                 final long waitTime = Long.valueOf(Latkes.getLocalProperty("redis.waitTime"));
                 jedisPoolConfig.setMaxWaitMillis(waitTime);
 
-                pool = new JedisPool(jedisPoolConfig, host, port, Protocol.DEFAULT_TIMEOUT, password);
+                final String masterName = Latkes.getLocalProperty("redis.master");
+                if (StringUtils.isNotBlank(masterName)) {
+                    final String[] sentinelArray = Latkes.getLocalProperty("redis.sentinels").split(",");
+                    final Set<String> sentinels = CollectionUtils.arrayToSet(sentinelArray);
+                    pool = new JedisSentinelPool(masterName, sentinels, jedisPoolConfig);
+                } else {
+                    final String host = Latkes.getLocalProperty("redis.host");
+                    final int port = Integer.valueOf(Latkes.getLocalProperty("redis.port"));
+                    pool = new JedisPool(jedisPoolConfig, host, port, Protocol.DEFAULT_TIMEOUT, password);
+                }
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Initializes redis connection pool failed", e);
