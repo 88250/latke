@@ -249,7 +249,7 @@ public class Request {
         } catch (final HttpPostRequestDecoder.EndOfDataDecoderException e) {
             // ignore
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Parse form data failed:" + e.getMessage());
+            LOGGER.log(Level.ERROR, "Parses request [uri=" + req.uri() + ", remoteAddr=" + getRemoteAddr() + ", body=" + bytes + "] failed: " + e.getMessage());
         }
     }
 
