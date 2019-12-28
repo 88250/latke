@@ -35,7 +35,7 @@ import java.util.*;
  * HTTP request.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Nov 11, 2019
+ * @version 1.0.0.3, Dec 28, 2019
  * @since 3.0.0
  */
 public class Request {
@@ -226,7 +226,7 @@ public class Request {
             }
             bytes = org.apache.commons.codec.binary.StringUtils.getBytesUtf8(content);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Parses request body [" + bytes + "] failed: " + e.getMessage());
+            LOGGER.log(Level.ERROR, "Parses request [uri=" + req.uri() + ", remoteAddr=" + getRemoteAddr() + ", body=" + bytes + "] failed: " + e.getMessage());
         }
     }
 
