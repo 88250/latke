@@ -24,7 +24,7 @@ import java.util.Map;
  * Abstract event queue(Observable).
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Sep 16, 2018
+ * @version 1.0.1.0, Jan 7, 2020
  * @see AbstractEventListener
  */
 public abstract class AbstractEventQueue {
@@ -80,18 +80,6 @@ public abstract class AbstractEventQueue {
         if (null != listenerList) {
             listenerList.remove(listener);
         }
-    }
-
-    /**
-     * If this object has changed, as indicated by the {@code hasChanged}
-     * method, then notify all of its listeners and then call the
-     * {@code clearChanged} method to indicate that this object has no longer
-     * changed.
-     *
-     * @see AbstractEventListener#performAction(org.b3log.latke.event.AbstractEventQueue, org.b3log.latke.event.Event)
-     */
-    public void notifyListeners() {
-        notifyListeners(null);
     }
 
     /**
@@ -166,7 +154,6 @@ public abstract class AbstractEventQueue {
      * This method is called automatically by the
      * {@code notifyListeners} methods.
      *
-     * @see #notifyListeners()
      * @see #notifyListeners(org.b3log.latke.event.Event)
      */
     protected synchronized void clearChanged() {
