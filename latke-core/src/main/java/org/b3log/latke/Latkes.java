@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.0.14, Dec 28, 2019
+ * @version 2.11.0.15, Jan 7, 2020
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -353,6 +353,15 @@ public final class Latkes {
     }
 
     /**
+     * Sets server scheme.
+     *
+     * @param serverScheme the specified server scheme
+     */
+    public static void setServerScheme(final String serverScheme) {
+        setLatkeProperty("serverScheme", serverScheme);
+    }
+
+    /**
      * Gets server host.
      *
      * @return server host
@@ -364,6 +373,15 @@ public final class Latkes {
         }
 
         return ret;
+    }
+
+    /**
+     * Sets server host.
+     *
+     * @param serverHost the specified server host
+     */
+    public static void setServerHost(final String serverHost) {
+        setLatkeProperty("serverHost", serverHost);
     }
 
     /**
@@ -426,6 +444,15 @@ public final class Latkes {
     }
 
     /**
+     * Sets server port.
+     *
+     * @param serverPort the specified server port
+     */
+    public static void setServerPort(final String serverPort) {
+        setLatkeProperty("serverPort", serverPort);
+    }
+
+    /**
      * Gets server.
      *
      * @return server, ${serverScheme}://${serverHost}:${serverPort}
@@ -464,6 +491,15 @@ public final class Latkes {
     }
 
     /**
+     * Sets static server scheme.
+     *
+     * @param staticServerScheme the specified static server scheme
+     */
+    public static void setStaticServerScheme(final String staticServerScheme) {
+        setLatkeProperty("staticServerScheme", staticServerScheme);
+    }
+
+    /**
      * Gets static server host.
      *
      * @return static server host
@@ -478,6 +514,15 @@ public final class Latkes {
     }
 
     /**
+     * Sets static server host.
+     *
+     * @param staticServerHost the specified static server host
+     */
+    public static void setStaticServerHost(final String staticServerHost) {
+        setLatkeProperty("staticServerHost", staticServerHost);
+    }
+
+    /**
      * Gets static server port.
      *
      * @return static server port
@@ -489,6 +534,15 @@ public final class Latkes {
         }
 
         return ret;
+    }
+
+    /**
+     * Sets static server port.
+     *
+     * @param staticServerPort the specified static server port
+     */
+    public static void setStaticServerPort(final String staticServerPort) {
+        setLatkeProperty("staticServerPort", staticServerPort);
     }
 
     /**
