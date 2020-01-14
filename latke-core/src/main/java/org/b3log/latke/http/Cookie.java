@@ -21,7 +21,7 @@ import io.netty.handler.codec.http.cookie.DefaultCookie;
  * HTTP cookie.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Nov 3, 2019
+ * @version 1.0.0.1, Jan 14, 2020
  * @since 3.0.0
  */
 public class Cookie {
@@ -62,5 +62,9 @@ public class Cookie {
 
     public void setSecure(boolean secure) {
         cookie.setSecure(secure);
+    }
+
+    public void setSameSite(String value) {
+        // TODO: 等待 Netty 支持
     }
 }
