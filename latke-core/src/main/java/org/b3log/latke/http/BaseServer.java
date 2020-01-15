@@ -31,11 +31,13 @@ import io.netty.util.internal.logging.Slf4JLoggerFactory;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Http Server based on Netty 4.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Nov 5, 2019
+ * @version 1.0.0.2, Jan 15, 2020
  * @since 3.0.0
  */
 public abstract class BaseServer {
@@ -69,8 +71,14 @@ public abstract class BaseServer {
     }
 
     private void shutdownServer() {
-        BOSS_GROUP.shutdownGracefully();
-        WORKER_GROUP.shutdownGracefully();
+        try {
+            LOGGER.log(Level.INFO, "HTTP server is shutting down");
+            BOSS_GROUP.shutdownGracefully(1, 7, TimeUnit.SECONDS).await();
+            WORKER_GROUP.shutdownGracefully(1, 7, TimeUnit.SECONDS).await();
+            LOGGER.log(Level.INFO, "HTTP server has shut down");
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Shutdown server failed", e);
+        }
     }
 
     private static final class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
