@@ -27,9 +27,10 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.internal.logging.InternalLoggerFactory;
-import io.netty.util.internal.logging.Slf4JLoggerFactory;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import io.netty.util.internal.logging.Log4J2LoggerFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +43,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class BaseServer {
 
-    private static final Logger LOGGER = Logger.getLogger(BaseServer.class);
+    private static final Logger LOGGER = LogManager.getLogger(BaseServer.class);
 
     private static final EventLoopGroup BOSS_GROUP = new NioEventLoopGroup(1);
     private static final EventLoopGroup WORKER_GROUP = new NioEventLoopGroup();
@@ -57,7 +58,7 @@ public abstract class BaseServer {
 
     private void startServer(final int listenPort) {
         try {
-            InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE);
+            InternalLoggerFactory.setDefaultFactory(Log4J2LoggerFactory.INSTANCE);
             new ServerBootstrap().
                     group(BOSS_GROUP, WORKER_GROUP).
                     channel(NioServerSocketChannel.class).

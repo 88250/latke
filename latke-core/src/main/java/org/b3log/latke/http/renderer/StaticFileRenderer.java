@@ -18,12 +18,13 @@ package org.b3log.latke.http.renderer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tika.Tika;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.URLs;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(StaticFileRenderer.class);
+    private static final Logger LOGGER = LogManager.getLogger(StaticFileRenderer.class);
 
     private static final Tika TIKA = new Tika();
 

@@ -17,11 +17,12 @@ package org.b3log.latke.ioc;
 
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.ioc.annotated.AnnotatedField;
 import org.b3log.latke.ioc.annotated.AnnotatedType;
 import org.b3log.latke.ioc.annotated.AnnotatedTypeImpl;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Reflections;
 
 import java.lang.annotation.Annotation;
@@ -44,7 +45,7 @@ public class Bean<T> {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Bean.class);
+    private static final Logger LOGGER = LogManager.getLogger(Bean.class);
 
     /**
      * Stereo types.
@@ -150,7 +151,7 @@ public class Bean<T> {
         final T ret = proxyClass.newInstance();
         ((ProxyObject) ret).setHandler(javassistMethodHandler);
 
-        LOGGER.log(Level.TRACE, "Uses Javassist method handler for bean [class={0}]", beanClass.getName());
+        LOGGER.log(Level.TRACE, "Uses Javassist method handler for bean [class={}]", beanClass.getName());
 
         return ret;
     }
@@ -233,7 +234,7 @@ public class Bean<T> {
     }
 
     public void destroy(final T instance) {
-        LOGGER.log(Level.DEBUG, "Destroyed bean [name={0}]", name);
+        LOGGER.log(Level.DEBUG, "Destroyed bean [name={}]", name);
     }
 
     public Class<?> getBeanClass() {

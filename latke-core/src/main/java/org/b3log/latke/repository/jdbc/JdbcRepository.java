@@ -17,10 +17,11 @@ package org.b3log.latke.repository.jdbc;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.repository.*;
 import org.b3log.latke.repository.jdbc.util.Connections;
@@ -49,7 +50,7 @@ public final class JdbcRepository implements Repository {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JdbcRepository.class);
+    private static final Logger LOGGER = LogManager.getLogger(JdbcRepository.class);
 
     /**
      * The current transaction.
@@ -276,7 +277,7 @@ public final class JdbcRepository implements Repository {
     private void buildUpdate(final String id, final JSONObject oldJsonObject, final JSONObject jsonObject, final List<Object> paramList, final StringBuilder sqlBuilder, final String... propertyNames) {
         final JSONObject needUpdateJsonObject = getDiff(oldJsonObject, jsonObject, propertyNames);
         if (0 == needUpdateJsonObject.length()) {
-            LOGGER.log(Level.TRACE, "Nothing to update [{0}] for repository [{1}]", id, getName());
+            LOGGER.log(Level.TRACE, "Nothing to update [{}] for repository [{}]", id, getName());
 
             return;
         }

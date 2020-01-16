@@ -15,8 +15,9 @@
  */
 package org.b3log.latke.repository.jdbc;
 
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.jdbc.util.Connections;
 
@@ -35,7 +36,7 @@ public final class JdbcTransaction implements Transaction {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JdbcTransaction.class);
+    private static final Logger LOGGER = LogManager.getLogger(JdbcTransaction.class);
 
     /**
      * Connection.

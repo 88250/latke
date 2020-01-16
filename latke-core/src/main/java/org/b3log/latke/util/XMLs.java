@@ -15,8 +15,9 @@
  */
 package org.b3log.latke.util;
 
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -42,7 +43,7 @@ public final class XMLs {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(XMLs.class);
+    private static final Logger LOGGER = LogManager.getLogger(XMLs.class);
 
     /**
      * Returns pretty print of the specified xml string.

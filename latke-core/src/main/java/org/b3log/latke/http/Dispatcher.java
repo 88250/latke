@@ -15,13 +15,14 @@
  */
 package org.b3log.latke.http;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.function.ContextHandler;
 import org.b3log.latke.http.handler.*;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 import org.b3log.latke.http.renderer.Http404Renderer;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
@@ -43,7 +44,7 @@ public final class Dispatcher {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Dispatcher.class);
+    private static final Logger LOGGER = LogManager.getLogger(Dispatcher.class);
 
     /**
      * Handlers.

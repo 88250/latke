@@ -18,14 +18,15 @@ package org.b3log.latke.plugin;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,7 +63,7 @@ public abstract class AbstractPlugin implements Serializable {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractPlugin.class);
+    private static final Logger LOGGER = LogManager.getLogger(AbstractPlugin.class);
 
     /**
      * Default serial version id.
@@ -279,7 +280,7 @@ public abstract class AbstractPlugin implements Serializable {
 
         dataModel.put(Plugin.PLUGINS, pluginsContent);
 
-        LOGGER.log(Level.DEBUG, "Plugin[name={0}] has been plugged", getName());
+        LOGGER.log(Level.DEBUG, "Plugin[name={}] has been plugged", getName());
 
     }
 
@@ -544,10 +545,7 @@ public abstract class AbstractPlugin implements Serializable {
         }
         final AbstractPlugin other = (AbstractPlugin) obj;
 
-        if ((null == this.id) ? (other.id != null) : !this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
+        return (null == this.id) ? (other.id == null) : this.id.equals(other.id);
     }
 
     @Override

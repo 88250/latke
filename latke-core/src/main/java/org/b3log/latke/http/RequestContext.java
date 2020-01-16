@@ -15,13 +15,14 @@
  */
 package org.b3log.latke.http;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.http.handler.Handler;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 import org.b3log.latke.http.renderer.Http500Renderer;
 import org.b3log.latke.http.renderer.JsonRenderer;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Requests;
 import org.json.JSONObject;
 
@@ -42,7 +43,7 @@ public final class RequestContext {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(RequestContext.class);
+    private static final Logger LOGGER = LogManager.getLogger(RequestContext.class);
 
     /**
      * Request.

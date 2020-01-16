@@ -21,8 +21,9 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.StaticResources;
 
 import java.util.Set;
@@ -39,7 +40,7 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ServerHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger(ServerHandler.class);
 
     @Override
     public void channelReadComplete(final ChannelHandlerContext ctx) {

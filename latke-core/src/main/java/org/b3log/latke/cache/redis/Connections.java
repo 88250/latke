@@ -16,9 +16,10 @@
 package org.b3log.latke.cache.redis;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.CollectionUtils;
 import redis.clients.jedis.*;
 
@@ -36,7 +37,7 @@ public final class Connections {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Connections.class);
+    private static final Logger LOGGER = LogManager.getLogger(Connections.class);
 
     /**
      * Pool.

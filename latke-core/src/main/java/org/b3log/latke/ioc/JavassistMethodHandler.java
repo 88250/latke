@@ -18,8 +18,9 @@ package org.b3log.latke.ioc;
 import javassist.util.proxy.MethodFilter;
 import javassist.util.proxy.MethodHandler;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.repository.annotation.Transactional;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.b3log.latke.repository.jdbc.JdbcTransaction;
@@ -42,7 +43,7 @@ final class JavassistMethodHandler implements MethodHandler {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JavassistMethodHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger(JavassistMethodHandler.class);
 
     /**
      * Bean manager.

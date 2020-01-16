@@ -17,8 +17,9 @@ package org.b3log.latke.util;
 
 import freemarker.core.TemplateElement;
 import freemarker.template.Template;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Enumeration;
 
@@ -33,7 +34,7 @@ public final class Templates {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Templates.class);
+    private static final Logger LOGGER = LogManager.getLogger(Templates.class);
 
     /**
      * Private constructor.
@@ -69,7 +70,7 @@ public final class Templates {
         final String canonicalForm = templateElement.getCanonicalForm();
 
         if (canonicalForm.startsWith(expression)) {
-            LOGGER.log(Level.TRACE, "Template has expression[nodeName={0}, expression={1}]",
+            LOGGER.log(Level.TRACE, "Template has expression[nodeName={}, expression={}]",
                     new Object[]{templateElement.getNodeName(), expression});
 
             return true;

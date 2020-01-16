@@ -17,9 +17,10 @@ package org.b3log.latke.repository;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Strings;
 import org.json.JSONArray;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -43,7 +45,7 @@ public final class Repositories {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Repositories.class);
+    private static final Logger LOGGER = LogManager.getLogger(Repositories.class);
 
     /**
      * Repository holder.
@@ -89,7 +91,7 @@ public final class Repositories {
 
             repository.setWritable(writable);
 
-            LOGGER.log(Level.INFO, "Sets repository[name={0}] writable[{1}]", new Object[]{repositoryName, writable});
+            LOGGER.log(Level.INFO, "Sets repository[name={}] writable[{}]", new Object[]{repositoryName, writable});
         }
 
         repositoryiesWritable = writable;
@@ -203,8 +205,8 @@ public final class Repositories {
              * ("double".equals(type) && !(value instanceof Double)) ||
              * ("boolean".equals(type) && !(value instanceof Boolean))) {
              * LOGGER.log(Level.WARNING,
-             * "A json object to persist to repository[name={0}] has " +
-             * "a wrong value type[definedType={1}, currentType={2}] with key["
+             * "A json object to persist to repository[name={}] has " +
+             * "a wrong value type[definedType={}, currentType={}] with key["
              * + key + "]", new Object[]{repositoryName, type,
              * value.getClass()});
              *
@@ -308,9 +310,9 @@ public final class Repositories {
         LOGGER.log(Level.INFO, "Parsing repository description....");
 
         try {
-            final String description = IOUtils.toString(inputStream, "UTF-8");
+            final String description = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 
-            LOGGER.log(Level.DEBUG, "{0}{1}", new Object[]{Strings.LINE_SEPARATOR, description});
+            LOGGER.log(Level.DEBUG, "{}{}", new Object[]{Strings.LINE_SEPARATOR, description});
 
             repositoriesDescription = new JSONObject(description);
 

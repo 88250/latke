@@ -15,10 +15,11 @@
  */
 package org.b3log.latke.ioc;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.http.advice.ProcessAdvice;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.plugin.PluginManager;
 import org.b3log.latke.service.LangPropsService;
 
@@ -39,7 +40,7 @@ public class BeanManager {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(BeanManager.class);
+    private static final Logger LOGGER = LogManager.getLogger(BeanManager.class);
 
     /**
      * Built-in beans.

@@ -16,8 +16,9 @@
 package org.b3log.latke.repository.mysql;
 
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.*;
 import org.b3log.latke.repository.jdbc.util.Connections;
@@ -41,7 +42,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(MysqlJdbcDatabaseSolution.class);
+    private static final Logger LOGGER = LogManager.getLogger(MysqlJdbcDatabaseSolution.class);
 
     /**
      * Public constructor.

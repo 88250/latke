@@ -16,12 +16,13 @@
 package org.b3log.latke.plugin;
 
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +39,7 @@ public final class ViewLoadEventHandler extends AbstractEventListener<ViewLoadEv
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ViewLoadEventHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger(ViewLoadEventHandler.class);
 
     @Override
     public String getEventType() {
@@ -54,17 +55,17 @@ public final class ViewLoadEventHandler extends AbstractEventListener<ViewLoadEv
         final PluginManager pluginManager = BeanManager.getInstance().getReference(PluginManager.class);
         final Set<AbstractPlugin> plugins = pluginManager.getPlugins(viewName);
 
-        LOGGER.log(Level.DEBUG, "Plugin count[{0}] of view[name={1}]", plugins.size(), viewName);
+        LOGGER.log(Level.DEBUG, "Plugin count[{}] of view[name={}]", plugins.size(), viewName);
         for (final AbstractPlugin plugin : plugins) {
             switch (plugin.getStatus()) {
                 case ENABLED:
                     plugin.plug(dataModel);
-                    LOGGER.log(Level.DEBUG, "Plugged[name={0}]", plugin.getName());
+                    LOGGER.log(Level.DEBUG, "Plugged[name={}]", plugin.getName());
 
                     break;
                 case DISABLED:
                     plugin.unplug();
-                    LOGGER.log(Level.DEBUG, "Unplugged[name={0}]", plugin.getName());
+                    LOGGER.log(Level.DEBUG, "Unplugged[name={}]", plugin.getName());
 
                     break;
                 default:

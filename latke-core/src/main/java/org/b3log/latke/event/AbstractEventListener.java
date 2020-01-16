@@ -15,8 +15,9 @@
  */
 package org.b3log.latke.event;
 
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract event listener (Observer).
@@ -30,7 +31,7 @@ public abstract class AbstractEventListener<T> {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractEventListener.class);
+    private static final Logger LOGGER = LogManager.getLogger(AbstractEventListener.class);
 
     /**
      * Gets the event type of this listener could handle.

@@ -18,9 +18,10 @@ package org.b3log.latke.repository.jdbc.util;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Callstacks;
 
 import java.io.InputStream;
@@ -44,7 +45,7 @@ public final class Connections {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Connections.class);
+    private static final Logger LOGGER = LogManager.getLogger(Connections.class);
 
     /**
      * Connection pool - HikariCP.

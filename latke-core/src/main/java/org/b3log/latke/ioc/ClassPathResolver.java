@@ -19,8 +19,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.util.AntPathMatcher;
 
 import java.io.File;
@@ -42,7 +43,7 @@ public final class ClassPathResolver {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ClassPathResolver.class);
+    private static final Logger LOGGER = LogManager.getLogger(ClassPathResolver.class);
 
     /**
      * Separator between JAR URL and file path within the JAR.
@@ -80,7 +81,7 @@ public final class ClassPathResolver {
         final Set<URL> rootDirResources = getResourcesFromRoot(scanRootPath);
 
         for (final URL rootDirResource : rootDirResources) {
-            LOGGER.log(Level.INFO, "RootDirResource [protocol={0}, path={1}]",
+            LOGGER.log(Level.INFO, "RootDirResource [protocol={}, path={}]",
                     new Object[]{rootDirResource.getProtocol(), rootDirResource.getPath()});
 
             if (isJarURL(rootDirResource)) {
@@ -135,7 +136,7 @@ public final class ClassPathResolver {
             URL url = null;
 
             while (resources.hasMoreElements()) {
-                url = (URL) resources.nextElement();
+                url = resources.nextElement();
 
                 rets.add(url);
             }
@@ -234,7 +235,7 @@ public final class ClassPathResolver {
                 rootEntryPath = rootEntryPath + "/";
             }
             for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements(); ) {
-                final JarEntry entry = (JarEntry) entries.nextElement();
+                final JarEntry entry = entries.nextElement();
                 final String entryPath = entry.getName();
 
                 String relativePath = null;
@@ -325,10 +326,7 @@ public final class ClassPathResolver {
                 if (file.isDirectory()) {
                     return false;
                 }
-                if (AntPathMatcher.match(filePattern, StringUtils.replace(file.getAbsolutePath(), File.separator, "/"))) {
-                    return true;
-                }
-                return false;
+                return AntPathMatcher.match(filePattern, StringUtils.replace(file.getAbsolutePath(), File.separator, "/"));
             }
         }, TrueFileFilter.INSTANCE);
 

@@ -19,9 +19,10 @@ import javassist.*;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.ioc.Stereotype;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
@@ -42,7 +43,7 @@ final public class Reflections {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Reflections.class);
+    private static final Logger LOGGER = LogManager.getLogger(Reflections.class);
 
     /**
      * Class pool.
@@ -430,11 +431,7 @@ final public class Reflections {
     }
 
     public static boolean match(final Field field1, final Field field2) {
-        if (field1.getName().equals(field2.getName()) && field1.getType().equals(field2.getType())) {
-            return true;
-        } else {
-            return false;
-        }
+        return field1.getName().equals(field2.getName()) && field1.getType().equals(field2.getType());
     }
 
     public static boolean matchInheritance(final Field subclassField, final Field superclassField) {

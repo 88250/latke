@@ -50,5 +50,5 @@ public enum HttpMethod {
     /**
      * Indicates HTTP TRACE method.
      */
-    TRACE;
+    TRACE
 }

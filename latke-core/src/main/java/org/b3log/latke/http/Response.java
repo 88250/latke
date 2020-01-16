@@ -22,11 +22,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import org.apache.commons.codec.binary.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.http.handler.ContextHandlerMeta;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -42,7 +43,7 @@ import java.util.Set;
  */
 public class Response {
 
-    private static final Logger LOGGER = Logger.getLogger(Response.class);
+    private static final Logger LOGGER = LogManager.getLogger(Response.class);
 
     ChannelHandlerContext ctx;
     RequestContext context;

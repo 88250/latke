@@ -20,9 +20,10 @@ import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.http.annotation.RequestProcessor;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.annotation.Repository;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.ArrayUtils;
@@ -46,7 +47,7 @@ public final class Discoverer {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Discoverer.class);
+    private static final Logger LOGGER = LogManager.getLogger(Discoverer.class);
 
     /**
      * Built-in component packages.
@@ -92,7 +93,7 @@ public final class Discoverer {
 
                 final AnnotationsAttribute annotationsAttribute = (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
                 if (null == annotationsAttribute) {
-                    LOGGER.log(Level.TRACE, "The class [name={0}] is not a bean", className);
+                    LOGGER.log(Level.TRACE, "The class [name={}] is not a bean", className);
 
                     continue;
                 }

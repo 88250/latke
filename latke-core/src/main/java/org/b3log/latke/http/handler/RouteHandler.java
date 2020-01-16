@@ -16,6 +16,9 @@
 package org.b3log.latke.http.handler;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.HttpMethod;
@@ -25,8 +28,6 @@ import org.b3log.latke.http.annotation.RequestProcessing;
 import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.ioc.Bean;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.UriTemplates;
 
 import java.lang.reflect.Method;
@@ -47,7 +48,7 @@ public class RouteHandler implements Handler {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(RouteHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger(RouteHandler.class);
 
     /**
      * The shared-matched-result-data name.
@@ -194,7 +195,7 @@ public class RouteHandler implements Handler {
         String requestURI = getRequestURI(request);
         requestURI = StringUtils.substringAfter(requestURI, Latkes.getContextPath()); // remove context path
         final String httpMethod = getHttpMethod(request);
-        LOGGER.log(Level.DEBUG, "Request [requestURI={0}, method={1}]", requestURI, httpMethod);
+        LOGGER.log(Level.DEBUG, "Request [requestURI={}, method={}]", requestURI, httpMethod);
 
         final MatchResult result = doMatch(requestURI, httpMethod);
         if (null == result) {

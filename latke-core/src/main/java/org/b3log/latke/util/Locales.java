@@ -16,12 +16,13 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.Session;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -38,7 +39,7 @@ public final class Locales {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Locales.class);
+    private static final Logger LOGGER = LogManager.getLogger(Locales.class);
 
     /**
      * Thread local holder for locale.
@@ -96,7 +97,7 @@ public final class Locales {
             // Gets from request header
             final String languageHeader = request.getHeader("Accept-Language");
 
-            LOGGER.log(Level.DEBUG, "[Accept-Language={0}]", languageHeader);
+            LOGGER.log(Level.DEBUG, "[Accept-Language={}]", languageHeader);
 
             String language = "zh";
             String country = "CN";
@@ -111,12 +112,12 @@ public final class Locales {
             if (!hasLocale(locale)) {
                 // Uses default
                 locale = Latkes.getLocale();
-                LOGGER.log(Level.DEBUG, "Using the default locale[{0}]", locale.toString());
+                LOGGER.log(Level.DEBUG, "Using the default locale[{}]", locale.toString());
             } else {
-                LOGGER.log(Level.DEBUG, "Got locale[{0}] from request.", locale.toString());
+                LOGGER.log(Level.DEBUG, "Got locale[{}] from request.", locale.toString());
             }
         } else {
-            LOGGER.log(Level.DEBUG, "Got locale[{0}] from session.", locale.toString());
+            LOGGER.log(Level.DEBUG, "Got locale[{}] from session.", locale.toString());
         }
 
         return locale;
@@ -157,7 +158,7 @@ public final class Locales {
         }
 
         session.setAttribute(Keys.LOCALE, locale.toString());
-        LOGGER.log(Level.DEBUG, "Client [sessionId={0}] sets locale to [{1}]", session.getId(), locale.toString());
+        LOGGER.log(Level.DEBUG, "Client [sessionId={}] sets locale to [{}]", session.getId(), locale.toString());
     }
 
     /**

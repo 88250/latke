@@ -17,12 +17,13 @@ package org.b3log.latke;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.cache.redis.RedisCache;
 import org.b3log.latke.http.renderer.StaticFileRenderer;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Discoverer;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.Connections;
 
 import java.io.*;
@@ -51,7 +52,7 @@ public final class Latkes {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Latkes.class);
+    private static final Logger LOGGER = LogManager.getLogger(Latkes.class);
 
     /**
      * Executor service.
@@ -670,14 +671,14 @@ public final class Latkes {
             LOGGER.warn("!!!!Runtime mode is [" + Latkes.RuntimeMode.DEVELOPMENT + "], please make sure configured it with ["
                     + Latkes.RuntimeMode.PRODUCTION + "] in latke.properties if deployed on production environment!!!!");
         } else {
-            LOGGER.log(Level.DEBUG, "Runtime mode is [{0}]", getRuntimeMode());
+            LOGGER.log(Level.DEBUG, "Runtime mode is [{}]", getRuntimeMode());
         }
 
         final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
-        LOGGER.log(Level.DEBUG, "Runtime database is [{0}]", runtimeDatabase);
+        LOGGER.log(Level.DEBUG, "Runtime database is [{}]", runtimeDatabase);
 
         final RuntimeCache runtimeCache = getRuntimeCache();
-        LOGGER.log(Level.INFO, "Runtime cache is [{0}]", runtimeCache);
+        LOGGER.log(Level.INFO, "Runtime cache is [{}]", runtimeCache);
 
         Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
 

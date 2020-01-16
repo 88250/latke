@@ -15,8 +15,9 @@
  */
 package org.b3log.latke.ioc;
 
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.util.Reflections;
 
 import java.lang.annotation.Annotation;
@@ -35,7 +36,7 @@ public class Configurator {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Configurator.class);
+    private static final Logger LOGGER = LogManager.getLogger(Configurator.class);
 
     /**
      * Bean manager.
@@ -71,7 +72,7 @@ public class Configurator {
         try {
             return beanManager.getBean(beanClass);
         } catch (final Exception e) {
-            LOGGER.log(Level.TRACE, "Not found bean [beanClass={0}], so to create it", beanClass);
+            LOGGER.log(Level.TRACE, "Not found bean [beanClass={}], so to create it", beanClass);
         }
 
         if (Reflections.isAbstract(beanClass) || Reflections.isInterface(beanClass)) {
@@ -83,7 +84,7 @@ public class Configurator {
         final Set<Type> beanTypes = Reflections.getBeanTypes(beanClass);
         final Set<Class<? extends Annotation>> stereotypes = Reflections.getStereotypes(beanClass);
 
-        LOGGER.log(Level.DEBUG, "Adding a bean [name={0}, class={1}] to the bean manager", name, beanClass.getName());
+        LOGGER.log(Level.DEBUG, "Adding a bean [name={}, class={}] to the bean manager", name, beanClass.getName());
 
         final Bean<T> ret = new Bean<T>(beanManager, name, beanClass, beanTypes, stereotypes);
         beanManager.addBean(ret);

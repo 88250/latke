@@ -16,9 +16,9 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.http.Request;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 
 import java.util.Iterator;
 
@@ -50,7 +50,7 @@ public final class Requests {
      * @param logger  the specified logger
      */
     public static void log(final Request request, final Level level, final Logger logger) {
-        if (!logger.isLoggable(level)) {
+        if (!logger.isEnabled(level)) {
             return;
         }
 

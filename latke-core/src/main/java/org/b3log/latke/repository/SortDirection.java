@@ -30,5 +30,5 @@ public enum SortDirection {
     /**
      * Descending.
      */
-    DESCENDING;
+    DESCENDING
 }

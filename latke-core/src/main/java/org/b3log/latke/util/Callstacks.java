@@ -16,8 +16,9 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Call stack utilities.
@@ -30,7 +31,7 @@ public final class Callstacks {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Callstacks.class);
+    private static final Logger LOGGER = LogManager.getLogger(Callstacks.class);
 
     /**
      * Checks the current method is whether invoked by a caller specified by the given class name and method name.
@@ -53,7 +54,7 @@ public final class Callstacks {
 
         for (int i = 1; i < stackElements.length; i++) {
             if (stackElements[i].getClassName().equals(className)) {
-                return matchAllMethod ? true : stackElements[i].getMethodName().equals(methodName);
+                return matchAllMethod || stackElements[i].getMethodName().equals(methodName);
             }
         }
 

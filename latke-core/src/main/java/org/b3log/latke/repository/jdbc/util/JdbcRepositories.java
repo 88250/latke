@@ -18,8 +18,9 @@ package org.b3log.latke.repository.jdbc.util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.repository.Repositories;
 import org.b3log.latke.repository.jdbc.JdbcFactory;
 import org.json.JSONArray;
@@ -45,7 +46,7 @@ public final class JdbcRepositories {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JdbcRepositories.class);
+    private static final Logger LOGGER = LogManager.getLogger(JdbcRepositories.class);
 
     /**
      * "repositories".

@@ -16,8 +16,9 @@
 package org.b3log.latke.repository.oracle;
 
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.BooleanMapping;
 import org.b3log.latke.repository.jdbc.mapping.IntMapping;
@@ -45,7 +46,7 @@ public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(OracleJdbcDatabaseSolution.class);
+    private static final Logger LOGGER = LogManager.getLogger(OracleJdbcDatabaseSolution.class);
 
     /**
      * Public constructor.

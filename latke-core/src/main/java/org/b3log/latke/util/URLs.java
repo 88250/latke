@@ -15,8 +15,9 @@
  */
 package org.b3log.latke.util;
 
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -33,7 +34,7 @@ public final class URLs {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(URLs.class);
+    private static final Logger LOGGER = LogManager.getLogger(URLs.class);
 
     /**
      * Encodes the specified string.

@@ -17,8 +17,9 @@ package org.b3log.latke.util;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -59,7 +60,7 @@ public final class Crypts {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Crypts.class);
+    private static final Logger LOGGER = LogManager.getLogger(Crypts.class);
 
     /**
      * Encrypts by AES.

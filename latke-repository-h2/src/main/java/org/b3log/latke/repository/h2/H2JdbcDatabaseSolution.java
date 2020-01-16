@@ -16,8 +16,9 @@
 package org.b3log.latke.repository.h2;
 
 import org.apache.commons.lang.StringUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.repository.h2.mapping.BooleanMapping;
 import org.b3log.latke.repository.h2.mapping.StringMapping;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
@@ -42,7 +43,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(H2JdbcDatabaseSolution.class);
+    private static final Logger LOGGER = LogManager.getLogger(H2JdbcDatabaseSolution.class);
 
     /**
      * Public constructor.

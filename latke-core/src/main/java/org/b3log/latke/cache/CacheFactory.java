@@ -15,9 +15,10 @@
  */
 package org.b3log.latke.cache;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public final class CacheFactory {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(CacheFactory.class);
+    private static final Logger LOGGER = LogManager.getLogger(CacheFactory.class);
 
     /**
      * Caches.
@@ -54,7 +55,7 @@ public final class CacheFactory {
      * @return a cache specified by the given cache name
      */
     public static synchronized Cache getCache(final String cacheName) {
-        LOGGER.log(Level.INFO, "Constructing cache [name={0}]....", cacheName);
+        LOGGER.log(Level.INFO, "Constructing cache [name={}]....", cacheName);
 
         Cache ret = CACHES.get(cacheName);
 
@@ -87,7 +88,7 @@ public final class CacheFactory {
             throw new RuntimeException("Can not get cache: " + e.getMessage(), e);
         }
 
-        LOGGER.log(Level.INFO, "Constructed cache [name={0}, runtime={1}]", cacheName, Latkes.getRuntimeCache());
+        LOGGER.log(Level.INFO, "Constructed cache [name={}, runtime={}]", cacheName, Latkes.getRuntimeCache());
 
         return ret;
     }
@@ -99,7 +100,7 @@ public final class CacheFactory {
         for (final Map.Entry<String, Cache> entry : CACHES.entrySet()) {
             final Cache cache = entry.getValue();
             cache.clear();
-            LOGGER.log(Level.TRACE, "Cleared cache [name={0}]", entry.getKey());
+            LOGGER.log(Level.TRACE, "Cleared cache [name={}]", entry.getKey());
         }
     }
 }

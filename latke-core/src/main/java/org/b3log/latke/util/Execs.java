@@ -16,8 +16,9 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.io.IOUtils;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public final class Execs {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(Execs.class);
+    private static final Logger LOGGER = LogManager.getLogger(Execs.class);
 
     /**
      * Executes the specified command with the specified timeout.

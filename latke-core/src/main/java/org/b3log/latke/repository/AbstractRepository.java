@@ -15,10 +15,11 @@
  */
 package org.b3log.latke.repository;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
@@ -40,7 +41,7 @@ public abstract class AbstractRepository implements Repository {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractRepository.class);
+    private static final Logger LOGGER = LogManager.getLogger(AbstractRepository.class);
 
     /**
      * Repository.
@@ -86,7 +87,7 @@ public abstract class AbstractRepository implements Repository {
         }
 
         Repositories.addRepository(repository);
-        LOGGER.log(Level.INFO, "Constructed repository [name={0}]", name);
+        LOGGER.log(Level.INFO, "Constructed repository [name={}]", name);
     }
 
     @Override

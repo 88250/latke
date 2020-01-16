@@ -17,12 +17,13 @@ package org.b3log.latke.http.renderer;
 
 import freemarker.template.Template;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.Response;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Requests;
 
 import java.io.StringWriter;
@@ -40,7 +41,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractFreeMarkerRenderer.class);
+    private static final Logger LOGGER = LogManager.getLogger(AbstractFreeMarkerRenderer.class);
 
     /**
      * Template name.
@@ -86,7 +87,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         final Request request = context.getRequest();
         final Template template = getTemplate();
         if (null == template) {
-            LOGGER.log(Level.ERROR, "Not found template [{0}]", templateName);
+            LOGGER.log(Level.ERROR, "Not found template [{}]", templateName);
             response.sendError0(404);
 
             return;

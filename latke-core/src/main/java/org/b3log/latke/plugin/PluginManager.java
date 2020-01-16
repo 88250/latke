@@ -17,13 +17,14 @@ package org.b3log.latke.plugin;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.Inject;
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Plugin;
 import org.b3log.latke.util.Stopwatchs;
 import org.json.JSONException;
@@ -49,7 +50,7 @@ public class PluginManager {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(PluginManager.class);
+    private static final Logger LOGGER = LogManager.getLogger(PluginManager.class);
 
     /**
      * Type of loaded event.
@@ -129,7 +130,7 @@ public class PluginManager {
         if (null != pluginDirPaths) {
             for (final String pluginDirPath : pluginDirPaths) {
                 try {
-                    LOGGER.log(Level.INFO, "Loading plugin under directory [{0}]", pluginDirPath);
+                    LOGGER.log(Level.INFO, "Loading plugin under directory [{}]", pluginDirPath);
 
                     final AbstractPlugin plugin = load(pluginDirPath, pluginCache);
                     if (plugin != null) {
@@ -186,7 +187,7 @@ public class PluginManager {
 
         final Class<?> pluginClass = classLoader.loadClass(pluginClassName);
 
-        LOGGER.log(Level.TRACE, "Loading plugin class [name={0}]", pluginClassName);
+        LOGGER.log(Level.TRACE, "Loading plugin class [name={}]", pluginClassName);
         final AbstractPlugin ret = (AbstractPlugin) pluginClass.getDeclaredConstructor().newInstance();
         ret.setRendererId(rendererId);
 
@@ -219,7 +220,7 @@ public class PluginManager {
             set.add(plugin);
         }
 
-        LOGGER.log(Level.DEBUG, "Registered plugin [name={0}, version={1}] for rendererId [name={2}], [{3}] plugins totally",
+        LOGGER.log(Level.DEBUG, "Registered plugin [name={}, version={}] for rendererId [name={}], [{}] plugins totally",
                 plugin.getName(), plugin.getVersion(), rendererId, holder.size());
     }
 
@@ -236,7 +237,7 @@ public class PluginManager {
         final String version = props.getProperty(Plugin.PLUGIN_VERSION);
         final String types = props.getProperty(Plugin.PLUGIN_TYPES);
 
-        LOGGER.log(Level.TRACE, "Plugin [name={0}, author={1}, version={2}, types={3}]", name, author, version, types);
+        LOGGER.log(Level.TRACE, "Plugin [name={}, author={}, version={}, types={}]", name, author, version, types);
 
         plugin.setAuthor(author);
         plugin.setName(name);

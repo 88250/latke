@@ -16,11 +16,12 @@
 package org.b3log.latke.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.Singleton;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.util.Locales;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class LangPropsService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LangPropsService.class);
+    private static final Logger LOGGER = LogManager.getLogger(LangPropsService.class);
 
     /**
      * Language properties.
@@ -125,7 +126,7 @@ public class LangPropsService {
         try {
             return replaceVars(ResourceBundle.getBundle(baseName, locale).getString(key));
         } catch (final MissingResourceException e) {
-            LOGGER.log(Level.WARN, "{0}, get it from default locale [{1}]", e.getMessage(), Latkes.getLocale());
+            LOGGER.log(Level.WARN, "{}, get it from default locale [{}]", e.getMessage(), Latkes.getLocale());
 
             return replaceVars(ResourceBundle.getBundle(baseName, Latkes.getLocale()).getString(key));
         }

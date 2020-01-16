@@ -17,10 +17,11 @@ package org.b3log.latke.repository.jdbc.util;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
 import org.json.JSONArray;
@@ -46,7 +47,7 @@ public final class JdbcUtil {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(JdbcUtil.class);
+    private static final Logger LOGGER = LogManager.getLogger(JdbcUtil.class);
 
     /**
      * Executes the specified SQL with the specified connection.
@@ -182,7 +183,7 @@ public final class JdbcUtil {
 
         final List<FieldDefinition> definitionList = JdbcRepositories.getKeys(tableName);
         if (null == definitionList) {
-            LOGGER.log(Level.ERROR, "resultSetToJsonObject: null definitionList finded for table  {0}", tableName);
+            LOGGER.log(Level.ERROR, "resultSetToJsonObject: null definitionList finded for table  {}", tableName);
             throw new RepositoryException("resultSetToJsonObject: null definitionList finded for table  " + tableName);
         }
 

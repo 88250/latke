@@ -15,7 +15,8 @@
  */
 package org.b3log.latke.util;
 
-import org.b3log.latke.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.http.HttpMethod;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.http.annotation.RequestProcessing;
@@ -74,7 +75,7 @@ class FeedProcessor {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(FeedProcessor.class);
+    private static final Logger LOGGER = LogManager.getLogger(FeedProcessor.class);
 
     /**
      * Blog articles Atom output.

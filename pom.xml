@@ -4,7 +4,8 @@
     Version: 1.2.2.30, Jan 14, 2020
     Author: Liang Ding
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke-parent</artifactId>
@@ -41,8 +42,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-codec.version>1.12</commons-codec.version>
         <javassist.version>3.26.0-GA</javassist.version>
-        <slf4j.version>1.7.30</slf4j.version>
-        <log4j2.version></log4j2.version>
+        <log4j2.version>2.13.0</log4j2.version>
         <netty.version>4.1.45.Final</netty.version>
         <tika.version>1.22</tika.version>
 
@@ -131,9 +131,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j2.version}</version>
             </dependency>
 
             <dependency>

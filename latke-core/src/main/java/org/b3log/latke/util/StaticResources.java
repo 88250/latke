@@ -16,11 +16,12 @@
 package org.b3log.latke.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.Request;
-import org.b3log.latke.logging.Level;
-import org.b3log.latke.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -44,7 +45,7 @@ public final class StaticResources {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(StaticResources.class);
+    private static final Logger LOGGER = LogManager.getLogger(StaticResources.class);
 
     /**
      * Static resource path patterns.
