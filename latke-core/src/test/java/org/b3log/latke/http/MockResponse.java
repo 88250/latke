@@ -15,10 +15,7 @@
  */
 package org.b3log.latke.http;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.CombinedChannelDuplexHandler;
-import io.netty.handler.codec.http.*;
-import org.b3log.latke.http.Response;
+import io.netty.handler.codec.http.HttpResponse;
 
 /**
  * Mock HTTP response.

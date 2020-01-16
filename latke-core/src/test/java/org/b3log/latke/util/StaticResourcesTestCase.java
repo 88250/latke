@@ -15,7 +15,10 @@
  */
 package org.b3log.latke.util;
 
-import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpVersion;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.MockRequest;
 import org.b3log.latke.http.Request;

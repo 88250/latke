@@ -15,8 +15,8 @@
  */
 package org.b3log.latke.http;
 
-import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.http.advice.ProcessAdvice;
+import org.b3log.latke.ioc.Singleton;
 
 @Singleton
 public class TestBeforeAdvice extends ProcessAdvice {

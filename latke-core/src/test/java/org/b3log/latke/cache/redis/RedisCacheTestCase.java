@@ -21,7 +21,6 @@ import org.b3log.latke.cache.CacheFactory;
 import org.b3log.latke.util.Ids;
 import org.json.JSONObject;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * {@link RedisCache} test case.
