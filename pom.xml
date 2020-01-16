@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.30, Jan 14, 2020
+    Version: 1.2.2.31, Jan 16, 2020
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -132,6 +132,12 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
+                <version>${log4j2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${log4j2.version}</version>
             </dependency>
 
