@@ -17,12 +17,9 @@ package org.b3log.latke.ioc.inherit;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.BeanManager;
-import org.b3log.latke.ioc.Discoverer;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import java.util.Collection;
 
 import static org.testng.Assert.assertNotNull;
 
