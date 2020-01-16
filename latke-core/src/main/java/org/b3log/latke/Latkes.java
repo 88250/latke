@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.0.16, Jan 14, 2020
+ * @version 2.11.0.17, Jan 16, 2020
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -102,15 +102,6 @@ public final class Latkes {
      * IoC scan path.
      */
     private static String scanPath;
-
-    /**
-     * H2 database TCP server.
-     * <p>
-     * If Latke is using {@link RuntimeDatabase#H2 H2} database and specified newTCPServer=true in local.properties,
-     * creates a H2 TCP server and starts it.
-     * </p>
-     */
-    private static org.h2.tools.Server h2;
 
     /**
      * Init flag.
@@ -685,39 +676,6 @@ public final class Latkes {
         final RuntimeDatabase runtimeDatabase = getRuntimeDatabase();
         LOGGER.log(Level.DEBUG, "Runtime database is [{0}]", runtimeDatabase);
 
-        if (RuntimeDatabase.H2 == runtimeDatabase) {
-            final String newTCPServer = getLocalProperty("newTCPServer");
-
-            if ("true".equals(newTCPServer)) {
-                LOGGER.log(Level.DEBUG, "Starting H2 TCP server");
-
-                final String jdbcURL = getLocalProperty("jdbc.URL");
-
-                if (StringUtils.isBlank(jdbcURL)) {
-                    throw new IllegalStateException("The jdbc.URL in local.properties is required");
-                }
-
-                final String[] parts = jdbcURL.split(":");
-                if (5 != parts.length) {
-                    throw new IllegalStateException("jdbc.URL should like [jdbc:h2:tcp://localhost:8250/~/] (the port part is required)");
-                }
-
-                String port = parts[parts.length - 1];
-                port = StringUtils.substringBefore(port, "/");
-                LOGGER.log(Level.TRACE, "H2 TCP port [{0}]", port);
-                try {
-                    h2 = org.h2.tools.Server.createTcpServer(new String[]{"-tcpPort", port, "-tcpAllowOthers"}).start();
-                } catch (final SQLException e) {
-                    final String msg = "H2 TCP server create failed";
-                    LOGGER.log(Level.ERROR, msg, e);
-
-                    throw new IllegalStateException(msg);
-                }
-
-                LOGGER.log(Level.DEBUG, "Started H2 TCP server");
-            }
-        }
-
         final RuntimeCache runtimeCache = getRuntimeCache();
         LOGGER.log(Level.INFO, "Runtime cache is [{0}]", runtimeCache);
 
@@ -850,14 +808,6 @@ public final class Latkes {
             }
 
             Connections.shutdownConnectionPool();
-            if (RuntimeDatabase.H2 == getRuntimeDatabase()) {
-                final String newTCPServer = getLocalProperty("newTCPServer");
-                if ("true".equals(newTCPServer)) {
-                    h2.stop();
-                    h2.shutdown();
-                    LOGGER.log(Level.DEBUG, "Closed H2 TCP server");
-                }
-            }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
         }
