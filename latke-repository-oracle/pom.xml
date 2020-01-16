@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke Repository (Oracle).
-    Version: 1.0.0.0, Oct 16, 2017
+    Version: 1.0.0.1, Jan 16, 2020
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.b3log</groupId>
     <artifactId>latke-repository-oracle</artifactId>
     <packaging>jar</packaging>
 
@@ -20,61 +19,20 @@
         <version>3.1.2-SNAPSHOT</version>
     </parent>
 
-    <properties>
-        <ojdbc.version>6</ojdbc.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-
-            <dependency>
-                <groupId>org.b3log</groupId>
-                <artifactId>latke-core</artifactId>
-                <version>${project.parent.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
 
         <dependency>
             <groupId>org.b3log</groupId>
             <artifactId>latke-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
+            <version>${parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>oracle.jdbc</groupId>
             <artifactId>ojdbc</artifactId>
-            <version>${ojdbc.version}</version>
+            <version>6</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/lib/oracle/jdbc/ojdbc-6.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
