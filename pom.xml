@@ -137,13 +137,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-jdk14</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
