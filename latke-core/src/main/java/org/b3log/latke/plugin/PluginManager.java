@@ -127,18 +127,16 @@ public class PluginManager {
 
         final List<String> pluginDirPaths = Latkes.listFiles("/plugins");
         final List<AbstractPlugin> plugins = new ArrayList<>();
-        if (null != pluginDirPaths) {
-            for (final String pluginDirPath : pluginDirPaths) {
-                try {
-                    LOGGER.log(Level.INFO, "Loading plugin under directory [{}]", pluginDirPath);
+        for (final String pluginDirPath : pluginDirPaths) {
+            try {
+                LOGGER.log(Level.INFO, "Loading plugin under directory [{}]", pluginDirPath);
 
-                    final AbstractPlugin plugin = load(pluginDirPath, pluginCache);
-                    if (plugin != null) {
-                        plugins.add(plugin);
-                    }
-                } catch (final Exception e) {
-                    LOGGER.log(Level.WARN, "Load plugin under directory [" + pluginDirPath + "] failed", e);
+                final AbstractPlugin plugin = load(pluginDirPath, pluginCache);
+                if (plugin != null) {
+                    plugins.add(plugin);
                 }
+            } catch (final Exception e) {
+                LOGGER.log(Level.WARN, "Load plugin under directory [" + pluginDirPath + "] failed", e);
             }
         }
 

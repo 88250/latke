@@ -53,7 +53,7 @@ import java.util.*;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
- * @version 1.3.2.2, Dec 5, 2018
+ * @version 1.3.3.0, Jan 24, 2020
  * @see PluginManager
  * @see PluginStatus
  * @see PluginType
@@ -124,20 +124,6 @@ public abstract class AbstractPlugin implements Serializable {
      * FreeMarker configuration.
      */
     private transient Configuration configuration;
-
-    /**
-     * Event listeners.
-     */
-    private List<AbstractEventListener<?>> eventListeners = new ArrayList<AbstractEventListener<?>>();
-
-    /**
-     * Adds the specified event listener.
-     *
-     * @param eventListener the specified event listener
-     */
-    public void addEventListener(final AbstractEventListener<?> eventListener) {
-        eventListeners.add(eventListener);
-    }
 
     /**
      * Unplugs.
@@ -228,20 +214,12 @@ public abstract class AbstractPlugin implements Serializable {
      * The lifecycle pointcut for the plugin to start(enable status).
      */
     protected void start() {
-        final EventManager eventManager = BeanManager.getInstance().getReference(EventManager.class);
-        for (final AbstractEventListener<?> eventListener : eventListeners) {
-            eventManager.registerListener(eventListener);
-        }
     }
 
     /**
      * The lifecycle pointcut for the plugin to close(disable status).
      */
     protected void stop() {
-        final EventManager eventManager = BeanManager.getInstance().getReference(EventManager.class);
-        for (final AbstractEventListener<?> eventListener : eventListeners) {
-            eventManager.unregisterListener(eventListener);
-        }
     }
 
     /**
@@ -564,17 +542,12 @@ public abstract class AbstractPlugin implements Serializable {
      * </p>
      */
     public void changeStatus() {
-
         switch (status) {
             case ENABLED:
                 start();
-                break;
-
+                return;
             case DISABLED:
                 stop();
-
-            default:
         }
     }
-
 }
