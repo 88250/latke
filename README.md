@@ -5,7 +5,7 @@
 <br><br>
 <a title="Build Status" target="_blank" href="https://travis-ci.org/88250/latke"><img src="https://img.shields.io/travis/88250/latke.svg?style=flat-square"></a>
 <a title="Apache2" target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.txt"><img src="http://img.shields.io/badge/license-Apache2-orange.svg?style=flat-square"></a>
-<a title="Maven Central" target="_blank" href="http://repo1.maven.org/maven2/org/88250/latke-parent"><img src="https://maven-badges.herokuapp.com/maven-central/org.b3log/latke-parent/badge.svg?style=flat-square&color=blueviolet"></a>
+<a title="Maven Central" target="_blank" href="https://repo1.maven.org/maven2/org/b3log/latke-parent"><img src="https://maven-badges.herokuapp.com/maven-central/org.b3log/latke-parent/badge.svg?style=flat-square&color=blueviolet"></a>
 <a title="Hits" target="_blank" href="https://github.com/88250/hits"><img src="https://hits.b3log.org/88250/latke.svg"></a>
 </p>
 
