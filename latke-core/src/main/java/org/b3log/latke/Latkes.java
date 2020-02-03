@@ -41,7 +41,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.0.17, Jan 16, 2020
+ * @version 2.11.0.18, Feb 3, 2020
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -113,6 +113,57 @@ public final class Latkes {
      * Indicates whether HTTP session is enabled.
      */
     private static boolean enabledSession = true;
+
+    /**
+     * Scheme of the current request.
+     */
+    private static final ThreadLocal<String> SCHEME = new ThreadLocal<>();
+
+    /**
+     * Host of the current request.
+     */
+    private static final ThreadLocal<String> HOST = new ThreadLocal<>();
+
+    /**
+     * Port of the current request.
+     */
+    private static final ThreadLocal<String> PORT = new ThreadLocal<>();
+
+    /**
+     * Sets the current scheme with the specified scheme.
+     *
+     * @param scheme the specified scheme
+     */
+    public static void setScheme(final String scheme) {
+        SCHEME.set(scheme);
+    }
+
+    /**
+     * Sets the current host with the specified host.
+     *
+     * @param host the specified host
+     */
+    public static void setHost(final String host) {
+        HOST.set(host);
+    }
+
+    /**
+     * Sets the current port with the specified port.
+     *
+     * @param port the specified port
+     */
+    public static void setPort(final String port) {
+        PORT.set(port);
+    }
+
+    /**
+     * Clears scheme, host and port.
+     */
+    public static void clearSchemeHostPort() {
+        SCHEME.set(null);
+        HOST.set(null);
+        PORT.set(null);
+    }
 
     /**
      * Whether enables HTTP session. Default is enabled.
@@ -336,6 +387,11 @@ public final class Latkes {
      * @return server scheme
      */
     public static String getServerScheme() {
+        final String scheme = SCHEME.get();
+        if (null != scheme) {
+            return scheme;
+        }
+
         String ret = getLatkeProperty("serverScheme");
         if (null == ret) {
             ret = "http";
@@ -359,6 +415,11 @@ public final class Latkes {
      * @return server host
      */
     public static String getServerHost() {
+        final String host = HOST.get();
+        if (null != host) {
+            return host;
+        }
+
         String ret = getLatkeProperty("serverHost");
         if (null == ret) {
             ret = "localhost";
@@ -374,6 +435,34 @@ public final class Latkes {
      */
     public static void setServerHost(final String serverHost) {
         setLatkeProperty("serverHost", serverHost);
+    }
+
+    /**
+     * Gets server port.
+     *
+     * @return server port
+     */
+    public static String getServerPort() {
+        final String port = PORT.get();
+        if (null != port) {
+            return port;
+        }
+
+        String ret = getLatkeProperty("serverPort");
+        if (null == ret) {
+            ret = "8080";
+        }
+
+        return ret;
+    }
+
+    /**
+     * Sets server port.
+     *
+     * @param serverPort the specified server port
+     */
+    public static void setServerPort(final String serverPort) {
+        setLatkeProperty("serverPort", serverPort);
     }
 
     /**
@@ -419,29 +508,6 @@ public final class Latkes {
         }
 
         PUBLIC_IP = "127.0.0.1";
-    }
-
-    /**
-     * Gets server port.
-     *
-     * @return server port
-     */
-    public static String getServerPort() {
-        String ret = getLatkeProperty("serverPort");
-        if (null == ret) {
-            ret = "8080";
-        }
-
-        return ret;
-    }
-
-    /**
-     * Sets server port.
-     *
-     * @param serverPort the specified server port
-     */
-    public static void setServerPort(final String serverPort) {
-        setLatkeProperty("serverPort", serverPort);
     }
 
     /**

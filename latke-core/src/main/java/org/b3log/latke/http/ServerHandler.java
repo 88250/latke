@@ -32,7 +32,7 @@ import java.util.Set;
  * Http server handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Nov 5, 2019
+ * @version 1.0.0.2, Feb 3, 2020
  * @since 3.0.0
  */
 final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -49,8 +49,8 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     @Override
     protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest fullHttpRequest) {
+        setSchemeHostPort(fullHttpRequest);
         final Request request = new Request(ctx, fullHttpRequest);
-
         if (!StaticResources.isStatic(request)) {
             // 解析查询字符串
             request.parseQueryStr();
@@ -87,11 +87,34 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         release(context);
     }
 
+    private void setSchemeHostPort(final FullHttpRequest fullHttpRequest) {
+        final HttpHeaders headers = fullHttpRequest.headers();
+        if (null != headers) {
+            final String scheme = headers.get("scheme");
+            if (StringUtils.isNotBlank(scheme)) {
+                Latkes.setScheme(scheme);
+            }
+            final String host = headers.get("host");
+            if (StringUtils.isNotBlank(host)) {
+                if (StringUtils.containsIgnoreCase(host, ":")) {
+                    final String name = StringUtils.split(host, ":")[0];
+                    final String port = StringUtils.split(host, ":")[1];
+                    Latkes.setHost(name);
+                    Latkes.setPort(port);
+                } else {
+                    Latkes.setHost(host);
+                }
+            }
+        }
+    }
+
     private void release(final RequestContext context) {
         final Request request = context.getRequest();
         if (null != request.httpDecoder) {
             request.httpDecoder.destroy();
         }
+
+        Latkes.clearSchemeHostPort();
     }
 
     private void handleCookie(final Request request) {
