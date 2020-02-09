@@ -137,7 +137,7 @@ public final class Dispatcher {
      * @param handler     the specified handler
      */
     public static void error(final String uriTemplate, final ContextHandler handler) {
-        errorHandleRouter = new Router().get(uriTemplate, handler);
+        errorHandleRouter = group().get(uriTemplate, handler).routers.get(0);
     }
 
     /**
@@ -213,7 +213,7 @@ public final class Dispatcher {
          *
          * @return router
          */
-        public Router route() {
+        public Router router() {
             final Router ret = new Router();
             routers.add(ret);
             ret.group = this;
@@ -228,8 +228,11 @@ public final class Dispatcher {
          * @param handler     the specified handler
          * @return router
          */
-        public Router delete(final String uriTemplate, final ContextHandler handler) {
-            return route().delete(uriTemplate, handler);
+        public RouterGroup delete(final String uriTemplate, final ContextHandler handler) {
+            final Router route = router();
+            route.delete(uriTemplate, handler);
+
+            return route.group;
         }
 
         /**
@@ -239,8 +242,11 @@ public final class Dispatcher {
          * @param handler     the specified handler
          * @return router
          */
-        public Router put(final String uriTemplate, final ContextHandler handler) {
-            return route().put(uriTemplate, handler);
+        public RouterGroup put(final String uriTemplate, final ContextHandler handler) {
+            final Router router = router();
+            router.put(uriTemplate, handler);
+
+            return router.group;
         }
 
         /**
@@ -250,8 +256,11 @@ public final class Dispatcher {
          * @param handler     the specified handler
          * @return router
          */
-        public Router get(final String uriTemplate, final ContextHandler handler) {
-            return route().get(uriTemplate, handler);
+        public RouterGroup get(final String uriTemplate, final ContextHandler handler) {
+            final Router router = router();
+            router.get(uriTemplate, handler);
+
+            return router.group;
         }
 
         /**
@@ -261,8 +270,11 @@ public final class Dispatcher {
          * @param handler     the specified handler
          * @return router
          */
-        public Router post(final String uriTemplate, final ContextHandler handler) {
-            return route().post(uriTemplate, handler);
+        public RouterGroup post(final String uriTemplate, final ContextHandler handler) {
+            final Router router = router();
+            router.post(uriTemplate, handler);
+
+            return router.group;
         }
 
     }
@@ -280,41 +292,41 @@ public final class Dispatcher {
         private ContextHandler handler;
         private Method method;
 
-        public Router delete(final String uriTemplate, final ContextHandler handler) {
-            return delete(new String[]{uriTemplate}, handler);
+        public void delete(final String uriTemplate, final ContextHandler handler) {
+            delete(new String[]{uriTemplate}, handler);
         }
 
-        public Router delete(final String[] uriTemplates, final ContextHandler handler) {
-            return delete().uris(uriTemplates).handler(handler);
+        public void delete(final String[] uriTemplates, final ContextHandler handler) {
+            delete().uris(uriTemplates).handler(handler);
         }
 
-        public Router put(final String uriTemplate, final ContextHandler handler) {
-            return put(new String[]{uriTemplate}, handler);
+        public void put(final String uriTemplate, final ContextHandler handler) {
+            put(new String[]{uriTemplate}, handler);
         }
 
-        public Router put(final String[] uriTemplates, final ContextHandler handler) {
-            return put().uris(uriTemplates).handler(handler);
+        public void put(final String[] uriTemplates, final ContextHandler handler) {
+            put().uris(uriTemplates).handler(handler);
         }
 
-        public Router post(final String uriTemplate, final ContextHandler handler) {
-            return post(new String[]{uriTemplate}, handler);
+        public void post(final String uriTemplate, final ContextHandler handler) {
+            post(new String[]{uriTemplate}, handler);
         }
 
-        public Router post(final String[] uriTemplates, final ContextHandler handler) {
-            return post().uris(uriTemplates).handler(handler);
+        public void post(final String[] uriTemplates, final ContextHandler handler) {
+            post().uris(uriTemplates).handler(handler);
         }
 
-        public Router get(final String uriTemplate, final ContextHandler handler) {
-            return get(new String[]{uriTemplate}, handler);
+        public void get(final String uriTemplate, final ContextHandler handler) {
+            get(new String[]{uriTemplate}, handler);
         }
 
-        public Router get(final String[] uriTemplates, final ContextHandler handler) {
-            return get().uris(uriTemplates).handler(handler);
+        public void get(final String[] uriTemplates, final ContextHandler handler) {
+            get().uris(uriTemplates).handler(handler);
         }
 
         public Router uris(final String[] uriTemplates) {
-            for (int i = 0; i < uriTemplates.length; i++) {
-                uri(uriTemplates[i]);
+            for (final String uriTemplate : uriTemplates) {
+                uri(uriTemplate);
             }
 
             return this;
@@ -386,7 +398,7 @@ public final class Dispatcher {
 
         public Router handler(final ContextHandler handler) {
             this.handler = handler;
-            final Class clazz = handler.getClass();
+            final Class<?> clazz = handler.getClass();
             try {
                 final Serializable lambda = handler;
                 // Latke 框架中 "writeReplace" 是个什么魔数？ https://hacpai.com/article/1568102022352

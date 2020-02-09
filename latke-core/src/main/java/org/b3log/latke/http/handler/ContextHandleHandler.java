@@ -21,21 +21,22 @@ import org.b3log.latke.ioc.BeanManager;
 import java.lang.reflect.Method;
 
 /**
- * Invokes processing method ({@link org.b3log.latke.http.function.ContextHandler#handle(RequestContext)} or method annotated {@link org.b3log.latke.http.annotation.RequestProcessing}).
+ * Invokes processing method ({@link org.b3log.latke.http.function.ContextHandler#handle(RequestContext)}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Dec 5, 2018
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 2.4.34
  */
 public class ContextHandleHandler implements Handler {
 
     @Override
     public void handle(final RequestContext context) throws Exception {
-        final MatchResult result = (MatchResult) context.attr(RouteHandler.MATCH_RESULT);
+        final RouteResolution result = (RouteResolution) context.attr(RouteHandler.MATCH_RESULT);
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
         final BeanManager beanManager = BeanManager.getInstance();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
         invokeHolder.invoke(classHolder, context);
+        context.handle();
     }
 }

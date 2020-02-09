@@ -15,20 +15,17 @@
  */
 package org.b3log.latke.http.handler;
 
-import org.b3log.latke.http.renderer.AbstractResponseRenderer;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * The route matched-result bean.
+ * The route resolution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 2.0.0.0, Feb 9, 2020
  * @since 3.2.4
  */
-public final class MatchResult {
+public final class RouteResolution {
 
     /**
      * Context handler meta..
@@ -36,45 +33,28 @@ public final class MatchResult {
     private ContextHandlerMeta contextHandlerMeta;
 
     /**
-     * Request URI.
-     */
-    private String requestURI;
-
-    /**
-     * Matched HTTP method.
-     */
-    private String matchedMethod;
-
-    /**
-     * Matched URI template.
-     */
-    private String matchedUriTemplate;
-
-    /**
      * URI template name-args mappings.
      */
     private Map<String, String> pathVars = new HashMap<>();
 
     /**
-     * @param contextHandlerMeta context handler meta
-     * @param requestURI         requestURI from request
-     * @param matchedMethod      matched HTTP method
-     * @param matchedUriTemplate matched URI template
+     * Constructs a rote resolution with the specified context handler meta.
+     *
+     * @param contextHandlerMeta the specified context handler meta
      */
-    MatchResult(final ContextHandlerMeta contextHandlerMeta, final String requestURI, final String matchedMethod, final String matchedUriTemplate) {
+    public RouteResolution(final ContextHandlerMeta contextHandlerMeta) {
         this.contextHandlerMeta = contextHandlerMeta;
-        this.requestURI = requestURI;
-        this.matchedMethod = matchedMethod;
-        this.matchedUriTemplate = matchedUriTemplate;
     }
 
     /**
-     * Gets the matched URI template.
+     * Constructs a rote resolution with the specified context handler meta and path vars.
      *
-     * @return matched URI template
+     * @param contextHandlerMeta the specified context handler meta
+     * @param pathVars           the specified path vars
      */
-    public String getMatchedUriTemplate() {
-        return matchedUriTemplate;
+    public RouteResolution(final ContextHandlerMeta contextHandlerMeta, final Map<String, String> pathVars) {
+        this.contextHandlerMeta = contextHandlerMeta;
+        this.pathVars = pathVars;
     }
 
     /**
@@ -93,14 +73,5 @@ public final class MatchResult {
      */
     public Map<String, String> getPathVars() {
         return pathVars;
-    }
-
-    /**
-     * Set path vars.
-     *
-     * @param pathVars the specified path vars
-     */
-    public void setPathVars(final Map<String, String> pathVars) {
-        this.pathVars = pathVars;
     }
 }
