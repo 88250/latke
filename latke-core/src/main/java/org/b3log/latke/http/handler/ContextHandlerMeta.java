@@ -16,21 +16,16 @@
 package org.b3log.latke.http.handler;
 
 import org.b3log.latke.http.HttpMethod;
-import org.b3log.latke.http.advice.ProcessAdvice;
-import org.b3log.latke.http.annotation.After;
-import org.b3log.latke.http.annotation.Before;
 import org.b3log.latke.http.function.ContextHandler;
-import org.b3log.latke.ioc.BeanManager;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Context handler metadata.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Dec 10, 2018
+ * @version 2.0.0.0, Feb 9, 2020
  * @since 2.4.34
  */
 public final class ContextHandlerMeta {
@@ -51,45 +46,14 @@ public final class ContextHandlerMeta {
     private Method invokeHolder;
 
     /**
-     * Context handler if using functional routing.
+     * Context handler.
      */
     private ContextHandler handler;
 
     /**
-     * Before request process advices.
+     * Middlewares.
      */
-    private List<ProcessAdvice> beforeRequestProcessAdvices;
-
-    /**
-     * After request process advices.
-     */
-    private List<ProcessAdvice> afterRequestProcessAdvices;
-
-    /**
-     * Get the before request process advices.
-     *
-     * @return before request process advices
-     */
-    public List<ProcessAdvice> getBeforeRequestProcessAdvices() {
-        return beforeRequestProcessAdvices;
-    }
-
-    /**
-     * Get the after request process advices.
-     *
-     * @return after request process advices
-     */
-    public List<ProcessAdvice> getAfterRequestProcessAdvices() {
-        return afterRequestProcessAdvices;
-    }
-
-    /**
-     * Initializes process advices.
-     */
-    public void initProcessAdvices() {
-        initBeforeList();
-        initAfterList();
-    }
+    private List<Handler> middlewares;
 
     /**
      * Set the URI templates with the specified URI templates.
@@ -164,64 +128,20 @@ public final class ContextHandlerMeta {
     }
 
     /**
-     * Initializes before process advices.
+     * Gets the middlewares.
+     *
+     * @return middlewares
      */
-    private void initBeforeList() {
-        final List<ProcessAdvice> beforeRequestProcessAdvices = new ArrayList<>();
-
-        final Method invokeHolder = getInvokeHolder();
-        final Class<?> processorClass = invokeHolder.getDeclaringClass();
-
-        // 1. process class advice
-        if (null != processorClass && processorClass.isAnnotationPresent(Before.class)) {
-            final Class<? extends ProcessAdvice>[] bcs = processorClass.getAnnotation(Before.class).value();
-            for (int i = 0; i < bcs.length; i++) {
-                final Class<? extends ProcessAdvice> bc = bcs[i];
-                final ProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(bc);
-                beforeRequestProcessAdvices.add(beforeRequestProcessAdvice);
-            }
-        }
-        // 2. process method advice
-        if (invokeHolder.isAnnotationPresent(Before.class)) {
-            final Class<? extends ProcessAdvice>[] bcs = invokeHolder.getAnnotation(Before.class).value();
-            for (int i = 0; i < bcs.length; i++) {
-                final Class<? extends ProcessAdvice> bc = bcs[i];
-                final ProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(bc);
-                beforeRequestProcessAdvices.add(beforeRequestProcessAdvice);
-            }
-        }
-
-        this.beforeRequestProcessAdvices = beforeRequestProcessAdvices;
+    public List<Handler> getMiddlewares() {
+        return middlewares;
     }
 
     /**
-     * Initializes after process advices.
+     * Sets the middlewares.
+     *
+     * @param middlewares the specified middlewares
      */
-    private void initAfterList() {
-        final List<ProcessAdvice> afterRequestProcessAdvices = new ArrayList<>();
-
-        final Method invokeHolder = getInvokeHolder();
-        final Class<?> processorClass = invokeHolder.getDeclaringClass();
-
-        // 1. process method advice
-        if (invokeHolder.isAnnotationPresent(After.class)) {
-            final Class<? extends ProcessAdvice>[] acs = invokeHolder.getAnnotation(After.class).value();
-            for (int i = 0; i < acs.length; i++) {
-                final Class<? extends ProcessAdvice> ac = acs[i];
-                final ProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(ac);
-                afterRequestProcessAdvices.add(beforeRequestProcessAdvice);
-            }
-        }
-        // 2. process class advice
-        if (null != processorClass && processorClass.isAnnotationPresent(After.class)) {
-            final Class<? extends ProcessAdvice>[] acs = invokeHolder.getAnnotation(After.class).value();
-            for (int i = 0; i < acs.length; i++) {
-                final Class<? extends ProcessAdvice> ac = acs[i];
-                final ProcessAdvice beforeRequestProcessAdvice = BeanManager.getInstance().getReference(ac);
-                afterRequestProcessAdvices.add(beforeRequestProcessAdvice);
-            }
-        }
-
-        this.afterRequestProcessAdvices = afterRequestProcessAdvices;
+    public void setMiddlewares(List<Handler> middlewares) {
+        this.middlewares = middlewares;
     }
 }

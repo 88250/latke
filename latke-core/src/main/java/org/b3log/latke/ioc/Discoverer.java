@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.b3log.latke.repository.annotation.Repository;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.ArrayUtils;
@@ -39,7 +38,7 @@ import java.util.Set;
  * Bean discoverer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.6, Nov 3, 2019
+ * @version 1.0.0.7, Feb 9, 2020
  * @since 2.4.18
  */
 public final class Discoverer {
@@ -109,8 +108,7 @@ public final class Discoverer {
                         break;
                     }
 
-                    if (typeName.equals(RequestProcessor.class.getName()) || typeName.equals(Service.class.getName()) ||
-                            typeName.equals(Repository.class.getName())) {
+                    if (typeName.equals(Service.class.getName()) || typeName.equals(Repository.class.getName())) {
                         final Annotation singletonAnnotation = new Annotation(Singleton.class.getName(), constPool);
                         annotationsAttribute.addAnnotation(singletonAnnotation);
                         classFile.addAttribute(annotationsAttribute);

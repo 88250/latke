@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.http.annotation;
+package org.b3log.latke.http;
 
-
-import java.lang.annotation.*;
-
+import org.b3log.latke.ioc.Singleton;
 
 /**
- * The render mark for the parameter of the method, just to set the id of the renderer.
+ * Middleware for testing.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
- * @version 1.0.0.0, Jan 21, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.3, Feb 9, 2020
+ * @since 3.2.4
  */
-@Target({ElementType.PARAMETER, ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Render {
-
-    /**
-     * The id of the render, for plugin to identify.
-     *
-     * @return value
-     */
-    String value();
+@Singleton
+class TestMiddleware {
+    public void handle(final RequestContext context) {
+        context.attr("before", "before");
+        context.handle();
+        context.attr("after", "after");
+    }
 }
+

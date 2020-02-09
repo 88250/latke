@@ -17,10 +17,7 @@ package org.b3log.latke.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.b3log.latke.http.HttpMethod;
 import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.http.annotation.RequestProcessing;
-import org.b3log.latke.http.annotation.RequestProcessor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,7 +34,6 @@ public class ReflectionsTestCase {
     public void testMethod1(final String para1, final int para2) {
     }
 
-    @RequestProcessing(value = {"/"}, method = {HttpMethod.GET, HttpMethod.HEAD})
     public void testMethod2(final RequestContext context) throws IOException {
     }
 
@@ -69,7 +65,6 @@ public class ReflectionsTestCase {
  * @version 1.0.0.0, Oct 14, 2013
  * @since 0.3.1
  */
-@RequestProcessor
 class FeedProcessor {
 
     /**
@@ -82,7 +77,6 @@ class FeedProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = {"/blog-articles-feed.do"}, method = {HttpMethod.GET, HttpMethod.HEAD})
     public void blogArticlesAtom(final RequestContext context) {
     }
 
@@ -91,7 +85,6 @@ class FeedProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = {"/tag-articles-feed.do"}, method = {HttpMethod.GET, HttpMethod.HEAD})
     public void tagArticlesAtom(final RequestContext context) {
     }
 
@@ -100,7 +93,6 @@ class FeedProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = {"/blog-articles-rss.do"}, method = {HttpMethod.GET, HttpMethod.HEAD})
     public void blogArticlesRSS(final RequestContext context) {
     }
 
@@ -109,7 +101,6 @@ class FeedProcessor {
      *
      * @param context the specified context
      */
-    @RequestProcessing(value = {"/tag-articles-rss.do"}, method = {HttpMethod.GET, HttpMethod.HEAD})
     public void tagArticlesRSS(final RequestContext context) {
     }
 }

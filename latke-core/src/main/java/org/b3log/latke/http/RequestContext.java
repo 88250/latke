@@ -36,7 +36,8 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.0.0, Nov 11, 2019
+ * @version 2.1.0.0, Feb 9, 2020
+ * @since 2.4.34
  */
 public final class RequestContext {
 
@@ -572,5 +573,14 @@ public final class RequestContext {
      */
     public void addHandler(final Handler handler) {
         handlers.add(handler);
+    }
+
+    /**
+     * Inserts the specified handler after the current handler.
+     *
+     * @param handler the specified handler
+     */
+    public void insertHandlerAfter(final Handler handler) {
+        handlers.add(handleIndex + 1, handler);
     }
 }

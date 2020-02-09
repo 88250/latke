@@ -17,7 +17,6 @@ package org.b3log.latke.http.handler;
 
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +24,9 @@ import java.util.Map;
 /**
  * The route matched-result bean.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Dec 4, 2018
+ * @version 2.0.0.0, Feb 9, 2020
+ * @since 3.2.4
  */
 public final class MatchResult {
 
@@ -55,11 +54,6 @@ public final class MatchResult {
      * URI template name-args mappings.
      */
     private Map<String, String> pathVars = new HashMap<>();
-
-    /**
-     * the {@link AbstractResponseRenderer}  holders which be inited by sys, for advice to do the pre and post work.
-     */
-    private final List<AbstractResponseRenderer> rendererList = new ArrayList<>();
 
     /**
      * @param contextHandlerMeta context handler meta
@@ -93,15 +87,6 @@ public final class MatchResult {
     }
 
     /**
-     * addRenders.
-     *
-     * @param ins AbstractResponseRenderer
-     */
-    public void addRenders(final AbstractResponseRenderer ins) {
-        rendererList.add(ins);
-    }
-
-    /**
      * Get path vars.
      *
      * @return path vars
@@ -117,14 +102,5 @@ public final class MatchResult {
      */
     public void setPathVars(final Map<String, String> pathVars) {
         this.pathVars = pathVars;
-    }
-
-    /**
-     * getRendererList.
-     *
-     * @return rendererList
-     */
-    public List<AbstractResponseRenderer> getRendererList() {
-        return rendererList;
     }
 }

@@ -24,23 +24,18 @@ import org.b3log.latke.Latkes;
 import org.b3log.latke.http.HttpMethod;
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.http.annotation.RequestProcessing;
-import org.b3log.latke.http.annotation.RequestProcessor;
-import org.b3log.latke.ioc.Bean;
-import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.util.UriTemplates;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Route handler
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Nov 3, 2019
+ * @version 1.0.0.2, Feb 9, 2020
  * @since 2.4.34
  */
 public class RouteHandler implements Handler {
@@ -181,9 +176,6 @@ public class RouteHandler implements Handler {
      * Public constructor..
      */
     public RouteHandler() {
-        final BeanManager beanManager = BeanManager.getInstance();
-        final Set<Bean<?>> processBeans = beanManager.getBeans(RequestProcessor.class);
-        generateContextHandlerMeta(processBeans);
     }
 
     @Override
@@ -202,6 +194,14 @@ public class RouteHandler implements Handler {
             context.abort();
 
             return;
+        }
+
+        // 插入中间件处理器
+        final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
+        final List<Handler> middlewares = contextHandlerMeta.getMiddlewares();
+        for (int i = middlewares.size() - 1; 0 <= i; i--) {
+            final Handler middleware = middlewares.get(i);
+            context.insertHandlerAfter(middleware);
         }
 
         context.pathVars(result.getPathVars());
@@ -488,32 +488,5 @@ public class RouteHandler implements Handler {
         }
 
         return ret;
-    }
-
-    /**
-     * Scan beans to get the context handler meta.
-     *
-     * @param processBeans processBeans which contains {@link RequestProcessor}
-     */
-    private void generateContextHandlerMeta(final Set<Bean<?>> processBeans) {
-        for (final Bean<?> latkeBean : processBeans) {
-            final Class<?> clz = latkeBean.getBeanClass();
-            final Method[] declaredMethods = clz.getDeclaredMethods();
-            for (int i = 0; i < declaredMethods.length; i++) {
-                final Method method = declaredMethods[i];
-                final RequestProcessing requestProcessingMethodAnn = method.getAnnotation(RequestProcessing.class);
-                if (null == requestProcessingMethodAnn) {
-                    continue;
-                }
-
-                final ContextHandlerMeta contextHandlerMeta = new ContextHandlerMeta();
-                contextHandlerMeta.setUriTemplates(requestProcessingMethodAnn.value());
-                contextHandlerMeta.setHttpMethods(requestProcessingMethodAnn.method());
-                contextHandlerMeta.setInvokeHolder(method);
-                contextHandlerMeta.initProcessAdvices();
-
-                addContextHandlerMeta(contextHandlerMeta);
-            }
-        }
     }
 }

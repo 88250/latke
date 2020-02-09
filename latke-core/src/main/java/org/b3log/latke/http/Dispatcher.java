@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,9 +36,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Dispatch-controller for HTTP request dispatching.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.2, Dec 2, 2018
+ * @version 2.0.0.0, Feb 9, 2020
+ * @since 2.4.34
  */
 public final class Dispatcher {
 
@@ -64,9 +65,7 @@ public final class Dispatcher {
     static {
         HANDLERS.add(new StaticResourceHandler());
         HANDLERS.add(new RouteHandler());
-        HANDLERS.add(new BeforeHandleHandler());
         HANDLERS.add(new ContextHandleHandler());
-        HANDLERS.add(new AfterHandleHandler());
     }
 
     /**
@@ -127,67 +126,6 @@ public final class Dispatcher {
     }
 
     /**
-     * Programmatic routers.
-     */
-    private static List<Router> routers = new ArrayList<>();
-
-    /**
-     * HTTP DELETE routing.
-     *
-     * @param uriTemplate the specified request URI template
-     * @param handler     the specified handler
-     * @return router
-     */
-    public static Router delete(final String uriTemplate, final ContextHandler handler) {
-        return route().delete(uriTemplate, handler);
-    }
-
-    /**
-     * HTTP PUT routing.
-     *
-     * @param uriTemplate the specified request URI template
-     * @param handler     the specified handler
-     * @return router
-     */
-    public static Router put(final String uriTemplate, final ContextHandler handler) {
-        return route().put(uriTemplate, handler);
-    }
-
-    /**
-     * HTTP GET routing.
-     *
-     * @param uriTemplate the specified request URI template
-     * @param handler     the specified handler
-     * @return router
-     */
-    public static Router get(final String uriTemplate, final ContextHandler handler) {
-        return route().get(uriTemplate, handler);
-    }
-
-    /**
-     * HTTP POST routing.
-     *
-     * @param uriTemplate the specified request URI template
-     * @param handler     the specified handler
-     * @return router
-     */
-    public static Router post(final String uriTemplate, final ContextHandler handler) {
-        return route().post(uriTemplate, handler);
-    }
-
-    /**
-     * Registers a new router.
-     *
-     * @return router
-     */
-    public static Router route() {
-        final Router ret = new Router();
-        routers.add(ret);
-
-        return ret;
-    }
-
-    /**
      * Error handle router.
      */
     static Router errorHandleRouter;
@@ -218,13 +156,115 @@ public final class Dispatcher {
     }
 
     /**
+     * Router groups.
+     */
+    static List<RouterGroup> routerGroups = new ArrayList<>();
+
+    /**
+     * Creates a new router group.
+     *
+     * @return router group
+     */
+    public static RouterGroup group() {
+        final RouterGroup ret = new RouterGroup();
+        routerGroups.add(ret);
+
+        return ret;
+    }
+
+    /**
      * Performs mapping for all routers.
      */
     public static void mapping() {
-        for (final Router router : routers) {
-            final ContextHandlerMeta contextHandlerMeta = router.toContextHandlerMeta();
-            RouteHandler.addContextHandlerMeta(contextHandlerMeta);
+        for (final RouterGroup group : routerGroups) {
+            for (final Router router : group.routers) {
+                final ContextHandlerMeta contextHandlerMeta = router.toContextHandlerMeta();
+                RouteHandler.addContextHandlerMeta(contextHandlerMeta);
+            }
         }
+    }
+
+    /**
+     * Router group.
+     *
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
+     * @version 1.0.0.0, Feb 9, 2020
+     */
+    public static class RouterGroup {
+        private List<Handler> middlewares = new ArrayList<>();
+        private List<Router> routers = new ArrayList<>();
+
+        /**
+         * Bind middlewares.
+         *
+         * @param handler  the specified middleware
+         * @param handlers the specified middlewares
+         * @return this group
+         */
+        public RouterGroup middlewares(final Handler handler, final Handler... handlers) {
+            this.middlewares.add(handler);
+            this.middlewares.addAll(Arrays.asList(handlers));
+
+            return this;
+        }
+
+        /**
+         * Registers a new router.
+         *
+         * @return router
+         */
+        public Router route() {
+            final Router ret = new Router();
+            routers.add(ret);
+            ret.group = this;
+
+            return ret;
+        }
+
+        /**
+         * HTTP DELETE routing.
+         *
+         * @param uriTemplate the specified request URI template
+         * @param handler     the specified handler
+         * @return router
+         */
+        public Router delete(final String uriTemplate, final ContextHandler handler) {
+            return route().delete(uriTemplate, handler);
+        }
+
+        /**
+         * HTTP PUT routing.
+         *
+         * @param uriTemplate the specified request URI template
+         * @param handler     the specified handler
+         * @return router
+         */
+        public Router put(final String uriTemplate, final ContextHandler handler) {
+            return route().put(uriTemplate, handler);
+        }
+
+        /**
+         * HTTP GET routing.
+         *
+         * @param uriTemplate the specified request URI template
+         * @param handler     the specified handler
+         * @return router
+         */
+        public Router get(final String uriTemplate, final ContextHandler handler) {
+            return route().get(uriTemplate, handler);
+        }
+
+        /**
+         * HTTP POST routing.
+         *
+         * @param uriTemplate the specified request URI template
+         * @param handler     the specified handler
+         * @return router
+         */
+        public Router post(final String uriTemplate, final ContextHandler handler) {
+            return route().post(uriTemplate, handler);
+        }
+
     }
 
     /**
@@ -234,6 +274,7 @@ public final class Dispatcher {
      * @version 1.0.0.0, Dec 2, 2018
      */
     public static class Router {
+        private RouterGroup group;
         private List<String> uriTemplates = new ArrayList<>();
         private List<HttpMethod> httpRequestMethods = new ArrayList<>();
         private ContextHandler handler;
@@ -368,7 +409,7 @@ public final class Dispatcher {
             ret.setHttpMethods(httpRequestMethods.toArray(new HttpMethod[0]));
             ret.setInvokeHolder(method);
             ret.setHandler(handler);
-            ret.initProcessAdvices();
+            ret.setMiddlewares(group.middlewares);
 
             return ret;
         }

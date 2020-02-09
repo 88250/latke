@@ -19,7 +19,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.event.EventManager;
-import org.b3log.latke.http.advice.ProcessAdvice;
 import org.b3log.latke.plugin.PluginManager;
 import org.b3log.latke.service.LangPropsService;
 
@@ -52,7 +51,6 @@ public class BeanManager {
      */
     private static List<Class<?>> builtInBeanClasses = Arrays.asList(
             LangPropsService.class,
-            ProcessAdvice.class,
             EventManager.class,
             PluginManager.class);
 
