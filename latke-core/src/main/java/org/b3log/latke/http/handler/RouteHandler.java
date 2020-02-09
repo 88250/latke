@@ -196,7 +196,7 @@ public class RouteHandler implements Handler {
             return;
         }
 
-        // 插入中间件处理器
+        // 插入中间件
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final List<Handler> middlewares = contextHandlerMeta.getMiddlewares();
         for (int i = middlewares.size() - 1; 0 <= i; i--) {

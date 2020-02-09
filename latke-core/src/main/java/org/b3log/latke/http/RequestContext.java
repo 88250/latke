@@ -77,6 +77,17 @@ public final class RequestContext {
     private List<Handler> handlers = new ArrayList<>();
 
     /**
+     * Constructs a context with the specified request and response.
+     *
+     * @param request  the specified request
+     * @param response the specified response
+     */
+    public RequestContext(final Request request, final Response response) {
+        this.request = request;
+        this.response = response;
+    }
+
+    /**
      * Gets the renderer.
      *
      * @return renderer
@@ -573,6 +584,15 @@ public final class RequestContext {
      */
     public void addHandler(final Handler handler) {
         handlers.add(handler);
+    }
+
+    /**
+     * Add the specified handlers to handler chain.
+     *
+     * @param handlers the specified handlers
+     */
+    public void addHandlers(final List<Handler> handlers) {
+        this.handlers.addAll(handlers);
     }
 
     /**

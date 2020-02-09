@@ -76,11 +76,9 @@ public final class Dispatcher {
      * @return context
      */
     public static RequestContext handle(final Request request, final Response response) {
-        final RequestContext ret = new RequestContext();
-        ret.setRequest(request);
-        request.context = ret;
-        ret.setResponse(response);
-        response.context = ret;
+        final RequestContext ret = new RequestContext(request, response);
+        response.context = request.context = ret;
+        ret.addHandlers(HANDLERS);
 
         if (null != startRequestHandler) {
             try {
@@ -90,9 +88,6 @@ public final class Dispatcher {
             }
         }
 
-        for (final Handler handler : HANDLERS) {
-            ret.addHandler(handler);
-        }
         ret.handle();
         renderResponse(ret);
 
