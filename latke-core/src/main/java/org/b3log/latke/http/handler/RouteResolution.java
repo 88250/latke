@@ -22,7 +22,7 @@ import java.util.Map;
  * The route resolution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Feb 9, 2020
+ * @version 2.0.0.1, Feb 10, 2020
  * @since 3.2.4
  */
 public final class RouteResolution {
@@ -38,12 +38,26 @@ public final class RouteResolution {
     private Map<String, String> pathVars = new HashMap<>();
 
     /**
+     * Matched URI template.
+     */
+    private String matchedUriTemplate;
+
+    /**
+     * Matched HTTP method.
+     */
+    private String matchedMethod;
+
+    /**
      * Constructs a rote resolution with the specified context handler meta.
      *
      * @param contextHandlerMeta the specified context handler meta
+     * @param matchedUriTemplate the specified matched URI template
+     * @param matchedMethod      the specified matched method
      */
-    public RouteResolution(final ContextHandlerMeta contextHandlerMeta) {
+    public RouteResolution(final ContextHandlerMeta contextHandlerMeta, final String matchedUriTemplate, final String matchedMethod) {
         this.contextHandlerMeta = contextHandlerMeta;
+        this.matchedUriTemplate = matchedUriTemplate;
+        this.matchedMethod = matchedMethod;
     }
 
     /**
@@ -51,10 +65,14 @@ public final class RouteResolution {
      *
      * @param contextHandlerMeta the specified context handler meta
      * @param pathVars           the specified path vars
+     * @param matchedUriTemplate the specified matched URI template
+     * @param matchedMethod      the specified matched method
      */
-    public RouteResolution(final ContextHandlerMeta contextHandlerMeta, final Map<String, String> pathVars) {
+    public RouteResolution(final ContextHandlerMeta contextHandlerMeta, final Map<String, String> pathVars, final String matchedUriTemplate, final String matchedMethod) {
         this.contextHandlerMeta = contextHandlerMeta;
         this.pathVars = pathVars;
+        this.matchedUriTemplate = matchedUriTemplate;
+        this.matchedMethod = matchedMethod;
     }
 
     /**
@@ -73,5 +91,23 @@ public final class RouteResolution {
      */
     public Map<String, String> getPathVars() {
         return pathVars;
+    }
+
+    /**
+     * Gets matched URI template.
+     *
+     * @return matched URI template
+     */
+    public String getMatchedUriTemplate() {
+        return matchedUriTemplate;
+    }
+
+    /**
+     * Gets matched method.
+     *
+     * @return matched method
+     */
+    public String getMatchedMethod() {
+        return matchedMethod;
     }
 }

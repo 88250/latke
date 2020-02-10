@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Route handler
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Feb 9, 2020
+ * @version 1.0.0.3, Feb 10, 2020
  * @since 2.4.34
  */
 public class RouteHandler implements Handler {
@@ -224,74 +224,74 @@ public class RouteHandler implements Handler {
             case 1:
                 contextHandlerMeta = ONE_SEG_CONCRETE_CTX_HANDLER_METAS.get(concreteKey);
                 if (null != contextHandlerMeta) {
-                    return new RouteResolution(contextHandlerMeta);
+                    return new RouteResolution(contextHandlerMeta, requestURI, httpMethod);
                 }
 
                 switch (httpMethod) {
                     case "GET":
-                        return route(requestURI, ONE_SEG_GET_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, ONE_SEG_GET_VAR_CTX_HANDLER_METAS);
                     case "POST":
-                        return route(requestURI, ONE_SEG_POST_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, ONE_SEG_POST_VAR_CTX_HANDLER_METAS);
                     case "PUT":
-                        return route(requestURI, ONE_SEG_PUT_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, ONE_SEG_PUT_VAR_CTX_HANDLER_METAS);
                     case "DELETE":
-                        return route(requestURI, ONE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, ONE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
                     default:
-                        return route(requestURI, ONE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, ONE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
                 }
             case 2:
                 contextHandlerMeta = TWO_SEG_CONCRETE_CTX_HANDLER_METAS.get(concreteKey);
                 if (null != contextHandlerMeta) {
-                    return new RouteResolution(contextHandlerMeta);
+                    return new RouteResolution(contextHandlerMeta, requestURI, httpMethod);
                 }
 
                 switch (httpMethod) {
                     case "GET":
-                        return route(requestURI, TWO_SEG_GET_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, TWO_SEG_GET_VAR_CTX_HANDLER_METAS);
                     case "POST":
-                        return route(requestURI, TWO_SEG_POST_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, TWO_SEG_POST_VAR_CTX_HANDLER_METAS);
                     case "PUT":
-                        return route(requestURI, TWO_SEG_PUT_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, TWO_SEG_PUT_VAR_CTX_HANDLER_METAS);
                     case "DELETE":
-                        return route(requestURI, TWO_SEG_DELETE_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, TWO_SEG_DELETE_VAR_CTX_HANDLER_METAS);
                     default:
-                        return route(requestURI, TWO_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, TWO_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
                 }
             case 3:
                 contextHandlerMeta = THREE_SEG_CONCRETE_CTX_HANDLER_METAS.get(concreteKey);
                 if (null != contextHandlerMeta) {
-                    return new RouteResolution(contextHandlerMeta);
+                    return new RouteResolution(contextHandlerMeta, requestURI, httpMethod);
                 }
 
                 switch (httpMethod) {
                     case "GET":
-                        return route(requestURI, THREE_SEG_GET_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, THREE_SEG_GET_VAR_CTX_HANDLER_METAS);
                     case "POST":
-                        return route(requestURI, THREE_SEG_POST_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, THREE_SEG_POST_VAR_CTX_HANDLER_METAS);
                     case "PUT":
-                        return route(requestURI, THREE_SEG_PUT_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, THREE_SEG_PUT_VAR_CTX_HANDLER_METAS);
                     case "DELETE":
-                        return route(requestURI, THREE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, THREE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
                     default:
-                        return route(requestURI, THREE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, THREE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
                 }
             default:
                 contextHandlerMeta = FOUR_MORE_SEG_CONCRETE_CTX_HANDLER_METAS.get(concreteKey);
                 if (null != contextHandlerMeta) {
-                    return new RouteResolution(contextHandlerMeta);
+                    return new RouteResolution(contextHandlerMeta, requestURI, httpMethod);
                 }
 
                 switch (httpMethod) {
                     case "GET":
-                        return route(requestURI, FOUR_MORE_SEG_GET_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_GET_VAR_CTX_HANDLER_METAS);
                     case "POST":
-                        return route(requestURI, FOUR_MORE_SEG_POST_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_POST_VAR_CTX_HANDLER_METAS);
                     case "PUT":
-                        return route(requestURI, FOUR_MORE_SEG_PUT_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_PUT_VAR_CTX_HANDLER_METAS);
                     case "DELETE":
-                        return route(requestURI, FOUR_MORE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_DELETE_VAR_CTX_HANDLER_METAS);
                     default:
-                        return route(requestURI, FOUR_MORE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
+                        return route(requestURI, httpMethod, FOUR_MORE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS);
                 }
         }
     }
@@ -434,14 +434,14 @@ public class RouteHandler implements Handler {
     }
 
     /**
-     * Routes the specified request URI containing path vars with the specified path var context handler metas holder.
+     * Routes the specified request containing path vars with the specified path var context handler metas holder.
      *
      * @param requestURI                       the specified request URI
+     * @param method                           the specified request method
      * @param pathVarContextHandlerMetasHolder the specified path var context handler metas holder
      * @return match result, returns {@code null} if not found
      */
-    private static RouteResolution route(final String requestURI, final Map<String, ContextHandlerMeta> pathVarContextHandlerMetasHolder) {
-        RouteResolution ret;
+    private static RouteResolution route(final String requestURI, final String method, final Map<String, ContextHandlerMeta> pathVarContextHandlerMetasHolder) {
         for (final Map.Entry<String, ContextHandlerMeta> entry : pathVarContextHandlerMetasHolder.entrySet()) {
             final String uriTemplate = entry.getKey();
             final ContextHandlerMeta contextHandlerMeta = entry.getValue();
@@ -450,7 +450,7 @@ public class RouteHandler implements Handler {
                 continue;
             }
 
-            return new RouteResolution(contextHandlerMeta, pathVars);
+            return new RouteResolution(contextHandlerMeta, pathVars, uriTemplate, method);
         }
 
         return null;
