@@ -135,8 +135,12 @@ public final class Dispatcher {
      * @param uriTemplate the specified request URI template
      * @param handler     the specified handler
      */
-    public static void error(final String uriTemplate, final Handler handler) {
-        errorHandleRouter = group().get(uriTemplate, handler).routers.get(0);
+    public static void error(final String uriTemplate, final Handler handler, final Handler... middlewares) {
+        final RouterGroup group = group();
+        if (0 < ArrayUtils.getLength(middlewares)) {
+            group.middlewares.addAll(Arrays.asList(middlewares));
+        }
+        errorHandleRouter = group.get(uriTemplate, handler).routers.get(0);
     }
 
     /**
@@ -231,6 +235,18 @@ public final class Dispatcher {
         group.delete(uriTemplate, handler);
     }
 
+    /**
+     * OPTIONS routing.
+     *
+     * @param uriTemplate the specified URI template
+     * @param handler     the specified handler
+     * @param middlewares the specified middlewares
+     */
+    public static void options(final String uriTemplate, final Handler handler, final Handler... middlewares) {
+        final RouterGroup group = newGroupBindMiddlewares(middlewares);
+        group.options(uriTemplate, handler);
+    }
+
     private static RouterGroup newGroupBindMiddlewares(final Handler... middlewares) {
         final RouterGroup ret = group();
         if (0 < ArrayUtils.getLength(middlewares)) {
@@ -275,6 +291,20 @@ public final class Dispatcher {
             ret.group = this;
 
             return ret;
+        }
+
+        /**
+         * HTTP OPTIONS routing.
+         *
+         * @param uriTemplate the specified request URI template
+         * @param handler     the specified handler
+         * @return router
+         */
+        public RouterGroup options(final String uriTemplate, final Handler handler) {
+            final Router route = router();
+            route.options(uriTemplate, handler);
+
+            return route.group;
         }
 
         /**
@@ -347,6 +377,14 @@ public final class Dispatcher {
         private List<HttpMethod> httpRequestMethods = new ArrayList<>();
         private Handler handler;
         private Method method;
+
+        public void options(final String uriTemplate, final Handler handler) {
+            options(new String[]{uriTemplate}, handler);
+        }
+
+        public void options(final String[] uriTemplates, final Handler handler) {
+            options().uris(uriTemplates).handler(handler);
+        }
 
         public void delete(final String uriTemplate, final Handler handler) {
             delete(new String[]{uriTemplate}, handler);
