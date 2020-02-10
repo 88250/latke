@@ -16,7 +16,7 @@
 package org.b3log.latke.http.handler;
 
 import org.b3log.latke.http.HttpMethod;
-import org.b3log.latke.http.function.ContextHandler;
+import org.b3log.latke.http.function.Handler;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -48,7 +48,7 @@ public final class ContextHandlerMeta {
     /**
      * Context handler.
      */
-    private ContextHandler handler;
+    private Handler handler;
 
     /**
      * Middlewares.
@@ -114,7 +114,7 @@ public final class ContextHandlerMeta {
      *
      * @param handler the specified handler
      */
-    public void setHandler(final ContextHandler handler) {
+    public void setHandler(final Handler handler) {
         this.handler = handler;
     }
 
@@ -123,7 +123,7 @@ public final class ContextHandlerMeta {
      *
      * @return handler
      */
-    public ContextHandler getHandler() {
+    public Handler getHandler() {
         return handler;
     }
 

@@ -15,28 +15,41 @@
  */
 package org.b3log.latke.http.handler;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.b3log.latke.http.RequestContext;
+import org.b3log.latke.http.function.Handler;
 import org.b3log.latke.ioc.BeanManager;
 
 import java.lang.reflect.Method;
 
 /**
- * Invokes processing method ({@link org.b3log.latke.http.function.ContextHandler#handle(RequestContext)}.
+ * Invokes processing method ({@link Handler#handle(RequestContext)}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 2.0.0.0, Feb 9, 2020
  * @since 2.4.34
  */
-public class ContextHandleHandler implements Handler {
+public class HandleHandler implements Handler {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = LogManager.getLogger(HandleHandler.class);
 
     @Override
-    public void handle(final RequestContext context) throws Exception {
+    public void handle(final RequestContext context) {
         final RouteResolution result = (RouteResolution) context.attr(RouteHandler.MATCH_RESULT);
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
         final BeanManager beanManager = BeanManager.getInstance();
         final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
-        invokeHolder.invoke(classHolder, context);
+        try {
+            invokeHolder.invoke(classHolder, context);
+        } catch (final Throwable e) {
+            LOGGER.log(Level.ERROR, "Handler processing failed: ", e);
+        }
         context.handle();
     }
 }

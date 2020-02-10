@@ -15,12 +15,16 @@
  */
 package org.b3log.latke.http;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.http.function.ContextHandler;
-import org.b3log.latke.http.handler.*;
+import org.b3log.latke.http.function.Handler;
+import org.b3log.latke.http.handler.HandleHandler;
+import org.b3log.latke.http.handler.ContextHandlerMeta;
+import org.b3log.latke.http.handler.RouteHandler;
+import org.b3log.latke.http.handler.StaticResourceHandler;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 import org.b3log.latke.http.renderer.Http404Renderer;
 
@@ -37,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Dispatch-controller for HTTP request dispatching.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Feb 9, 2020
+ * @version 2.0.0.1, Feb 10, 2020
  * @since 2.4.34
  */
 public final class Dispatcher {
@@ -65,7 +69,7 @@ public final class Dispatcher {
     static {
         HANDLERS.add(new StaticResourceHandler());
         HANDLERS.add(new RouteHandler());
-        HANDLERS.add(new ContextHandleHandler());
+        HANDLERS.add(new HandleHandler());
     }
 
     /**
@@ -131,7 +135,7 @@ public final class Dispatcher {
      * @param uriTemplate the specified request URI template
      * @param handler     the specified handler
      */
-    public static void error(final String uriTemplate, final ContextHandler handler) {
+    public static void error(final String uriTemplate, final Handler handler) {
         errorHandleRouter = group().get(uriTemplate, handler).routers.get(0);
     }
 
@@ -180,6 +184,63 @@ public final class Dispatcher {
     }
 
     /**
+     * GET routing.
+     *
+     * @param uriTemplate the specified URI template
+     * @param handler     the specified handler
+     * @param middlewares the specified middlewares
+     */
+    public static void get(final String uriTemplate, final Handler handler, final Handler... middlewares) {
+        final RouterGroup group = newGroupBindMiddlewares(middlewares);
+        group.get(uriTemplate, handler);
+    }
+
+    /**
+     * POST routing.
+     *
+     * @param uriTemplate the specified URI template
+     * @param handler     the specified handler
+     * @param middlewares the specified middlewares
+     */
+    public static void post(final String uriTemplate, final Handler handler, final Handler... middlewares) {
+        final RouterGroup group = newGroupBindMiddlewares(middlewares);
+        group.post(uriTemplate, handler);
+    }
+
+    /**
+     * PUT routing.
+     *
+     * @param uriTemplate the specified URI template
+     * @param handler     the specified handler
+     * @param middlewares the specified middlewares
+     */
+    public static void put(final String uriTemplate, final Handler handler, final Handler... middlewares) {
+        final RouterGroup group = newGroupBindMiddlewares(middlewares);
+        group.put(uriTemplate, handler);
+    }
+
+    /**
+     * DELETE routing.
+     *
+     * @param uriTemplate the specified URI template
+     * @param handler     the specified handler
+     * @param middlewares the specified middlewares
+     */
+    public static void delete(final String uriTemplate, final Handler handler, final Handler... middlewares) {
+        final RouterGroup group = newGroupBindMiddlewares(middlewares);
+        group.delete(uriTemplate, handler);
+    }
+
+    private static RouterGroup newGroupBindMiddlewares(final Handler... middlewares) {
+        final RouterGroup ret = group();
+        if (0 < ArrayUtils.getLength(middlewares)) {
+            ret.middlewares.addAll(Arrays.asList(middlewares));
+        }
+
+        return ret;
+    }
+
+    /**
      * Router group.
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
@@ -223,7 +284,7 @@ public final class Dispatcher {
          * @param handler     the specified handler
          * @return router
          */
-        public RouterGroup delete(final String uriTemplate, final ContextHandler handler) {
+        public RouterGroup delete(final String uriTemplate, final Handler handler) {
             final Router route = router();
             route.delete(uriTemplate, handler);
 
@@ -237,7 +298,7 @@ public final class Dispatcher {
          * @param handler     the specified handler
          * @return router
          */
-        public RouterGroup put(final String uriTemplate, final ContextHandler handler) {
+        public RouterGroup put(final String uriTemplate, final Handler handler) {
             final Router router = router();
             router.put(uriTemplate, handler);
 
@@ -251,7 +312,7 @@ public final class Dispatcher {
          * @param handler     the specified handler
          * @return router
          */
-        public RouterGroup get(final String uriTemplate, final ContextHandler handler) {
+        public RouterGroup get(final String uriTemplate, final Handler handler) {
             final Router router = router();
             router.get(uriTemplate, handler);
 
@@ -265,7 +326,7 @@ public final class Dispatcher {
          * @param handler     the specified handler
          * @return router
          */
-        public RouterGroup post(final String uriTemplate, final ContextHandler handler) {
+        public RouterGroup post(final String uriTemplate, final Handler handler) {
             final Router router = router();
             router.post(uriTemplate, handler);
 
@@ -284,38 +345,38 @@ public final class Dispatcher {
         private RouterGroup group;
         private List<String> uriTemplates = new ArrayList<>();
         private List<HttpMethod> httpRequestMethods = new ArrayList<>();
-        private ContextHandler handler;
+        private Handler handler;
         private Method method;
 
-        public void delete(final String uriTemplate, final ContextHandler handler) {
+        public void delete(final String uriTemplate, final Handler handler) {
             delete(new String[]{uriTemplate}, handler);
         }
 
-        public void delete(final String[] uriTemplates, final ContextHandler handler) {
+        public void delete(final String[] uriTemplates, final Handler handler) {
             delete().uris(uriTemplates).handler(handler);
         }
 
-        public void put(final String uriTemplate, final ContextHandler handler) {
+        public void put(final String uriTemplate, final Handler handler) {
             put(new String[]{uriTemplate}, handler);
         }
 
-        public void put(final String[] uriTemplates, final ContextHandler handler) {
+        public void put(final String[] uriTemplates, final Handler handler) {
             put().uris(uriTemplates).handler(handler);
         }
 
-        public void post(final String uriTemplate, final ContextHandler handler) {
+        public void post(final String uriTemplate, final Handler handler) {
             post(new String[]{uriTemplate}, handler);
         }
 
-        public void post(final String[] uriTemplates, final ContextHandler handler) {
+        public void post(final String[] uriTemplates, final Handler handler) {
             post().uris(uriTemplates).handler(handler);
         }
 
-        public void get(final String uriTemplate, final ContextHandler handler) {
+        public void get(final String uriTemplate, final Handler handler) {
             get(new String[]{uriTemplate}, handler);
         }
 
-        public void get(final String[] uriTemplates, final ContextHandler handler) {
+        public void get(final String[] uriTemplates, final Handler handler) {
             get().uris(uriTemplates).handler(handler);
         }
 
@@ -391,7 +452,7 @@ public final class Dispatcher {
             return this;
         }
 
-        public Router handler(final ContextHandler handler) {
+        public Router handler(final Handler handler) {
             this.handler = handler;
             final Class<?> clazz = handler.getClass();
             try {

@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
-import org.b3log.latke.http.handler.Handler;
+import org.b3log.latke.http.function.Handler;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
 import org.b3log.latke.http.renderer.Http500Renderer;
 import org.b3log.latke.http.renderer.JsonRenderer;

@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.http.handler;
+package org.b3log.latke.http.function;
 
-import org.b3log.latke.http.Dispatcher;
 import org.b3log.latke.http.RequestContext;
 
+import java.io.Serializable;
+
 /**
- * A handler interface for  {@link Dispatcher} to do the inner process.
+ * Represents an request handler that accepts a context as the single input argument and returns no result.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Dec 5, 2018
- * @since 2.4.34
+ * @version 1.0.0.0, Dec 1, 2018
+ * @since 2.4.30
  */
-public interface Handler {
+@FunctionalInterface
+public interface Handler extends Serializable {
 
     /**
-     * Handle.
+     * Performs request handling with the specified context.
      *
-     * @param context the specified request context
-     * @throws Exception exception
+     * @param context the specified context
      */
-    void handle(final RequestContext context) throws Exception;
+    void handle(final RequestContext context);
 }

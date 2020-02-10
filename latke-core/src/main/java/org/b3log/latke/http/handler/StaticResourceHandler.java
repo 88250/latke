@@ -17,6 +17,7 @@ package org.b3log.latke.http.handler;
 
 import org.b3log.latke.http.Request;
 import org.b3log.latke.http.RequestContext;
+import org.b3log.latke.http.function.Handler;
 import org.b3log.latke.http.renderer.StaticFileRenderer;
 
 /**
