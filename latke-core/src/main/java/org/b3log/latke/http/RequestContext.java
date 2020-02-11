@@ -36,7 +36,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.0.0, Feb 9, 2020
+ * @version 2.1.0.1, Feb 11, 2020
  * @since 2.4.34
  */
 public final class RequestContext {
@@ -300,6 +300,16 @@ public final class RequestContext {
      */
     public void sendError(final int sc) {
         response.sendError(sc);
+    }
+
+    /**
+     * Sends the specified error status code and data model.
+     *
+     * @param sc        the specified error status code
+     * @param dataModel the specified data model
+     */
+    public void sendError(final int sc, final Map<String, Object> dataModel) {
+        response.sendError(sc, dataModel);
     }
 
     /**

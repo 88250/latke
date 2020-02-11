@@ -32,13 +32,14 @@ import org.b3log.latke.ioc.BeanManager;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * HTTP response.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Nov 11, 2019
+ * @version 1.0.0.2, Feb 11, 2020
  * @since 3.0.0
  */
 public class Response {
@@ -124,6 +125,10 @@ public class Response {
     }
 
     public void sendError(final int status) {
+        sendError(status, null);
+    }
+
+    public void sendError(final int status, final Map<String, Object> dataModel) {
         setStatus(status);
         if (null != Dispatcher.errorHandleRouter) {
             try {
@@ -132,6 +137,7 @@ public class Response {
                 final BeanManager beanManager = BeanManager.getInstance();
                 final Object classHolder = beanManager.getReference(invokeHolder.getDeclaringClass());
                 context.pathVar("statusCode", String.valueOf(status));
+                context.attr("dataModel", dataModel);
                 invokeHolder.invoke(classHolder, context);
                 final AbstractResponseRenderer renderer = context.getRenderer();
                 renderer.render(context);
