@@ -31,12 +31,12 @@ import java.lang.reflect.Method;
  * @version 2.0.0.0, Feb 9, 2020
  * @since 2.4.34
  */
-public class HandleHandler implements Handler {
+public class InvokeHandler implements Handler {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = LogManager.getLogger(HandleHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger(InvokeHandler.class);
 
     @Override
     public void handle(final RequestContext context) {

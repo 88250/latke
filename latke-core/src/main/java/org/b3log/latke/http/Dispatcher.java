@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.http.function.Handler;
 import org.b3log.latke.http.handler.ContextHandlerMeta;
-import org.b3log.latke.http.handler.HandleHandler;
+import org.b3log.latke.http.handler.InvokeHandler;
 import org.b3log.latke.http.handler.RouteHandler;
 import org.b3log.latke.http.handler.StaticResourceHandler;
 import org.b3log.latke.http.renderer.AbstractResponseRenderer;
@@ -69,7 +69,7 @@ public final class Dispatcher {
     static {
         HANDLERS.add(new StaticResourceHandler());
         HANDLERS.add(new RouteHandler());
-        HANDLERS.add(new HandleHandler());
+        HANDLERS.add(new InvokeHandler());
     }
 
     /**
