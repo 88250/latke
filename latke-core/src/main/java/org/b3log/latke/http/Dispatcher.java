@@ -93,6 +93,7 @@ public final class Dispatcher {
         }
 
         ret.handle();
+        renderResponse(ret);
 
         if (null != endRequestHandler) {
             try {
@@ -101,8 +102,6 @@ public final class Dispatcher {
                 LOGGER.log(Level.ERROR, "End request handle failed", e);
             }
         }
-
-        renderResponse(ret);
 
         return ret;
     }
