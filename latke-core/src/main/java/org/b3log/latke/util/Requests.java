@@ -26,8 +26,8 @@ import java.util.Iterator;
  * Request utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="mailto:dongxv.vang@gmail.com">Dongxu Wang</a>
- * @version 3.0.0.0, Nov 3, 2019
+ * @author <a href="https://hacpai.com/member/e">Dongxu Wang</a>
+ * @version 3.0.0.1, Feb 12, 2020
  */
 public final class Requests {
 
@@ -74,7 +74,7 @@ public final class Requests {
         logBuilder.append(indents).append("method=").append(request.getMethod()).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("URI=").append(request.getRequestURI()).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("contentType=").append(request.getContentType()).append(",").append(Strings.LINE_SEPARATOR);
-        logBuilder.append(indents).append(indents).append("remoteAddr=").append(getRemoteAddr(request)).append(",").append(Strings.LINE_SEPARATOR);
+        logBuilder.append(indents).append("remoteAddr=").append(getRemoteAddr(request)).append(",").append(Strings.LINE_SEPARATOR);
         logBuilder.append(indents).append("headers=[");
         final Iterator<String> headerNames = request.getHeaderNames();
         final StringBuilder headerLogBuilder = new StringBuilder();
