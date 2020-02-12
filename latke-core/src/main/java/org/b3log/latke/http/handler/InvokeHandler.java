@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
  * Invokes processing method ({@link Handler#handle(RequestContext)}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Feb 9, 2020
+ * @version 2.0.0.1, Feb 12, 2020
  * @since 2.4.34
  */
 public class InvokeHandler implements Handler {
@@ -49,7 +49,12 @@ public class InvokeHandler implements Handler {
             invokeHolder.invoke(classHolder, context);
         } catch (final Throwable e) {
             LOGGER.log(Level.ERROR, "Handler processing failed: ", e);
+            context.sendError(500);
+            context.abort();
+
+            return;
         }
+
         context.handle();
     }
 }
