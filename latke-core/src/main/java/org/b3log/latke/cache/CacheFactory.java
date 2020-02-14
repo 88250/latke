@@ -28,7 +28,7 @@ import java.util.Map;
  * Cache factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.1.4, Mar 26, 2019
+ * @version 2.1.1.5, Feb 14, 2020
  */
 public final class CacheFactory {
 
@@ -64,7 +64,7 @@ public final class CacheFactory {
                 Class<Cache> cacheClass;
                 switch (Latkes.getRuntimeCache()) {
                     case LOCAL_LRU:
-                        cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.caffeine.CaffeineCache");
+                        cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.guava.GuavaCache");
 
                         break;
                     case REDIS:

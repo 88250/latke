@@ -15,14 +15,14 @@
  */
 package org.b3log.latke.util;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * {@link Stopwatchs} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.2, Dec 20, 2014
+ * @version 1.0.1.3, Feb 14, 2020
  */
 public final class StopwatchsTestCase {
 
@@ -99,7 +99,7 @@ public final class StopwatchsTestCase {
         //    [25]%, [20]ms [task 1.2.2]
         //  [12.5]%, [10]ms [task 1.3]
         final String[] lines = output.split(Strings.LINE_SEPARATOR);
-        Assert.assertEquals(10, lines.length);
+        Assert.assertEquals(lines.length, 10);
     }
 
     /**
@@ -145,7 +145,7 @@ public final class StopwatchsTestCase {
             //    [0]%, [20]ms [task 1.2.2]
             //    [100]%, [-1419045335340]ms [task 1.3]     
             final String[] lines = output.split(Strings.LINE_SEPARATOR);
-            Assert.assertEquals(6, lines.length);
+            Assert.assertEquals(lines.length, 6);
         }
     }
 }

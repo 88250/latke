@@ -15,14 +15,14 @@
  */
 package org.b3log.latke.util;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * {@link AntPathMatcher} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, May 15, 2012
+ * @version 1.0.0.2, Feb 14, 2020
  */
 public final class AntPathMatcherTestCase {
 

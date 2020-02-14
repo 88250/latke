@@ -1014,7 +1014,7 @@ public final class Latkes {
          */
         NONE,
         /**
-         * Local LRU memory cache (Caffeine).
+         * Local LRU memory cache (Guava).
          */
         LOCAL_LRU,
         /**

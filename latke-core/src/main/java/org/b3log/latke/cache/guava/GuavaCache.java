@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.cache.caffeine;
+package org.b3log.latke.cache.guava;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.b3log.latke.cache.AbstractCache;
 import org.json.JSONObject;
 
@@ -24,15 +24,15 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Caffeine cache.
+ * Guava cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Mar 26, 2019
+ * @version 2.0.0.0, Feb 14, 2020
  * @since 2.4.48
  */
-public final class CaffeineCache extends AbstractCache {
+public final class GuavaCache extends AbstractCache {
 
-    private Cache<String, JSONObject> cache = Caffeine.newBuilder().expireAfterWrite(EXPIRE_SECONDS, TimeUnit.SECONDS).build();
+    private Cache<String, JSONObject> cache = CacheBuilder.newBuilder().expireAfterWrite(EXPIRE_SECONDS, TimeUnit.SECONDS).build();
 
     @Override
     public boolean contains(final String key) {

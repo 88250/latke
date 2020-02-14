@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.b3log.latke.cache.caffeine;
+package org.b3log.latke.cache.guava;
 
 import org.b3log.latke.Latkes;
 import org.b3log.latke.cache.Cache;
@@ -24,13 +24,13 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * {@link CaffeineCache} test case.
+ * {@link GuavaCache} test case.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Jun 8, 2019
  * @since 2.4.58
  */
-public class CaffeineCacheTestCase {
+public class GuavaCacheTestCase {
 
     static {
         Latkes.init();
