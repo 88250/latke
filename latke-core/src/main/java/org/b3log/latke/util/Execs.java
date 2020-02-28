@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 2.0.0.0, Nov 25, 2018
- * @since 0.1.0
+ * @since 1.0.0
  */
 public final class Execs {
 
