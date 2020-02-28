@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.cache.redis.RedisCache;
-import org.b3log.latke.http.renderer.StaticFileRenderer;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.ioc.Discoverer;
 import org.b3log.latke.repository.jdbc.util.Connections;
@@ -41,7 +40,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.0.20, Feb 10, 2020
+ * @version 2.11.1.0, Feb 28, 2020
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -62,7 +61,7 @@ public final class Latkes {
     /**
      * Version.
      */
-    public static final String VERSION = "3.2.8";
+    public static final String VERSION = "3.2.9";
 
     /**
      * Application startup time millisecond.
@@ -216,7 +215,7 @@ public final class Latkes {
 
     static {
         try {
-            final URL resource = StaticFileRenderer.class.getResource("/");
+            final URL resource = Latkes.class.getResource("/latke.properties");
             inJar = null == resource || "jar".equals(resource.toURI().getScheme());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Checks filesystem failed, exit", e);

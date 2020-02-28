@@ -34,7 +34,8 @@ import java.io.InputStream;
  * Static file renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.1.0, Dec 3, 2019
+ * @version 2.0.2.0, Feb 28, 2020
+ * @since 1.0.0
  */
 public class StaticFileRenderer extends AbstractResponseRenderer {
 
@@ -55,7 +56,8 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
             byte[] bytes;
 
             if (!Latkes.isInJar()) {
-                String path = StaticFileRenderer.class.getResource("/").getPath();
+                String path = Latkes.class.getResource("/latke.properties").getPath();
+                path = StringUtils.substringBeforeLast(path, "latke.properties");
                 if (StringUtils.contains(path, "/target/classes/") || StringUtils.contains(path, "/target/test-classes/")) {
                     // 开发时使用源码目录
                     path = StringUtils.replace(path, "/target/classes/", "/src/main/resources/");
