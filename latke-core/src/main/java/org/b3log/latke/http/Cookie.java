@@ -52,6 +52,10 @@ public class Cookie {
         cookie.setMaxAge(maxAge);
     }
 
+    public long getMaxAge() {
+        return cookie.maxAge();
+    }
+
     public void setPath(final String path) {
         cookie.setPath(path);
     }
@@ -64,8 +68,16 @@ public class Cookie {
         cookie.setHttpOnly(httpOnly);
     }
 
+    public boolean isHttpOnly() {
+        return cookie.isHttpOnly();
+    }
+
     public void setSecure(boolean secure) {
         cookie.setSecure(secure);
+    }
+
+    public boolean isSecure() {
+        return cookie.isSecure();
     }
 
     public void setSameSite(String value) {
@@ -74,5 +86,17 @@ public class Cookie {
 
     public void setDomain(final String domain) {
         cookie.setDomain(domain);
+    }
+
+    public String getDomain() {
+        return cookie.domain();
+    }
+
+    public void setWrap(final boolean b) {
+        cookie.setWrap(b);
+    }
+
+    public boolean isWrap() {
+        return cookie.wrap();
     }
 }
