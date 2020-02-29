@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.32, Feb 14, 2020
+    Version: 1.2.2.33, Feb 29, 2020
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -42,7 +42,7 @@
         <commons-codec.version>1.12</commons-codec.version>
         <javassist.version>3.26.0-GA</javassist.version>
         <log4j2.version>2.13.0</log4j2.version>
-        <netty.version>4.1.45.Final</netty.version>
+        <netty.version>4.1.46.Final</netty.version>
         <tika.version>1.22</tika.version>
 
         <hikaricp.version>3.4.2</hikaricp.version>
