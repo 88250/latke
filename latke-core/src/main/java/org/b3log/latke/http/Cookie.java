@@ -21,7 +21,7 @@ import io.netty.handler.codec.http.cookie.DefaultCookie;
  * HTTP cookie.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Jan 14, 2020
+ * @version 1.0.0.2, Feb 29, 2020
  * @since 3.0.0
  */
 public class Cookie {
@@ -38,6 +38,10 @@ public class Cookie {
 
     public String getName() {
         return cookie.name();
+    }
+
+    public void setValue(final String value) {
+        cookie.setValue(value);
     }
 
     public String getValue() {
@@ -66,5 +70,9 @@ public class Cookie {
 
     public void setSameSite(String value) {
         // TODO: 等待 Netty 支持
+    }
+
+    public void setDomain(final String domain) {
+        cookie.setDomain(domain);
     }
 }
