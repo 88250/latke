@@ -33,8 +33,9 @@ public final class DateMapping implements Mapping {
 
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
-        final StringBuilder builder = new StringBuilder(definition.getName()).append(" datetime");
+        final StringBuilder builder = new StringBuilder();
 
+        builder.append("`").append(definition.getName()).append("` datetime");
         if (!definition.getNullable()) {
             builder.append(" not null");
         }

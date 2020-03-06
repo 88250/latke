@@ -33,8 +33,9 @@ public final class LongMapping implements Mapping {
 
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
-        final StringBuilder builder = new StringBuilder(definition.getName()).append(" bigint");
+        final StringBuilder builder = new StringBuilder();
 
+        builder.append("`").append(definition.getName()).append("` bigint");
         if (!definition.getNullable()) {
             builder.append(" not null");
         }

@@ -32,7 +32,7 @@ public class NumberMapping implements Mapping {
 
         final StringBuilder sql = new StringBuilder();
 
-        sql.append(definition.getName());
+        sql.append("`").append(definition.getName()).append("`");
         sql.append("  double ");
         if (!definition.getNullable()) {
             sql.append(" not null");

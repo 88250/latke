@@ -223,7 +223,7 @@ public final class JdbcRepository implements Repository {
             }
         }
 
-        sql.append("INSERT INTO ").append(getName()).append(insertString).append(" VALUES ").append(wildcardString);
+        sql.append("INSERT INTO ").append("`" + getName() + "`").append(insertString).append(" VALUES ").append(wildcardString);
     }
 
     @Override
@@ -298,7 +298,7 @@ public final class JdbcRepository implements Repository {
             paramList.add(needUpdateJsonObject.get(key));
         }
 
-        sqlBuilder.append("UPDATE ").append(getName()).append(propertyBuilder).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = ?");
+        sqlBuilder.append("UPDATE ").append("`" + getName() + "`").append(propertyBuilder).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = ?");
         paramList.add(id);
     }
 
@@ -351,7 +351,7 @@ public final class JdbcRepository implements Repository {
         final Connection connection = getConnection();
 
         try {
-            sql.append("DELETE FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = '").append(id).append("'");
+            sql.append("DELETE FROM ").append("`" + getName() + "`").append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = '").append(id).append("'");
             JdbcUtil.executeSql(sql.toString(), connection, debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove failed", e);
@@ -362,7 +362,7 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public void remove(final Query query) throws RepositoryException {
-        final StringBuilder deleteSQL = new StringBuilder("DELETE FROM ").append(getName());
+        final StringBuilder deleteSQL = new StringBuilder("DELETE FROM ").append("`" + getName() + "`");
 
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSql = new StringBuilder();
@@ -389,7 +389,7 @@ public final class JdbcRepository implements Repository {
         final Connection connection = getConnection();
 
         try {
-            sql.append("SELECT * FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = ?");
+            sql.append("SELECT * FROM ").append("`" + getName() + "`").append(" WHERE ").append(JdbcRepositories.getDefaultKeyName()).append(" = ?");
             final ArrayList<Object> paramList = new ArrayList<>();
             paramList.add(id);
             ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), debug);
@@ -514,7 +514,7 @@ public final class JdbcRepository implements Repository {
         buildOrderBy(orderByBuilder, query.getSorts());
 
         if (-1 == pageCount) {
-            final StringBuilder countBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
+            final StringBuilder countBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append("`" + getName() + "`");
             if (StringUtils.isNotBlank(whereBuilder.toString())) {
                 countBuilder.append(" WHERE ").append(whereBuilder);
             }
@@ -642,14 +642,14 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public long count() throws RepositoryException {
-        final StringBuilder sql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
+        final StringBuilder sql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append("`" + getName() + "`");
 
         return count(sql, new ArrayList<>());
     }
 
     @Override
     public long count(final Query query) throws RepositoryException {
-        final StringBuilder countSql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append(getName());
+        final StringBuilder countSql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.getDefaultKeyName() + ") FROM ").append("`" + getName() + "`");
 
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSql = new StringBuilder();

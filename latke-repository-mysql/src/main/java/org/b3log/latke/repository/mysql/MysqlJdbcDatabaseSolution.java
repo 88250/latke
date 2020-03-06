@@ -80,7 +80,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
                             final String tableName) {
         final StringBuilder sql = new StringBuilder();
 
-        sql.append(selectSql).append(" FROM ").append(tableName);
+        sql.append(selectSql).append(" FROM ").append("`" + tableName + "`");
         if (StringUtils.isNotBlank(filterSql)) {
             sql.append(" WHERE ").append(filterSql);
         }
@@ -92,14 +92,14 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
         final StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
+        sql.append("SELECT * FROM ").append("`" + tableName + "`").append(" ORDER BY RAND() LIMIT ").append(fetchSize);
 
         return sql.toString();
     }
 
     @Override
     protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
+        createTableSql.append("CREATE TABLE IF NOT EXISTS `").append(repositoryDefinition.getName()).append("`(");
     }
 
     @Override

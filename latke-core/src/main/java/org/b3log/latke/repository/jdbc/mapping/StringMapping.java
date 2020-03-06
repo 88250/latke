@@ -31,7 +31,7 @@ public class StringMapping implements Mapping {
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
         final StringBuilder sql = new StringBuilder();
-        sql.append(definition.getName());
+        sql.append("`").append(definition.getName()).append("`");
         if (null == definition.getLength()) {
             definition.setLength(0);
         }
