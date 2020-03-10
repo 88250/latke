@@ -32,7 +32,7 @@ import java.util.Set;
  * Http server handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Feb 3, 2020
+ * @version 1.0.1.0, Mar 10, 2020
  * @since 3.0.0
  */
 final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -78,7 +78,6 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         final Response response = new Response(ctx, res);
         response.setKeepAlive(HttpUtil.isKeepAlive(request.req));
-        response.setCookies(request.getCookies());
 
         // 分发处理
         final RequestContext context = Dispatcher.handle(request, response);
