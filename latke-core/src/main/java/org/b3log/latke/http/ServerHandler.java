@@ -32,7 +32,7 @@ import java.util.Set;
  * Http server handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Mar 10, 2020
+ * @version 1.0.2.0, Mar 13, 2020
  * @since 3.0.0
  */
 final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -51,6 +51,9 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest fullHttpRequest) {
         setSchemeHostPort(fullHttpRequest);
         final Request request = new Request(ctx, fullHttpRequest);
+        final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+        final Response response = new Response(ctx, res);
+        response.setKeepAlive(HttpUtil.isKeepAlive(request.req));
         if (!StaticResources.isStatic(request)) {
             // 解析查询字符串
             request.parseQueryStr();
@@ -69,15 +72,11 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             }
 
             // 处理 Cookie
-            handleCookie(request);
+            handleCookie(request, response);
         } else {
             // 标识为静态资源文件
             request.setStaticResource(true);
         }
-
-        final HttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-        final Response response = new Response(ctx, res);
-        response.setKeepAlive(HttpUtil.isKeepAlive(request.req));
 
         // 分发处理
         final RequestContext context = Dispatcher.handle(request, response);
@@ -116,7 +115,7 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         Latkes.clearSchemeHostPort();
     }
 
-    private void handleCookie(final Request request) {
+    private void handleCookie(final Request request, final Response response) {
         final boolean secure = StringUtils.equalsIgnoreCase(Latkes.getServerScheme(), "https");
         Session session = null;
         final boolean enabledSession = Latkes.isEnabledSession();
@@ -132,36 +131,35 @@ final class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                 if (cookie.name().equals(Session.LATKE_SESSION_ID)) {
                     final String cookieSessionId = cookie.value();
                     if (!Sessions.contains(cookieSessionId)) {
-                        session = createSessionCookie(request, secure);
+                        session = createSessionCookie(request, response, secure);
                     } else {
                         session = Sessions.get(cookieSessionId);
                         final org.b3log.latke.http.Cookie c = new org.b3log.latke.http.Cookie(Session.LATKE_SESSION_ID, session.getId());
                         c.setHttpOnly(true);
                         c.setSecure(secure);
                         request.addCookie(c);
+                        response.addCookie(c);
                     }
                 } else {
                     request.addCookie(new org.b3log.latke.http.Cookie(cookie));
+                    response.addCookie(new org.b3log.latke.http.Cookie(cookie));
                 }
-            }
-        } else {
-            if (enabledSession) {
-                session = createSessionCookie(request, secure);
             }
         }
 
         if (null == session && enabledSession) {
-            session = createSessionCookie(request, secure);
+            session = createSessionCookie(request, response, secure);
         }
         request.session = session;
     }
 
-    private Session createSessionCookie(final Request request, final boolean secure) {
+    private Session createSessionCookie(final Request request, final Response response, final boolean secure) {
         final Session ret = Sessions.add();
         final org.b3log.latke.http.Cookie c = new org.b3log.latke.http.Cookie(Session.LATKE_SESSION_ID, ret.getId());
         c.setHttpOnly(true);
         c.setSecure(secure);
         request.addCookie(c);
+        response.addCookie(c);
 
         return ret;
     }
