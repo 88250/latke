@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke-parent</artifactId>
-    <version>3.2.13-SNAPSHOT</version>
+    <version>3.2.13</version>
     <packaging>pom</packaging>
     <name>Latke Parent</name>
     <url>https://github.com/88250/latke</url>
@@ -65,7 +65,7 @@
         <connection>scm:git:git@github.com:88250/latke.git</connection>
         <developerConnection>scm:git:git@github.com:88250/latke.git</developerConnection>
         <url>git@github.com:88250/latke.git</url>
-        <tag>HEAD</tag>
+        <tag>latke-parent-3.2.13</tag>
     </scm>
 
     <developers>
