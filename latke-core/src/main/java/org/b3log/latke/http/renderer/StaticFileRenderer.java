@@ -34,7 +34,7 @@ import java.io.InputStream;
  * Static file renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.1, Mar 11, 2020
+ * @version 2.0.2.2, Mar 18, 2020
  * @since 1.0.0
  */
 public class StaticFileRenderer extends AbstractResponseRenderer {
@@ -66,7 +66,14 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
                     path = StringUtils.replace(path, "/target/test-classes/", "/src/main/resources/");
                 }
                 path += uri;
-                bytes = FileUtils.readFileToByteArray(new File(path));
+                final File file = new File(path);
+                if (!file.exists()) {
+                    response.sendError0(404);
+
+                    return;
+                }
+
+                bytes = FileUtils.readFileToByteArray(file);
             } else {
                 try (final InputStream inputStream = StaticFileRenderer.class.getResourceAsStream(uri)) {
                     bytes = IOUtils.toByteArray(inputStream);
