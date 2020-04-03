@@ -36,7 +36,7 @@ import java.util.*;
  * HTTP request.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Dec 28, 2019
+ * @version 1.0.0.4, Mar 3, 2020
  * @since 3.0.0
  */
 public class Request {
@@ -144,7 +144,11 @@ public class Request {
     }
 
     public String getRemoteAddr() {
-        return ctx.channel().remoteAddress().toString();
+        String ret = ctx.channel().remoteAddress().toString();
+        if (StringUtils.startsWith(ret, "/")) {
+            ret = ret.substring(1);
+        }
+        return StringUtils.substringBeforeLast(ret, ":");
     }
 
     public String getScheme() {
