@@ -1,12 +1,16 @@
 <p align = "center">
-<img alt="Latke" src="https://user-images.githubusercontent.com/873584/52535454-6a60a980-2d89-11e9-9f4c-000bd7e90f9e.png">
+<img alt="Latke" src="https://b3log.org/images/brand/latke-128.png">
 <br><br>
 一款以 JSON 为主的 Java Web 框架
 <br><br>
 <a title="Build Status" target="_blank" href="https://travis-ci.org/88250/latke"><img src="https://img.shields.io/travis/88250/latke.svg?style=flat-square"></a>
-<a title="Apache2" target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.txt"><img src="http://img.shields.io/badge/license-Apache2-orange.svg?style=flat-square"></a>
+<a title="MulanPSL2" target="_blank" href="https://license.coscl.org.cn/MulanPSL2"><img src="http://img.shields.io/badge/license-MulanPSL2-orange.svg?style=flat-square"></a>
 <a title="Maven Central" target="_blank" href="https://repo1.maven.org/maven2/org/b3log/latke-parent"><img src="https://maven-badges.herokuapp.com/maven-central/org.b3log/latke-parent/badge.svg?style=flat-square&color=blueviolet"></a>
 <a title="Hits" target="_blank" href="https://github.com/88250/hits"><img src="https://hits.b3log.org/88250/latke.svg"></a>
+</p>
+
+<p align="center">
+<a href="https://hacpai.com/article/1574210028252">中文</a>
 </p>
 
 ## 💡 简介
