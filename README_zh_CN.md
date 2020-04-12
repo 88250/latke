@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/88250/latke">英文</a>
+<a href="https://github.com/88250/latke">English</a>
 </p>
 
 ## 💡 简介
