@@ -5,7 +5,7 @@
 <br><br>
 <a title="Build Status" target="_blank" href="https://travis-ci.org/88250/latke"><img src="https://img.shields.io/travis/88250/latke.svg?style=flat-square"></a>
 <a title="MulanPSL2" target="_blank" href="https://license.coscl.org.cn/MulanPSL2"><img src="http://img.shields.io/badge/license-MulanPSL2-orange.svg?style=flat-square"></a>
-<a title="Maven Central" target="_blank" href="https://repo1.maven.org/maven2/org/b3log/latke-parent"><img src="https://maven-badges.herokuapp.com/maven-central/org.b3log/latke-parent/badge.svg?style=flat-square&color=blueviolet"></a>
+<a title="Maven Central" target="_blank" href="https://repo1.maven.org/maven2/org/b3log/latke-parent"><img src="https://img.shields.io/maven-central/v/org.b3log/latke-parent?style=flat-square&color=blueviolet"></a>
 <a title="Hits" target="_blank" href="https://github.com/88250/hits"><img src="https://hits.b3log.org/88250/latke.svg"></a>
 </p>
 
@@ -15,9 +15,7 @@
 
 ## 💡 简介
 
-[Latke](https://github.com/88250/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC、事件通知、ORM、插件等组件。
-
-在实体模型上使用 JSON 贯穿前后端，使应用开发更加快捷。这是 Latke 不同于其他框架的地方，比较适合小型应用的快速开发。
+[Latke](https://github.com/88250/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC、事件通知、ORM、插件等组件。在实体模型上使用 JSON 贯穿前后端，使应用开发更加快捷。这是 Latke 不同于其他框架的地方，比较适合小型应用的快速开发。
 
 欢迎到 [Latke 官方讨论区](https://hacpai.com/tag/latke)了解更多。同时也欢迎关注 B3log 开源社区微信公众号 `B3log开源`：
 
