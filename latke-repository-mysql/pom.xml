@@ -4,7 +4,8 @@
     Version: 2.1.1.5, Jan 16, 2020
     Author: Liang Ding
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>latke-repository-mysql</artifactId>
     <packaging>jar</packaging>
@@ -33,6 +34,11 @@
             <version>8.0.19</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>2.6.0</version>
+        </dependency>
     </dependencies>
 
 </project>
