@@ -15,7 +15,7 @@ A Java Web framework based on JSON
 
 ## 💡 Introduction
 
-[Latke](https://github.com/88250/latke) ('lɑ: tkə, potato cake) is a simple and easy-to-use Java Web application development framework, including MVC, IoC, event notification, ORM, plugins and other components . The use of JSON on the entity model runs through the front and back ends, making application development faster. This is where Latke is different from other frameworks, and is more suitable for the rapid development of small applications.
+[Latke](https://github.com/88250/latke) ('lɑ:tkə, potato cake) is a simple and easy-to-use Java Web application development framework, including MVC, IoC, event notification, ORM, plugins and other components. The use of JSON on the entity model runs through the front and back ends, making application development faster. This is where Latke is different from other frameworks, and is more suitable for the rapid development of small applications.
 
 Welcome to [Latke Official Discussion Forum](https://hacpai.com/tag/latke) to learn more.
 
@@ -186,12 +186,12 @@ final List<JSONObject> records = select("SELECT * FROM `user` WHERE `name` = ?",
 
 ## 📄 License
 
-Latke uses the [Mulan Permissive Software License，Version 2](http://license.coscl.org.cn/MulanPSL2) open source license.
+Latke uses the [Mulan Permissive Software License, Version 2](http://license.coscl.org.cn/MulanPSL2) open source license.
 
 ## 🙏 Acknowledgement
 
 * [Netty](https://github.com/netty/netty): An event-driven asynchronous network application framework
-* [FreeMarker](https://github.com/apache/freemarker)：A widely used Java template engine
+* [FreeMarker](https://github.com/apache/freemarker): A widely used Java template engine
 * [Javassist](https://github.com/jboss-javassist/javassist): Java bytecode processing tool library
 * [Apache Commons](http://commons.apache.org): Java related tool library
 * [Apache Log4j](https://logging.apache.org/log4j/2.x): Java logging library
