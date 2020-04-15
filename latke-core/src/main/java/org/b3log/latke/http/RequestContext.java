@@ -32,7 +32,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.0.1, Feb 11, 2020
+ * @version 2.1.1.0, Apr 15, 2020
  * @since 2.4.34
  */
 public final class RequestContext {
@@ -247,8 +247,8 @@ public final class RequestContext {
         return request.getBytes();
     }
 
-    public String requestString() {
-        return request.getString();
+    public String requestQueryStr() {
+        return request.getQueryString();
     }
 
     /**
