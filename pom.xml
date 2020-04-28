@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.2.2.35, Apr 9, 2020
+    Version: 1.2.2.36, Apr 28, 2020
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -49,7 +49,7 @@
         <jedis.version>3.2.0</jedis.version>
         <guava.version>28.2-jre</guava.version>
 
-        <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
+        <license-maven-plugin.version>3.0</license-maven-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
@@ -209,9 +209,9 @@
         <plugins>
 
             <plugin>
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <version>${maven-license-plugin.version}</version>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${license-maven-plugin.version}</version>
                 <configuration>
                     <basedir>${basedir}</basedir>
                     <header>src/main/resources/etc/header.txt</header>

@@ -24,6 +24,15 @@ import java.util.Collection;
  */
 public final class NoneCache extends AbstractCache {
 
+    /**
+     * Constructor with the specified expire seconds.
+     *
+     * @param expireSeconds the specified expire seconds
+     */
+    public NoneCache(int expireSeconds) {
+        super(expireSeconds);
+    }
+
     @Override
     public boolean contains(final String key) {
         return false;

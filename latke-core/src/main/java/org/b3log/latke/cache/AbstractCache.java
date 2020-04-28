@@ -25,9 +25,18 @@ public abstract class AbstractCache implements Cache {
     private String name;
 
     /**
-     * Fixed expire seconds after put, 6 hours.
+     * Expire seconds.
      */
-    protected static final int EXPIRE_SECONDS = 60 * 60 * 6;
+    protected int expireSeconds;
+
+    /**
+     * Constructor with the specified expire seconds.
+     *
+     * @param expireSeconds the specified expire seconds
+     */
+    public AbstractCache(final int expireSeconds) {
+        this.expireSeconds = expireSeconds;
+    }
 
     @Override
     public String getName() {

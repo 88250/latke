@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
 
+import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.Map;
  * Cache factory.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.1.5, Feb 14, 2020
+ * @version 2.1.1.6, Apr 28, 2020
  */
 public final class CacheFactory {
 
@@ -39,18 +40,24 @@ public final class CacheFactory {
     private static final Map<String, Cache> CACHES = Collections.synchronizedMap(new HashMap<>());
 
     /**
+     * Fixed expire seconds after put, 6 hours.
+     */
+    protected static final int EXPIRE_SECONDS = 60 * 60 * 6;
+
+    /**
      * Private constructor.
      */
     private CacheFactory() {
     }
 
     /**
-     * Gets a cache specified by the given cache name.
+     * Gets a cache specified by the given cache name and expire seconds.
      *
-     * @param cacheName the given cache name
-     * @return a cache specified by the given cache name
+     * @param cacheName     the given cache name
+     * @param expireSeconds the given expire seconds
+     * @return a cache instance
      */
-    public static synchronized Cache getCache(final String cacheName) {
+    public static Cache getCache(final String cacheName, final int expireSeconds) {
         LOGGER.log(Level.INFO, "Constructing cache [name={}]....", cacheName);
 
         Cache ret = CACHES.get(cacheName);
@@ -75,8 +82,8 @@ public final class CacheFactory {
                         throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");
                 }
 
-                ret = cacheClass.newInstance();
-
+                final Constructor<Cache> constructor = cacheClass.getConstructor(int.class);
+                ret = constructor.newInstance(expireSeconds);
                 ret.setName(cacheName);
                 CACHES.put(cacheName, ret);
             }
@@ -87,6 +94,16 @@ public final class CacheFactory {
         LOGGER.log(Level.INFO, "Constructed cache [name={}, runtime={}]", cacheName, Latkes.getRuntimeCache());
 
         return ret;
+    }
+
+    /**
+     * Gets a cache specified by the given cache name.
+     *
+     * @param cacheName the given cache name
+     * @return a cache specified by the given cache name
+     */
+    public static Cache getCache(final String cacheName) {
+        return getCache(cacheName, EXPIRE_SECONDS);
     }
 
     /**

@@ -52,6 +52,15 @@ public final class RedisCache extends AbstractCache {
         KEY_PREFIX = keyPrefix;
     }
 
+    /**
+     * Constructor with the specified expire seconds.
+     *
+     * @param expireSeconds the specified expire seconds
+     */
+    public RedisCache(int expireSeconds) {
+        super(expireSeconds);
+    }
+
     @Override
     public boolean contains(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
@@ -65,7 +74,7 @@ public final class RedisCache extends AbstractCache {
 
     @Override
     public void put(final String key, final JSONObject value) {
-        put(key, value, EXPIRE_SECONDS);
+        put(key, value, this.expireSeconds);
     }
 
     @Override
