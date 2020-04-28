@@ -41,11 +41,11 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-codec.version>1.12</commons-codec.version>
         <javassist.version>3.26.0-GA</javassist.version>
-        <log4j2.version>2.13.0</log4j2.version>
-        <netty.version>4.1.48.Final</netty.version>
-        <tika.version>1.22</tika.version>
+        <log4j2.version>2.13.2</log4j2.version>
+        <netty.version>4.1.49.Final</netty.version>
+        <tika.version>1.24.1</tika.version>
 
-        <hikaricp.version>3.4.2</hikaricp.version>
+        <hikaricp.version>3.4.3</hikaricp.version>
         <jedis.version>3.2.0</jedis.version>
         <guava.version>28.2-jre</guava.version>
 
