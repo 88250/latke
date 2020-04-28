@@ -29,7 +29,7 @@ import java.util.Set;
  * Redis cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Dec 8, 2019
+ * @version 1.2.0.0, Apr 28, 2020
  * @since 2.3.13
  */
 public final class RedisCache extends AbstractCache {
@@ -65,8 +65,13 @@ public final class RedisCache extends AbstractCache {
 
     @Override
     public void put(final String key, final JSONObject value) {
+        put(key, value, EXPIRE_SECONDS);
+    }
+
+    @Override
+    public void put(final String key, final JSONObject value, final int expireSeconds) {
         try (final Jedis jedis = Connections.getJedis()) {
-            jedis.setex(getKeyPrefix() + key, EXPIRE_SECONDS, value.toString());
+            jedis.setex(getKeyPrefix() + key, expireSeconds, value.toString());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Put data to cache with key [" + key + "] failed", e);
         }

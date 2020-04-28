@@ -22,7 +22,7 @@ import java.util.Collection;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 3.1.0.0, Jun 8, 2019
+ * @version 3.2.0.0, Apr 28, 2020
  */
 public interface Cache {
 
@@ -50,14 +50,20 @@ public interface Cache {
 
     /**
      * Puts the specified object into this cache.
-     * <p>
-     * Throws {@link IllegalArgumentException} if the specified key or value is {@code null}.
-     * </p>
      *
      * @param key   the key of the specified object
      * @param value the specified object
      */
     void put(final String key, final JSONObject value);
+
+    /**
+     * Puts the specified object into this cache with expire time.
+     *
+     * @param key           the key of the specified object
+     * @param value         the specified object
+     * @param expireSeconds the specified expire seconds
+     */
+    void put(final String key, final JSONObject value, final int expireSeconds);
 
     /**
      * Gets a object by the specified key.

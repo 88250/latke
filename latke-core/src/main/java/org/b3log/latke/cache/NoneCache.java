@@ -19,7 +19,7 @@ import java.util.Collection;
  * None cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Mar 26, 2019
+ * @version 1.0.0.3, Apr 28, 2020
  * @since 2.3.13
  */
 public final class NoneCache extends AbstractCache {
@@ -31,6 +31,10 @@ public final class NoneCache extends AbstractCache {
 
     @Override
     public void put(final String key, final JSONObject value) {
+    }
+
+    @Override
+    public void put(final String key, final JSONObject value, final int expireSeconds) {
     }
 
     @Override

@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * Guava cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Feb 14, 2020
+ * @version 2.1.0.0, Apr 28, 2020
  * @since 2.4.48
  */
 public final class GuavaCache extends AbstractCache {
@@ -38,6 +38,11 @@ public final class GuavaCache extends AbstractCache {
     @Override
     public void put(final String key, final JSONObject value) {
         cache.put(key, value);
+    }
+
+    @Override
+    public void put(final String key, final JSONObject value, final int expireSeconds) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
