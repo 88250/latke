@@ -78,7 +78,7 @@ final class JavassistMethodHandler implements MethodHandler {
     public Object invoke(final Object proxy, final Method method, final Method proceed, final Object[] params) throws Throwable {
         LOGGER.trace("Processing invocation [" + method.toString() + "]");
 
-        AtomicInteger calls = CALLS.get();
+        volatile AtomicInteger calls = CALLS.get();
         if (null == calls) {
             synchronized (this) {
                 if (null == calls) {
