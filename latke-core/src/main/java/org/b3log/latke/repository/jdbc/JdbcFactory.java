@@ -41,21 +41,21 @@ public final class JdbcFactory implements JdbcDatabase {
     private AbstractJdbcDatabaseSolution databaseSolution;
 
     /**
-     * The singleton instance.
-     */
-    private static final JdbcFactory jdbcFactory = new JdbcFactory();
-
-    /**
      * All JdbcDatabaseSolution class names.
      */
-    private static Map<Latkes.RuntimeDatabase, String> jdbcDatabaseSolutionMap = new HashMap<Latkes.RuntimeDatabase, String>() {
-        {
-            put(Latkes.RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
-            put(Latkes.RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
-            put(Latkes.RuntimeDatabase.MSSQL, "org.b3log.latke.repository.sqlserver.SQLServerJdbcDatabaseSolution");
-            put(Latkes.RuntimeDatabase.ORACLE, "org.b3log.latke.repository.oracle.OracleJdbcDatabaseSolution");
-        }
-    };
+    private static final Map<Latkes.RuntimeDatabase, String> SOLUTIONS = new HashMap<>();
+
+    static {
+        SOLUTIONS.put(Latkes.RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
+        SOLUTIONS.put(Latkes.RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
+        SOLUTIONS.put(Latkes.RuntimeDatabase.MSSQL, "org.b3log.latke.repository.sqlserver.SQLServerJdbcDatabaseSolution");
+        SOLUTIONS.put(Latkes.RuntimeDatabase.ORACLE, "org.b3log.latke.repository.oracle.OracleJdbcDatabaseSolution");
+    }
+
+    /**
+     * The singleton instance.
+     */
+    private static final JdbcFactory INSTANCE = new JdbcFactory();
 
     @Override
     public boolean existTable(final String tableName) {
@@ -73,16 +73,14 @@ public final class JdbcFactory implements JdbcDatabase {
      * @return JdbcFactory singleton instance
      */
     public static JdbcFactory getInstance() {
-        return jdbcFactory;
+        return INSTANCE;
     }
 
     /**
      * Private constructor.
      */
     private JdbcFactory() {
-
-        final String databaseSolutionClassName = jdbcDatabaseSolutionMap.get(Latkes.getRuntimeDatabase());
-
+        final String databaseSolutionClassName = SOLUTIONS.get(Latkes.getRuntimeDatabase());
         try {
             databaseSolution = (AbstractJdbcDatabaseSolution) Class.forName(databaseSolutionClassName).newInstance();
         } catch (final Exception e) {
