@@ -43,7 +43,7 @@ public final class JdbcFactory implements JdbcDatabase {
     /**
      * the singleton of jdbcfactory.
      */
-    private static JdbcFactory jdbcFactory;
+    private static volatile JdbcFactory jdbcFactory;
 
     /**
      * All JdbcDatabaseSolution class names.
