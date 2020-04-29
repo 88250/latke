@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Feb 21, 2019
+ * @version 2.0.0.2, Apr 29, 2020
  */
 public final class JdbcFactory implements JdbcDatabase {
 
@@ -36,14 +36,14 @@ public final class JdbcFactory implements JdbcDatabase {
     private static final Logger LOGGER = LogManager.getLogger(JdbcRepository.class);
 
     /**
-     * the holder of the databaseSolution.
+     * The holder of the database solution.
      */
     private AbstractJdbcDatabaseSolution databaseSolution;
 
     /**
-     * the singleton of jdbcfactory.
+     * The singleton instance.
      */
-    private static volatile JdbcFactory jdbcFactory;
+    private static final JdbcFactory jdbcFactory = new JdbcFactory();
 
     /**
      * All JdbcDatabaseSolution class names.
@@ -72,11 +72,7 @@ public final class JdbcFactory implements JdbcDatabase {
      *
      * @return JdbcFactory singleton instance
      */
-    public static synchronized JdbcFactory getInstance() {
-        if (null == jdbcFactory) {
-            jdbcFactory = new JdbcFactory();
-        }
-
+    public static JdbcFactory getInstance() {
         return jdbcFactory;
     }
 
@@ -85,9 +81,6 @@ public final class JdbcFactory implements JdbcDatabase {
      */
     private JdbcFactory() {
 
-        /**
-         * Latkes.getRuntimeDatabase(); 
-         */
         final String databaseSolutionClassName = jdbcDatabaseSolutionMap.get(Latkes.getRuntimeDatabase());
 
         try {

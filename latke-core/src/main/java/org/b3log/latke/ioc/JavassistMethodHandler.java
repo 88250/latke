@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Javassist method handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.6, Oct 31, 2018
+ * @version 1.0.1.7, Apr 29, 2020
  * @since 2.4.18
  */
 final class JavassistMethodHandler implements MethodHandler {
@@ -49,7 +49,7 @@ final class JavassistMethodHandler implements MethodHandler {
     /**
      * Call count in the current thread.
      */
-    private static final ThreadLocal<AtomicInteger> CALLS = new ThreadLocal();
+    private static final ThreadLocal<AtomicInteger> CALLS = new ThreadLocal<>();
 
     /**
      * Method filter.
@@ -78,14 +78,10 @@ final class JavassistMethodHandler implements MethodHandler {
     public Object invoke(final Object proxy, final Method method, final Method proceed, final Object[] params) throws Throwable {
         LOGGER.trace("Processing invocation [" + method.toString() + "]");
 
-        volatile AtomicInteger calls = CALLS.get();
+        AtomicInteger calls = CALLS.get();
         if (null == calls) {
-            synchronized (this) {
-                if (null == calls) {
-                    calls = new AtomicInteger(0);
-                    CALLS.set(calls);
-                }
-            }
+            calls = new AtomicInteger(0);
+            CALLS.set(calls);
         }
         calls.incrementAndGet();
 
@@ -123,14 +119,14 @@ final class JavassistMethodHandler implements MethodHandler {
             }
 
             throw e.getTargetException();
-        }
-
-        if (0 == calls.decrementAndGet()) {
-            CALLS.set(null);
-            final Connection connection = JdbcRepository.CONN.get();
-            if (null != connection) {
-                connection.close();
-                JdbcRepository.CONN.set(null);
+        } finally {
+            if (0 == calls.decrementAndGet()) {
+                CALLS.set(null);
+                final Connection connection = JdbcRepository.CONN.get();
+                if (null != connection) {
+                    connection.close();
+                    JdbcRepository.CONN.set(null);
+                }
             }
         }
 
