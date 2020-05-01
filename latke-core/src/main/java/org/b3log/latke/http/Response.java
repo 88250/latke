@@ -35,7 +35,7 @@ import java.util.Set;
  * HTTP response.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Feb 11, 2020
+ * @version 1.0.0.3, May 1, 2020
  * @since 3.0.0
  */
 public class Response {
@@ -128,6 +128,7 @@ public class Response {
         setStatus(status);
         if (null != Dispatcher.errorHandleRouter) {
             try {
+                context.attr(RequestContext.ERROR_CODE, status);
                 final ContextHandlerMeta contextHandlerMeta = Dispatcher.errorHandleRouter.toContextHandlerMeta();
                 final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
                 final BeanManager beanManager = BeanManager.getInstance();

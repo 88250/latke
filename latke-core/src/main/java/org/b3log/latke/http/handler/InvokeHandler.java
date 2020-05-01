@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
  * Invokes processing method ({@link Handler#handle(RequestContext)}.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Feb 12, 2020
+ * @version 2.0.0.2, May 1, 2020
  * @since 2.4.34
  */
 public class InvokeHandler implements Handler {
@@ -36,7 +36,7 @@ public class InvokeHandler implements Handler {
 
     @Override
     public void handle(final RequestContext context) {
-        final RouteResolution result = (RouteResolution) context.attr(RouteHandler.MATCH_RESULT);
+        final RouteResolution result = (RouteResolution) context.attr(RequestContext.MATCH_RESULT);
         final ContextHandlerMeta contextHandlerMeta = result.getContextHandlerMeta();
         final Method invokeHolder = contextHandlerMeta.getInvokeHolder();
         final BeanManager beanManager = BeanManager.getInstance();

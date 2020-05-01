@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Route handler
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Feb 10, 2020
+ * @version 1.0.0.4, May 1, 2020
  * @since 2.4.34
  */
 public class RouteHandler implements Handler {
@@ -41,11 +41,6 @@ public class RouteHandler implements Handler {
      * Logger.
      */
     private static final Logger LOGGER = LogManager.getLogger(RouteHandler.class);
-
-    /**
-     * The shared-matched-result-data name.
-     */
-    public static final String MATCH_RESULT = "MATCH_RESULT";
 
     // 以下 Map 按照分隔符 / 数量和 HTTP 请求方法分开，主要是为了让每种 Map 都比较小，这样查找更快。
 
@@ -202,7 +197,7 @@ public class RouteHandler implements Handler {
         }
 
         context.pathVars(result.getPathVars());
-        context.attr(MATCH_RESULT, result);
+        context.attr(RequestContext.MATCH_RESULT, result);
         context.handle();
     }
 

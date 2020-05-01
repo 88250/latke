@@ -32,7 +32,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.1.0, Apr 15, 2020
+ * @version 2.1.1.1, May 1, 2020
  * @since 2.4.34
  */
 public final class RequestContext {
@@ -41,6 +41,16 @@ public final class RequestContext {
      * Logger.
      */
     private static final Logger LOGGER = LogManager.getLogger(RequestContext.class);
+
+    /**
+     * The key name of shared matched result while routing.
+     */
+    public static final String MATCH_RESULT = "MATCH_RESULT";
+
+    /**
+     * The key name of error code while handling error.
+     */
+    public static final String ERROR_CODE = "ERROR_CODE";
 
     /**
      * Request.
@@ -70,7 +80,7 @@ public final class RequestContext {
     /**
      * Handlers.
      */
-    private List<Handler> handlers = new ArrayList<>();
+    private final List<Handler> handlers = new ArrayList<>();
 
     /**
      * Constructs a context with the specified request and response.

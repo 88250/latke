@@ -30,7 +30,8 @@ import java.util.Map;
  * Abstract <a href="http://freemarker.org">FreeMarker</a> HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Nov 11, 2019
+ * @version 2.0.0.2, May 1, 2020
+ * @since 2.4.34
  */
 public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRenderer {
 
@@ -102,7 +103,12 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         } catch (final Exception e) {
             final String requestLog = Requests.getLog(request);
             LOGGER.log(Level.ERROR, "Renders template [" + templateName + "] failed [" + requestLog + "]", e);
-            response.sendError0(500);
+            if (null != context.attr(RequestContext.ERROR_CODE)) {
+                // 错误处理器如果也报错的话走内部 500 处理
+                response.sendError0(500);
+            } else {
+                response.sendError(500);
+            }
         }
     }
 
