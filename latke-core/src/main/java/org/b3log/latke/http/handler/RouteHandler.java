@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Route handler
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, May 1, 2020
+ * @version 1.0.0.5, May 7, 2020
  * @since 2.4.34
  */
 public class RouteHandler implements Handler {
@@ -165,7 +165,7 @@ public class RouteHandler implements Handler {
     private static final Map<String, ContextHandlerMeta> FOUR_MORE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS = new ConcurrentHashMap<>();
 
     /**
-     * Public constructor..
+     * Public constructor.
      */
     public RouteHandler() {
     }
