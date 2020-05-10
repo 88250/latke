@@ -25,7 +25,7 @@ import java.sql.SQLException;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Oct 31, 2018
+ * @version 1.1.0.0, May 10, 2020
  */
 public final class JdbcTransaction implements Transaction {
 
@@ -45,11 +45,6 @@ public final class JdbcTransaction implements Transaction {
     private boolean isActive;
 
     /**
-     * Is programmatic.
-     */
-    private boolean isProgrammatic;
-
-    /**
      * Public constructor.
      *
      * @throws SQLException SQLException
@@ -62,15 +57,11 @@ public final class JdbcTransaction implements Transaction {
 
     @Override
     public void commit() {
-        boolean succ = false;
         try {
             connection.commit();
-            succ = true;
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Commits transaction [" + getId() + "] failed", e);
-        }
-
-        if (succ) {
+        } finally {
             dispose();
         }
     }
@@ -80,7 +71,7 @@ public final class JdbcTransaction implements Transaction {
         try {
             connection.rollback();
         } catch (final SQLException e) {
-            throw new RuntimeException("rollback mistake", e);
+            throw new RuntimeException("Rollbacks transaction [" + getId() + "] failed", e);
         } finally {
             dispose();
         }
@@ -89,24 +80,6 @@ public final class JdbcTransaction implements Transaction {
     @Override
     public boolean isActive() {
         return isActive;
-    }
-
-    /**
-     * Determines whether this transaction is programmatic.
-     *
-     * @return {@code true} if this transaction is programmatic, returns {@code false} otherwise
-     */
-    public boolean isProgrammatic() {
-        return isProgrammatic;
-    }
-
-    /**
-     * Sets this transaction is programmatic with the specified flag.
-     *
-     * @param isProgrammatic the specified flag
-     */
-    public void setProgrammatic(final boolean isProgrammatic) {
-        this.isProgrammatic = isProgrammatic;
     }
 
     /**

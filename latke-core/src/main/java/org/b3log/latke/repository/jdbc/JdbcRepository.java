@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.2.0, Jul 25, 2019
+ * @version 1.3.2.1, May 10, 2020
  */
 public final class JdbcRepository implements Repository {
 
@@ -702,14 +702,11 @@ public final class JdbcRepository implements Repository {
     public Transaction beginTransaction() {
         JdbcTransaction ret = TX.get();
         if (null != ret && ret.isActive()) {
-            ret.setProgrammatic(true);
-
             return TX.get(); // Using 'the current transaction'
         }
 
         try {
             ret = new JdbcTransaction();
-            ret.setProgrammatic(true);
         } catch (final SQLException e) {
             LOGGER.log(Level.ERROR, "Failed to initialize JDBC transaction", e);
 

@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Javassist method handler.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.7, Apr 29, 2020
+ * @version 1.0.2.0, May 10, 2020
  * @since 2.4.18
  */
 final class JavassistMethodHandler implements MethodHandler {
@@ -100,22 +100,19 @@ final class JavassistMethodHandler implements MethodHandler {
 
                 throw new IllegalStateException("Begin a transaction failed");
             }
-
             JdbcRepository.TX.set(transaction);
         }
 
         Object ret;
         try {
             ret = proceed.invoke(proxy, params);
-
             if (needHandleTrans) {
                 transaction.commit();
             }
         } catch (final InvocationTargetException e) {
-            if (needHandleTrans) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
+            transaction = JdbcRepository.TX.get();
+            if (null != transaction && transaction.isActive()) {
+                transaction.rollback();
             }
 
             throw e.getTargetException();
