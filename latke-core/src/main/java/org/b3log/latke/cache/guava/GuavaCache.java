@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class GuavaCache extends AbstractCache {
 
-    private Cache<String, JSONObject> cache;
+    private final Cache<String, JSONObject> cache;
 
     /**
      * Constructor with the specified expire seconds.

@@ -48,7 +48,7 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
     /**
      * Data model.
      */
-    private Map<String, Object> dataModel = new HashMap<>();
+    private final Map<String, Object> dataModel = new HashMap<>();
 
     /**
      * Invoked before render.
@@ -86,7 +86,6 @@ public abstract class AbstractFreeMarkerRenderer extends AbstractResponseRendere
         if (null == template) {
             LOGGER.log(Level.ERROR, "Not found template [{}]", templateName);
             response.sendError0(404);
-
             return;
         }
 

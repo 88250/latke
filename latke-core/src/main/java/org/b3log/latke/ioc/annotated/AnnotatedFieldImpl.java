@@ -28,7 +28,7 @@ public class AnnotatedFieldImpl<T> implements AnnotatedField {
     /**
      * Field.
      */
-    private Field field;
+    private final Field field;
 
     /**
      * Constructs an annotated field with the specified field.

@@ -31,7 +31,7 @@ public final class Blob implements Serializable {
     /**
      * Bytes.
      */
-    private byte[] bytes;
+    private final byte[] bytes;
 
     /**
      * Constructs a blob with the specified bytes.

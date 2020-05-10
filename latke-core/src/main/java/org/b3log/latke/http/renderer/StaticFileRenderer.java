@@ -66,7 +66,6 @@ public class StaticFileRenderer extends AbstractResponseRenderer {
                 final File file = new File(path);
                 if (!file.exists()) {
                     response.sendError0(404);
-
                     return;
                 }
 

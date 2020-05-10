@@ -44,7 +44,7 @@ final class JavassistMethodHandler implements MethodHandler {
     /**
      * Bean manager.
      */
-    private BeanManager beanManager;
+    private final BeanManager beanManager;
 
     /**
      * Call count in the current thread.
@@ -54,7 +54,7 @@ final class JavassistMethodHandler implements MethodHandler {
     /**
      * Method filter.
      */
-    private MethodFilter methodFilter = method -> {
+    private final MethodFilter methodFilter = method -> {
         final String pkg = method.getDeclaringClass().getPackage().getName();
         if (StringUtils.startsWithAny(pkg, new String[]{"org.b3log.latke", "java.", "javax."})) {
             return false;

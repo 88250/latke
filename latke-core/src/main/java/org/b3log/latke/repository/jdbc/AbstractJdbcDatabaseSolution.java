@@ -33,7 +33,7 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
     /**
      * the map Mapping type to real database type.
      */
-    private Map<String, Mapping> jdbcTypeMapping = new HashMap<>();
+    private final Map<String, Mapping> jdbcTypeMapping = new HashMap<>();
 
     /**
      * register type to mapping solution.

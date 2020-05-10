@@ -25,7 +25,7 @@ public final class Http500Renderer extends AbstractResponseRenderer {
     /**
      * The internal exception.
      */
-    private Exception e;
+    private final Exception e;
 
     /**
      * Constructor.

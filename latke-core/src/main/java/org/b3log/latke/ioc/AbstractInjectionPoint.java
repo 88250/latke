@@ -25,12 +25,12 @@ public abstract class AbstractInjectionPoint implements InjectionPoint {
     /**
      * Annotated element.
      */
-    private Annotated annotated;
+    private final Annotated annotated;
 
     /**
      * Owner bean.
      */
-    private Bean<?> ownerBean;
+    private final Bean<?> ownerBean;
 
     /**
      * Constructs a injection point with the specified arguments.

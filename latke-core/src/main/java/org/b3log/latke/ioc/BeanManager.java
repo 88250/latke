@@ -45,7 +45,7 @@ public class BeanManager {
     /**
      * Built-in bean classes.
      */
-    private static List<Class<?>> builtInBeanClasses = Arrays.asList(
+    private static final List<Class<?>> builtInBeanClasses = Arrays.asList(
             LangPropsService.class,
             EventManager.class,
             PluginManager.class);
@@ -53,17 +53,17 @@ public class BeanManager {
     /**
      * Configurator.
      */
-    private Configurator configurator;
+    private final Configurator configurator;
 
     /**
      * Beans.
      */
-    private Set<Bean<?>> beans;
+    private final Set<Bean<?>> beans;
 
     /**
      * Context.
      */
-    private SingletonContext context;
+    private final SingletonContext context;
 
     /**
      * Constructs a Latke bean manager.
@@ -184,7 +184,7 @@ public class BeanManager {
         /**
          * Singleton of bean manager.
          */
-        private static BeanManager instance = new BeanManager();
+        private static final BeanManager instance = new BeanManager();
 
         /**
          * Private constructor.

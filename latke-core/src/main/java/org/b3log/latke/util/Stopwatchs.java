@@ -104,7 +104,6 @@ public final class Stopwatchs {
         if (null == root) {
             root = new Stopwatch(taskTitle); // Creates the root stopwatch
             STOPWATCH.set(root);
-
             return;
         }
 
@@ -300,17 +299,17 @@ public final class Stopwatchs {
         /**
          * Task title.
          */
-        private String taskTitle;
+        private final String taskTitle;
 
         /**
          * Leaf noes.
          */
-        private List<Stopwatch> leaves = new ArrayList<Stopwatch>();
+        private final List<Stopwatch> leaves = new ArrayList<Stopwatch>();
 
         /**
          * Start time.
          */
-        private long startTime;
+        private final long startTime;
 
         /**
          * End time.

@@ -68,15 +68,12 @@ public final class CacheFactory {
                 switch (Latkes.getRuntimeCache()) {
                     case LOCAL_LRU:
                         cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.guava.GuavaCache");
-
                         break;
                     case REDIS:
                         cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.redis.RedisCache");
-
                         break;
                     case NONE:
                         cacheClass = (Class<Cache>) Class.forName("org.b3log.latke.cache.NoneCache");
-
                         break;
                     default:
                         throw new RuntimeException("Latke runs in the hell.... Please set the environment correctly");

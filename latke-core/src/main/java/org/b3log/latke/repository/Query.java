@@ -43,7 +43,7 @@ public final class Query {
     /**
      * Sorts.
      */
-    private Map<String, SortDirection> sorts = new LinkedHashMap<>();
+    private final Map<String, SortDirection> sorts = new LinkedHashMap<>();
 
     /**
      * Filter.
@@ -53,7 +53,7 @@ public final class Query {
     /**
      * SELECT projections.
      */
-    private List<Projection> projections = new ArrayList<>();
+    private final List<Projection> projections = new ArrayList<>();
 
     /**
      * Debug flag. https://github.com/b3log/latke/issues/82

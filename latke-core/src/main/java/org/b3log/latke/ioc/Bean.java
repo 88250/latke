@@ -51,47 +51,47 @@ public class Bean<T> {
     /**
      * Bean manager.
      */
-    private BeanManager beanManager;
+    private final BeanManager beanManager;
 
     /**
      * Bean configurator.
      */
-    private Configurator configurator;
+    private final Configurator configurator;
 
     /**
      * Bean name.
      */
-    private String name;
+    private final String name;
 
     /**
      * Bean class.
      */
-    private Class<T> beanClass;
+    private final Class<T> beanClass;
 
     /**
      * Proxy class.
      */
-    private Class<T> proxyClass;
+    private final Class<T> proxyClass;
 
     /**
      * Javassist method handler.
      */
-    private JavassistMethodHandler javassistMethodHandler;
+    private final JavassistMethodHandler javassistMethodHandler;
 
     /**
      * Bean types.
      */
-    private Set<Type> types;
+    private final Set<Type> types;
 
     /**
      * Annotated type of this bean.
      */
-    private AnnotatedType<T> annotatedType;
+    private final AnnotatedType<T> annotatedType;
 
     /**
      * Field injection points.
      */
-    private Set<FieldInjectionPoint> fieldInjectionPoints;
+    private final Set<FieldInjectionPoint> fieldInjectionPoints;
 
     /**
      * Constructs a Latke bean.

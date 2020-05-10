@@ -132,7 +132,7 @@ public class TimeZones {
         return INSTANCE;
     }
 
-    private List<TimeZoneWithDisplayNames> timeZones = new ArrayList<>();
+    private final List<TimeZoneWithDisplayNames> timeZones = new ArrayList<>();
 
     private TimeZones() {
         HashSet<String> availableIdsSet = new HashSet<>(Arrays.asList(TimeZone.getAvailableIDs()));

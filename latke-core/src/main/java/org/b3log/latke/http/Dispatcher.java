@@ -259,8 +259,8 @@ public final class Dispatcher {
      * @version 1.0.0.0, Feb 9, 2020
      */
     public static class RouterGroup {
-        private List<Handler> middlewares = new ArrayList<>();
-        private List<Router> routers = new ArrayList<>();
+        private final List<Handler> middlewares = new ArrayList<>();
+        private final List<Router> routers = new ArrayList<>();
 
         /**
          * Bind middlewares.
@@ -369,8 +369,8 @@ public final class Dispatcher {
      */
     public static class Router {
         private RouterGroup group;
-        private List<String> uriTemplates = new ArrayList<>();
-        private List<HttpMethod> httpRequestMethods = new ArrayList<>();
+        private final List<String> uriTemplates = new ArrayList<>();
+        private final List<HttpMethod> httpRequestMethods = new ArrayList<>();
         private Handler handler;
         private Method method;
 

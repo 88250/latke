@@ -42,7 +42,7 @@ public abstract class AbstractRepository implements Repository {
     /**
      * Repository.
      */
-    private Repository repository;
+    private final Repository repository;
 
     /**
      * Debug flag.
@@ -65,11 +65,9 @@ public abstract class AbstractRepository implements Repository {
                 case MSSQL:
                 case ORACLE:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
-
                     break;
                 case NONE:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
-
                     break;
                 default:
                     throw new RuntimeException("The runtime database [" + runtimeDatabase + "] is not support NOW!");

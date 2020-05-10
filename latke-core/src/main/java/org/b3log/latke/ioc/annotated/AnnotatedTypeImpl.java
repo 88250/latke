@@ -32,12 +32,12 @@ public class AnnotatedTypeImpl<T> implements AnnotatedType<T> {
     /**
      * Bean class.
      */
-    private Class<T> beanClass;
+    private final Class<T> beanClass;
 
     /**
      * Annotated fields.
      */
-    private Set<AnnotatedField<? super T>> annotatedFields = new HashSet<>();
+    private final Set<AnnotatedField<? super T>> annotatedFields = new HashSet<>();
 
     /**
      * Constructs an annotated type with the specified bean class.

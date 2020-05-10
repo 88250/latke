@@ -26,12 +26,12 @@ public final class CompositeFilter implements Filter {
     /**
      * Operator.
      */
-    private CompositeFilterOperator operator;
+    private final CompositeFilterOperator operator;
 
     /**
      * Sub filters.
      */
-    private List<Filter> subFilters;
+    private final List<Filter> subFilters;
 
     /**
      * Constructor with the specified parameters.

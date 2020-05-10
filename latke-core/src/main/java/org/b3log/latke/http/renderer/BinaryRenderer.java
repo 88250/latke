@@ -25,7 +25,7 @@ public class BinaryRenderer extends AbstractResponseRenderer {
     /**
      * Content type.
      */
-    private String contentType;
+    private final String contentType;
 
     /**
      * Data.

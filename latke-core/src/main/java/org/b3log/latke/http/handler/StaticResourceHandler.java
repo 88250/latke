@@ -30,7 +30,6 @@ public class StaticResourceHandler implements Handler {
         if (request.isStaticResource()) {
             context.setRenderer(new StaticFileRenderer());
             context.abort();
-
             return;
         }
 

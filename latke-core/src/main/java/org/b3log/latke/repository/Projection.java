@@ -24,7 +24,7 @@ public class Projection {
     /**
      * Key.
      */
-    private String key;
+    private final String key;
 
     /**
      * Gets the key.

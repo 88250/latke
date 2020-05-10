@@ -19,10 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
-import org.b3log.latke.event.AbstractEventListener;
-import org.b3log.latke.event.EventManager;
 import org.b3log.latke.http.RequestContext;
-import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.model.Plugin;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -109,12 +106,12 @@ public abstract class AbstractPlugin implements Serializable {
     /**
      * Types of this plugin.
      */
-    private Set<PluginType> types = new HashSet<PluginType>();
+    private final Set<PluginType> types = new HashSet<PluginType>();
 
     /**
      * Languages.
      */
-    private Map<String, Properties> langs = new HashMap<String, Properties>();
+    private final Map<String, Properties> langs = new HashMap<String, Properties>();
 
     /**
      * FreeMarker configuration.

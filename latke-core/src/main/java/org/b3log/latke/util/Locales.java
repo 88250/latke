@@ -149,7 +149,6 @@ public final class Locales {
         final Session session = request.getSession();
         if (null == session) {
             LOGGER.warn("Ignores set locale caused by no session");
-
             return;
         }
 

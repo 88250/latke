@@ -57,12 +57,10 @@ public final class ViewLoadEventHandler extends AbstractEventListener<ViewLoadEv
                 case ENABLED:
                     plugin.plug(dataModel);
                     LOGGER.log(Level.DEBUG, "Plugged[name={}]", plugin.getName());
-
                     break;
                 case DISABLED:
                     plugin.unplug();
                     LOGGER.log(Level.DEBUG, "Unplugged[name={}]", plugin.getName());
-
                     break;
                 default:
                     throw new AssertionError("Plugin state error, this is a bug! Please report this bug (https://github.com/88250/latke/issues/new)!");

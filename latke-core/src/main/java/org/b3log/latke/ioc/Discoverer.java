@@ -89,7 +89,6 @@ public final class Discoverer {
                 final AnnotationsAttribute annotationsAttribute = (AnnotationsAttribute) classFile.getAttribute(AnnotationsAttribute.visibleTag);
                 if (null == annotationsAttribute) {
                     LOGGER.log(Level.TRACE, "The class [name={}] is not a bean", className);
-
                     continue;
                 }
 
@@ -100,7 +99,6 @@ public final class Discoverer {
                     final String typeName = annotation.getTypeName();
                     if (typeName.equals(Singleton.class.getName())) {
                         maybeBeanClass = true;
-
                         break;
                     }
 
@@ -110,7 +108,6 @@ public final class Discoverer {
                         classFile.addAttribute(annotationsAttribute);
                         classFile.setVersionToJava5();
                         maybeBeanClass = true;
-
                         break;
                     }
                 }

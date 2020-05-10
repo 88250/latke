@@ -33,7 +33,7 @@ public abstract class AbstractEventQueue {
     /**
      * Listeners.
      */
-    private Map<String, List<AbstractEventListener<?>>> listeners = new HashMap<>();
+    private final Map<String, List<AbstractEventListener<?>>> listeners = new HashMap<>();
 
     /**
      * Adds the specified listener to the set of listeners for this object,

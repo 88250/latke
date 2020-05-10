@@ -274,7 +274,6 @@ public final class JdbcRepository implements Repository {
         final JSONObject needUpdateJsonObject = getDiff(oldJsonObject, jsonObject, propertyNames);
         if (0 == needUpdateJsonObject.length()) {
             LOGGER.log(Level.TRACE, "Nothing to update [{}] for repository [{}]", id, getName());
-
             return;
         }
 
@@ -546,7 +545,6 @@ public final class JdbcRepository implements Repository {
         selectBuilder.append("SELECT ");
         if (null == projections || projections.isEmpty()) {
             selectBuilder.append(" * ");
-
             return;
         }
 
@@ -784,43 +782,33 @@ public final class JdbcRepository implements Repository {
         switch (operator) {
             case EQUAL:
                 filterOperator = "=";
-
                 break;
             case GREATER_THAN:
                 filterOperator = ">";
-
                 break;
             case GREATER_THAN_OR_EQUAL:
                 filterOperator = ">=";
-
                 break;
             case LESS_THAN:
                 filterOperator = "<";
-
                 break;
             case LESS_THAN_OR_EQUAL:
                 filterOperator = "<=";
-
                 break;
             case NOT_EQUAL:
                 filterOperator = "!=";
-
                 break;
             case IN:
                 filterOperator = "IN";
-
                 break;
             case NOT_IN:
                 filterOperator = "NOT IN";
-
                 break;
             case LIKE:
                 filterOperator = "LIKE";
-
                 break;
             case NOT_LIKE:
                 filterOperator = "NOT LIKE";
-
                 break;
             default:
                 throw new RepositoryException("Unsupported filter operator [" + operator + "]");
@@ -894,11 +882,9 @@ public final class JdbcRepository implements Repository {
                 switch (compositeFilter.getOperator()) {
                     case AND:
                         whereBuilder.append(" AND ");
-
                         break;
                     case OR:
                         whereBuilder.append(" OR ");
-
                         break;
                     default:
                         throw new RepositoryException("Unsupported composite filter [operator=" + compositeFilter.getOperator() + "]");

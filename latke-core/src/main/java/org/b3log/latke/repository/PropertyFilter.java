@@ -24,17 +24,17 @@ public final class PropertyFilter implements Filter {
     /**
      * Key.
      */
-    private String key;
+    private final String key;
 
     /**
      * Operator.
      */
-    private FilterOperator operator;
+    private final FilterOperator operator;
 
     /**
      * Value.
      */
-    private Object value;
+    private final Object value;
 
     /**
      * Constructor with the specified parameters.

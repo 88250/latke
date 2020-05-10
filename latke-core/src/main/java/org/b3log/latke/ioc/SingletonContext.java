@@ -29,7 +29,7 @@ public final class SingletonContext {
     /**
      * Bean reference in this context.
      */
-    private Map<Bean<?>, Object> beanReferences;
+    private final Map<Bean<?>, Object> beanReferences;
 
     /**
      * Constructs a context.

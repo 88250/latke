@@ -69,7 +69,6 @@ public final class Callstacks {
     public static void printCallstack(final Level logLevel, final String[] carePackages, final String[] exceptablePackages) {
         if (null == logLevel) {
             LOGGER.log(Level.WARN, "Requires parameter [logLevel]");
-
             return;
         }
 
@@ -78,7 +77,6 @@ public final class Callstacks {
 
         if (null == stackElements) {
             LOGGER.log(Level.WARN, "Empty call stack");
-
             return;
         }
 

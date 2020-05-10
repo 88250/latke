@@ -59,12 +59,12 @@ public class PluginManager {
      * Caches plugins with the key "plugins" and its value is the real holder, a map: &lt;"hosting view name", plugins&gt;
      * </p>
      */
-    private Map<String, HashSet<AbstractPlugin>> pluginCache = new HashMap<>();
+    private final Map<String, HashSet<AbstractPlugin>> pluginCache = new HashMap<>();
 
     /**
      * Plugin class loaders.
      */
-    private Set<ClassLoader> classLoaders = new HashSet<>();
+    private final Set<ClassLoader> classLoaders = new HashSet<>();
 
     /**
      * Event manager.

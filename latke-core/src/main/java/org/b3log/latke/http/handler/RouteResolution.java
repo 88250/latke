@@ -26,7 +26,7 @@ public final class RouteResolution {
     /**
      * Context handler meta..
      */
-    private ContextHandlerMeta contextHandlerMeta;
+    private final ContextHandlerMeta contextHandlerMeta;
 
     /**
      * URI template name-args mappings.
@@ -36,12 +36,12 @@ public final class RouteResolution {
     /**
      * Matched URI template.
      */
-    private String matchedUriTemplate;
+    private final String matchedUriTemplate;
 
     /**
      * Matched HTTP method.
      */
-    private String matchedMethod;
+    private final String matchedMethod;
 
     /**
      * Constructs a rote resolution with the specified context handler meta.

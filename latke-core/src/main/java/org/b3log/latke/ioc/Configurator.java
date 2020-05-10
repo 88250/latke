@@ -37,12 +37,12 @@ public class Configurator {
     /**
      * Bean manager.
      */
-    private BeanManager beanManager;
+    private final BeanManager beanManager;
 
     /**
      * &lt;BeanType, BeanClasses&gt;.
      */
-    private Map<Type, Set<Class<?>>> typeClasses;
+    private final Map<Type, Set<Class<?>>> typeClasses;
 
     /**
      * Constructs a configurator with the specified bean manager.

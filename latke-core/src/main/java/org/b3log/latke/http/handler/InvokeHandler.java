@@ -47,7 +47,6 @@ public class InvokeHandler implements Handler {
             LOGGER.log(Level.ERROR, "Handler processing failed: ", e);
             context.sendError(500);
             context.abort();
-
             return;
         }
 

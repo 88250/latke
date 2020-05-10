@@ -26,7 +26,7 @@ public class TextResponseRenderer extends AbstractResponseRenderer {
     /**
      * Content type.
      */
-    private String contentType;
+    private final String contentType;
 
     /**
      * Content to render.

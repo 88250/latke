@@ -246,12 +246,10 @@ public final class Latkes {
     public static void setLocalProperty(final String key, final String value) {
         if (null == key) {
             LOGGER.log(Level.WARN, "local.props can not set null key");
-
             return;
         }
         if (null == value) {
             LOGGER.log(Level.WARN, "local.props can not set null value");
-
             return;
         }
 
@@ -276,12 +274,10 @@ public final class Latkes {
     public static void setLatkeProperty(final String key, final String value) {
         if (null == key) {
             LOGGER.log(Level.WARN, "latke.props can not set null key");
-
             return;
         }
         if (null == value) {
             LOGGER.log(Level.WARN, "latke.props can not set null value");
-
             return;
         }
 
@@ -491,12 +487,10 @@ public final class Latkes {
                 PUBLIC_IP = in.readLine();
             }
             urlConnection.disconnect();
-
             return;
         } catch (final Exception e) {
             try {
                 PUBLIC_IP = InetAddress.getLocalHost().getHostAddress();
-
                 return;
             } catch (final Exception e2) {
             }

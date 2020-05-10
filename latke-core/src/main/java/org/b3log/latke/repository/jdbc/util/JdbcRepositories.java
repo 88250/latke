@@ -165,7 +165,6 @@ public final class JdbcRepositories {
         final JSONObject jsonObject = Repositories.getRepositoriesDescription();
         if (null == jsonObject) {
             LOGGER.warn("Loads repository description [repository.json] failed");
-
             return;
         }
 
@@ -319,7 +318,6 @@ public final class JdbcRepositories {
             final File file = new File(destPath);
             if (file.isDirectory()) {
                 LOGGER.log(Level.ERROR, "Can't generate repository definition file caused by the specified destination path [" + destPath + "] is a dir");
-
                 return;
             }
 
@@ -376,48 +374,38 @@ public final class JdbcRepositories {
                         case Types.NVARCHAR:
                         case Types.VARCHAR:
                             key.put("type", "String");
-
                             break;
                         case Types.BIGINT:
                             key.put("type", "long");
-
                             break;
                         case Types.INTEGER:
                         case Types.SMALLINT:
                         case Types.TINYINT:
                             key.put("type", "int");
-
                             break;
                         case Types.DATE:
                             key.put("type", "Date");
-
                             break;
                         case Types.TIME:
                         case Types.TIMESTAMP:
                             key.put("type", "Datetime");
-
                             break;
                         case Types.DECIMAL:
                         case Types.NUMERIC:
                             key.put("type", "Decimal");
                             key.put("precision", rs.getInt("DECIMAL_DIGITS"));
-
                             break;
                         case Types.BIT:
                             key.put("type", "Bit");
-
                             break;
                         case Types.CLOB:
                             key.put("type", "Clob");
-
                             break;
                         case Types.BLOB:
                             key.put("type", "Blob");
-
                             break;
                         case Types.DOUBLE:
                             key.put("type", "double");
-
                             break;
                         default:
                             throw new IllegalStateException("Unsupported type [" + dataType + ']');

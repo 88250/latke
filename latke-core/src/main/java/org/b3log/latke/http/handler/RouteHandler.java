@@ -184,7 +184,6 @@ public class RouteHandler implements Handler {
         final RouteResolution result = doMatch(requestURI, httpMethod);
         if (null == result) {
             context.abort();
-
             return;
         }
 
@@ -360,7 +359,6 @@ public class RouteHandler implements Handler {
                                 default:
                                     ONE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                             }
-
                             break;
                         case 2:
                             switch (httpMethod) {
@@ -379,7 +377,6 @@ public class RouteHandler implements Handler {
                                 default:
                                     TWO_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                             }
-
                             break;
                         case 3:
                             switch (httpMethod) {
@@ -398,7 +395,6 @@ public class RouteHandler implements Handler {
                                 default:
                                     THREE_SEG_OTHER_METHOD_VAR_CTX_HANDLER_METAS.put(uriTemplate, contextHandlerMeta);
                             }
-
                             break;
                         default:
                             switch (httpMethod) {

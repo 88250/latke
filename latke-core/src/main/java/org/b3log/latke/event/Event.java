@@ -24,12 +24,12 @@ public final class Event<T> {
     /**
      * Type of this event.
      */
-    private String type;
+    private final String type;
 
     /**
      * Data of this event.
      */
-    private T data;
+    private final T data;
 
     /**
      * Constructs a {@link Event} object with the specified type and data.

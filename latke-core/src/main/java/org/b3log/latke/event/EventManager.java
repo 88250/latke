@@ -29,7 +29,7 @@ public class EventManager {
     /**
      * Synchronized event queue.
      */
-    private SynchronizedEventQueue synchronizedEventQueue = new SynchronizedEventQueue(this);
+    private final SynchronizedEventQueue synchronizedEventQueue = new SynchronizedEventQueue(this);
 
     /**
      * Fire the specified event synchronously.
