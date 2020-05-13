@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.2.1, May 10, 2020
+ * @version 1.3.2.2, May 13, 2020
  */
 public final class JdbcRepository implements Repository {
 
@@ -140,9 +140,13 @@ public final class JdbcRepository implements Repository {
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 toOracleClobEmpty(jsonObject);
             }
+
             ret = buildAddSql(jsonObject, paramList, sql);
             JdbcUtil.executeSql(sql.toString(), paramList, connection, debug);
-            JdbcUtil.fromOracleClobEmpty(jsonObject);
+
+            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
+                JdbcUtil.fromOracleClobEmpty(jsonObject);
+            }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Add failed", e);
             throw new RepositoryException(e);
@@ -234,7 +238,9 @@ public final class JdbcRepository implements Repository {
             final JSONObject oldJsonObject = get(id);
             buildUpdate(id, oldJsonObject, jsonObject, paramList, sqlBuilder, propertyNames);
 
-            JdbcUtil.fromOracleClobEmpty(jsonObject);
+            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
+                JdbcUtil.fromOracleClobEmpty(jsonObject);
+            }
 
             final String sql = sqlBuilder.toString();
             if (StringUtils.isBlank(sql)) {
