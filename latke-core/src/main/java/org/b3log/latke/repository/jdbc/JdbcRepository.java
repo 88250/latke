@@ -148,7 +148,7 @@ public final class JdbcRepository implements Repository {
                 JdbcUtil.fromOracleClobEmpty(jsonObject);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Add failed", e);
+            LOGGER.log(Level.ERROR, "Adds a record failed", e);
             throw new RepositoryException(e);
         }
 
@@ -241,7 +241,7 @@ public final class JdbcRepository implements Repository {
 
             JdbcUtil.executeSql(sql, paramList, connection, debug);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Update failed", e);
+            LOGGER.log(Level.ERROR, "Updates a record [id=" + id + "] failed", e);
             throw new RepositoryException(e);
         }
     }
@@ -331,10 +331,15 @@ public final class JdbcRepository implements Repository {
         final StringBuilder sqlBuilder = new StringBuilder();
         final Connection connection = getConnection();
         try {
-            sqlBuilder.append("DELETE FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+            if (Repositories.isSoftDelete()) {
+                sqlBuilder.append("UPDATE ").append(getName()).append(" SET `").append(JdbcRepositories.softDeleteFieldName).append("` = 1").
+                        append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+            } else {
+                sqlBuilder.append("DELETE FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+            }
             JdbcUtil.executeSql(sqlBuilder.toString(), connection, debug);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Remove failed", e);
+            LOGGER.log(Level.ERROR, "Removes a record [id=" + id + "] failed", e);
 
             throw new RepositoryException(e);
         }
@@ -371,11 +376,14 @@ public final class JdbcRepository implements Repository {
         final Connection connection = getConnection();
         try {
             sqlBuilder.append("SELECT * FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
+            if (Repositories.isSoftDelete()) {
+                sqlBuilder.append(" AND `").append(JdbcRepositories.softDeleteFieldName).append("` = 0");
+            }
             final ArrayList<Object> paramList = new ArrayList<>();
             paramList.add(id);
             ret = JdbcUtil.queryJsonObject(sqlBuilder.toString(), paramList, connection, getName(), debug);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Gets an object by id [" + id + "] failed", e);
+            LOGGER.log(Level.ERROR, "Gets a record [id=" + id + "] failed", e);
             throw new RepositoryException(e);
         }
 
@@ -384,14 +392,12 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public Map<String, JSONObject> get(final Iterable<String> ids) throws RepositoryException {
-        final Map<String, JSONObject> map = new HashMap<>();
-        JSONObject jsonObject;
+        final Map<String, JSONObject> ret = new HashMap<>();
         for (final String id : ids) {
-            jsonObject = get(id);
-            map.put(jsonObject.optString(JdbcRepositories.keyName), jsonObject);
+            final JSONObject jsonObject = get(id);
+            ret.put(jsonObject.optString(JdbcRepositories.keyName), jsonObject);
         }
-
-        return map;
+        return ret;
     }
 
     @Override
