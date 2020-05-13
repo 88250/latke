@@ -351,6 +351,11 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public void remove(final Query query) throws RepositoryException {
+        final JdbcTransaction currentTransaction = TX.get();
+        if (null == currentTransaction) {
+            throw new RepositoryException("Invoking remove() outside a transaction");
+        }
+
         final StringBuilder deleteSQL = new StringBuilder("DELETE FROM ").append(getName());
 
         final List<Object> paramList = new ArrayList<>();
