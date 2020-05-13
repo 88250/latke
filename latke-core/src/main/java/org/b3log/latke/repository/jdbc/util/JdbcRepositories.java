@@ -35,7 +35,7 @@ import java.util.Set;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.3, Mar 2, 2019
+ * @version 2.1.0.0, May 13, 2019
  */
 public final class JdbcRepositories {
 
@@ -100,9 +100,9 @@ public final class JdbcRepositories {
     public static String keyName = "oId";
 
     /**
-     * The logic delete field name.
+     * The logic/soft delete field name.
      */
-    public static String deleted = "oDeleted";
+    public static String softDeleteFieldName = "oDeleted";
 
     /**
      * Stores all repository definitions.
