@@ -60,7 +60,8 @@ public final class Repositories {
     /**
      * Whether all repositories is writable.
      */
-    private static boolean repositoryiesWritable = true;
+    private static boolean repositoriesWritable = true;
+
 
     static {
         loadRepositoryDescription();
@@ -71,8 +72,8 @@ public final class Repositories {
      *
      * @return {@code true} if they are writable, returns {@code false} otherwise
      */
-    public static boolean getReposirotiesWritable() {
-        return repositoryiesWritable;
+    public static boolean getRepositoriesWritable() {
+        return repositoriesWritable;
     }
 
     /**
@@ -85,10 +86,10 @@ public final class Repositories {
             final String repositoryName = entry.getKey();
             final Repository repository = entry.getValue();
             repository.setWritable(writable);
-            LOGGER.log(Level.INFO, "Sets repository[name={}] writable[{}]", new Object[]{repositoryName, writable});
+            LOGGER.log(Level.INFO, "Sets repository[name={}] writable[{}]", repositoryName, writable);
         }
 
-        repositoryiesWritable = writable;
+        repositoriesWritable = writable;
     }
 
     /**
