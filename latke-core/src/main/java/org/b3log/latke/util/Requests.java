@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.http.Request;
+import org.b3log.latke.http.RequestContext;
 
 import java.util.Iterator;
 
@@ -23,7 +24,7 @@ import java.util.Iterator;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/e">Dongxu Wang</a>
- * @version 3.0.0.1, Feb 12, 2020
+ * @version 3.1.0.0, May 13, 2020
  */
 public final class Requests {
 
@@ -110,6 +111,21 @@ public final class Requests {
         }
 
         return ret.split(",")[0];
+    }
+
+    /**
+     * Gets the Internet Protocol (IP) address of the end-client that sent the specified request.
+     * <p>
+     * It will try to get HTTP head "X-forwarded-for" or "X-Real-IP" from the last proxy to get the request first, if not found, try to get
+     * it directly by {@link Request#getRemoteAddr()}.
+     * </p>
+     *
+     * @param context the specified request context
+     * @return the IP address of the end-client sent the specified request
+     * @see #getRemoteAddr(Request)
+     */
+    public static String getRemoteAddr(final RequestContext context) {
+        return getRemoteAddr(context.getRequest());
     }
 
     /**
