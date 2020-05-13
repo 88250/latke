@@ -109,9 +109,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          FROM Test.dbo.basetable
          ORDER BY CHECKSUM(NEWID())
          */
-        final StringBuilder sqlBuilder = new StringBuilder("SELECT TOP ").append(fetchSize).append(" * FROM ").
-                append(tableName).append(" ORDER BY CHECKSUM(NEWID())");
-        return sqlBuilder.toString();
+        return "SELECT TOP " + fetchSize + " * FROM " + tableName + " ORDER BY CHECKSUM(NEWID())";
     }
 
     @Override
@@ -137,7 +135,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
 
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
-                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
+                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(", ");
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
@@ -147,6 +145,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
 
         }
 
+        createSoftDeleteField(createTableSqlBuilder);
         createTableSqlBuilder.append(createKeyDefinition(keyDefinitionList));
     }
 

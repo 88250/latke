@@ -85,9 +85,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
-        final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
-        return sqlBuilder.toString();
+        return "SELECT * FROM " + tableName + " ORDER BY RAND() LIMIT " + fetchSize;
     }
 
     @Override
@@ -105,8 +103,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
-                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
-
+                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(", ");
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
@@ -115,6 +112,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
         }
 
+        createSoftDeleteField(createTableSqlBuilder);
         createTableSqlBuilder.append(createKeyDefinition(keyDefinitionList));
     }
 

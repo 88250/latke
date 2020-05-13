@@ -118,8 +118,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
         }
 
-
-
+        createSoftDeleteField(createTableSqlBuilder);
         createTableSqlBuilder.append(createKeyDefinition(keyDefinitionList));
     }
 

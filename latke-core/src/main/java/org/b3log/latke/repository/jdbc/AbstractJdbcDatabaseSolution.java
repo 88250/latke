@@ -11,8 +11,10 @@
  */
 package org.b3log.latke.repository.jdbc;
 
+import org.b3log.latke.repository.Repositories;
 import org.b3log.latke.repository.jdbc.mapping.Mapping;
 import org.b3log.latke.repository.jdbc.util.Connections;
+import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.jdbc.util.JdbcUtil;
 import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 
@@ -50,12 +52,12 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
         final Connection connection = Connections.getConnection();
 
         try {
-            final StringBuilder createTableSql = new StringBuilder();
-            createTableHead(createTableSql, repositoryDefinition);
-            createTableBody(createTableSql, repositoryDefinition);
-            createTableEnd(createTableSql, repositoryDefinition);
+            final StringBuilder createTableSqlBuilder = new StringBuilder();
+            createTableHead(createTableSqlBuilder, repositoryDefinition);
+            createTableBody(createTableSqlBuilder, repositoryDefinition);
+            createTableEnd(createTableSqlBuilder, repositoryDefinition);
 
-            return JdbcUtil.executeSql(createTableSql.toString(), connection, false);
+            return JdbcUtil.executeSql(createTableSqlBuilder.toString(), connection, false);
         } catch (final SQLException e) {
             throw e;
         } finally {
@@ -66,26 +68,34 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
     /**
      * abstract createTableHead for each DB to impl.
      *
-     * @param createTableSql       createSql
+     * @param createTableSqlBuilder       createSql
      * @param repositoryDefinition the specified repository definition
      */
-    protected abstract void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition);
+    protected abstract void createTableHead(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition);
 
     /**
      * abstract createTableBody for each DB to impl.
      *
-     * @param createTableSql       createSql
+     * @param createTableSqlBuilder       createSql
      * @param repositoryDefinition the specified repository definition
      */
-    protected abstract void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition);
+    protected abstract void createTableBody(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition);
 
     /**
      * abstract createTableEnd for each DB to impl.
      *
-     * @param createTableSql       createSql
+     * @param createTableSqlBuilder       createSql
      * @param repositoryDefinition the specified repository definition
      */
-    protected abstract void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition);
+    protected abstract void createTableEnd(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition);
+
+    protected void createSoftDeleteField(final StringBuilder createTableSqlBuilder) {
+        if (!Repositories.isSoftDelete()) {
+            return;
+        }
+
+        createTableSqlBuilder.append(JdbcRepositories.softDeleteFieldName).append(" INT NOT NULL, ");
+    }
 
     /**
      * @return jdbcTypeMapping

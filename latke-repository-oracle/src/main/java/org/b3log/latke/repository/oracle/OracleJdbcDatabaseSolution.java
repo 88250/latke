@@ -112,9 +112,7 @@ FROM    (
         )
 WHERE rownum <= 1000
  */
-        final StringBuilder sqlBuilder = new StringBuilder("SELECT ").append(" * FROM (").append("SELECT * FROM ").
-                append(tableName).append(" ORDER BY dbms_random.value) WHERE rownum <=").append(fetchSize);
-        return sqlBuilder.toString();
+        return "SELECT " + " * FROM (" + "SELECT * FROM " + tableName + " ORDER BY dbms_random.value) WHERE rownum <=" + fetchSize;
     }
 
     @Override
@@ -134,7 +132,7 @@ WHERE rownum <= 1000
 
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
-                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
+                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(", ");
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
@@ -143,6 +141,7 @@ WHERE rownum <= 1000
             }
         }
 
+        createSoftDeleteField(createTableSqlBuilder);
         createTableSqlBuilder.append(createKeyDefinition(keyDefinitionList));
     }
 
