@@ -118,12 +118,12 @@ WHERE rownum <= 1000
     }
 
     @Override
-    protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append("CREATE TABLE ").append(repositoryDefinition.getName()).append("(");
+    protected void createTableHead(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
+        createTableSqlBuilder.append("CREATE TABLE ").append(repositoryDefinition.getName()).append("(");
     }
 
     @Override
-    protected void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+    protected void createTableBody(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
         final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
         final List<FieldDefinition> fieldDefinitions = repositoryDefinition.getKeys();
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
@@ -134,7 +134,7 @@ WHERE rownum <= 1000
 
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
-                createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
+                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
@@ -143,7 +143,7 @@ WHERE rownum <= 1000
             }
         }
 
-        createTableSql.append(createKeyDefinition(keyDefinitionList));
+        createTableSqlBuilder.append(createKeyDefinition(keyDefinitionList));
     }
 
     /**
@@ -170,7 +170,7 @@ WHERE rownum <= 1000
     }
 
     @Override
-    protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append(")");
+    protected void createTableEnd(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
+        createTableSqlBuilder.append(")");
     }
 }

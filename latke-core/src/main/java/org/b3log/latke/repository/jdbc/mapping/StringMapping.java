@@ -11,9 +11,7 @@
  */
 package org.b3log.latke.repository.jdbc.mapping;
 
-
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-
 
 /**
  * String mapping.
@@ -26,8 +24,8 @@ public class StringMapping implements Mapping {
 
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
-        final StringBuilder sql = new StringBuilder();
-        sql.append(definition.getName());
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(definition.getName());
         if (null == definition.getLength()) {
             definition.setLength(0);
         }
@@ -35,21 +33,21 @@ public class StringMapping implements Mapping {
         final Integer length = definition.getLength();
         if (255 < length) {
             if (16777215 < length) {
-                sql.append(" longtext");
+                sqlBuilder.append(" LONGTEXT");
             } else if (65535 < length) {
-                sql.append(" mediumtext");
+                sqlBuilder.append(" MEDIUMTEXT");
             } else {
-                sql.append(" text");
+                sqlBuilder.append(" TEXT");
             }
         } else {
-            sql.append(" varchar(").append(length < 1 ? 255 : length);
-            sql.append(")");
+            sqlBuilder.append(" VARCHAR(").append(length < 1 ? 255 : length);
+            sqlBuilder.append(")");
         }
 
         if (!definition.getNullable()) {
-            sql.append(" not null");
+            sqlBuilder.append(" NOT NULL");
         }
 
-        return sql.toString();
+        return sqlBuilder.toString();
     }
 }

@@ -11,9 +11,7 @@
  */
 package org.b3log.latke.repository.jdbc.mapping;
 
-
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-
 
 /**
  * IntMapping.
@@ -25,17 +23,12 @@ public class IntMapping implements Mapping {
 
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
-
-        final StringBuilder sql = new StringBuilder();
-
-        sql.append(definition.getName());
-        sql.append(" int");
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(definition.getName());
+        sqlBuilder.append(" INT");
         if (!definition.getNullable()) {
-            sql.append(" not null");
+            sqlBuilder.append(" NOT NULL");
         }
-
-        return sql.toString();
-
+        return sqlBuilder.toString();
     }
-
 }

@@ -91,12 +91,12 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
+    protected void createTableHead(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
+        createTableSqlBuilder.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
     }
 
     @Override
-    protected void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+    protected void createTableBody(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
         final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
         for (FieldDefinition fieldDefinition : repositoryDefinition.getKeys()) {
             final String type = fieldDefinition.getType();
@@ -105,7 +105,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
-                createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
+                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
 
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
@@ -115,7 +115,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
         }
 
-        createTableSql.append(createKeyDefinition(keyDefinitionList));
+        createTableSqlBuilder.append(createKeyDefinition(keyDefinitionList));
     }
 
     /**
@@ -142,7 +142,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append(")");
+    protected void createTableEnd(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
+        createTableSqlBuilder.append(")");
     }
 }

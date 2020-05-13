@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.b3log.latke.repository.Repositories;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.*;
 import org.b3log.latke.repository.jdbc.util.Connections;
@@ -88,12 +89,12 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
+    protected void createTableHead(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
+        createTableSqlBuilder.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
     }
 
     @Override
-    protected void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+    protected void createTableBody(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
         final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
         final List<FieldDefinition> fieldDefinitions = repositoryDefinition.getKeys();
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
@@ -103,12 +104,12 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (null != mapping) {
-                createTableSql.append(mapping.toDataBaseSting(fieldDefinition));
+                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition));
                 final String description = fieldDefinition.getDescription();
                 if (StringUtils.isNotBlank(description)) {
-                    createTableSql.append(" COMMENT '" + description + "'");
+                    createTableSqlBuilder.append(" COMMENT '" + description + "'");
                 }
-                createTableSql.append(", ");
+                createTableSqlBuilder.append(", ");
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
@@ -117,7 +118,9 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
         }
 
-        createTableSql.append(createKeyDefinition(keyDefinitionList));
+
+
+        createTableSqlBuilder.append(createKeyDefinition(keyDefinitionList));
     }
 
     /**
@@ -144,25 +147,25 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append(") ENGINE=InnoDB");
+    protected void createTableEnd(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
+        createTableSqlBuilder.append(") ENGINE=InnoDB");
 
         final String description = repositoryDefinition.getDescription();
         if (StringUtils.isNotBlank(description)) {
-            createTableSql.append(" COMMENT='").append(description).append("'");
+            createTableSqlBuilder.append(" COMMENT='").append(description).append("'");
         }
 
         final String charset = repositoryDefinition.getCharset();
         if (StringUtils.isNotBlank(charset)) {
-            createTableSql.append(" DEFAULT CHARACTER SET ").append(charset);
+            createTableSqlBuilder.append(" DEFAULT CHARACTER SET ").append(charset);
         } else {
-            createTableSql.append(" DEFAULT CHARACTER SET ").append("utf8mb4");
+            createTableSqlBuilder.append(" DEFAULT CHARACTER SET ").append("utf8mb4");
         }
         final String collate = repositoryDefinition.getCollate();
         if (StringUtils.isNotBlank(collate)) {
-            createTableSql.append(" COLLATE ").append(collate);
+            createTableSqlBuilder.append(" COLLATE ").append(collate);
         } else {
-            createTableSql.append(" COLLATE ").append("utf8mb4_general_ci");
+            createTableSqlBuilder.append(" COLLATE ").append("utf8mb4_general_ci");
         }
     }
 }

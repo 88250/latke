@@ -115,18 +115,18 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
     }
 
     @Override
-    protected void createTableHead(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+    protected void createTableHead(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
         /*
          IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[tablename]')
          AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
          CREATE TABLE [dbo].[tablename] ( columns specification );
          */
-        createTableSql.append("IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").append(
+        createTableSqlBuilder.append("IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id(N'[dbo].[").append(
                 repositoryDefinition.getName()).append("]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) ");
     }
 
     @Override
-    protected void createTableBody(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
+    protected void createTableBody(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
         final List<FieldDefinition> keyDefinitionList = new ArrayList<>();
         final List<FieldDefinition> fieldDefinitions = repositoryDefinition.getKeys();
         for (FieldDefinition fieldDefinition : fieldDefinitions) {
@@ -137,7 +137,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
 
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
-                createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
+                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
@@ -147,7 +147,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
 
         }
 
-        createTableSql.append(createKeyDefinition(keyDefinitionList));
+        createTableSqlBuilder.append(createKeyDefinition(keyDefinitionList));
     }
 
     /**
@@ -174,7 +174,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
     }
 
     @Override
-    protected void createTableEnd(final StringBuilder createTableSql, final RepositoryDefinition repositoryDefinition) {
-        createTableSql.append(");");
+    protected void createTableEnd(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
+        createTableSqlBuilder.append(");");
     }
 }

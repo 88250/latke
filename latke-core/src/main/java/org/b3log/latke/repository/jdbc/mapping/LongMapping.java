@@ -11,9 +11,7 @@
  */
 package org.b3log.latke.repository.jdbc.mapping;
 
-
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
-
 
 /**
  * Long type mapping.
@@ -29,12 +27,10 @@ public final class LongMapping implements Mapping {
 
     @Override
     public String toDataBaseSting(final FieldDefinition definition) {
-        final StringBuilder builder = new StringBuilder(definition.getName()).append(" bigint");
-
+        final StringBuilder sqlBuilder = new StringBuilder(definition.getName()).append(" BIGINT");
         if (!definition.getNullable()) {
-            builder.append(" not null");
+            sqlBuilder.append(" NOT NULL");
         }
-
-        return builder.toString();
+        return sqlBuilder.toString();
     }
 }
