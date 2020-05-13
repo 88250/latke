@@ -143,7 +143,6 @@ WHERE rownum <= 1000
             }
         }
 
-        keyDefinitionList.size();
         createTableSql.append(createKeyDefinition(keyDefinitionList));
     }
 

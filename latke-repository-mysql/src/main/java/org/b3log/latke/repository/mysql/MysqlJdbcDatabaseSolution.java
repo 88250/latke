@@ -84,9 +84,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
-        final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
-        return sqlBuilder.toString();
+        return "SELECT * FROM " + tableName + " ORDER BY RAND() LIMIT " + fetchSize;
     }
 
     @Override
@@ -119,7 +117,6 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
         }
 
-        keyDefinitionList.size();
         createTableSql.append(createKeyDefinition(keyDefinitionList));
     }
 

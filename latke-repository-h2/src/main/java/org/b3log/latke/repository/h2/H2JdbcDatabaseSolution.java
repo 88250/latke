@@ -115,7 +115,6 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
         }
 
-        keyDefinitionList.size();
         createTableSql.append(createKeyDefinition(keyDefinitionList));
     }
 

@@ -147,7 +147,6 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
 
         }
 
-        keyDefinitionList.size();
         createTableSql.append(createKeyDefinition(keyDefinitionList));
     }
 
