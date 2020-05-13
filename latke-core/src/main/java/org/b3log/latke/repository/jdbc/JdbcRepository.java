@@ -134,15 +134,15 @@ public final class JdbcRepository implements Repository {
 
         final Connection connection = getConnection();
         final List<Object> paramList = new ArrayList<>();
-        final StringBuilder sql = new StringBuilder();
+        final StringBuilder sqlBuilder = new StringBuilder();
         String ret;
         try {
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 toOracleClobEmpty(jsonObject);
             }
 
-            ret = buildAddSql(jsonObject, paramList, sql);
-            JdbcUtil.executeSql(sql.toString(), paramList, connection, debug);
+            ret = buildAddSql(jsonObject, paramList, sqlBuilder);
+            JdbcUtil.executeSql(sqlBuilder.toString(), paramList, connection, debug);
 
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 JdbcUtil.fromOracleClobEmpty(jsonObject);
@@ -156,14 +156,14 @@ public final class JdbcRepository implements Repository {
     }
 
     /**
-     * buildAddSql.
+     * Builds add param list and SQL.
      *
-     * @param jsonObject jsonObject
-     * @param paramlist  paramlist
-     * @param sql        sql
-     * @return id
+     * @param jsonObject jsonObject the specified JSON object
+     * @param paramList  paramlist the specified param list
+     * @param sqlBuilder the specified SQL builder
+     * @return id the generated key
      */
-    private String buildAddSql(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) {
+    private String buildAddSql(final JSONObject jsonObject, final List<Object> paramList, final StringBuilder sqlBuilder) {
         String ret = null;
         if (!jsonObject.has(Keys.OBJECT_ID)) {
             if (!(KEY_GEN instanceof DBKeyGenerator)) {
@@ -174,18 +174,6 @@ public final class JdbcRepository implements Repository {
             ret = jsonObject.getString(Keys.OBJECT_ID);
         }
 
-        setProperties(jsonObject, paramlist, sql);
-        return ret;
-    }
-
-    /**
-     * setProperties.
-     *
-     * @param jsonObject jsonObject
-     * @param paramlist  paramlist
-     * @param sql        sql
-     */
-    private void setProperties(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) {
         final Iterator<String> keys = jsonObject.keys();
         final StringBuilder insertString = new StringBuilder();
         final StringBuilder wildcardString = new StringBuilder();
@@ -204,7 +192,7 @@ public final class JdbcRepository implements Repository {
             }
 
             value = jsonObject.get(key);
-            paramlist.add(value);
+            paramList.add(value);
 
             if (!keys.hasNext()) {
                 insertString.append(")");
@@ -212,7 +200,8 @@ public final class JdbcRepository implements Repository {
             }
         }
 
-        sql.append("INSERT INTO ").append(getName()).append(insertString).append(" VALUES ").append(wildcardString);
+        sqlBuilder.append("INSERT INTO ").append(getName()).append(insertString).append(" VALUES ").append(wildcardString);
+        return ret;
     }
 
     @Override
@@ -229,7 +218,6 @@ public final class JdbcRepository implements Repository {
         final Connection connection = getConnection();
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder sqlBuilder = new StringBuilder();
-
         try {
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 toOracleClobEmpty(jsonObject);
@@ -336,12 +324,11 @@ public final class JdbcRepository implements Repository {
             throw new RepositoryException("Invoking remove() outside a transaction");
         }
 
-        final StringBuilder sql = new StringBuilder();
+        final StringBuilder sqlBuilder = new StringBuilder();
         final Connection connection = getConnection();
-
         try {
-            sql.append("DELETE FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
-            JdbcUtil.executeSql(sql.toString(), connection, debug);
+            sqlBuilder.append("DELETE FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+            JdbcUtil.executeSql(sqlBuilder.toString(), connection, debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Remove failed", e);
 
@@ -356,18 +343,17 @@ public final class JdbcRepository implements Repository {
             throw new RepositoryException("Invoking remove() outside a transaction");
         }
 
-        final StringBuilder deleteSQL = new StringBuilder("DELETE FROM ").append(getName());
-
+        final StringBuilder deleteSQLBuilder = new StringBuilder("DELETE FROM ").append(getName());
         final List<Object> paramList = new ArrayList<>();
-        final StringBuilder filterSql = new StringBuilder();
-        buildWhere(filterSql, paramList, query.getFilter());
-        if (StringUtils.isNotBlank(filterSql.toString())) {
-            deleteSQL.append(" WHERE ").append(filterSql);
+        final StringBuilder filterSqlBuilder = new StringBuilder();
+        buildWhere(filterSqlBuilder, paramList, query.getFilter());
+        if (StringUtils.isNotBlank(filterSqlBuilder.toString())) {
+            deleteSQLBuilder.append(" WHERE ").append(filterSqlBuilder);
         }
 
         final Connection connection = getConnection();
         try {
-            JdbcUtil.executeSql(deleteSQL.toString(), paramList, connection, debug);
+            JdbcUtil.executeSql(deleteSQLBuilder.toString(), paramList, connection, debug);
         } catch (final SQLException e) {
             LOGGER.log(Level.ERROR, "Remove failed", e);
             throw new RepositoryException(e);
@@ -377,15 +363,13 @@ public final class JdbcRepository implements Repository {
     @Override
     public JSONObject get(final String id) throws RepositoryException {
         JSONObject ret;
-
-        final StringBuilder sql = new StringBuilder();
+        final StringBuilder sqlBuilder = new StringBuilder();
         final Connection connection = getConnection();
-
         try {
-            sql.append("SELECT * FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
+            sqlBuilder.append("SELECT * FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
             final ArrayList<Object> paramList = new ArrayList<>();
             paramList.add(id);
-            ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), debug);
+            ret = JdbcUtil.queryJsonObject(sqlBuilder.toString(), paramList, connection, getName(), debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Gets an object by id [" + id + "] failed", e);
             throw new RepositoryException(e);
@@ -398,7 +382,6 @@ public final class JdbcRepository implements Repository {
     public Map<String, JSONObject> get(final Iterable<String> ids) throws RepositoryException {
         final Map<String, JSONObject> map = new HashMap<>();
         JSONObject jsonObject;
-
         for (final String id : ids) {
             jsonObject = get(id);
             map.put(jsonObject.optString(JdbcRepositories.keyName), jsonObject);
@@ -415,7 +398,6 @@ public final class JdbcRepository implements Repository {
     @Override
     public JSONObject get(final Query query) throws RepositoryException {
         final JSONObject ret = new JSONObject();
-
         final int currentPageNum = query.getCurrentPageNum();
         final int pageSize = query.getPageSize();
 
@@ -427,12 +409,11 @@ public final class JdbcRepository implements Repository {
             pageCount = query.getPageCount();
         }
 
-        final StringBuilder sql = new StringBuilder();
+        final StringBuilder sqlBuilder = new StringBuilder();
         final Connection connection = getConnection();
         final List<Object> paramList = new ArrayList<>();
-
         try {
-            final Map<String, Object> paginationCnt = buildSQLCount(currentPageNum, pageSize, pageCount, query, sql, paramList);
+            final Map<String, Object> paginationCnt = buildSQLCount(currentPageNum, pageSize, pageCount, query, sqlBuilder, paramList);
             final JSONObject pagination = new JSONObject();
             final int pageCnt = (Integer) paginationCnt.get(Pagination.PAGINATION_PAGE_COUNT);
             pagination.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
@@ -440,12 +421,10 @@ public final class JdbcRepository implements Repository {
             ret.put(Pagination.PAGINATION, pagination);
             if (0 == pageCnt) {
                 ret.put(Keys.RESULTS, new JSONArray());
-
                 return ret;
             }
 
-            final JSONArray jsonResults = JdbcUtil.queryJsonArray(sql.toString(), paramList, connection, getName(), query.isDebug());
-
+            final JSONArray jsonResults = JdbcUtil.queryJsonArray(sqlBuilder.toString(), paramList, connection, getName(), query.isDebug());
             ret.put(Keys.RESULTS, jsonResults);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Query failed", e);
@@ -458,7 +437,6 @@ public final class JdbcRepository implements Repository {
     @Override
     public List<JSONObject> select(final String statement, final Object... params) throws RepositoryException {
         JSONArray jsonResults;
-
         final Connection connection = getConnection();
         try {
             if (null == params || 0 == params.length) {
@@ -491,10 +469,8 @@ public final class JdbcRepository implements Repository {
      */
     private Map<String, Object> buildSQLCount(final int currentPageNum, final int pageSize, final int pageCount, final Query query, final StringBuilder sqlBuilder, final List<Object> paramList) throws RepositoryException {
         final Map<String, Object> ret = new HashMap<>();
-
         int pageCnt = pageCount;
         int recordCnt = 0;
-
         final StringBuilder selectBuilder = new StringBuilder();
         final StringBuilder whereBuilder = new StringBuilder();
         final StringBuilder orderByBuilder = new StringBuilder();
@@ -526,7 +502,6 @@ public final class JdbcRepository implements Repository {
         final int end = start + pageSize;
         sqlBuilder.append(JdbcFactory.getInstance().
                 queryPage(start, end, selectBuilder.toString(), whereBuilder.toString(), orderByBuilder.toString(), getName()));
-
         return ret;
     }
 
@@ -542,7 +517,6 @@ public final class JdbcRepository implements Repository {
             selectBuilder.append(" * ");
             return;
         }
-
         selectBuilder.append(projections.stream().map(Projection::getKey).collect(Collectors.joining(", ")));
     }
 
@@ -597,58 +571,39 @@ public final class JdbcRepository implements Repository {
     @Override
     public List<JSONObject> getRandomly(final int fetchSize) throws RepositoryException {
         final List<JSONObject> jsonObjects = new ArrayList<>();
-
-        final StringBuilder sql = new StringBuilder();
+        final StringBuilder sqlBuilder = new StringBuilder();
         JSONArray jsonArray;
-
         final Connection connection = getConnection();
-
-        getRandomly(fetchSize, sql);
+        sqlBuilder.append(JdbcFactory.getInstance().getRandomlySql(getName(), fetchSize));
         try {
-            jsonArray = JdbcUtil.queryJsonArray(sql.toString(), new ArrayList<>(), connection, getName(), debug);
-
+            jsonArray = JdbcUtil.queryJsonArray(sqlBuilder.toString(), new ArrayList<>(), connection, getName(), debug);
             for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObjects.add(jsonArray.getJSONObject(i));
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Get randomly failed", e);
+            LOGGER.log(Level.ERROR, "Get list randomly failed", e);
             throw new RepositoryException(e);
         }
 
         return jsonObjects;
     }
 
-    /**
-     * getRandomly.
-     *
-     * @param fetchSize fetchSize
-     * @param sql       sql
-     */
-    private void getRandomly(final int fetchSize, final StringBuilder sql) {
-        sql.append(JdbcFactory.getInstance().getRandomlySql(getName(), fetchSize));
-    }
-
     @Override
     public long count() throws RepositoryException {
-        final StringBuilder sql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append(getName());
-
-        return count(sql, new ArrayList<>());
+        final StringBuilder sqlBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append(getName());
+        return count(sqlBuilder, new ArrayList<>());
     }
 
     @Override
     public long count(final Query query) throws RepositoryException {
-        final StringBuilder countSql = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append(getName());
-
+        final StringBuilder countSqlBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append(getName());
         final List<Object> paramList = new ArrayList<>();
-        final StringBuilder filterSql = new StringBuilder();
-
-        buildWhere(filterSql, paramList, query.getFilter());
-
-        if (StringUtils.isNotBlank(filterSql.toString())) {
-            countSql.append(" WHERE ").append(filterSql);
+        final StringBuilder filterSqlBuilder = new StringBuilder();
+        buildWhere(filterSqlBuilder, paramList, query.getFilter());
+        if (StringUtils.isNotBlank(filterSqlBuilder.toString())) {
+            countSqlBuilder.append(" WHERE ").append(filterSqlBuilder);
         }
-
-        return (int) count(countSql, paramList);
+        return (int) count(countSqlBuilder, paramList);
     }
 
     /**
