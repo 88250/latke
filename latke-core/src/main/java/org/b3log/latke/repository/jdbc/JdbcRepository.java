@@ -73,9 +73,7 @@ public final class JdbcRepository implements Repository {
             try {
                 final Class<?> keyGenClass = Class.forName(value);
                 final Constructor<?> constructor = keyGenClass.getConstructor();
-
                 KEY_GEN = (KeyGenerator) constructor.newInstance();
-
             } catch (final Exception e) {
                 throw new IllegalArgumentException("Can not load key generator with the specified class name [" + value + ']', e);
             }
@@ -111,7 +109,6 @@ public final class JdbcRepository implements Repository {
      */
     public static void dispose() {
         final JdbcTransaction jdbcTransaction = TX.get();
-
         if (null != jdbcTransaction && jdbcTransaction.getConnection() != null) {
             jdbcTransaction.dispose();
         }
@@ -139,7 +136,6 @@ public final class JdbcRepository implements Repository {
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder sql = new StringBuilder();
         String ret;
-
         try {
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 toOracleClobEmpty(jsonObject);
@@ -149,7 +145,6 @@ public final class JdbcRepository implements Repository {
             JdbcUtil.fromOracleClobEmpty(jsonObject);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Add failed", e);
-
             throw new RepositoryException(e);
         }
 
@@ -166,7 +161,6 @@ public final class JdbcRepository implements Repository {
      */
     private String buildAddSql(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) {
         String ret = null;
-
         if (!jsonObject.has(Keys.OBJECT_ID)) {
             if (!(KEY_GEN instanceof DBKeyGenerator)) {
                 ret = (String) KEY_GEN.gen();
@@ -177,7 +171,6 @@ public final class JdbcRepository implements Repository {
         }
 
         setProperties(jsonObject, paramlist, sql);
-
         return ret;
     }
 
@@ -190,17 +183,13 @@ public final class JdbcRepository implements Repository {
      */
     private void setProperties(final JSONObject jsonObject, final List<Object> paramlist, final StringBuilder sql) {
         final Iterator<String> keys = jsonObject.keys();
-
         final StringBuilder insertString = new StringBuilder();
         final StringBuilder wildcardString = new StringBuilder();
-
         boolean isFirst = true;
         String key;
         Object value;
-
         while (keys.hasNext()) {
             key = keys.next();
-
             if (isFirst) {
                 insertString.append("(`").append(key).append("`");
                 wildcardString.append("(?");
@@ -255,7 +244,6 @@ public final class JdbcRepository implements Repository {
             JdbcUtil.executeSql(sql, paramList, connection, debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Update failed", e);
-
             throw new RepositoryException(e);
         }
     }
@@ -371,7 +359,6 @@ public final class JdbcRepository implements Repository {
             JdbcUtil.executeSql(deleteSQL.toString(), paramList, connection, debug);
         } catch (final SQLException e) {
             LOGGER.log(Level.ERROR, "Remove failed", e);
-
             throw new RepositoryException(e);
         }
     }
@@ -390,7 +377,6 @@ public final class JdbcRepository implements Repository {
             ret = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Gets an object by id [" + id + "] failed", e);
-
             throw new RepositoryException(e);
         }
 
@@ -452,7 +438,6 @@ public final class JdbcRepository implements Repository {
             ret.put(Keys.RESULTS, jsonResults);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Query failed", e);
-
             throw new RepositoryException(e);
         }
 
@@ -474,7 +459,6 @@ public final class JdbcRepository implements Repository {
             return CollectionUtils.jsonArrayToList(jsonResults);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Select failed", e);
-
             throw new RepositoryException(e);
         }
     }
@@ -617,7 +601,6 @@ public final class JdbcRepository implements Repository {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Get randomly failed", e);
-
             throw new RepositoryException(e);
         }
 
@@ -676,7 +659,6 @@ public final class JdbcRepository implements Repository {
             count = jsonObject.getLong(jsonObject.keys().next());
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Count failed", e);
-
             throw new RepositoryException(e);
         }
 
@@ -694,7 +676,6 @@ public final class JdbcRepository implements Repository {
         final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
                 ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_"
                 : "";
-
         return tableNamePrefix + name;
     }
 

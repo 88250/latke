@@ -23,8 +23,6 @@ public final class DBKeyGenerator implements KeyGenerator<Void> {
     @Override
     public Void gen() {
         // Do nothing
-
         return null;
     }
-
 }
