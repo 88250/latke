@@ -68,7 +68,7 @@ public final class Keys {
     /**
      * Key of id of an entity json object.
      */
-    public static final String OBJECT_ID = JdbcRepositories.getKeyName();
+    public static final String OBJECT_ID = JdbcRepositories.keyName;
 
     /**
      * Key of ids.

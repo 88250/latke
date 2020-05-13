@@ -97,35 +97,17 @@ public final class JdbcRepositories {
     /**
      * The primary key name.
      */
-    private static String keyName = "oId";
+    public static String keyName = "oId";
 
     /**
      * The logic delete field name.
      */
-    private static String deleted = "oDeleted";
+    public static String deleted = "oDeleted";
 
     /**
      * Stores all repository definitions.
      */
     private static List<RepositoryDefinition> repositoryDefinitions = null;
-
-    /**
-     * Sets the key name.
-     *
-     * @param keyName the specified key name
-     */
-    public static void setKeyName(final String keyName) {
-        JdbcRepositories.keyName = keyName;
-    }
-
-    /**
-     * Gets the key name.
-     *
-     * @return key name
-     */
-    public static String getKeyName() {
-        return keyName;
-    }
 
     /**
      * Gets keys of the repository specified by the given repository name.

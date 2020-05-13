@@ -92,7 +92,7 @@ SELECT * FROM
 WHERE r__ >= (((pageNumber-1) * pageSize) + 1)
          */
         final StringBuilder sql = new StringBuilder();
-        final String orderBy = StringUtils.isBlank(orderBySql) ? " order by " + JdbcRepositories.getKeyName() + " desc" : orderBySql;
+        final String orderBy = StringUtils.isBlank(orderBySql) ? " order by " + JdbcRepositories.keyName + " desc" : orderBySql;
 
         sql.append(selectSql).append(" from (select a.*, rownum r__ from (select * from ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {

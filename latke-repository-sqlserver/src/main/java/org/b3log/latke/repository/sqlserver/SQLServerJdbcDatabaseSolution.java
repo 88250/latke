@@ -92,7 +92,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          ) a 
          where rownum>10000 and rownum<10501
          */
-        final String over = StringUtils.isBlank(orderBySql) ? "order by " + JdbcRepositories.getKeyName() + " desc" : orderBySql;
+        final String over = StringUtils.isBlank(orderBySql) ? "order by " + JdbcRepositories.keyName + " desc" : orderBySql;
 
         sql.append(selectSql).append(" from (select top 100 percent ROW_NUMBER() over(").append(over).append(") rownum, * from ").append(
                 tableName);
