@@ -95,9 +95,14 @@ public final class JdbcRepositories {
     private static final String ISKEY = "iskey";
 
     /**
-     * The default primary key name.
+     * The primary key name.
      */
-    private static String defaultKeyName = "oId";
+    private static String keyName = "oId";
+
+    /**
+     * The logic delete field name.
+     */
+    private static String deleted = "oDeleted";
 
     /**
      * Stores all repository definitions.
@@ -105,21 +110,21 @@ public final class JdbcRepositories {
     private static List<RepositoryDefinition> repositoryDefinitions = null;
 
     /**
-     * Sets the default key name.
+     * Sets the key name.
      *
      * @param keyName the specified key name
      */
-    public static void setDefaultKeyName(final String keyName) {
-        defaultKeyName = keyName;
+    public static void setKeyName(final String keyName) {
+        JdbcRepositories.keyName = keyName;
     }
 
     /**
-     * Gets the default key name.
+     * Gets the key name.
      *
-     * @return default key name
+     * @return key name
      */
-    public static String getDefaultKeyName() {
-        return defaultKeyName;
+    public static String getKeyName() {
+        return keyName;
     }
 
     /**
@@ -208,10 +213,7 @@ public final class JdbcRepositories {
         ret.setNullable(fieldDefinitionObject.optBoolean(NULLABLE));
         ret.setLength(fieldDefinitionObject.optInt(LENGTH));
         ret.setIsKey(fieldDefinitionObject.optBoolean(ISKEY));
-        if (defaultKeyName.equals(ret.getName())) {
-            ret.setIsKey(true);
-        }
-
+        ret.setIsKey(keyName.equals(ret.getName()));
         return ret;
     }
 

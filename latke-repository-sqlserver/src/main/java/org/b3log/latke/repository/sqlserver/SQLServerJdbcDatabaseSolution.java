@@ -38,7 +38,7 @@ import java.util.List;
  * Microsoft SQL Server database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Feb 21, 2019
+ * @version 2.0.0.2, May 13, 2020
  * @since 1.0.8
  */
 public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
@@ -92,7 +92,7 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          ) a 
          where rownum>10000 and rownum<10501
          */
-        final String over = StringUtils.isBlank(orderBySql) ? "order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
+        final String over = StringUtils.isBlank(orderBySql) ? "order by " + JdbcRepositories.getKeyName() + " desc" : orderBySql;
 
         sql.append(selectSql).append(" from (select top 100 percent ROW_NUMBER() over(").append(over).append(") rownum, * from ").append(
                 tableName);

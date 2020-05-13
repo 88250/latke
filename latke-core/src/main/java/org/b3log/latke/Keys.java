@@ -21,7 +21,7 @@ import java.util.Map;
  * This class define framework keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.10, Feb 10, 2019
+ * @version 1.2.2.11, May 13, 2020
  */
 public final class Keys {
 
@@ -68,7 +68,7 @@ public final class Keys {
     /**
      * Key of id of an entity json object.
      */
-    public static final String OBJECT_ID = JdbcRepositories.getDefaultKeyName();
+    public static final String OBJECT_ID = JdbcRepositories.getKeyName();
 
     /**
      * Key of ids.
@@ -93,7 +93,7 @@ public final class Keys {
     /**
      * Key of template directory name.
      */
-    public static final String TEMAPLTE_DIR_NAME = "templateDirName";
+    public static final String TEMPLATE_DIR_NAME = "templateDirName";
 
     /**
      * Key of exclusion.

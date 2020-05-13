@@ -34,7 +34,7 @@ import java.util.List;
  * Oracle database solution.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Feb 21, 2019
+ * @version 2.0.0.2, May 13, 2020
  * @since 2.3.18
  */
 public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
@@ -92,7 +92,7 @@ SELECT * FROM
 WHERE r__ >= (((pageNumber-1) * pageSize) + 1)
          */
         final StringBuilder sql = new StringBuilder();
-        final String orderBy = StringUtils.isBlank(orderBySql) ? " order by " + JdbcRepositories.getDefaultKeyName() + " desc" : orderBySql;
+        final String orderBy = StringUtils.isBlank(orderBySql) ? " order by " + JdbcRepositories.getKeyName() + " desc" : orderBySql;
 
         sql.append(selectSql).append(" from (select a.*, rownum r__ from (select * from ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {
