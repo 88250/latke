@@ -72,26 +72,22 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    public String queryPage(final int start, final int end, final String selectSql,
-                            final String filterSql, final String orderBySql, final String tableName) {
-        final StringBuilder sql = new StringBuilder();
-
-        sql.append(selectSql).append(" FROM ").append(tableName);
+    public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql, final String tableName) {
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(selectSql).append(" FROM ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {
-            sql.append(" WHERE ").append(filterSql);
+            sqlBuilder.append(" WHERE ").append(filterSql);
         }
-        sql.append(orderBySql);
-        sql.append(" LIMIT ").append(start).append(",").append(end - start);
-
-        return sql.toString();
+        sqlBuilder.append(orderBySql);
+        sqlBuilder.append(" LIMIT ").append(start).append(",").append(end - start);
+        return sqlBuilder.toString();
     }
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
-        final StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
-
-        return sql.toString();
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT * FROM ").append(tableName).append(" ORDER BY RAND() LIMIT ").append(fetchSize);
+        return sqlBuilder.toString();
     }
 
     @Override
@@ -130,24 +126,20 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
      * @return createKeyDefinitionsql
      */
     private String createKeyDefinition(final List<FieldDefinition> keyDefinitionList) {
-        final StringBuilder sql = new StringBuilder();
-
-        sql.append(" PRIMARY KEY");
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(" PRIMARY KEY");
         boolean isFirst = true;
-
         for (FieldDefinition fieldDefinition : keyDefinitionList) {
             if (isFirst) {
-                sql.append("(");
+                sqlBuilder.append("(");
                 isFirst = false;
             } else {
-                sql.append(",");
+                sqlBuilder.append(",");
             }
-            sql.append(fieldDefinition.getName());
+            sqlBuilder.append(fieldDefinition.getName());
         }
-
-        sql.append(")");
-
-        return sql.toString();
+        sqlBuilder.append(")");
+        return sqlBuilder.toString();
     }
 
     @Override

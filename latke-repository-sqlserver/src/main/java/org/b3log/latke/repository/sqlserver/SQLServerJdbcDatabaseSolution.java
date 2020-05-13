@@ -80,9 +80,8 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
     }
 
     @Override
-    public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql,
-                            final String tableName) {
-        final StringBuilder sql = new StringBuilder();
+    public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql, final String tableName) {
+        final StringBuilder sqlBuilder = new StringBuilder();
 
         /*
          select * from 
@@ -93,31 +92,26 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
          where rownum>10000 and rownum<10501
          */
         final String over = StringUtils.isBlank(orderBySql) ? "order by " + JdbcRepositories.keyName + " desc" : orderBySql;
-
-        sql.append(selectSql).append(" from (select top 100 percent ROW_NUMBER() over(").append(over).append(") rownum, * from ").append(
+        sqlBuilder.append(selectSql).append(" from (select top 100 percent ROW_NUMBER() over(").append(over).append(") rownum, * from ").append(
                 tableName);
         if (StringUtils.isNotBlank(filterSql)) {
-            sql.append(" where ").append(filterSql);
+            sqlBuilder.append(" where ").append(filterSql);
         }
-
-        sql.append(orderBySql);
-        sql.append(" ) a where rownum > ").append(start).append(" and rownum <= ").append(end);
-
-        return sql.toString();
+        sqlBuilder.append(orderBySql);
+        sqlBuilder.append(" ) a where rownum > ").append(start).append(" and rownum <= ").append(end);
+        return sqlBuilder.toString();
     }
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
-
         /*
          SELECT TOP 5 *
          FROM Test.dbo.basetable
          ORDER BY CHECKSUM(NEWID())
          */
-        final StringBuilder sql = new StringBuilder("SELECT TOP ").append(fetchSize).append(" * FROM ").
+        final StringBuilder sqlBuilder = new StringBuilder("SELECT TOP ").append(fetchSize).append(" * FROM ").
                 append(tableName).append(" ORDER BY CHECKSUM(NEWID())");
-
-        return sql.toString();
+        return sqlBuilder.toString();
     }
 
     @Override
@@ -144,7 +138,6 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
                 createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
-
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
@@ -165,24 +158,20 @@ public class SQLServerJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution 
      * @return createKeyDefinitionsql
      */
     private String createKeyDefinition(final List<FieldDefinition> keyDefinitionList) {
-        final StringBuilder sql = new StringBuilder();
-
-        sql.append(" PRIMARY KEY");
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(" PRIMARY KEY");
         boolean isFirst = true;
-
         for (FieldDefinition fieldDefinition : keyDefinitionList) {
             if (isFirst) {
-                sql.append("(");
+                sqlBuilder.append("(");
                 isFirst = false;
             } else {
-                sql.append(",");
+                sqlBuilder.append(",");
             }
-
-            sql.append(fieldDefinition.getName());
+            sqlBuilder.append(fieldDefinition.getName());
         }
-
-        sql.append(")");
-        return sql.toString();
+        sqlBuilder.append(")");
+        return sqlBuilder.toString();
     }
 
     @Override

@@ -76,8 +76,7 @@ public class OracleJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     }
 
     @Override
-    public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql,
-                            final String tableName) {
+    public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql, final String tableName) {
         /*
 SELECT * FROM
 (
@@ -91,16 +90,14 @@ SELECT * FROM
 )
 WHERE r__ >= (((pageNumber-1) * pageSize) + 1)
          */
-        final StringBuilder sql = new StringBuilder();
+        final StringBuilder sqlBuilder = new StringBuilder();
         final String orderBy = StringUtils.isBlank(orderBySql) ? " order by " + JdbcRepositories.keyName + " desc" : orderBySql;
-
-        sql.append(selectSql).append(" from (select a.*, rownum r__ from (select * from ").append(tableName);
+        sqlBuilder.append(selectSql).append(" from (select a.*, rownum r__ from (select * from ").append(tableName);
         if (StringUtils.isNotBlank(filterSql)) {
-            sql.append(" where ").append(filterSql);
+            sqlBuilder.append(" where ").append(filterSql);
         }
-        sql.append(orderBy).append(" ) a where rownum < ").append(end).append(") where r__ >= ").append(start);
-
-        return sql.toString();
+        sqlBuilder.append(orderBy).append(" ) a where rownum < ").append(end).append(") where r__ >= ").append(start);
+        return sqlBuilder.toString();
     }
 
     @Override
@@ -115,10 +112,9 @@ FROM    (
         )
 WHERE rownum <= 1000
  */
-        final StringBuilder sql = new StringBuilder("SELECT ").append(" * FROM (").append("SELECT * FROM ").
+        final StringBuilder sqlBuilder = new StringBuilder("SELECT ").append(" * FROM (").append("SELECT * FROM ").
                 append(tableName).append(" ORDER BY dbms_random.value) WHERE rownum <=").append(fetchSize);
-
-        return sql.toString();
+        return sqlBuilder.toString();
     }
 
     @Override
@@ -139,7 +135,6 @@ WHERE rownum <= 1000
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
                 createTableSql.append(mapping.toDataBaseSting(fieldDefinition)).append(",   ");
-
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }
@@ -159,24 +154,20 @@ WHERE rownum <= 1000
      * @return createKeyDefinitionsql
      */
     private String createKeyDefinition(final List<FieldDefinition> keyDefinitionList) {
-        final StringBuilder sql = new StringBuilder();
-
-        sql.append(" PRIMARY KEY");
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(" PRIMARY KEY");
         boolean isFirst = true;
-
         for (FieldDefinition fieldDefinition : keyDefinitionList) {
             if (isFirst) {
-                sql.append("(");
+                sqlBuilder.append("(");
                 isFirst = false;
             } else {
-                sql.append(",");
+                sqlBuilder.append(",");
             }
-
-            sql.append(fieldDefinition.getName());
+            sqlBuilder.append(fieldDefinition.getName());
         }
-
-        sql.append(")");
-        return sql.toString();
+        sqlBuilder.append(")");
+        return sqlBuilder.toString();
     }
 
     @Override
