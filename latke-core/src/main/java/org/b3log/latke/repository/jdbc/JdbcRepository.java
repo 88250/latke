@@ -540,15 +540,19 @@ public final class JdbcRepository implements Repository {
      * @throws RepositoryException RepositoryException
      */
     private void buildWhere(final StringBuilder whereBuilder, final List<Object> paramList, final Filter filter) throws RepositoryException {
-        if (null == filter) {
-            return;
-        }
-
         final Filter whereFilter;
         if (Repositories.isSoftDelete()) {
-            whereFilter = CompositeFilterOperator.and(filter, new PropertyFilter(JdbcRepositories.softDeleteFieldName, FilterOperator.EQUAL, 0));
+            if (null != filter) {
+                whereFilter = CompositeFilterOperator.and(filter, new PropertyFilter(JdbcRepositories.softDeleteFieldName, FilterOperator.EQUAL, 0));
+            } else {
+                whereFilter = new PropertyFilter(JdbcRepositories.softDeleteFieldName, FilterOperator.EQUAL, 0);
+            }
         } else {
             whereFilter = filter;
+        }
+
+        if (null == whereFilter) {
+            return;
         }
 
         if (whereFilter instanceof PropertyFilter) {
