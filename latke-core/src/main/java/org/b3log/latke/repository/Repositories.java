@@ -62,9 +62,31 @@ public final class Repositories {
      */
     private static boolean repositoriesWritable = true;
 
+    /**
+     * Whether enable logic/soft delete.
+     */
+    private static boolean softDelete = false;
 
     static {
         loadRepositoryDescription();
+    }
+
+    /**
+     * Whether enable logic/soft delete.
+     *
+     * @return {@code true} if enabled, returns {@code false} otherwise
+     */
+    public static boolean isSoftDelete() {
+        return softDelete;
+    }
+
+    /**
+     * Sets logic/soft delete enable.
+     *
+     * @param softDelete the specified flag, {@code true} for enabled, {@code false} otherwise
+     */
+    public static void setSoftDelete(boolean softDelete) {
+        Repositories.softDelete = softDelete;
     }
 
     /**
@@ -79,7 +101,7 @@ public final class Repositories {
     /**
      * Sets all repositories whether is writable with the specified flag.
      *
-     * @param writable the specified flat, {@code true} for writable, {@code false} otherwise
+     * @param writable the specified flag, {@code true} for writable, {@code false} otherwise
      */
     public static void setRepositoriesWritable(final boolean writable) {
         for (final Map.Entry<String, Repository> entry : REPOS_HOLDER.entrySet()) {
