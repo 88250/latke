@@ -544,10 +544,17 @@ public final class JdbcRepository implements Repository {
             return;
         }
 
-        if (filter instanceof PropertyFilter) {
-            processPropertyFilter(whereBuilder, paramList, (PropertyFilter) filter);
+        final Filter whereFilter;
+        if (Repositories.isSoftDelete()) {
+            whereFilter = CompositeFilterOperator.and(filter, new PropertyFilter(JdbcRepositories.softDeleteFieldName, FilterOperator.EQUAL, 0));
+        } else {
+            whereFilter = filter;
+        }
+
+        if (whereFilter instanceof PropertyFilter) {
+            processPropertyFilter(whereBuilder, paramList, (PropertyFilter) whereFilter);
         } else { // CompositeFiler
-            processCompositeFilter(whereBuilder, paramList, (CompositeFilter) filter);
+            processCompositeFilter(whereBuilder, paramList, (CompositeFilter) whereFilter);
         }
     }
 
