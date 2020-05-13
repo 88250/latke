@@ -107,7 +107,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
                 createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition));
                 final String description = fieldDefinition.getDescription();
                 if (StringUtils.isNotBlank(description)) {
-                    createTableSqlBuilder.append(" COMMENT '" + description + "'");
+                    createTableSqlBuilder.append(" COMMENT '").append(description).append("'");
                 }
                 createTableSqlBuilder.append(", ");
                 if (fieldDefinition.getIsKey()) {

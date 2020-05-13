@@ -175,32 +175,36 @@ public final class JdbcRepository implements Repository {
         }
 
         final Iterator<String> keys = jsonObject.keys();
-        final StringBuilder insertString = new StringBuilder();
-        final StringBuilder wildcardString = new StringBuilder();
+        final StringBuilder paraBuilder = new StringBuilder();
+        final StringBuilder argBuilder = new StringBuilder();
         boolean isFirst = true;
         String key;
         Object value;
         while (keys.hasNext()) {
             key = keys.next();
             if (isFirst) {
-                insertString.append("(`").append(key).append("`");
-                wildcardString.append("(?");
+                paraBuilder.append("(`").append(key).append("`");
+                argBuilder.append("(?");
                 isFirst = false;
             } else {
-                insertString.append(",`").append(key).append("`");
-                wildcardString.append(",?");
+                paraBuilder.append(",`").append(key).append("`");
+                argBuilder.append(",?");
             }
 
             value = jsonObject.get(key);
             paramList.add(value);
 
             if (!keys.hasNext()) {
-                insertString.append(")");
-                wildcardString.append(")");
+                if (Repositories.isSoftDelete()) {
+                    paraBuilder.append(", `" + JdbcRepositories.softDeleteFieldName + "`");
+                    argBuilder.append(", 0");
+                }
+                paraBuilder.append(")");
+                argBuilder.append(")");
             }
         }
 
-        sqlBuilder.append("INSERT INTO ").append(getName()).append(insertString).append(" VALUES ").append(wildcardString);
+        sqlBuilder.append("INSERT INTO ").append(getName()).append(paraBuilder).append(" VALUES ").append(argBuilder);
         return ret;
     }
 
