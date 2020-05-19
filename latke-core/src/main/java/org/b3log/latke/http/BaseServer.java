@@ -41,7 +41,8 @@ import java.util.concurrent.TimeUnit;
  * Http Server based on Netty 4.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Jan 15, 2020
+ * @author <a href="https://hacpai.com/member/CismonX">CismonX</a>
+ * @version 1.0.0.3, May 19, 2020
  * @since 3.0.0
  */
 public abstract class BaseServer {
@@ -66,6 +67,8 @@ public abstract class BaseServer {
             WORKER_GROUP = new NioEventLoopGroup();
             SOCKET_CHANNEL_CLASS = NioServerSocketChannel.class;
         }
+
+        LOGGER.log(Level.TRACE, "Using [" + SOCKET_CHANNEL_CLASS.getSimpleName() + "] as underlying implementation of server socket channel");
     }
 
     public void start(final int listenPort) {

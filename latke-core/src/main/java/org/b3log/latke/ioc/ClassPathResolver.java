@@ -69,17 +69,12 @@ public final class ClassPathResolver {
      * @return all URLS
      */
     public static Set<URL> getResources(final String locationPattern) {
-
-        final Set<URL> result = new HashSet<URL>();
-
+        final Set<URL> result = new HashSet<>();
         final String scanRootPath = getRootPath(locationPattern);
         final String subPattern = locationPattern.substring(scanRootPath.length());
         final Set<URL> rootDirResources = getResourcesFromRoot(scanRootPath);
-
         for (final URL rootDirResource : rootDirResources) {
-            LOGGER.log(Level.INFO, "RootDirResource [protocol={}, path={}]",
-                    new Object[]{rootDirResource.getProtocol(), rootDirResource.getPath()});
-
+            LOGGER.log(Level.DEBUG, "RootDirResource [protocol={}, path={}]", rootDirResource.getProtocol(), rootDirResource.getPath());
             if (isJarURL(rootDirResource)) {
                 result.addAll(doFindPathMatchingJarResources(rootDirResource, subPattern));
             } else if (rootDirResource.getProtocol().startsWith(URL_PROTOCOL_VFS)) {

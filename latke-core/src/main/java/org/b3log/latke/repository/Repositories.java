@@ -290,22 +290,17 @@ public final class Repositories {
      * Loads repository description.
      */
     private static void loadRepositoryDescription() {
-        LOGGER.log(Level.INFO, "Loading repository description....");
-
+        LOGGER.log(Level.DEBUG, "Loading repository description....");
         final InputStream inputStream = AbstractRepository.class.getResourceAsStream("/repository.json");
-
         if (null == inputStream) {
             LOGGER.log(Level.INFO, "Not found repository description [repository.json] file under classpath");
             return;
         }
 
-        LOGGER.log(Level.INFO, "Parsing repository description....");
-
+        LOGGER.log(Level.DEBUG, "Parsing repository description....");
         try {
             final String description = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-
             LOGGER.log(Level.DEBUG, "{}{}", new Object[]{Strings.LINE_SEPARATOR, description});
-
             repositoriesDescription = new JSONObject(description);
 
             // Repository name prefix
@@ -314,10 +309,8 @@ public final class Repositories {
                     : "";
 
             final JSONArray repositories = repositoriesDescription.optJSONArray("repositories");
-
             for (int i = 0; i < repositories.length(); i++) {
                 final JSONObject repository = repositories.optJSONObject(i);
-
                 repository.put("name", tableNamePrefix + repository.optString("name"));
             }
         } catch (final Exception e) {
