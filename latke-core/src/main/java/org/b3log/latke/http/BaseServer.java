@@ -15,7 +15,14 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.kqueue.KQueue;
+import io.netty.channel.kqueue.KQueueEventLoopGroup;
+import io.netty.channel.kqueue.KQueueServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -41,8 +48,25 @@ public abstract class BaseServer {
 
     private static final Logger LOGGER = LogManager.getLogger(BaseServer.class);
 
-    private static final EventLoopGroup BOSS_GROUP = new NioEventLoopGroup(1);
-    private static final EventLoopGroup WORKER_GROUP = new NioEventLoopGroup();
+    private static final EventLoopGroup BOSS_GROUP;
+    private static final EventLoopGroup WORKER_GROUP;
+    private static final Class<? extends ServerSocketChannel> SOCKET_CHANNEL_CLASS;
+
+    static {
+        if (Epoll.isAvailable()) {
+            BOSS_GROUP = new EpollEventLoopGroup(1);
+            WORKER_GROUP = new EpollEventLoopGroup();
+            SOCKET_CHANNEL_CLASS = EpollServerSocketChannel.class;
+        } else if (KQueue.isAvailable()) {
+            BOSS_GROUP = new KQueueEventLoopGroup(1);
+            WORKER_GROUP = new KQueueEventLoopGroup();
+            SOCKET_CHANNEL_CLASS = KQueueServerSocketChannel.class;
+        } else {
+            BOSS_GROUP = new NioEventLoopGroup(1);
+            WORKER_GROUP = new NioEventLoopGroup();
+            SOCKET_CHANNEL_CLASS = NioServerSocketChannel.class;
+        }
+    }
 
     public void start(final int listenPort) {
         startServer(listenPort);
@@ -57,7 +81,7 @@ public abstract class BaseServer {
             InternalLoggerFactory.setDefaultFactory(Log4J2LoggerFactory.INSTANCE);
             new ServerBootstrap().
                     group(BOSS_GROUP, WORKER_GROUP).
-                    channel(NioServerSocketChannel.class).
+                    channel(SOCKET_CHANNEL_CLASS).
                     handler(new LoggingHandler(LogLevel.INFO)).
                     childHandler(new HttpServerInitializer()).
                     bind(listenPort).sync().channel().closeFuture().sync();
