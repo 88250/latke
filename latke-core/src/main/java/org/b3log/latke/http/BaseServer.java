@@ -12,19 +12,14 @@
 package org.b3log.latke.http;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.epoll.Epoll;
-import io.netty.channel.epoll.EpollEventLoopGroup;
-import io.netty.channel.epoll.EpollServerSocketChannel;
-import io.netty.channel.kqueue.KQueue;
-import io.netty.channel.kqueue.KQueueEventLoopGroup;
-import io.netty.channel.kqueue.KQueueServerSocketChannel;
+import io.netty.channel.*;
+import io.netty.channel.epoll.*;
+import io.netty.channel.kqueue.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.unix.DomainSocketAddress;
+import io.netty.channel.unix.ServerDomainSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.logging.LogLevel;
@@ -35,6 +30,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/CismonX">CismonX</a>
- * @version 1.0.0.3, May 19, 2020
+ * @version 1.0.0.4, May 21, 2020
  * @since 3.0.0
  */
 public abstract class BaseServer {
@@ -52,42 +49,57 @@ public abstract class BaseServer {
     private static final EventLoopGroup BOSS_GROUP;
     private static final EventLoopGroup WORKER_GROUP;
     private static final Class<? extends ServerSocketChannel> SOCKET_CHANNEL_CLASS;
+    private static final Class<? extends ServerDomainSocketChannel> DOMAIN_SOCKET_CHANNEL_CLASS;
 
     static {
         if (Epoll.isAvailable()) {
             BOSS_GROUP = new EpollEventLoopGroup(1);
             WORKER_GROUP = new EpollEventLoopGroup();
             SOCKET_CHANNEL_CLASS = EpollServerSocketChannel.class;
+            DOMAIN_SOCKET_CHANNEL_CLASS = EpollServerDomainSocketChannel.class;
         } else if (KQueue.isAvailable()) {
             BOSS_GROUP = new KQueueEventLoopGroup(1);
             WORKER_GROUP = new KQueueEventLoopGroup();
             SOCKET_CHANNEL_CLASS = KQueueServerSocketChannel.class;
+            DOMAIN_SOCKET_CHANNEL_CLASS = KQueueServerDomainSocketChannel.class;
         } else {
             BOSS_GROUP = new NioEventLoopGroup(1);
             WORKER_GROUP = new NioEventLoopGroup();
             SOCKET_CHANNEL_CLASS = NioServerSocketChannel.class;
+            DOMAIN_SOCKET_CHANNEL_CLASS = null;
         }
-
-        LOGGER.log(Level.TRACE, "Using [" + SOCKET_CHANNEL_CLASS.getSimpleName() + "] as underlying implementation of server socket channel");
     }
 
     public void start(final int listenPort) {
-        startServer(listenPort);
+        LOGGER.log(Level.TRACE, "Using [" + SOCKET_CHANNEL_CLASS.getSimpleName() + "] as underlying implementation of server socket channel");
+
+        startServer(new InetSocketAddress(listenPort), SOCKET_CHANNEL_CLASS);
+    }
+
+    public void start(final String socketPath) {
+        if (DOMAIN_SOCKET_CHANNEL_CLASS == null) {
+            LOGGER.error("Unix domain socket is not supported on this platform");
+            System.exit(-1);
+        }
+
+        LOGGER.log(Level.TRACE, "Using [" + DOMAIN_SOCKET_CHANNEL_CLASS.getSimpleName() + "] as underlying implementation of server socket channel");
+
+        startServer(new DomainSocketAddress(socketPath), DOMAIN_SOCKET_CHANNEL_CLASS);
     }
 
     public void shutdown() {
         shutdownServer();
     }
 
-    private void startServer(final int listenPort) {
+    private void startServer(final SocketAddress socketAddress, final Class<? extends ServerChannel> channelClass) {
         try {
             InternalLoggerFactory.setDefaultFactory(Log4J2LoggerFactory.INSTANCE);
             new ServerBootstrap().
                     group(BOSS_GROUP, WORKER_GROUP).
-                    channel(SOCKET_CHANNEL_CLASS).
+                    channel(channelClass).
                     handler(new LoggingHandler(LogLevel.INFO)).
                     childHandler(new HttpServerInitializer()).
-                    bind(listenPort).sync().channel().closeFuture().sync();
+                    bind(socketAddress).sync().channel().closeFuture().sync();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Start server failed, exit process", e);
             System.exit(-1);
@@ -105,10 +117,10 @@ public abstract class BaseServer {
         }
     }
 
-    private static final class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
+    private static final class HttpServerInitializer extends ChannelInitializer<Channel> {
 
         @Override
-        public void initChannel(final SocketChannel ch) {
+        public void initChannel(final Channel ch) {
             final ChannelPipeline pipeline = ch.pipeline();
             pipeline.addLast(new HttpServerCodec());
             pipeline.addLast(new HttpObjectAggregator(1024 * 1024 * 64));
