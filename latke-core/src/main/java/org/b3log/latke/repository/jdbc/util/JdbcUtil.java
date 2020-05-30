@@ -20,23 +20,19 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.jdbc.JdbcRepository;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * JDBC utilities.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.9, May 13, 2020
+ * @version 2.0.0.0, May 30, 2020
  */
 public final class JdbcUtil {
 
@@ -90,7 +86,7 @@ public final class JdbcUtil {
     }
 
     /**
-     * queryJsonObject.
+     * Queries a JSON object.
      *
      * @param sql        sql
      * @param paramList  paramList
@@ -98,32 +94,26 @@ public final class JdbcUtil {
      * @param tableName  tableName
      * @param isDebug    the specified debug flag
      * @return JSONObject only one record.
-     * @throws SQLException        SQLException
-     * @throws JSONException       JSONException
-     * @throws RepositoryException repositoryException
+     * @throws Exception Exception
      */
-    public static JSONObject queryJsonObject(final String sql, final List<Object> paramList, final Connection connection,
-                                             final String tableName, final boolean isDebug) throws SQLException, JSONException, RepositoryException {
+    public static JSONObject queryJsonObject(final String sql, final List<Object> paramList, final Connection connection, final String tableName, final boolean isDebug) throws Exception {
         return queryJson(sql, paramList, connection, true, tableName, isDebug);
     }
 
     /**
-     * queryJsonArray.
+     * Queries a list of JSON objects.
      *
      * @param sql        sql
      * @param paramList  paramList
      * @param connection connection
      * @param tableName  tableName
      * @param isDebug    the specified debug flag
-     * @return JSONArray
-     * @throws SQLException        SQLException
-     * @throws JSONException       JSONException
-     * @throws RepositoryException repositoryException
+     * @return a list of JSON object
+     * @throws Exception Exception
      */
-    public static JSONArray queryJsonArray(final String sql, final List<Object> paramList, final Connection connection,
-                                           final String tableName, final boolean isDebug) throws SQLException, JSONException, RepositoryException {
+    public static List<JSONObject> queryListJson(final String sql, final List<Object> paramList, final Connection connection, final String tableName, final boolean isDebug) throws Exception {
         final JSONObject jsonObject = queryJson(sql, paramList, connection, false, tableName, isDebug);
-        return jsonObject.getJSONArray(Keys.RESULTS);
+        return (List<JSONObject>) jsonObject.opt(Keys.RESULTS);
     }
 
     /**
@@ -134,12 +124,9 @@ public final class JdbcUtil {
      * @param tableName  tableName
      * @param isDebug    the specified debug flag
      * @return JSONObject
-     * @throws SQLException        SQLException
-     * @throws JSONException       JSONException
-     * @throws RepositoryException respsitoryException
+     * @throws Exception Exception
      */
-    private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection,
-                                        final boolean ifOnlyOne, final String tableName, final boolean isDebug) throws SQLException, JSONException, RepositoryException {
+    private static JSONObject queryJson(final String sql, final List<Object> paramList, final Connection connection, final boolean ifOnlyOne, final String tableName, final boolean isDebug) throws Exception {
         if (isDebug || LOGGER.isTraceEnabled()) {
             LOGGER.log(Level.INFO, "Executing SQL [" + sql + "]");
         }
@@ -156,28 +143,23 @@ public final class JdbcUtil {
     }
 
     /**
-     * resultSetToJsonObject.
+     * Converts the specified query result set to JSON object.
      *
-     * @param resultSet resultSet
+     * @param resultSet resultSet the specified query result set
      * @param ifOnlyOne ifOnlyOne
      * @param tableName tableName
      * @return JSONObject
-     * @throws SQLException        SQLException
-     * @throws JSONException       JSONException
-     * @throws RepositoryException RepositoryException
      */
-    private static JSONObject resultSetToJsonObject(final ResultSet resultSet, final boolean ifOnlyOne, final String tableName)
-            throws SQLException, JSONException, RepositoryException {
+    private static JSONObject resultSetToJsonObject(final ResultSet resultSet, final boolean ifOnlyOne, final String tableName) throws Exception {
         final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
         final List<FieldDefinition> definitionList = JdbcRepositories.getKeys(tableName);
         if (null == definitionList) {
-            LOGGER.log(Level.ERROR, "resultSetToJsonObject: null definitionList finded for table  {}", tableName);
-            throw new RepositoryException("resultSetToJsonObject: null definitionList finded for table  " + tableName);
+            throw new RepositoryException("Null definition list for table [" + tableName + "]");
         }
 
         final Map<String, FieldDefinition> dMap = new HashMap<>();
-        for (FieldDefinition fieldDefinition : definitionList) {
+        for (final FieldDefinition fieldDefinition : definitionList) {
             if (Latkes.RuntimeDatabase.H2 == Latkes.getRuntimeDatabase() || Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
                 dMap.put(fieldDefinition.getName().toUpperCase(), fieldDefinition);
             } else {
@@ -186,18 +168,18 @@ public final class JdbcUtil {
         }
 
         final int numColumns = resultSetMetaData.getColumnCount();
-        final JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject;
+        final List<JSONObject> list = new ArrayList<>();
+        JSONObject ret;
         String columnName;
         while (resultSet.next()) {
-            jsonObject = new JSONObject();
+            ret = new JSONObject();
             for (int i = 1; i < numColumns + 1; i++) {
                 columnName = resultSetMetaData.getColumnLabel(i);
                 final FieldDefinition definition = dMap.get(columnName);
                 if (null == definition) { // COUNT(OID)
-                    jsonObject.put(columnName, resultSet.getObject(columnName));
+                    ret.put(columnName, resultSet.getObject(columnName));
                 } else if ("boolean".equals(definition.getType())) {
-                    jsonObject.put(definition.getName(), resultSet.getBoolean(columnName));
+                    ret.put(definition.getName(), resultSet.getBoolean(columnName));
                 } else {
                     final Object v = resultSet.getObject(columnName);
                     if (v instanceof Clob) {
@@ -216,33 +198,31 @@ public final class JdbcUtil {
                             }
                         }
 
-                        jsonObject.put(definition.getName(), str);
+                        ret.put(definition.getName(), str);
                     } else {
-                        jsonObject.put(definition.getName(), v);
+                        ret.put(definition.getName(), v);
                     }
                 }
             }
 
             if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                jsonObject.remove("R__");
-                fromOracleClobEmpty(jsonObject);
+                ret.remove("R__");
+                fromOracleClobEmpty(ret);
             }
 
-            jsonArray.put(jsonObject);
+            list.add(ret);
         }
 
         if (ifOnlyOne) {
-            if (jsonArray.length() > 0) {
-                jsonObject = jsonArray.getJSONObject(0);
-                return jsonObject;
+            if (list.isEmpty()) {
+                return null;
             }
-
-            return null;
+            return list.get(0);
         }
 
-        jsonObject = new JSONObject();
-        jsonObject.put(Keys.RESULTS, jsonArray);
-        return jsonObject;
+        ret = new JSONObject();
+        ret.put(Keys.RESULTS, (Object) list);
+        return ret;
     }
 
     /**

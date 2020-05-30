@@ -12,7 +12,6 @@
 package org.b3log.latke.repository;
 
 import org.b3log.latke.Keys;
-import org.b3log.latke.util.CollectionUtils;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -128,8 +127,7 @@ public interface Repository {
      */
     default List<JSONObject> getList(final Query query) throws RepositoryException {
         final JSONObject result = get(query);
-
-        return CollectionUtils.jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+        return (List<JSONObject>) result.opt(Keys.RESULTS);
     }
 
     /**

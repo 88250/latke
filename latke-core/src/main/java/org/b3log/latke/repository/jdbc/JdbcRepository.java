@@ -23,8 +23,6 @@ import org.b3log.latke.repository.*;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.jdbc.util.JdbcUtil;
-import org.b3log.latke.util.CollectionUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +37,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.2.2, May 13, 2020
+ * @version 2.0.0.0, May 30, 2020
  */
 public final class JdbcRepository implements Repository {
 
@@ -430,12 +428,12 @@ public final class JdbcRepository implements Repository {
             pagination.put(Pagination.PAGINATION_RECORD_COUNT, paginationCnt.get(Pagination.PAGINATION_RECORD_COUNT));
             ret.put(Pagination.PAGINATION, pagination);
             if (0 == pageCnt) {
-                ret.put(Keys.RESULTS, new JSONArray());
+                ret.put(Keys.RESULTS, (Object) new ArrayList<>());
                 return ret;
             }
 
-            final JSONArray jsonResults = JdbcUtil.queryJsonArray(sqlBuilder.toString(), paramList, connection, getName(), query.isDebug());
-            ret.put(Keys.RESULTS, jsonResults);
+            final List<JSONObject> list = JdbcUtil.queryListJson(sqlBuilder.toString(), paramList, connection, getName(), query.isDebug());
+            ret.put(Keys.RESULTS, (Object) list);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Query failed", e);
             throw new RepositoryException(e);
@@ -446,16 +444,15 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public List<JSONObject> select(final String statement, final Object... params) throws RepositoryException {
-        JSONArray jsonResults;
+        List<JSONObject> ret;
         final Connection connection = getConnection();
         try {
-            if (null == params || 0 == params.length) {
-                jsonResults = JdbcUtil.queryJsonArray(statement, Collections.emptyList(), connection, getName(), debug);
+            if (ArrayUtils.isEmpty(params)) {
+                ret = JdbcUtil.queryListJson(statement, Collections.emptyList(), connection, getName(), debug);
             } else {
-                jsonResults = JdbcUtil.queryJsonArray(statement, Arrays.asList(params), connection, getName(), debug);
+                ret = JdbcUtil.queryListJson(statement, Arrays.asList(params), connection, getName(), debug);
             }
-
-            return CollectionUtils.jsonArrayToList(jsonResults);
+            return ret;
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Select failed", e);
             throw new RepositoryException(e);
@@ -591,22 +588,15 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public List<JSONObject> getRandomly(final int fetchSize) throws RepositoryException {
-        final List<JSONObject> jsonObjects = new ArrayList<>();
-        final StringBuilder sqlBuilder = new StringBuilder();
-        JSONArray jsonArray;
         final Connection connection = getConnection();
+        final StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(JdbcFactory.getInstance().getRandomlySql(getName(), fetchSize));
         try {
-            jsonArray = JdbcUtil.queryJsonArray(sqlBuilder.toString(), new ArrayList<>(), connection, getName(), debug);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                jsonObjects.add(jsonArray.getJSONObject(i));
-            }
+            return JdbcUtil.queryListJson(sqlBuilder.toString(), new ArrayList<>(), connection, getName(), debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Get list randomly failed", e);
             throw new RepositoryException(e);
         }
-
-        return jsonObjects;
     }
 
     @Override
