@@ -103,7 +103,7 @@ public final class H2JdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (mapping != null) {
-                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition)).append(", ");
+                createTableSqlBuilder.append(mapping.toDataBaseString(fieldDefinition)).append(", ");
                 if (fieldDefinition.getIsKey()) {
                     keyDefinitionList.add(fieldDefinition);
                 }

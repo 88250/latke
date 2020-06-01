@@ -26,7 +26,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 public final class LongMapping implements Mapping {
 
     @Override
-    public String toDataBaseSting(final FieldDefinition definition) {
+    public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder(definition.getName()).append(" BIGINT");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");

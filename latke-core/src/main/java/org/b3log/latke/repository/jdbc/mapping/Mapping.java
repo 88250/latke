@@ -27,5 +27,5 @@ public interface Mapping {
      * @param definition {@link FieldDefinition}
      * @return table-definition sql.
      */
-    String toDataBaseSting(FieldDefinition definition);
+    String toDataBaseString(FieldDefinition definition);
 }

@@ -23,7 +23,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 public class StringMapping implements Mapping {
 
     @Override
-    public String toDataBaseSting(final FieldDefinition definition) {
+    public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(definition.getName());
         if (null == definition.getLength()) {
