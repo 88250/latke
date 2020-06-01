@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.b3log.latke.repository.Repositories;
 import org.b3log.latke.repository.jdbc.AbstractJdbcDatabaseSolution;
 import org.b3log.latke.repository.jdbc.mapping.*;
 import org.b3log.latke.repository.jdbc.util.Connections;
@@ -104,7 +103,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             }
             final Mapping mapping = getJdbcTypeMapping().get(type);
             if (null != mapping) {
-                createTableSqlBuilder.append(mapping.toDataBaseSting(fieldDefinition));
+                createTableSqlBuilder.append(mapping.toDataBaseString(fieldDefinition));
                 final String description = fieldDefinition.getDescription();
                 if (StringUtils.isNotBlank(description)) {
                     createTableSqlBuilder.append(" COMMENT '").append(description).append("'");

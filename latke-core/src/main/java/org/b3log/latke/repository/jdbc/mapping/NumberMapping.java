@@ -22,7 +22,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 public class NumberMapping implements Mapping {
 
     @Override
-    public String toDataBaseSting(final FieldDefinition definition) {
+    public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(definition.getName());
         sqlBuilder.append("  DOUBLE ");
