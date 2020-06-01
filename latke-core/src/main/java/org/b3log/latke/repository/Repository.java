@@ -95,7 +95,7 @@ public interface Repository {
      * {@link Query#setPageCount(int)}), the value will be used in the returned value. In other words, the page count result
      * will not be calculated by this interface, otherwise, the returned value pagination.paginationPageCount and
      * pagination.paginationRecordCount will be calculated with query condition.
-     * <p>
+     * </p>
      * <p>
      * <b>Note</b>: The order of elements of the returned result list is decided by datastore implementation, excepts
      * {@link Query#addSort(java.lang.String, org.b3log.latke.repository.SortDirection)} be invoked.
@@ -193,7 +193,6 @@ public interface Repository {
 
     /**
      * Begins a transaction against the repository.
-     * <p>
      * <p>
      * Callers are responsible for explicitly calling {@linkplain Transaction#commit()} or
      * {@linkplain Transaction#rollback()} when they no longer need the {@code Transaction}. The {@code Transaction}

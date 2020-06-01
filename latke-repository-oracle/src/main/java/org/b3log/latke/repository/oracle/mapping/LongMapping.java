@@ -17,7 +17,6 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 /**
  * Long type mapping.
  * <p>
- * <p>
  * Maps Java long type to SQL bigint type.
  * </p>
  *
