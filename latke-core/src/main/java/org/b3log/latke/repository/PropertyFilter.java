@@ -94,9 +94,7 @@ public final class PropertyFilter implements Filter {
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("key=");
-
         stringBuilder.append(key).append(", operator=").append(operator.name()).append(", value=").append(value.toString());
-
         return stringBuilder.toString();
     }
 }

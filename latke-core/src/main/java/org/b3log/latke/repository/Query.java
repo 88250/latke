@@ -70,7 +70,6 @@ public final class Query {
     public Query setPage(final int currentPageNum, final int pageSize) {
         setCurrentPageNum(currentPageNum);
         setPageSize(pageSize);
-
         return this;
     }
 
@@ -91,7 +90,6 @@ public final class Query {
      */
     public Query setDebug(final boolean debug) {
         this.debug = debug;
-
         return this;
     }
 
@@ -104,13 +102,11 @@ public final class Query {
      */
     public Query select(final String propertyName, final String... propertyNames) {
         projections.add(new Projection(propertyName));
-
         if (null != propertyNames && 0 < propertyNames.length) {
-            for (int i = 0; i < propertyNames.length; i++) {
-                projections.add(new Projection(propertyNames[i]));
+            for (final String name : propertyNames) {
+                projections.add(new Projection(name));
             }
         }
-
         return this;
     }
 
@@ -132,7 +128,6 @@ public final class Query {
      */
     public Query addSort(final String propertyName, final SortDirection sortDirection) {
         sorts.put(propertyName, sortDirection);
-
         return this;
     }
 
@@ -144,7 +139,6 @@ public final class Query {
      */
     public Query setFilter(final Filter filter) {
         this.filter = filter;
-
         return this;
     }
 
@@ -178,7 +172,6 @@ public final class Query {
      */
     public Query setCurrentPageNum(final int currentPageNum) {
         this.currentPageNum = currentPageNum;
-
         return this;
     }
 
@@ -203,7 +196,6 @@ public final class Query {
      */
     public Query setPageSize(final int pageSize) {
         this.pageSize = pageSize;
-
         return this;
     }
 
@@ -233,7 +225,6 @@ public final class Query {
      */
     public Query setPageCount(final int pageCount) {
         this.pageCount = pageCount;
-
         return this;
     }
 
@@ -242,7 +233,6 @@ public final class Query {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Query query = (Query) o;
-
         return currentPageNum == query.currentPageNum &&
                 pageSize == query.pageSize &&
                 debug == query.debug &&
@@ -261,7 +251,6 @@ public final class Query {
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("currentPageNum=").append(currentPageNum).append(", pageSize=").
                 append(pageSize).append(", pageCount=").append(pageCount).append(", sorts=[");
-
         final Set<Entry<String, SortDirection>> entrySet = sorts.entrySet();
         final Iterator<Entry<String, SortDirection>> sortsIterator = entrySet.iterator();
         while (sortsIterator.hasNext()) {
@@ -271,13 +260,11 @@ public final class Query {
                 stringBuilder.append(", ");
             }
         }
-
         stringBuilder.append("]");
         if (null != filter) {
             stringBuilder.append(", filter=[").append(filter.toString()).append("]");
         }
         stringBuilder.append(", projections=[");
-
         final Iterator<Projection> projectionsIterator = projections.iterator();
         while (projectionsIterator.hasNext()) {
             final Projection projection = projectionsIterator.next();
@@ -287,7 +274,6 @@ public final class Query {
             }
         }
         stringBuilder.append("]");
-
         return stringBuilder.toString();
     }
 }

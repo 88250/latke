@@ -67,8 +67,7 @@ public final class CompositeFilter implements Filter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompositeFilter that = (CompositeFilter) o;
-        return operator == that.operator &&
-                Objects.equals(subFilters, that.subFilters);
+        return operator == that.operator && Objects.equals(subFilters, that.subFilters);
     }
 
     @Override
@@ -79,21 +78,15 @@ public final class CompositeFilter implements Filter {
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("operator=");
-
         stringBuilder.append(operator).append(", filters=[");
-
         for (int i = 0; i < subFilters.size(); i++) {
             final Filter filter = subFilters.get(i);
-
             stringBuilder.append("filter=[").append(filter.toString()).append("]");
-
             if (i < subFilters.size() - 1) {
                 stringBuilder.append(", ");
             }
         }
-
         stringBuilder.append("]");
-
         return stringBuilder.toString();
     }
 }

@@ -68,24 +68,24 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
     /**
      * abstract createTableHead for each DB to impl.
      *
-     * @param createTableSqlBuilder       createSql
-     * @param repositoryDefinition the specified repository definition
+     * @param createTableSqlBuilder createSql
+     * @param repositoryDefinition  the specified repository definition
      */
     protected abstract void createTableHead(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition);
 
     /**
      * abstract createTableBody for each DB to impl.
      *
-     * @param createTableSqlBuilder       createSql
-     * @param repositoryDefinition the specified repository definition
+     * @param createTableSqlBuilder createSql
+     * @param repositoryDefinition  the specified repository definition
      */
     protected abstract void createTableBody(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition);
 
     /**
      * abstract createTableEnd for each DB to impl.
      *
-     * @param createTableSqlBuilder       createSql
-     * @param repositoryDefinition the specified repository definition
+     * @param createTableSqlBuilder createSql
+     * @param repositoryDefinition  the specified repository definition
      */
     protected abstract void createTableEnd(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition);
 

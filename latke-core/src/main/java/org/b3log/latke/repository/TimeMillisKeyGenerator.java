@@ -26,5 +26,4 @@ public final class TimeMillisKeyGenerator implements KeyGenerator<String> {
     public String gen() {
         return Ids.genTimeMillisId();
     }
-
 }

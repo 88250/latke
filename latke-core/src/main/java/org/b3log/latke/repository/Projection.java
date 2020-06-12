@@ -48,8 +48,7 @@ public class Projection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Projection that = (Projection) o;
-
+        final Projection that = (Projection) o;
         return Objects.equals(key, that.key);
     }
 
