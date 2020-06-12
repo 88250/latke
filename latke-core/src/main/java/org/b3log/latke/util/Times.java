@@ -23,7 +23,7 @@ import java.util.Map;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.0, Jun 21, 2019
+ * @version 1.0.1.1, Jun 12, 2020
  * @since 2.4.4
  */
 public final class Times {
@@ -59,6 +59,17 @@ public final class Times {
     private static final long YEAR_UNIT = 12 * MONTH_UNIT;
 
     /**
+     * Gets time ago format text with default locale.
+     *
+     * @param time the specified time.
+     * @return time ago format text
+     */
+    public static String getTimeAgo(final long time) {
+        final Locale locale = Locales.getLocale();
+        return getTimeAgo(time, locale);
+    }
+
+    /**
      * Gets time ago format text.
      *
      * @param time   the specified time.
@@ -75,40 +86,33 @@ public final class Times {
 
         if (diff > YEAR_UNIT) {
             r = diff / YEAR_UNIT;
-
             return r + " " + langs.get("yearsAgoLabel");
         }
 
         if (diff > MONTH_UNIT) {
             r = diff / MONTH_UNIT;
-
             return r + " " + langs.get("monthsAgoLabel");
         }
 
         if (diff > WEEK_UNIT) {
             r = diff / WEEK_UNIT;
-
             return r + " " + langs.get("weeksAgoLabel");
         }
 
         if (diff > DAY_UNIT) {
             r = diff / DAY_UNIT;
-
             return r + " " + langs.get("daysAgoLabel");
         }
 
         if (diff > HOUR_UNIT) {
             r = diff / HOUR_UNIT;
-
             return r + " " + langs.get("hoursAgoLabel");
         }
 
         if (diff > MINUTE_UNIT) {
             r = diff / MINUTE_UNIT;
-
             return r + " " + langs.get("minutesAgoLabel");
         }
-
         return langs.get("justNowLabel");
     }
 
@@ -124,7 +128,6 @@ public final class Times {
         cal1.setTime(date1);
         final Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
-
         return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
                 && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
                 && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
@@ -142,11 +145,9 @@ public final class Times {
         final Calendar cal1 = Calendar.getInstance();
         cal1.setFirstDayOfWeek(Calendar.MONDAY);
         cal1.setTime(date1);
-
         final Calendar cal2 = Calendar.getInstance();
         cal2.setFirstDayOfWeek(Calendar.MONDAY);
         cal2.setTime(date2);
-
         return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
                 && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
                 && cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
@@ -162,10 +163,8 @@ public final class Times {
     public static boolean isSameMonth(final Date date1, final Date date2) {
         final Calendar cal1 = Calendar.getInstance();
         cal1.setTime(date1);
-
         final Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
-
         return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
                 && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
                 && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
@@ -185,7 +184,6 @@ public final class Times {
         final int day = start.get(Calendar.DATE);
         start.set(year, month, day, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
-
         return start.getTimeInMillis();
     }
 
@@ -203,7 +201,6 @@ public final class Times {
         final int day = end.get(Calendar.DATE);
         end.set(year, month, day, 23, 59, 59);
         end.set(Calendar.MILLISECOND, 999);
-
         return end.getTimeInMillis();
     }
 
@@ -220,7 +217,6 @@ public final class Times {
         if (ret <= 0) {
             ret = 7;
         }
-
         return ret;
     }
 
@@ -239,7 +235,6 @@ public final class Times {
         start.set(Calendar.MINUTE, 0);
         start.set(Calendar.SECOND, 0);
         start.set(Calendar.MILLISECOND, 0);
-
         return start.getTimeInMillis();
     }
 
@@ -258,7 +253,6 @@ public final class Times {
         end.set(Calendar.MINUTE, 59);
         end.set(Calendar.SECOND, 59);
         end.set(Calendar.MILLISECOND, 999);
-
         return end.getTimeInMillis();
     }
 
@@ -275,7 +269,6 @@ public final class Times {
         final int month = start.get(Calendar.MONTH);
         start.set(year, month, 1, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
-
         return start.getTimeInMillis();
     }
 
@@ -293,7 +286,6 @@ public final class Times {
         end.set(Calendar.MINUTE, 59);
         end.set(Calendar.SECOND, 59);
         end.set(Calendar.MILLISECOND, 999);
-
         return end.getTimeInMillis();
     }
 
