@@ -32,7 +32,7 @@ public class FileUpload {
         try {
             return fileUpload.get();
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Get file upload data fialed", e);
+            LOGGER.log(Level.ERROR, "Get file upload data failed", e);
             return null;
         }
     }

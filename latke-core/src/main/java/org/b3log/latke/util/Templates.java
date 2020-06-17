@@ -67,7 +67,7 @@ public final class Templates {
 
         if (canonicalForm.startsWith(expression)) {
             LOGGER.log(Level.TRACE, "Template has expression[nodeName={}, expression={}]",
-                    new Object[]{templateElement.getNodeName(), expression});
+                    templateElement.getNodeName(), expression);
 
             return true;
         }

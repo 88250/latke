@@ -261,7 +261,7 @@ public final class Latkes {
      *
      * @param props the specified props
      */
-    public static void setLakteProps(final Properties props) {
+    public static void setLatkeProps(final Properties props) {
         Latkes.latkeProps = props;
     }
 

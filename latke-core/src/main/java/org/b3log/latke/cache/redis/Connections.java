@@ -45,15 +45,15 @@ public final class Connections {
             final Latkes.RuntimeCache runtimeCache = Latkes.getRuntimeCache();
             if (Latkes.RuntimeCache.REDIS == runtimeCache) {
                 final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-                final int minConnCnt = Integer.valueOf(Latkes.getLocalProperty("redis.minConnCnt"));
+                final int minConnCnt = Integer.parseInt(Latkes.getLocalProperty("redis.minConnCnt"));
                 jedisPoolConfig.setMinIdle(minConnCnt);
-                final int maxConnCnt = Integer.valueOf(Latkes.getLocalProperty("redis.maxConnCnt"));
+                final int maxConnCnt = Integer.parseInt(Latkes.getLocalProperty("redis.maxConnCnt"));
                 jedisPoolConfig.setMaxTotal(maxConnCnt);
                 String password = Latkes.getLocalProperty("redis.password");
                 if (StringUtils.isBlank(password)) {
                     password = null;
                 }
-                final long waitTime = Long.valueOf(Latkes.getLocalProperty("redis.waitTime"));
+                final long waitTime = Long.parseLong(Latkes.getLocalProperty("redis.waitTime"));
                 jedisPoolConfig.setMaxWaitMillis(waitTime);
 
                 final String masterName = Latkes.getLocalProperty("redis.master");
@@ -63,7 +63,7 @@ public final class Connections {
                     pool = new JedisSentinelPool(masterName, sentinels, jedisPoolConfig, password);
                 } else {
                     final String host = Latkes.getLocalProperty("redis.host");
-                    final int port = Integer.valueOf(Latkes.getLocalProperty("redis.port"));
+                    final int port = Integer.parseInt(Latkes.getLocalProperty("redis.port"));
                     pool = new JedisPool(jedisPoolConfig, host, port, Protocol.DEFAULT_TIMEOUT, password);
                 }
             }

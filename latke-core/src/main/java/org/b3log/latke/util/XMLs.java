@@ -36,6 +36,9 @@ import java.io.StringWriter;
  */
 public final class XMLs {
 
+    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+
     /**
      * Logger.
      */
@@ -49,9 +52,9 @@ public final class XMLs {
      */
     public static String format(final String xml) {
         try {
-            final DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final DocumentBuilder db = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
             final Document doc = db.parse(new InputSource(new StringReader(xml)));
-            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             final StreamResult result = new StreamResult(new StringWriter());

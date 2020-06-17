@@ -131,7 +131,7 @@ public final class Requests {
     /**
      * Gets the scheme of the end-client that sent the specified request.
      *
-     * @param request the specified reuqest
+     * @param request the specified request
      * @return scheme
      */
     public static String getServerScheme(final Request request) {
@@ -149,7 +149,7 @@ public final class Requests {
     /**
      * Gets the server name of the end-client that sent the specified request.
      *
-     * @param request the specified reuqest
+     * @param request the specified request
      * @return server name
      */
     public static String getServerName(final Request request) {

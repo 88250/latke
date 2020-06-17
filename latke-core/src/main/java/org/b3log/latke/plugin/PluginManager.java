@@ -31,7 +31,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Plugin loader.
@@ -59,7 +61,7 @@ public class PluginManager {
      * Caches plugins with the key "plugins" and its value is the real holder, a map: &lt;"hosting view name", plugins&gt;
      * </p>
      */
-    private final Map<String, HashSet<AbstractPlugin>> pluginCache = new HashMap<>();
+    private final Map<String, Set<AbstractPlugin>> pluginCache = new HashMap<>();
 
     /**
      * Plugin class loaders.
@@ -84,12 +86,7 @@ public class PluginManager {
             load();
         }
 
-        final List<AbstractPlugin> ret = new ArrayList<>();
-        for (final Map.Entry<String, HashSet<AbstractPlugin>> entry : pluginCache.entrySet()) {
-            ret.addAll(entry.getValue());
-        }
-
-        return ret;
+        return pluginCache.values().stream().flatMap(Set::stream).collect(Collectors.toList());
     }
 
     /**
@@ -105,12 +102,7 @@ public class PluginManager {
             load();
         }
 
-        final Set<AbstractPlugin> ret = pluginCache.get(viewName);
-        if (null == ret) {
-            return Collections.emptySet();
-        }
-
-        return ret;
+        return pluginCache.getOrDefault(viewName, Collections.emptySet());
     }
 
     /**
@@ -149,7 +141,7 @@ public class PluginManager {
      * @return loaded plugin
      * @throws Exception exception
      */
-    private AbstractPlugin load(final String pluginDirPath, final Map<String, HashSet<AbstractPlugin>> holder) throws Exception {
+    private AbstractPlugin load(final String pluginDirPath, final Map<String, Set<AbstractPlugin>> holder) throws Exception {
         final Properties props = new Properties();
 
         String plugin = StringUtils.substringAfter(pluginDirPath, "/plugins");
@@ -199,20 +191,15 @@ public class PluginManager {
      * @param plugin the specified plugin
      * @param holder the specified holder
      */
-    private void register(final AbstractPlugin plugin, final Map<String, HashSet<AbstractPlugin>> holder) {
+    private void register(final AbstractPlugin plugin, final Map<String, Set<AbstractPlugin>> holder) {
         final String rendererId = plugin.getRendererId();
 
         /*
          * the rendererId support multiple,using ';' to split.
-         * and using Map to match the plugin is not flexible, a regular expression match pattern may be needed in futrue.
+         * and using Map to match the plugin is not flexible, a regular expression match pattern may be needed in future.
          */
-        final String[] redererIds = rendererId.split(";");
-
-        for (final String rid : redererIds) {
-            final HashSet<AbstractPlugin> set = holder.computeIfAbsent(rid, k -> new HashSet<>());
-
-            set.add(plugin);
-        }
+        Arrays.asList(rendererId.split(";")).forEach(rid ->
+                holder.computeIfAbsent(rid, k -> new HashSet<>()).add(plugin));
 
         LOGGER.log(Level.DEBUG, "Registered plugin [name={}, version={}] for rendererId [name={}], [{}] plugins totally",
                 plugin.getName(), plugin.getVersion(), rendererId, holder.size());
@@ -245,7 +232,7 @@ public class PluginManager {
 
         if (null != settingFile && settingFile.exists()) {
             try {
-                final String config = FileUtils.readFileToString(settingFile);
+                final String config = FileUtils.readFileToString(settingFile, Charset.defaultCharset());
                 final JSONObject jsonObject = new JSONObject(config);
 
                 plugin.setSetting(jsonObject);

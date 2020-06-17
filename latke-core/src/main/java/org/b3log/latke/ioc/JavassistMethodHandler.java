@@ -118,11 +118,11 @@ final class JavassistMethodHandler implements MethodHandler {
             throw e.getTargetException();
         } finally {
             if (0 == calls.decrementAndGet()) {
-                CALLS.set(null);
+                CALLS.remove();
                 final Connection connection = JdbcRepository.CONN.get();
                 if (null != connection) {
                     connection.close();
-                    JdbcRepository.CONN.set(null);
+                    JdbcRepository.CONN.remove();
                 }
             }
         }

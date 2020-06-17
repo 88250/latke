@@ -34,7 +34,7 @@ import java.util.Set;
  * @version 1.0.0.6, Sep 30, 2018
  * @since 2.4.19
  */
-final public class Reflections {
+public final class Reflections {
 
     /**
      * Logger.
