@@ -31,7 +31,7 @@ public final class Times {
     /**
      * Minute unit.
      */
-    private static final long MINUTE_UNIT = 60 * 1000;
+    private static final long MINUTE_UNIT = 60 * 1000L;
 
     /**
      * Hour unit.

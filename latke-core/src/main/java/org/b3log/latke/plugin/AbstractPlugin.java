@@ -508,23 +508,17 @@ public abstract class AbstractPlugin implements Serializable {
 
     @Override
     public boolean equals(final Object obj) {
-        if (null == obj) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (null == obj || getClass() != obj.getClass()) {
             return false;
         }
         final AbstractPlugin other = (AbstractPlugin) obj;
 
-        return (null == this.id) ? (other.id == null) : this.id.equals(other.id);
+        return Objects.equals(this.id, other.id);
     }
 
     @Override
     public int hashCode() {
-        int hash = 2;
-
-        hash = 2 + (this.id != null ? this.id.hashCode() : 0);
-        return hash;
+        return 2 + (this.id != null ? this.id.hashCode() : 0);
     }
 
     /**
@@ -535,12 +529,10 @@ public abstract class AbstractPlugin implements Serializable {
      * </p>
      */
     public void changeStatus() {
-        switch (status) {
-            case ENABLED:
-                start();
-                return;
-            case DISABLED:
-                stop();
+        if (PluginStatus.ENABLED.equals(status)) {
+            start();
+        } else {
+            stop();
         }
     }
 }

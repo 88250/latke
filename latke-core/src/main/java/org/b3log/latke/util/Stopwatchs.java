@@ -91,7 +91,7 @@ public final class Stopwatchs {
     /**
      * Thread-local variable of a stopwatch.
      */
-    private static final ThreadLocal<Stopwatch> STOPWATCH = new ThreadLocal<Stopwatch>();
+    private static final ThreadLocal<Stopwatch> STOPWATCH = new ThreadLocal<>();
 
     /**
      * Starts a task timing with the specified task title.

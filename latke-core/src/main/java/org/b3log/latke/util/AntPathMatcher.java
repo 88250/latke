@@ -27,7 +27,6 @@
 package org.b3log.latke.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -471,34 +470,18 @@ public final class AntPathMatcher {
      */
     private static String[] tokenizeToStringArray(String str, String delimiters) {
         if (null == str) {
-            return null;
+            return new String[0];
         }
         StringTokenizer st = new StringTokenizer(str, delimiters);
-        List tokens = new ArrayList();
+        List<String> tokens = new ArrayList<>();
 
         while (st.hasMoreTokens()) {
-            String token = st.nextToken();
+            String token = st.nextToken().trim();
 
-            token = token.trim();
             if (token.length() > 0) {
                 tokens.add(token);
             }
         }
-        return toStringArray(tokens);
-    }
-
-    /**
-     * Copy the given Collection into a String array.
-     * The Collection must contain String elements only.
-     *
-     * @param collection the Collection to copy
-     * @return the String array (<code>null</code> if the passed-in
-     * Collection was <code>null</code>)
-     */
-    private static String[] toStringArray(Collection collection) {
-        if (null == collection) {
-            return null;
-        }
-        return (String[]) collection.toArray(new String[collection.size()]);
+        return tokens.toArray(new String[0]);
     }
 }

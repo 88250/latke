@@ -119,7 +119,7 @@ public class Bean<T> {
         proxyFactory.setFilter(javassistMethodHandler.getMethodFilter());
         proxyClass = (Class<T>) proxyFactory.createClass();
 
-        annotatedType = new AnnotatedTypeImpl<T>(beanClass);
+        annotatedType = new AnnotatedTypeImpl<>(beanClass);
         fieldInjectionPoints = new HashSet<>();
 
         initFieldInjectionPoints();

@@ -117,12 +117,6 @@ public class Configurator {
      * @param classes the specified classes to filter
      */
     private static void filterClasses(final Collection<Class<?>> classes) {
-        final Iterator<Class<?>> iterator = classes.iterator();
-        while (iterator.hasNext()) {
-            final Class<?> clazz = iterator.next();
-            if (clazz.isAnnotation() || !Reflections.isConcrete(clazz)) {
-                iterator.remove();
-            }
-        }
+        classes.removeIf(clazz -> clazz.isAnnotation() || !Reflections.isConcrete(clazz));
     }
 }

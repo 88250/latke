@@ -27,7 +27,7 @@ import org.json.JSONObject;
  * @version 1.0.0.0, Nov 3, 2019
  * @since 3.0.0
  */
-public class Sessions {
+public final class Sessions {
 
     private static final Logger LOGGER = LogManager.getLogger(Sessions.class);
 
@@ -58,5 +58,8 @@ public class Sessions {
         }
 
         return new Session(session.optString("id"));
+    }
+
+    private Sessions() {
     }
 }

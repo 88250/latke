@@ -114,7 +114,7 @@ public final class ClassPathResolver {
      */
     private static Set<URL> getResourcesFromRoot(final String rootPath) {
 
-        final Set<URL> rets = new LinkedHashSet<URL>();
+        final Set<URL> rets = new LinkedHashSet<>();
 
         String path = rootPath;
 
@@ -138,7 +138,7 @@ public final class ClassPathResolver {
     }
 
     /**
-     * check if the URL of the Rousource is a JAR resource.
+     * check if the URL of the Resource is a JAR resource.
      *
      * @param rootDirResource rootDirResource
      * @return isJAR
@@ -170,11 +170,11 @@ public final class ClassPathResolver {
      */
     private static Collection<? extends URL> doFindPathMatchingJarResources(final URL rootDirResource, final String subPattern) {
 
-        final Set<URL> result = new LinkedHashSet<URL>();
+        final Set<URL> result = new LinkedHashSet<>();
 
-        JarFile jarFile = null;
+        JarFile jarFile;
         String jarFileUrl;
-        String rootEntryPath = null;
+        String rootEntryPath;
         URLConnection con;
         boolean newJarFile = false;
 
@@ -229,10 +229,8 @@ public final class ClassPathResolver {
                 final JarEntry entry = entries.nextElement();
                 final String entryPath = entry.getName();
 
-                String relativePath = null;
-
                 if (entryPath.startsWith(rootEntryPath)) {
-                    relativePath = entryPath.substring(rootEntryPath.length());
+                    String relativePath = entryPath.substring(rootEntryPath.length());
 
                     if (AntPathMatcher.match(subPattern, relativePath)) {
                         if (relativePath.startsWith("/")) {
@@ -289,8 +287,8 @@ public final class ClassPathResolver {
      */
     private static Collection<? extends URL> doFindPathMatchingFileResources(final URL rootDirResource, final String subPattern) {
 
-        File rootFile = null;
-        final Set<URL> rets = new LinkedHashSet<URL>();
+        File rootFile;
+        final Set<URL> rets = new LinkedHashSet<>();
 
         try {
             rootFile = new File(rootDirResource.toURI());
@@ -377,73 +375,6 @@ public final class ClassPathResolver {
 //            }
 
             throw new UnsupportedOperationException("JBoss VFS not supported yet!");
-        }
-    }
-
-    /**
-     * VFS visitor for path matching purposes.
-     */
-    private static class PatternVirtualFileVisitor { // implements VirtualFileVisitor {
-
-        /**
-         * the subPattern of the Pattern URL(not full).
-         */
-        private final String subPattern;
-
-        /**
-         * the ROOT Path which to be scanned.
-         */
-        private final String rootPath;
-
-        /**
-         * the all matched URLS.
-         */
-        private final Set<URL> resources = new LinkedHashSet<URL>();
-
-        /**
-         * the simplest constructor.
-         *
-         * @param rootPath   rootPath
-         * @param subPattern subPattern
-         */
-        PatternVirtualFileVisitor(final String rootPath, final String subPattern) {
-            this.subPattern = subPattern;
-            this.rootPath = rootPath.length() == 0 || rootPath.endsWith("/") ? rootPath : rootPath + "/";
-        }
-
-//        @Override
-//        public VisitorAttributes getAttributes() {
-//            return VisitorAttributes.RECURSE;
-//        }
-//
-//        @Override
-//        public void visit(final VirtualFile vf) {
-//            if (AntPathMatcher.match(this.subPattern, vf.getPathName().substring(this.rootPath.length()))) {
-//                try {
-//                    this.resources.add(vf.toURL());
-//                } catch (final Exception e) {
-//                    LOGGER.log(Level.ERROR, "getting URL from JBOSS VirtualFile occurs error ", e);
-//                    throw new RuntimeException("getting URL from JBOSS VirtualFile occurs error ", e);
-//                }
-//            }
-//        }
-
-        /**
-         * return the matched URLs.
-         *
-         * @return URLs
-         */
-        public Set<URL> getResources() {
-            return this.resources;
-        }
-
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder();
-
-            sb.append("sub-pattern: ").append(this.subPattern);
-            sb.append(", resources: ").append(this.resources);
-            return sb.toString();
         }
     }
 }

@@ -51,13 +51,7 @@ public abstract class AbstractEventQueue {
             throw new NullPointerException();
         }
 
-        List<AbstractEventListener<?>> listenerList = listeners.get(eventType);
-        if (null == listenerList) {
-            listenerList = new ArrayList<>();
-            listeners.put(eventType, listenerList);
-        }
-
-        listenerList.add(listener);
+        listeners.computeIfAbsent(eventType, k -> new ArrayList<>()).add(listener);
     }
 
     /**

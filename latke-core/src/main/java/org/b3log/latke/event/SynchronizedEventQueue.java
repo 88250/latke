@@ -51,11 +51,7 @@ final class SynchronizedEventQueue extends AbstractEventQueue {
      */
     synchronized void fireEvent(final Event<?> event) {
         final String eventType = event.getType();
-        List<Event<?>> events = synchronizedEvents.get(eventType);
-        if (null == events) {
-            events = new ArrayList<>();
-            synchronizedEvents.put(eventType, events);
-        }
+        List<Event<?>> events = synchronizedEvents.computeIfAbsent(eventType, k -> new ArrayList<>());
 
         events.add(event);
         setChanged();

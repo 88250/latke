@@ -24,7 +24,7 @@ public class Session {
 
     public static final String LATKE_SESSION_ID = "LATKE_SESSION_ID";
 
-    String id;
+    private final String id;
 
     public Session(final String id) {
         this.id = id;

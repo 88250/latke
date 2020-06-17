@@ -48,7 +48,7 @@ public class EventManager {
      * @return future result
      */
     public <T> Future<T> fireEventAsynchronously(final Event<?> event) {
-        final FutureTask<T> futureTask = new FutureTask<T>(() -> {
+        final FutureTask<T> futureTask = new FutureTask<>(() -> {
             synchronizedEventQueue.fireEvent(event);
 
             return null; // XXX: Our future????

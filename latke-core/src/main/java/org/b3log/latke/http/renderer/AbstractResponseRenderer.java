@@ -37,9 +37,6 @@ public abstract class AbstractResponseRenderer implements ResponseRenderer {
     private String rendererId;
 
     @Override
-    public abstract void render(final RequestContext context);
-
-    @Override
     public void preRender(final RequestContext context) {
         if (StringUtils.isBlank(rendererId)) {
             return;
