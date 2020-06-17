@@ -14,14 +14,12 @@ package org.b3log.latke.util;
 import org.json.JSONArray;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Collection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.9, Jun 17, 2020
+ * @version 1.0.0.8, Oct 21, 2012
  */
 public final class CollectionUtils {
 
@@ -46,9 +44,21 @@ public final class CollectionUtils {
         }
 
         final List<Integer> integers = genIntegers(start, end);
-        Collections.shuffle(integers);
+        final List<Integer> ret = new ArrayList<>();
 
-        return integers.subList(0, size);
+        int remainsSize;
+        int index;
+
+        while (ret.size() < size) {
+            remainsSize = integers.size();
+            index = (int) (Math.random() * (remainsSize - 1));
+            final Integer i = integers.get(index);
+
+            ret.add(i);
+            integers.remove(i);
+        }
+
+        return ret;
     }
 
     /**
@@ -60,7 +70,13 @@ public final class CollectionUtils {
      * @return a list of integers
      */
     public static List<Integer> genIntegers(final int start, final int end) {
-        return IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
+        final List<Integer> ret = new ArrayList<>();
+
+        for (int i = 0; i <= end; i++) {
+            ret.add(i + start);
+        }
+
+        return ret;
     }
 
     /**
@@ -75,7 +91,15 @@ public final class CollectionUtils {
             return Collections.emptySet();
         }
 
-        return new HashSet<>(Arrays.asList(array));
+        final Set<T> ret = new HashSet<>();
+
+        for (int i = 0; i < array.length; i++) {
+            final T object = array[i];
+
+            ret.add(object);
+        }
+
+        return ret;
     }
 
     /**
@@ -87,7 +111,17 @@ public final class CollectionUtils {
      * @return a {@link JSONArray JSON array}
      */
     public static <T> JSONArray listToJSONArray(final List<T> list) {
-        return toJSONArray(list);
+        final JSONArray ret = new JSONArray();
+
+        if (null == list) {
+            return ret;
+        }
+
+        for (final T object : list) {
+            ret.put(object);
+        }
+
+        return ret;
     }
 
     /**
@@ -98,7 +132,17 @@ public final class CollectionUtils {
      * @return a {@link JSONArray JSON array}
      */
     public static <T> JSONArray toJSONArray(final Collection<T> collection) {
-        return new JSONArray(collection);
+        final JSONArray ret = new JSONArray();
+
+        if (null == collection) {
+            return ret;
+        }
+
+        for (final T object : collection) {
+            ret.put(object);
+        }
+
+        return ret;
     }
 
     /**
@@ -115,7 +159,8 @@ public final class CollectionUtils {
             return Collections.emptySet();
         }
 
-        final Set<T> ret = new HashSet<>();
+        final Set<T> ret = new HashSet<T>();
+
         for (int i = 0; i < jsonArray.length(); i++) {
             ret.add((T) jsonArray.opt(i));
         }
@@ -138,6 +183,7 @@ public final class CollectionUtils {
         }
 
         final List<T> ret = new ArrayList<T>();
+
         for (int i = 0; i < jsonArray.length(); i++) {
             ret.add((T) jsonArray.opt(i));
         }
@@ -161,6 +207,7 @@ public final class CollectionUtils {
 
         final int newLength = jsonArray.length();
         final Object[] original = new Object[newLength];
+
         for (int i = 0; i < newLength; i++) {
             original[i] = jsonArray.opt(i);
         }
