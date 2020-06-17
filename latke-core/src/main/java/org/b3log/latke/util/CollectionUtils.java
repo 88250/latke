@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
  * Collection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.8, Oct 21, 2012
+ * @version 1.0.0.9, Jun 17, 2020
  */
 public final class CollectionUtils {
 
@@ -116,7 +116,6 @@ public final class CollectionUtils {
         }
 
         final Set<T> ret = new HashSet<>();
-
         for (int i = 0; i < jsonArray.length(); i++) {
             ret.add((T) jsonArray.opt(i));
         }
@@ -134,8 +133,16 @@ public final class CollectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> jsonArrayToList(final JSONArray jsonArray) {
-        return (List<T>) Optional.ofNullable(jsonArray)
-                .map(JSONArray::toList).orElse(Collections.emptyList());
+        if (null == jsonArray) {
+            return Collections.emptyList();
+        }
+
+        final List<T> ret = new ArrayList<T>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            ret.add((T) jsonArray.opt(i));
+        }
+
+        return ret;
     }
 
     /**
@@ -148,8 +155,16 @@ public final class CollectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T[] jsonArrayToArray(final JSONArray jsonArray, final Class<? extends T[]> newType) {
-        Object[] result = Optional.ofNullable(jsonArray)
-                .map(JSONArray::toList).map(List::toArray).orElse(new Object[]{});
-        return Arrays.copyOf(result, result.length, newType);
+        if (null == jsonArray) {
+            return (T[]) new Object[]{};
+        }
+
+        final int newLength = jsonArray.length();
+        final Object[] original = new Object[newLength];
+        for (int i = 0; i < newLength; i++) {
+            original[i] = jsonArray.opt(i);
+        }
+
+        return Arrays.copyOf(original, newLength, newType);
     }
 }
