@@ -148,7 +148,8 @@ public final class CollectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T[] jsonArrayToArray(final JSONArray jsonArray, final Class<? extends T[]> newType) {
-        return (T[]) Optional.ofNullable(jsonArray)
+        Object[] result = Optional.ofNullable(jsonArray)
                 .map(JSONArray::toList).map(List::toArray).orElse(new Object[]{});
+        return Arrays.copyOf(result, result.length, newType);
     }
 }
