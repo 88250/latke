@@ -93,7 +93,7 @@ public final class JdbcTransaction implements Transaction {
         } finally {
             isActive = false;
             connection = null;
-            JdbcRepository.TX.set(null);
+            JdbcRepository.TX.remove();
         }
     }
 

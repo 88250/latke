@@ -155,9 +155,9 @@ public final class Latkes {
      * Clears scheme, host and port.
      */
     public static void clearSchemeHostPort() {
-        SCHEME.set(null);
-        HOST.set(null);
-        PORT.set(null);
+        SCHEME.remove();
+        HOST.remove();
+        PORT.remove();
     }
 
     /**

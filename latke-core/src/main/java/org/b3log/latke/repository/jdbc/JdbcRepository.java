@@ -118,7 +118,7 @@ public final class JdbcRepository implements Repository {
             } catch (final SQLException e) {
                 throw new RuntimeException("Close connection failed", e);
             } finally {
-                CONN.set(null);
+                CONN.remove();
             }
         }
     }

@@ -143,7 +143,7 @@ public final class Stopwatchs {
      * </p>
      */
     public static void release() {
-        STOPWATCH.set(null);
+        STOPWATCH.remove();
     }
 
     /**
