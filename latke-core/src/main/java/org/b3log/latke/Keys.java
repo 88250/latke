@@ -21,7 +21,7 @@ import java.util.Map;
  * This class define framework keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.2.11, May 13, 2020
+ * @version 1.3.0.0, Jun 19, 2020
  */
 public final class Keys {
 
@@ -49,16 +49,6 @@ public final class Keys {
      * Key of code.
      */
     public static final String CODE = "code";
-
-    /**
-     * Key of action status code.
-     */
-    public static final String STATUS_CODE = "sc";
-
-    /**
-     * Key of session id.
-     */
-    public static final String SESSION_ID = "sId";
 
     /**
      * Key of results.

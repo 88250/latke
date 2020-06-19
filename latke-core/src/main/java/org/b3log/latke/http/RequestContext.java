@@ -32,7 +32,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.1.1, May 1, 2020
+ * @version 2.2.0.0, Jun 19, 2020
  * @since 2.4.34
  */
 public final class RequestContext {
@@ -157,7 +157,6 @@ public final class RequestContext {
         if (null == renderer) {
             return null;
         }
-
         return renderer.getRenderDataModel();
     }
 
@@ -248,7 +247,6 @@ public final class RequestContext {
             return request.getParameter(name);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Can't parse request parameter [uri=" + request.getRequestURI() + ", method=" + request.getMethod() + ", parameterName=" + name + "]: " + e.getMessage());
-
             return null;
         }
     }
@@ -387,24 +385,7 @@ public final class RequestContext {
         final JsonRenderer jsonRenderer = new JsonRenderer();
         jsonRenderer.setJSONObject(json);
         jsonRenderer.setPretty(true);
-
         this.renderer = jsonRenderer;
-
-        return this;
-    }
-
-    /**
-     * Renders using {@link JsonRenderer} with {"sc": false}.
-     *
-     * @return this context
-     */
-    public RequestContext renderJSON() {
-        final JsonRenderer jsonRenderer = new JsonRenderer();
-        final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, false);
-        jsonRenderer.setJSONObject(ret);
-
-        this.renderer = jsonRenderer;
-
         return this;
     }
 
@@ -417,25 +398,7 @@ public final class RequestContext {
     public RequestContext renderJSON(final JSONObject json) {
         final JsonRenderer jsonRenderer = new JsonRenderer();
         jsonRenderer.setJSONObject(json);
-
         this.renderer = jsonRenderer;
-
-        return this;
-    }
-
-    /**
-     * Renders using {@link JsonRenderer} with {"sc": sc}.
-     *
-     * @param sc the specified sc
-     * @return this context
-     */
-    public RequestContext renderJSON(final boolean sc) {
-        final JsonRenderer jsonRenderer = new JsonRenderer();
-        final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, sc);
-        jsonRenderer.setJSONObject(ret);
-
-        this.renderer = jsonRenderer;
-
         return this;
     }
 
@@ -449,41 +412,56 @@ public final class RequestContext {
         final JsonRenderer jsonRenderer = new JsonRenderer();
         final JSONObject ret = new JSONObject().put(Keys.CODE, code);
         jsonRenderer.setJSONObject(ret);
-
         this.renderer = jsonRenderer;
-
         return this;
     }
 
     /**
-     * Renders with {"sc": true}.
+     * Renders with {"code": int, "data": JSONObject, "msg": ""}.
      *
+     * @param code the specified code
+     * @param data the specified data
+     * @param msg  the specified msg
      * @return this context
      */
-    public RequestContext renderTrueResult() {
+    public RequestContext renderCodeDataMsg(final int code, final JSONObject data, final String msg) {
         if (renderer instanceof JsonRenderer) {
             final JsonRenderer r = (JsonRenderer) renderer;
-
             final JSONObject ret = r.getJSONObject();
-            ret.put(Keys.STATUS_CODE, true);
+            ret.put(Keys.CODE, code).put(Keys.DATA, data).put(Keys.MSG, msg);
         }
-
         return this;
     }
 
     /**
-     * Renders with {"sc": false}.
+     * Renders with {"code": int, "data": JSONObject}.
      *
+     * @param code the specified code
+     * @param data the specified data
      * @return this context
      */
-    public RequestContext renderFalseResult() {
+    public RequestContext renderCodeData(final int code, final JSONObject data) {
         if (renderer instanceof JsonRenderer) {
             final JsonRenderer r = (JsonRenderer) renderer;
-
             final JSONObject ret = r.getJSONObject();
-            ret.put(Keys.STATUS_CODE, false);
+            ret.put(Keys.CODE, code).put(Keys.DATA, data);
         }
+        return this;
+    }
 
+    /**
+     * Renders with {"code": int, "msg": ""}.
+     *
+     * @param code the specified code
+     * @param msg  the specified msg
+     * @return this context
+     */
+    public RequestContext renderCodeMsg(final int code, final String msg) {
+        if (renderer instanceof JsonRenderer) {
+            final JsonRenderer r = (JsonRenderer) renderer;
+            final JSONObject ret = r.getJSONObject();
+            ret.put(Keys.CODE, code).put(Keys.MSG, msg);
+        }
         return this;
     }
 
@@ -496,11 +474,9 @@ public final class RequestContext {
     public RequestContext renderCode(final int code) {
         if (renderer instanceof JsonRenderer) {
             final JsonRenderer r = (JsonRenderer) renderer;
-
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.CODE, code);
         }
-
         return this;
     }
 
@@ -513,11 +489,9 @@ public final class RequestContext {
     public RequestContext renderMsg(final String msg) {
         if (renderer instanceof JsonRenderer) {
             final JsonRenderer r = (JsonRenderer) renderer;
-
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.MSG, msg);
         }
-
         return this;
     }
 
@@ -530,11 +504,9 @@ public final class RequestContext {
     public RequestContext renderData(final Object data) {
         if (renderer instanceof JsonRenderer) {
             final JsonRenderer r = (JsonRenderer) renderer;
-
             final JSONObject ret = r.getJSONObject();
             ret.put(Keys.DATA, data);
         }
-
         return this;
     }
 
@@ -548,7 +520,6 @@ public final class RequestContext {
             final JsonRenderer r = (JsonRenderer) renderer;
             r.setPretty(true);
         }
-
         return this;
     }
 
@@ -562,11 +533,9 @@ public final class RequestContext {
     public RequestContext renderJSONValue(final String name, final Object obj) {
         if (renderer instanceof JsonRenderer) {
             final JsonRenderer r = (JsonRenderer) renderer;
-
             final JSONObject ret = r.getJSONObject();
             ret.put(name, obj);
         }
-
         return this;
     }
 
@@ -581,7 +550,6 @@ public final class RequestContext {
         } catch (final Exception e) {
             final String requestLog = Requests.getLog(request);
             LOGGER.log(Level.ERROR, "Handler process failed: " + requestLog, e);
-
             setRenderer(new Http500Renderer(e));
         }
     }
