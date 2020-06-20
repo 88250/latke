@@ -11,12 +11,10 @@
  */
 package org.b3log.latke.repository.annotation;
 
-
 import org.b3log.latke.ioc.Singleton;
 import org.b3log.latke.ioc.Stereotype;
 
 import java.lang.annotation.*;
-
 
 /**
  * Indicates that an annotated type is a repository.

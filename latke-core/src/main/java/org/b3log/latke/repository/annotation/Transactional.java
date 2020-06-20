@@ -11,32 +11,16 @@
  */
 package org.b3log.latke.repository.annotation;
 
-
 import java.lang.annotation.*;
-
 
 /**
  * Indicates that an annotated method is transactional.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jul 8, 2013
+ * @version 1.0.0.1, Jun 20, 2020
  */
 @Target(value = ElementType.METHOD)
 @Retention(value = RetentionPolicy.RUNTIME)
 @Documented
 public @interface Transactional {
-
-    /**
-     * Transaction isolation level.
-     *
-     * @return isolation
-     */
-    Isolation isolation() default Isolation.READ_COMMITTED;
-
-    /**
-     * Transaction propagation type.
-     *
-     * @return propagation
-     */
-    Propagation propagation() default Propagation.REQUIRED;
 }
