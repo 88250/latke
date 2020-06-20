@@ -46,7 +46,7 @@ public final class JdbcFactory implements JdbcDatabase {
     private static final Map<Latkes.RuntimeDatabase, String> SOLUTIONS = new HashMap<>();
 
     static {
-        SOLUTIONS.put(Latkes.RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MysqlJdbcDatabaseSolution");
+        SOLUTIONS.put(Latkes.RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MySQLJdbcDatabaseSolution");
         SOLUTIONS.put(Latkes.RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
     }
 

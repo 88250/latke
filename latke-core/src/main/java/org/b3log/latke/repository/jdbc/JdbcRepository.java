@@ -185,7 +185,7 @@ public final class JdbcRepository implements Repository {
 
             if (!keys.hasNext()) {
                 if (Repositories.isSoftDelete()) {
-                    paraBuilder.append(", `" + JdbcRepositories.softDeleteFieldName + "`");
+                    paraBuilder.append(", `").append(JdbcRepositories.softDeleteFieldName).append("`");
                     argBuilder.append(", 0");
                 }
                 paraBuilder.append(")");
@@ -193,7 +193,7 @@ public final class JdbcRepository implements Repository {
             }
         }
 
-        sqlBuilder.append("INSERT INTO ").append(getName()).append(paraBuilder).append(" VALUES ").append(argBuilder);
+        sqlBuilder.append("INSERT INTO ").append("`").append(getName()).append("`").append(paraBuilder).append(" VALUES ").append(argBuilder);
         return ret;
     }
 
@@ -259,7 +259,7 @@ public final class JdbcRepository implements Repository {
             paramList.add(needUpdateJsonObject.get(key));
         }
 
-        sqlBuilder.append("UPDATE ").append(getName()).append(propertyBuilder).append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
+        sqlBuilder.append("UPDATE ").append("`").append(getName()).append("`").append(propertyBuilder).append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
         paramList.add(id);
     }
 
@@ -315,7 +315,7 @@ public final class JdbcRepository implements Repository {
                 sqlBuilder.append("UPDATE ").append(getName()).append(" SET `").append(JdbcRepositories.softDeleteFieldName).append("` = 1").
                         append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
             } else {
-                sqlBuilder.append("DELETE FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+                sqlBuilder.append("DELETE FROM ").append("`").append(getName()).append("`").append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
             }
             JdbcUtil.executeSql(sqlBuilder.toString(), connection, debug);
         } catch (final Exception e) {
@@ -332,7 +332,7 @@ public final class JdbcRepository implements Repository {
             throw new RepositoryException("Invoking remove() outside a transaction");
         }
 
-        final StringBuilder deleteSQLBuilder = new StringBuilder("DELETE FROM ").append(getName());
+        final StringBuilder deleteSQLBuilder = new StringBuilder("DELETE FROM ").append("`").append(getName()).append("`");
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSqlBuilder = new StringBuilder();
         buildWhere(filterSqlBuilder, paramList, query.getFilter());
@@ -355,7 +355,7 @@ public final class JdbcRepository implements Repository {
         final StringBuilder sqlBuilder = new StringBuilder();
         final Connection connection = getConnection();
         try {
-            sqlBuilder.append("SELECT * FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
+            sqlBuilder.append("SELECT * FROM ").append("`").append(getName()).append("`").append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
             if (Repositories.isSoftDelete()) {
                 sqlBuilder.append(" AND `").append(JdbcRepositories.softDeleteFieldName).append("` = 0");
             }
@@ -467,7 +467,7 @@ public final class JdbcRepository implements Repository {
         buildOrderBy(orderByBuilder, query.getSorts());
 
         if (-1 == pageCount) {
-            final StringBuilder countBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append(getName());
+            final StringBuilder countBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append("`").append(getName()).append("`");
             if (StringUtils.isNotBlank(whereBuilder.toString())) {
                 countBuilder.append(" WHERE ").append(whereBuilder);
             }
@@ -580,13 +580,13 @@ public final class JdbcRepository implements Repository {
 
     @Override
     public long count() throws RepositoryException {
-        final StringBuilder sqlBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append(getName());
+        final StringBuilder sqlBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append("`").append(getName()).append("`");
         return count(sqlBuilder, new ArrayList<>());
     }
 
     @Override
     public long count(final Query query) throws RepositoryException {
-        final StringBuilder countSqlBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append(getName());
+        final StringBuilder countSqlBuilder = new StringBuilder("SELECT COUNT(" + JdbcRepositories.keyName + ") FROM ").append("`").append(getName()).append("`");
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSqlBuilder = new StringBuilder();
         buildWhere(filterSqlBuilder, paramList, query.getFilter());

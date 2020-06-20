@@ -17,15 +17,14 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
  * IntMapping.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
- * @version 1.0.0.0, Jan 12, 2012
+ * @version 1.0.0.1, Jun 20, 2020
  */
 public class IntMapping implements Mapping {
 
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(definition.getName());
-        sqlBuilder.append(" INT");
+        sqlBuilder.append("`").append(definition.getName()).append("`").append(" INT");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }

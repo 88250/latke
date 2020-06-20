@@ -27,7 +27,7 @@ public final class LongMapping implements Mapping {
 
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
-        final StringBuilder sqlBuilder = new StringBuilder(definition.getName()).append(" BIGINT");
+        final StringBuilder sqlBuilder = new StringBuilder("`" + definition.getName() + "`").append(" BIGINT");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }

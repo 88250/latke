@@ -14,7 +14,7 @@ package org.b3log.latke.repository.jdbc.mapping;
 import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 
 /**
- * the interface for mapping.
+ * Data type mapping.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.0, Jan 12, 2012
@@ -22,10 +22,10 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 public interface Mapping {
 
     /**
-     * for mapping from java definition to database table-definition sql.
+     * Mapping from Java definition to database table-definition SQL.
      *
      * @param definition {@link FieldDefinition}
-     * @return table-definition sql.
+     * @return table-definition SQL.
      */
     String toDataBaseString(FieldDefinition definition);
 }

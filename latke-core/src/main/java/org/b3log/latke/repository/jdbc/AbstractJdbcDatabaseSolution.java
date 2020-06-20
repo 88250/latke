@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Feb 21, 2019
+ * @version 2.0.0.2, Jun 20, 2020
  */
 public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
 
@@ -49,19 +49,12 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
 
     @Override
     public boolean createTable(final RepositoryDefinition repositoryDefinition) throws SQLException {
-        final Connection connection = Connections.getConnection();
-
-        try {
+        try (final Connection connection = Connections.getConnection()) {
             final StringBuilder createTableSqlBuilder = new StringBuilder();
             createTableHead(createTableSqlBuilder, repositoryDefinition);
             createTableBody(createTableSqlBuilder, repositoryDefinition);
             createTableEnd(createTableSqlBuilder, repositoryDefinition);
-
             return JdbcUtil.executeSql(createTableSqlBuilder.toString(), connection, false);
-        } catch (final SQLException e) {
-            throw e;
-        } finally {
-            connection.close();
         }
     }
 
@@ -93,7 +86,6 @@ public abstract class AbstractJdbcDatabaseSolution implements JdbcDatabase {
         if (!Repositories.isSoftDelete()) {
             return;
         }
-
         createTableSqlBuilder.append(JdbcRepositories.softDeleteFieldName).append(" INT NOT NULL, ");
     }
 

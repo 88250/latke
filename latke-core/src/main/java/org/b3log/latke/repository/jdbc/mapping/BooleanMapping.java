@@ -22,15 +22,14 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
  * </p>
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
- * @version 1.0.0.1, Dec 27, 2012
+ * @version 1.0.0.2, Jun 20, 2020
  */
 public class BooleanMapping implements Mapping {
 
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(definition.getName());
-        sqlBuilder.append(" CHAR(1)");
+        sqlBuilder.append("`").append(definition.getName()).append("`").append(" CHAR(1)");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }

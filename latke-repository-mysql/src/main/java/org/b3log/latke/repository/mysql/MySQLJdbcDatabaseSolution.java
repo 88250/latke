@@ -31,19 +31,19 @@ import java.util.List;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.3, May 13, 2020
+ * @version 2.0.0.4, Jun 20, 2020
  */
-public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
+public class MySQLJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = LogManager.getLogger(MysqlJdbcDatabaseSolution.class);
+    private static final Logger LOGGER = LogManager.getLogger(MySQLJdbcDatabaseSolution.class);
 
     /**
      * Public constructor.
      */
-    public MysqlJdbcDatabaseSolution() {
+    public MySQLJdbcDatabaseSolution() {
         registerType("int", new IntMapping());
         registerType("boolean", new BooleanMapping());
         registerType("long", new LongMapping());
@@ -61,11 +61,9 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
             } catch (final Throwable e) {
                 return false;
             }
-
             return true;
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Checks table [" + tableName + "] existence failed, assumed it existing [true]", e);
-
             return true;
         }
     }
@@ -73,7 +71,7 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
     @Override
     public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql, final String tableName) {
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(selectSql).append(" FROM ").append(tableName);
+        sqlBuilder.append(selectSql).append(" FROM ").append("`").append(tableName).append("`");
         if (StringUtils.isNotBlank(filterSql)) {
             sqlBuilder.append(" WHERE ").append(filterSql);
         }
@@ -84,12 +82,12 @@ public class MysqlJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution {
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
-        return "SELECT * FROM " + tableName + " ORDER BY RAND() LIMIT " + fetchSize;
+        return "SELECT * FROM `" + tableName + "` ORDER BY RAND() LIMIT " + fetchSize;
     }
 
     @Override
     protected void createTableHead(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
-        createTableSqlBuilder.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
+        createTableSqlBuilder.append("CREATE TABLE IF NOT EXISTS `").append(repositoryDefinition.getName()).append("`(");
     }
 
     @Override

@@ -17,15 +17,14 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
  * NumberMapping.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
- * @version 1.0.0.0, Jan 12, 2012
+ * @version 1.0.0.1, Jun 20, 2020
  */
 public class NumberMapping implements Mapping {
 
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(definition.getName());
-        sqlBuilder.append("  DOUBLE ");
+        sqlBuilder.append("`").append(definition.getName()).append("`").append("  DOUBLE ");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }

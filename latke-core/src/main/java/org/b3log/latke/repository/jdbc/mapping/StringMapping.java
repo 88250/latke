@@ -18,14 +18,13 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Feb 21, 2013
+ * @version 1.0.0.2, Jun 20, 2020
  */
 public class StringMapping implements Mapping {
 
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
-        final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(definition.getName());
+        final StringBuilder sqlBuilder = new StringBuilder(("`" + definition.getName() + "`"));
         if (null == definition.getLength()) {
             definition.setLength(0);
         }
@@ -47,7 +46,6 @@ public class StringMapping implements Mapping {
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }
-
         return sqlBuilder.toString();
     }
 }
