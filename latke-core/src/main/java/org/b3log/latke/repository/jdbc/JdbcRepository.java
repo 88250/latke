@@ -23,7 +23,6 @@ import org.b3log.latke.repository.*;
 import org.b3log.latke.repository.jdbc.util.Connections;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.repository.jdbc.util.JdbcUtil;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, May 30, 2020
+ * @version 2.0.0.1, Jun 20, 2020
  */
 public final class JdbcRepository implements Repository {
 
@@ -135,16 +134,8 @@ public final class JdbcRepository implements Repository {
         final StringBuilder sqlBuilder = new StringBuilder();
         String ret;
         try {
-            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                toOracleClobEmpty(jsonObject);
-            }
-
             ret = buildAddSql(jsonObject, paramList, sqlBuilder);
             JdbcUtil.executeSql(sqlBuilder.toString(), paramList, connection, debug);
-
-            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                JdbcUtil.fromOracleClobEmpty(jsonObject);
-            }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Adds a record failed", e);
             throw new RepositoryException(e);
@@ -221,17 +212,8 @@ public final class JdbcRepository implements Repository {
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder sqlBuilder = new StringBuilder();
         try {
-            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                toOracleClobEmpty(jsonObject);
-            }
-
             final JSONObject oldJsonObject = get(id);
             buildUpdate(id, oldJsonObject, jsonObject, paramList, sqlBuilder, propertyNames);
-
-            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                JdbcUtil.fromOracleClobEmpty(jsonObject);
-            }
-
             final String sql = sqlBuilder.toString();
             if (StringUtils.isBlank(sql)) {
                 return;
@@ -384,7 +366,6 @@ public final class JdbcRepository implements Repository {
             LOGGER.log(Level.ERROR, "Gets a record [id=" + id + "] failed", e);
             throw new RepositoryException(e);
         }
-
         return ret;
     }
 
@@ -438,7 +419,6 @@ public final class JdbcRepository implements Repository {
             LOGGER.log(Level.ERROR, "Query failed", e);
             throw new RepositoryException(e);
         }
-
         return ret;
     }
 
@@ -507,8 +487,7 @@ public final class JdbcRepository implements Repository {
 
         final int start = (currentPageNum - 1) * pageSize;
         final int end = start + pageSize;
-        sqlBuilder.append(JdbcFactory.getInstance().
-                queryPage(start, end, selectBuilder.toString(), whereBuilder.toString(), orderByBuilder.toString(), getName()));
+        sqlBuilder.append(JdbcFactory.getInstance().queryPage(start, end, selectBuilder.toString(), whereBuilder.toString(), orderByBuilder.toString(), getName()));
         return ret;
     }
 
@@ -627,10 +606,8 @@ public final class JdbcRepository implements Repository {
      */
     private long count(final StringBuilder sql, final List<Object> paramList) throws RepositoryException {
         final Connection connection = getConnection();
-
         JSONObject jsonObject;
         long count;
-
         try {
             jsonObject = JdbcUtil.queryJsonObject(sql.toString(), paramList, connection, getName(), debug);
             count = jsonObject.getLong(jsonObject.keys().next());
@@ -638,7 +615,6 @@ public final class JdbcRepository implements Repository {
             LOGGER.log(Level.ERROR, "Count failed", e);
             throw new RepositoryException(e);
         }
-
         return count;
     }
 
@@ -651,8 +627,7 @@ public final class JdbcRepository implements Repository {
     @Override
     public String getName() {
         final String tableNamePrefix = StringUtils.isNotBlank(Latkes.getLocalProperty("jdbc.tablePrefix"))
-                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_"
-                : "";
+                ? Latkes.getLocalProperty("jdbc.tablePrefix") + "_" : "";
         return tableNamePrefix + name;
     }
 
@@ -672,7 +647,6 @@ public final class JdbcRepository implements Repository {
         }
 
         TX.set(ret);
-
         return ret;
     }
 
@@ -712,14 +686,12 @@ public final class JdbcRepository implements Repository {
             if (null != ret && !ret.isClosed()) {
                 return ret;
             }
-
             ret = Connections.getConnection();
         } catch (final SQLException e) {
             LOGGER.log(Level.ERROR, "Gets a connection failed", e);
         }
 
         CONN.set(ret);
-
         return ret;
     }
 
@@ -846,35 +818,6 @@ public final class JdbcRepository implements Repository {
                 }
             }
         }
-
         whereBuilder.append(")");
-    }
-
-    /**
-     * Placeholder for Oracle empty clob.
-     */
-    public static final String ORA_EMPTY_STR = "oranil";
-
-    /**
-     * Process Oracle CLOB empty string.
-     *
-     * @param jsonObject the specified JSON object
-     */
-    private static void toOracleClobEmpty(final JSONObject jsonObject) {
-        final Iterator<String> keys = jsonObject.keys();
-        try {
-            while (keys.hasNext()) {
-                final String name = keys.next();
-                final Object val = jsonObject.get(name);
-                if (val instanceof String) {
-                    final String valStr = (String) val;
-                    if (StringUtils.isBlank(valStr)) {
-                        jsonObject.put(name, ORA_EMPTY_STR);
-                    }
-                }
-            }
-        } catch (final JSONException e) {
-            LOGGER.log(Level.ERROR, "Process oracle clob empty failed", e);
-        }
     }
 }

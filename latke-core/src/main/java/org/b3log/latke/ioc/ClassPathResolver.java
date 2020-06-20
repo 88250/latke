@@ -32,7 +32,7 @@ import java.util.jar.JarFile;
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Jan 20, 2013
+ * @version 1.0.1.2, Jun 20, 2020
  */
 public final class ClassPathResolver {
 
@@ -50,11 +50,6 @@ public final class ClassPathResolver {
      * URL prefix for loading from the file system: "file:".
      */
     private static final String FILE_URL_PREFIX = "file:";
-
-    /**
-     * URL protocol for a JBoss VFS resource: "vfs".
-     */
-    public static final String URL_PROTOCOL_VFS = "vfs";
 
     /**
      * Private constructor.
@@ -77,13 +72,10 @@ public final class ClassPathResolver {
             LOGGER.log(Level.DEBUG, "RootDirResource [protocol={}, path={}]", rootDirResource.getProtocol(), rootDirResource.getPath());
             if (isJarURL(rootDirResource)) {
                 result.addAll(doFindPathMatchingJarResources(rootDirResource, subPattern));
-            } else if (rootDirResource.getProtocol().startsWith(URL_PROTOCOL_VFS)) {
-                result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirResource, subPattern));
             } else {
                 result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
             }
         }
-
         return result;
     }
 
@@ -97,9 +89,7 @@ public final class ClassPathResolver {
      * @return the RootPath string.
      */
     private static String getRootPath(final String locationPattern) {
-
         int rootDirEnd = locationPattern.length();
-
         while (AntPathMatcher.isPattern(locationPattern.substring(0, rootDirEnd))) {
             rootDirEnd = locationPattern.lastIndexOf('/', rootDirEnd - 2) + 1;
         }
@@ -113,22 +103,16 @@ public final class ClassPathResolver {
      * @return the URLS under the Root path
      */
     private static Set<URL> getResourcesFromRoot(final String rootPath) {
-
         final Set<URL> rets = new LinkedHashSet<>();
-
         String path = rootPath;
-
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
 
         try {
             final Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(path);
-            URL url = null;
-
             while (resources.hasMoreElements()) {
-                url = resources.nextElement();
-
+                final URL url = resources.nextElement();
                 rets.add(url);
             }
         } catch (final IOException e) {
@@ -144,21 +128,15 @@ public final class ClassPathResolver {
      * @return isJAR
      */
     private static boolean isJarURL(final URL rootDirResource) {
-
         final String protocol = rootDirResource.getProtocol();
-
-        /**
-         * Determine whether the given URL points to a resource in a jar file, that is, has protocol "jar", "zip",
-         * "wsjar" or "code-source".
-         * <p>
-         * "zip" and "wsjar" are used by BEA WebLogic Server and IBM WebSphere, respectively, but can be treated like
-         * jar files. The same applies to "code-source" URLs on Oracle OC4J, provided that the path contains a jar
-         * separator.
-         * *
-         */
+        // Determine whether the given URL points to a resource in a jar file, that is, has protocol "jar", "zip",
+        // "wsjar" or "code-source".
+        //
+        // "zip" and "wsjar" are used by BEA WebLogic Server and IBM WebSphere, respectively, but can be treated like
+        // jar files. The same applies to "code-source" URLs on Oracle OC4J, provided that the path contains a jar
+        // separator.
         return "jar".equals(protocol) || "zip".equals(protocol) || "wsjar".equals(protocol)
                 || ("code-source".equals(protocol) && rootDirResource.getPath().contains(JAR_URL_SEPARATOR));
-
     }
 
     /**
@@ -169,7 +147,6 @@ public final class ClassPathResolver {
      * @return the URLs of all the matched classes
      */
     private static Collection<? extends URL> doFindPathMatchingJarResources(final URL rootDirResource, final String subPattern) {
-
         final Set<URL> result = new LinkedHashSet<>();
 
         JarFile jarFile;
@@ -180,15 +157,11 @@ public final class ClassPathResolver {
 
         try {
             con = rootDirResource.openConnection();
-
             if (con instanceof JarURLConnection) {
                 final JarURLConnection jarCon = (JarURLConnection) con;
-
                 jarCon.setUseCaches(false);
                 jarFile = jarCon.getJarFile();
-                jarFileUrl = jarCon.getJarFileURL().toExternalForm();
                 final JarEntry jarEntry = jarCon.getJarEntry();
-
                 rootEntryPath = jarEntry != null ? jarEntry.getName() : "";
             } else {
                 // No JarURLConnection -> need to resort to URL file parsing.
@@ -206,17 +179,15 @@ public final class ClassPathResolver {
                     jarFile = getJarFile(jarFileUrl);
                 } else {
                     jarFile = new JarFile(urlFile);
-                    jarFileUrl = urlFile;
                     rootEntryPath = "";
                 }
                 newJarFile = true;
-
             }
-
         } catch (final IOException e) {
             LOGGER.log(Level.ERROR, "reslove jar File error", e);
             return result;
         }
+
         try {
             if (!"".equals(rootEntryPath) && !rootEntryPath.endsWith("/")) {
                 // Root entry path must end with slash to allow for proper
@@ -311,7 +282,6 @@ public final class ClassPathResolver {
 
             @Override
             public boolean accept(final File file) {
-
                 if (file.isDirectory()) {
                     return false;
                 }
@@ -320,14 +290,13 @@ public final class ClassPathResolver {
         }, TrueFileFilter.INSTANCE);
 
         try {
-            for (File file : files) {
+            for (final File file : files) {
                 rets.add(file.toURI().toURL());
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "convert file to URL error", e);
             throw new RuntimeException("convert file to URL error", e);
         }
-
         return rets;
     }
 
@@ -340,41 +309,5 @@ public final class ClassPathResolver {
      */
     private static URI toURI(final String location) throws URISyntaxException {
         return new URI(StringUtils.replace(location, " ", "%20"));
-    }
-
-    /**
-     * Inner delegate class, avoiding a hard JBoss VFS API dependency at runtime.
-     */
-    private static final class VfsResourceMatchingDelegate {
-
-        /**
-         * the default private constructor.
-         */
-        private VfsResourceMatchingDelegate() {
-        }
-
-        /**
-         * scan Resources in Jboss Victual File System.
-         *
-         * @param rootUrl         rootUrl
-         * @param locationPattern subPattern
-         * @return the matched URLd
-         */
-        public static Set<URL> findMatchingResources(final URL rootUrl, final String locationPattern) {
-//            VirtualFile root;
-//
-//            try {
-//                root = VFS.getChild(rootUrl.toURI());
-//                final PatternVirtualFileVisitor visitor = new PatternVirtualFileVisitor(root.getPathName(), locationPattern);
-//
-//                root.visit(visitor);
-//                return visitor.getResources();
-//            } catch (final Exception e) {
-//                LOGGER.log(Level.ERROR, "findMatchingResources in Jboss VPF wrong", e);
-//                return new HashSet<URL>();
-//            }
-
-            throw new UnsupportedOperationException("JBoss VFS not supported yet!");
-        }
     }
 }

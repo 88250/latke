@@ -12,27 +12,27 @@
 package org.b3log.latke.repository.jdbc.util;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.repository.RepositoryException;
-import org.b3log.latke.repository.jdbc.JdbcRepository;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * JDBC utilities.
  *
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, May 30, 2020
+ * @version 2.0.0.1, Jun 20, 2020
  */
 public final class JdbcUtil {
 
@@ -160,7 +160,7 @@ public final class JdbcUtil {
 
         final Map<String, FieldDefinition> dMap = new HashMap<>();
         for (final FieldDefinition fieldDefinition : definitionList) {
-            if (Latkes.RuntimeDatabase.H2 == Latkes.getRuntimeDatabase() || Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
+            if (Latkes.RuntimeDatabase.H2 == Latkes.getRuntimeDatabase()) {
                 dMap.put(fieldDefinition.getName().toUpperCase(), fieldDefinition);
             } else {
                 dMap.put(fieldDefinition.getName(), fieldDefinition);
@@ -205,11 +205,6 @@ public final class JdbcUtil {
                 }
             }
 
-            if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                ret.remove("R__");
-                fromOracleClobEmpty(ret);
-            }
-
             list.add(ret);
         }
 
@@ -223,29 +218,6 @@ public final class JdbcUtil {
         ret = new JSONObject();
         ret.put(Keys.RESULTS, (Object) list);
         return ret;
-    }
-
-    /**
-     * Process Oracle CLOB empty string.
-     *
-     * @param jsonObject the specified JSON object
-     */
-    public static void fromOracleClobEmpty(final JSONObject jsonObject) {
-        final Iterator<String> keys = jsonObject.keys();
-        try {
-            while (keys.hasNext()) {
-                final String name = keys.next();
-                final Object val = jsonObject.get(name);
-                if (val instanceof String) {
-                    final String valStr = (String) val;
-                    if (StringUtils.equals(valStr, JdbcRepository.ORA_EMPTY_STR)) {
-                        jsonObject.put(name, "");
-                    }
-                }
-            }
-        } catch (final JSONException e) {
-            LOGGER.log(Level.ERROR, "Process oracle clob empty failed", e);
-        }
     }
 
     /**

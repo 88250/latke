@@ -30,7 +30,7 @@ import java.util.Map;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.3.0.3, Jun 6, 2019
+ * @version 2.3.0.4, Jun 20, 2020
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -57,13 +57,10 @@ public abstract class AbstractRepository implements Repository {
     public AbstractRepository(final String name) {
         try {
             Class<Repository> repositoryClass;
-
             final Latkes.RuntimeDatabase runtimeDatabase = Latkes.getRuntimeDatabase();
             switch (runtimeDatabase) {
                 case MYSQL:
                 case H2:
-                case MSSQL:
-                case ORACLE:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
                     break;
                 case NONE:
@@ -74,7 +71,6 @@ public abstract class AbstractRepository implements Repository {
             }
 
             final Constructor<Repository> constructor = repositoryClass.getConstructor(String.class);
-
             repository = constructor.newInstance(name);
         } catch (final Exception e) {
             throw new RuntimeException("Can not initialize repository!", e);
@@ -89,9 +85,7 @@ public abstract class AbstractRepository implements Repository {
         if (!isWritable()) {
             throw new RepositoryException("The repository [name=" + getName() + "] is not writable at present");
         }
-
         Repositories.check(getName(), jsonObject, Keys.OBJECT_ID);
-
         return repository.add(jsonObject);
     }
 
@@ -102,7 +96,6 @@ public abstract class AbstractRepository implements Repository {
         }
 
         Repositories.check(getName(), jsonObject, Keys.OBJECT_ID);
-
         repository.update(id, jsonObject, propertyNames);
     }
 
@@ -111,7 +104,6 @@ public abstract class AbstractRepository implements Repository {
         if (!isWritable()) {
             throw new RepositoryException("The repository [name=" + getName() + "] is not writable at present");
         }
-
         repository.remove(id);
     }
 
@@ -120,7 +112,6 @@ public abstract class AbstractRepository implements Repository {
         if (!isWritable()) {
             throw new RepositoryException("The repository [name=" + getName() + "] is not writable at present");
         }
-
         repository.remove(query);
     }
 

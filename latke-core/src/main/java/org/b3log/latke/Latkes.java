@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.1.16, Jun 19, 2020
+ * @version 2.11.1.17, Jun 20, 2020
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -194,7 +194,6 @@ public final class Latkes {
      */
     public static long currentPID() {
         final String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-
         return Long.parseLong(processName.split("@")[0]);
     }
 
@@ -337,7 +336,6 @@ public final class Latkes {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Loads latke.properties failed", e);
-
             throw new RuntimeException("Loads latke.properties failed");
         }
     }
@@ -510,7 +508,6 @@ public final class Latkes {
         if (StringUtils.isNotBlank(port) && !"80".equals(port) && !"443".equals(port)) {
             serverBuilder.append(':').append(port);
         }
-
         return serverBuilder.toString();
     }
 
@@ -533,7 +530,6 @@ public final class Latkes {
         if (null == ret) {
             return getServerScheme();
         }
-
         return ret;
     }
 
@@ -556,7 +552,6 @@ public final class Latkes {
         if (null == ret) {
             return getServerHost();
         }
-
         return ret;
     }
 
@@ -579,7 +574,6 @@ public final class Latkes {
         if (null == ret) {
             return getServerPort();
         }
-
         return ret;
     }
 
@@ -603,7 +597,6 @@ public final class Latkes {
         if (StringUtils.isNotBlank(port) && !"80".equals(port) && !"443".equals(port)) {
             staticServerBuilder.append(':').append(port);
         }
-
         return staticServerBuilder.toString();
     }
 
@@ -629,10 +622,8 @@ public final class Latkes {
         final String contextPathConf = getLatkeProperty("contextPath");
         if (null != contextPathConf) {
             contextPath = contextPathConf;
-
             return contextPath;
         }
-
         contextPath = "";
         return contextPath;
     }
@@ -654,12 +645,10 @@ public final class Latkes {
     public static String getStaticPath() {
         if (null == staticPath) {
             staticPath = getLatkeProperty("staticPath");
-
             if (null == staticPath) {
                 staticPath = getContextPath();
             }
         }
-
         return staticPath;
     }
 
@@ -685,7 +674,6 @@ public final class Latkes {
                 LOGGER.log(Level.INFO, "IoC scan path is empty, uses \"org.b3log\" as default scan path");
             }
         }
-
         return scanPath;
     }
 
@@ -706,7 +694,6 @@ public final class Latkes {
             return;
         }
         inited = true;
-
         LOGGER.log(Level.TRACE, "Initializing Latke");
 
         loadLatkeProps();
@@ -752,7 +739,6 @@ public final class Latkes {
         if (null == runtimeMode) {
             throw new RuntimeException("Runtime mode has not been initialized!");
         }
-
         return runtimeMode;
     }
 
@@ -774,10 +760,8 @@ public final class Latkes {
         final String runtimeCache = getLocalProperty("runtimeCache");
         if (null == runtimeCache) {
             LOGGER.debug("Not found [runtimeCache] in local.properties, uses [LOCAL_LRU] as default");
-
             return RuntimeCache.LOCAL_LRU;
         }
-
         return RuntimeCache.valueOf(runtimeCache);
     }
 
@@ -796,7 +780,6 @@ public final class Latkes {
         if (null == ret) {
             throw new RuntimeException("Please configures a valid runtime database in local.properties!");
         }
-
         return ret;
     }
 
@@ -829,9 +812,7 @@ public final class Latkes {
         if (StringUtils.isBlank(ret)) {
             return ret;
         }
-
         ret = replaceEnvVars(ret);
-
         return ret;
     }
 
@@ -846,9 +827,7 @@ public final class Latkes {
         if (StringUtils.isBlank(ret)) {
             return ret;
         }
-
         ret = replaceEnvVars(ret);
-
         return ret;
     }
 
@@ -858,11 +837,9 @@ public final class Latkes {
     public static void shutdown() {
         try {
             EXECUTOR_SERVICE.shutdown();
-
             if (RuntimeCache.REDIS == getRuntimeCache()) {
                 RedisCache.shutdown();
             }
-
             Connections.shutdownConnectionPool();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Shutdowns Latke failed", e);
@@ -874,7 +851,6 @@ public final class Latkes {
         final Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             final Driver driver = drivers.nextElement();
-
             try {
                 DriverManager.deregisterDriver(driver);
                 LOGGER.log(Level.TRACE, "Unregistered JDBC driver [" + driver + "]");
@@ -896,11 +872,9 @@ public final class Latkes {
             final Properties ret = new Properties();
             final File file = getFile("/skins/" + skinDirName + "/skin.properties");
             ret.load(new FileInputStream(file));
-
             return ret.getProperty("name");
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Read skin [" + skinDirName + "]'s configuration failed: " + e.getMessage());
-
             return null;
         }
     }
@@ -929,7 +903,6 @@ public final class Latkes {
             return ret;
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Reads file [path=" + path + "] failed", e);
-
             return null;
         }
     }
@@ -962,7 +935,7 @@ public final class Latkes {
      *
      * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.6, Jul 5, 2016
+     * @version 1.1.0.0, Jun 20, 2020
      * @see Latkes#getRuntimeDatabase()
      */
     public enum RuntimeDatabase {
@@ -972,10 +945,6 @@ public final class Latkes {
          */
         NONE,
         /**
-         * Oracle.
-         */
-        ORACLE,
-        /**
          * MySQL.
          */
         MYSQL,
@@ -983,10 +952,6 @@ public final class Latkes {
          * H2.
          */
         H2,
-        /**
-         * MSSQL.
-         */
-        MSSQL,
     }
 
     /**
@@ -1041,17 +1006,14 @@ public final class Latkes {
         String ret = val;
         final String[] envVars = StringUtils.substringsBetween(ret, "${", "}");
         if (null != envVars) {
-            for (int i = 0; i < envVars.length; i++) {
-                final String envKey = envVars[i];
+            for (final String envKey : envVars) {
                 String envVal = System.getenv(envKey);
                 if (StringUtils.isBlank(envVal)) {
                     envVal = "";
                 }
-
                 ret = StringUtils.replace(ret, "${" + envKey + "}", envVal);
             }
         }
-
         return ret;
     }
 

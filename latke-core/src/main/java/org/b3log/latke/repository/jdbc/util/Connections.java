@@ -34,7 +34,7 @@ import java.util.Properties;
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
  * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
- * @version 2.1.0.0, Nov 23, 2019
+ * @version 2.1.0.1, Jun 20, 2020
  */
 public final class Connections {
 
@@ -109,11 +109,7 @@ public final class Connections {
                     LOGGER.log(Level.INFO, "Created datasource with hikari.properties");
                 } else {
                     hikari = new HikariDataSource();
-                    if (Latkes.RuntimeDatabase.ORACLE == Latkes.getRuntimeDatabase()) {
-                        hikari.setConnectionTestQuery("SELECT 1 FROM DUAL");
-                    } else {
-                        hikari.setConnectionTestQuery("SELECT 1");
-                    }
+                    hikari.setConnectionTestQuery("SELECT 1");
 
                     if (Latkes.RuntimeDatabase.MYSQL == Latkes.getRuntimeDatabase()) {
                         // 内置 HikariCP 对 MySQL 的优化配置 https://github.com/b3log/latke/issues/159
@@ -155,7 +151,6 @@ public final class Connections {
         if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
             return -1;
         }
-
         return hikari.getHikariPoolMXBean().getTotalConnections();
     }
 
@@ -168,7 +163,6 @@ public final class Connections {
         if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
             return -1;
         }
-
         return hikari.getMaximumPoolSize();
     }
 
@@ -181,7 +175,6 @@ public final class Connections {
         if (Latkes.RuntimeDatabase.NONE == Latkes.getRuntimeDatabase()) {
             return -1;
         }
-
         return hikari.getHikariPoolMXBean().getActiveConnections();
     }
 
@@ -203,7 +196,6 @@ public final class Connections {
         final Connection ret = hikari.getConnection();
         ret.setTransactionIsolation(transactionIsolationInt);
         ret.setAutoCommit(false);
-
         return ret;
     }
 
@@ -214,7 +206,6 @@ public final class Connections {
         if (null == hikari) {
             return;
         }
-
         hikari.close();
         LOGGER.debug("Closed database connection pool");
     }
@@ -228,7 +219,6 @@ public final class Connections {
         if (null == hikari) {
             return true;
         }
-
         return hikari.isClosed();
     }
 
