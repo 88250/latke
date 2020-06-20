@@ -23,7 +23,7 @@ Welcome to [Latke Official Discussion Forum](https://hacpai.com/tag/latke) to le
 
 * Functional routing
 * Dependency injection
-* Multiple databases ORM
+* MySQL/H2 ORM
 * Multi-language
 * Memory / Redis cache
 * Event mechanism
