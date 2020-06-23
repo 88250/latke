@@ -1,7 +1,7 @@
 <p align = "center">
 <img alt="Latke" src="https://b3log.org/images/brand/latke-128.png">
 <br><br>
-一款以 JSON 为主的 Java Web 框架
+A Java Web framework based on JSON
 <br><br>
 <a title="Build Status" target="_blank" href="https://travis-ci.org/88250/latke"><img src="https://img.shields.io/travis/88250/latke.svg?style=flat-square"></a>
 <a title="MulanPSL2" target="_blank" href="https://license.coscl.org.cn/MulanPSL2"><img src="http://img.shields.io/badge/license-MulanPSL2-orange.svg?style=flat-square"></a>
@@ -10,34 +10,32 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/88250/latke/blob/master/README_en_US.md">English</a>
+<a href="https://github.com/88250/latke/blob/master/README.md">中文</a>
 </p>
 
-## 💡 简介
+## 💡 Introduction
 
-[Latke](https://github.com/88250/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC、事件通知、ORM、插件等组件。在实体模型上使用 JSON 贯穿前后端，使应用开发更加快捷。这是 Latke 不同于其他框架的地方，比较适合小型应用的快速开发。
+[Latke](https://github.com/88250/latke) ('lɑ:tkə, potato cake) is a simple and easy-to-use Java Web application development framework, including MVC, IoC, event notification, ORM, plugins and other components. The use of JSON on the entity model runs through the front and back ends, making application development faster. This is where Latke is different from other frameworks, and is more suitable for the rapid development of small applications.
 
-欢迎到 [Latke 官方讨论区](https://hacpai.com/tag/latke)了解更多。同时也欢迎关注 B3log 开源社区微信公众号 `B3log开源`：
+Welcome to [Latke Official Discussion Forum](https://hacpai.com/tag/latke) to learn more.
 
-![b3logos.png](https://img.hacpai.com/file/2019/10/image-d3c00d78.png)
+## ✨ Features
 
-## ✨ 特性
-
-* 函数式路由
-* 依赖注入
+* Functional routing
+* Dependency injection
 * MySQL/H2 ORM
-* 多语言
-* 内存/Redis 缓存
-* 事件机制
-* 插件机制
+* Multi-language
+* Memory / Redis cache
+* Event mechanism
+* Plug-in mechanism
 
-## 🗃 案例
+## 🗃 Showcases
 
-* [Demo](https://github.com/88250/latke-demo)：简单的 Latke 应用示例
-* [Solo](https://github.com/88250/solo)：一款小而美的 Java 开源博客系统，专为程序员设计
-* [Symphony](https://github.com/88250/symphony)：一款用 Java 实现的现代化社区（论坛/BBS/社交网络/博客）平台
+* [Demo](https://github.com/88250/latke-demo): Simple Latke application example
+* [Solo](https://github.com/88250/solo): A small and beautiful Java open source blog system, designed for programmers
+* [Symphony](https://github.com/88250/symphony): A modern community (forum/BBS/SNS/blog) platform implemented in Java
 
-## 🛠️ 使用
+## 🛠️ Usages
 
 ### Maven
 
@@ -49,9 +47,9 @@
 </dependency>
 ```
 
-### 控制器层用法
+### Controller layer usage
 
-**函数式路由**
+**Functional routing**
 
 ```java
 final Dispatcher.RouterGroup routeGroup = Dispatcher.group();
@@ -62,13 +60,13 @@ routeGroup.get("/", helloProcessor::index).
         router().get().post().uri("/greeting").handler(helloProcessor::greeting);
 ```
 
-**JSON 解析**
+**JSON parsing**
 
 ```java
 final JSONObject requestJSON = context.requestJSON();
 ```
 
-**HTTP 封装**
+**HTTP encapsulation**
 
 ```java
 final String remoteAddr = context.remoteAddr();
@@ -80,9 +78,9 @@ final Request request = context.getRequest();
 final Response response = context.getResponse();
 ```
 
-### 服务层用法
+### Service layer usage
 
-**依赖注入、事务**
+**Dependency injection, transaction**
 
 ```java
 @Service
@@ -106,7 +104,7 @@ public class UserService {
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Saves user failed", e);
 
-            // 抛出异常后框架将回滚事务
+            // The framework will roll back the transaction after throwing an exception
             throw new IllegalStateException("Saves user failed");
         }
 
@@ -115,9 +113,9 @@ public class UserService {
 }
 ```
 
-### 持久层用法
+### Persistence layer usage
 
-**构造 ORM**
+**Construct repository**
 
 ```java
 @Repository
@@ -129,7 +127,7 @@ public class UserRepository extends AbstractRepository {
 }
 ```
 
-**单表 CRUD**
+**Single table CRUD**
 
 ```java
 public interface Repository {
@@ -142,7 +140,7 @@ public interface Repository {
 }
 ```
 
-**条件查询**
+**Conditional query**
 
 ```java
 public JSONObject getByName(final String name) throws RepositoryException {
@@ -150,51 +148,50 @@ public JSONObject getByName(final String name) throws RepositoryException {
 }
 ```
 
-**分页查询**
+**Paging query**
 
 ```java
 new Query().setPage(1, 50)
 ```
 
-**按字段排序**
+**Sort by field**
 
 ```java
 new Query().addSort("name", SortDirection.DESCENDING);
 ```
 
-**仅获取需要字段**
+**Get only required fields**
 
 ```java
 new Query().select("name", "age");
 ```
 
-**原生 SQL**
+**Native SQL**
 
 ```java
 final List<JSONObject> records = select("SELECT * FROM `user` WHERE `name` = ?", name);
 ```
 
-## 📜 文档
+## 📜 Documentation
 
-* [《提问的智慧》精读注解版](https://hacpai.com/article/1536377163156)
-* [Latke 一款以 JSON 为主的 Java Web 框架](https://hacpai.com/article/1574210028252)
-* [为什么又要造一个叫 Latke 的轮子](https://hacpai.com/article/1403847528022)
-* [Latke 快速上手指南](https://hacpai.com/article/1466870492857)
-* [Latke 配置剖析](https://hacpai.com/article/1474087427032)
+* [Latke is a Java web framework based on JSON](https://hacpai.com/article/1574210028252)
+* [Why make another wheel called Latke](https://hacpai.com/article/1403847528022)
+* [Latke Quick Start Guide](https://hacpai.com/article/1466870492857)
+* [Anatomy of a Latke configuration](https://hacpai.com/article/1474087427032)
 
-## 🏘️ 社区
+## 🏘️ Community
 
-* [讨论区](https://hacpai.com/tag/latke)
-* [报告问题](https://github.com/88250/latke/issues/new/choose)
+* [Forum](https://hacpai.com/tag/latke)
+* [Issues](https://github.com/88250/latke/issues/new/choose)
 
-## 📄 授权
+## 📄 License
 
-Latke 使用 [木兰宽松许可证, 第2版](http://license.coscl.org.cn/MulanPSL2) 开源协议。
+Latke uses the [Mulan Permissive Software License, Version 2](http://license.coscl.org.cn/MulanPSL2) open source license.
 
-## 🙏 鸣谢
+## 🙏 Acknowledgement
 
-* [Netty](https://github.com/netty/netty)：事件驱动的异步网络应用框架
-* [FreeMarker](https://github.com/apache/freemarker)：使用广泛的 Java 模版引擎
-* [Javassist](https://github.com/jboss-javassist/javassist)：Java 字节码处理工具库
-* [Apache Commons](http://commons.apache.org)：Java 相关工具库
-* [Apache Log4j](https://logging.apache.org/log4j/2.x)：Java 日志库
+* [Netty](https://github.com/netty/netty): An event-driven asynchronous network application framework
+* [FreeMarker](https://github.com/apache/freemarker): A widely used Java template engine
+* [Javassist](https://github.com/jboss-javassist/javassist): Java bytecode processing tool library
+* [Apache Commons](http://commons.apache.org): Java related tool library
+* [Apache Log4j](https://logging.apache.org/log4j/2.x): Java logging library
