@@ -14,7 +14,7 @@ package org.b3log.latke.repository.jdbc.util;
 /**
  * FieldDefinition of each Filed in *.json.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
+ * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 2.0.0.0, Mar 15, 2018
  */

@@ -17,7 +17,7 @@ A Java Web framework based on JSON
 
 [Latke](https://github.com/88250/latke) ('lɑ:tkə, potato cake) is a simple and easy-to-use Java Web application development framework, including MVC, IoC, event notification, ORM, plugins and other components. The use of JSON on the entity model runs through the front and back ends, making application development faster. This is where Latke is different from other frameworks, and is more suitable for the rapid development of small applications.
 
-Welcome to [Latke Official Discussion Forum](https://hacpai.com/tag/latke) to learn more.
+Welcome to [Latke Official Discussion Forum](https://ld246.com/tag/latke) to learn more.
 
 ## ✨ Features
 
@@ -174,14 +174,14 @@ final List<JSONObject> records = select("SELECT * FROM `user` WHERE `name` = ?",
 
 ## 📜 Documentation
 
-* [Latke is a Java web framework based on JSON](https://hacpai.com/article/1574210028252)
-* [Why make another wheel called Latke](https://hacpai.com/article/1403847528022)
-* [Latke Quick Start Guide](https://hacpai.com/article/1466870492857)
-* [Anatomy of a Latke configuration](https://hacpai.com/article/1474087427032)
+* [Latke is a Java web framework based on JSON](https://ld246.com/article/1574210028252)
+* [Why make another wheel called Latke](https://ld246.com/article/1403847528022)
+* [Latke Quick Start Guide](https://ld246.com/article/1466870492857)
+* [Anatomy of a Latke configuration](https://ld246.com/article/1474087427032)
 
 ## 🏘️ Community
 
-* [Forum](https://hacpai.com/tag/latke)
+* [Forum](https://ld246.com/tag/latke)
 * [Issues](https://github.com/88250/latke/issues/new/choose)
 
 ## 📄 License

@@ -42,7 +42,7 @@ public class RouteHandler implements Handler {
      */
     private static final Logger LOGGER = LogManager.getLogger(RouteHandler.class);
 
-    // 以下 Map 按照分隔符 / 数量和 HTTP 请求方法分开，主要是为了让每种 Map 都比较小，这样查找更快。 https://hacpai.com/article/1569318933910
+    // 以下 Map 按照分隔符 / 数量和 HTTP 请求方法分开，主要是为了让每种 Map 都比较小，这样查找更快。 https://ld246.com/article/1569318933910
 
     /**
      * One segment concrete URI context handler metas holder.

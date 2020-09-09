@@ -23,7 +23,7 @@ import java.util.Iterator;
  * Request utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://hacpai.com/member/e">Dongxu Wang</a>
+ * @author <a href="https://ld246.com/member/e">Dongxu Wang</a>
  * @version 3.1.0.0, May 13, 2020
  */
 public final class Requests {

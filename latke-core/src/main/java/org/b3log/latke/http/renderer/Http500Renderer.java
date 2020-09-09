@@ -17,7 +17,7 @@ import org.b3log.latke.http.Response;
 /**
  * HTTP 500 status renderer.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
+ * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @version 2.0.0.0, Nov 3, 2019
  */
 public final class Http500Renderer extends AbstractResponseRenderer {

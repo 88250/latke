@@ -30,7 +30,7 @@ import java.util.Set;
  * Reflection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
+ * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.6, Sep 30, 2018
  * @since 2.4.19
  */

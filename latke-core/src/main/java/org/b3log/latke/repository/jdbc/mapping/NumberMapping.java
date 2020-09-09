@@ -16,7 +16,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 /**
  * NumberMapping.
  *
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
+ * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.1, Jun 20, 2020
  */
 public class NumberMapping implements Mapping {

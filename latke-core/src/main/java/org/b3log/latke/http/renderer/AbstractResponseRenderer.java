@@ -25,7 +25,7 @@ import java.util.Set;
  * Abstract HTTP response renderer.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
+ * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @version 1.0.0.1, Sep 29, 2018
  * @since 2.4.18
  */

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * Plugin loader.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://hacpai.com/member/yanxingangsun">yanxingangsun</a>
+ * @author <a href="https://ld246.com/member/yanxingangsun">yanxingangsun</a>
  * @version 1.0.3.1, Jul 29, 2019
  */
 @Singleton

@@ -17,7 +17,7 @@
 
 [Latke](https://github.com/88250/latke)（'lɑ:tkə，土豆饼）是一个简单易用的 Java Web 应用开发框架，包含 MVC、IoC、事件通知、ORM、插件等组件。在实体模型上使用 JSON 贯穿前后端，使应用开发更加快捷。这是 Latke 不同于其他框架的地方，比较适合小型应用的快速开发。
 
-欢迎到 [Latke 官方讨论区](https://hacpai.com/tag/latke)了解更多。同时也欢迎关注 B3log 开源社区微信公众号 `B3log开源`：
+欢迎到 [Latke 官方讨论区](https://ld246.com/tag/latke)了解更多。同时也欢迎关注 B3log 开源社区微信公众号 `B3log开源`：
 
 ![b3logos.jpg](https://b3logfile.com/file/2020/08/b3logos-032af045.jpg)
 
@@ -176,15 +176,15 @@ final List<JSONObject> records = select("SELECT * FROM `user` WHERE `name` = ?",
 
 ## 📜 文档
 
-* [《提问的智慧》精读注解版](https://hacpai.com/article/1536377163156)
-* [Latke 一款以 JSON 为主的 Java Web 框架](https://hacpai.com/article/1574210028252)
-* [为什么又要造一个叫 Latke 的轮子](https://hacpai.com/article/1403847528022)
-* [Latke 快速上手指南](https://hacpai.com/article/1466870492857)
-* [Latke 配置剖析](https://hacpai.com/article/1474087427032)
+* [《提问的智慧》精读注解版](https://ld246.com/article/1536377163156)
+* [Latke 一款以 JSON 为主的 Java Web 框架](https://ld246.com/article/1574210028252)
+* [为什么又要造一个叫 Latke 的轮子](https://ld246.com/article/1403847528022)
+* [Latke 快速上手指南](https://ld246.com/article/1466870492857)
+* [Latke 配置剖析](https://ld246.com/article/1474087427032)
 
 ## 🏘️ 社区
 
-* [讨论区](https://hacpai.com/tag/latke)
+* [讨论区](https://ld246.com/tag/latke)
 * [报告问题](https://github.com/88250/latke/issues/new/choose)
 
 ## 📄 授权

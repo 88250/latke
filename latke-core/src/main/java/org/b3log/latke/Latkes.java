@@ -933,7 +933,7 @@ public final class Latkes {
     /**
      * Latke runtime JDBC database specified in the configuration file local.properties.
      *
-     * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
+     * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.1.0.0, Jun 20, 2020
      * @see Latkes#getRuntimeDatabase()

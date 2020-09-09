@@ -32,8 +32,8 @@ import java.util.Properties;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://hacpai.com/member/mainlove">Love Yao</a>
- * @author <a href="https://hacpai.com/member/DASHU">DASHU</a>
+ * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
+ * @author <a href="https://ld246.com/member/DASHU">DASHU</a>
  * @version 2.1.0.1, Jun 20, 2020
  */
 public final class Connections {

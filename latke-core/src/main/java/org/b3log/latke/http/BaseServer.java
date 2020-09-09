@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  * Http Server based on Netty 4.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @author <a href="https://hacpai.com/member/CismonX">CismonX</a>
+ * @author <a href="https://ld246.com/member/CismonX">CismonX</a>
  * @version 1.0.0.4, May 21, 2020
  * @since 3.0.0
  */
