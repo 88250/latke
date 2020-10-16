@@ -32,7 +32,7 @@ import java.util.*;
  * HTTP request.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Mar 3, 2020
+ * @version 1.0.0.5, Oct 17, 2020
  * @since 3.0.0
  */
 public class Request {
@@ -232,10 +232,11 @@ public class Request {
     }
 
     void parseFormData() {
-        httpDecoder = new HttpPostRequestDecoder(HTTP_DATA_FACTORY, req);
-        httpDecoder.setDiscardThreshold(0);
-        httpDecoder.offer(req);
         try {
+            httpDecoder = new HttpPostRequestDecoder(HTTP_DATA_FACTORY, req);
+            httpDecoder.setDiscardThreshold(0);
+            httpDecoder.offer(req);
+
             while (httpDecoder.hasNext()) {
                 final InterfaceHttpData data = httpDecoder.next();
                 if (InterfaceHttpData.HttpDataType.FileUpload == data.getHttpDataType()) {
