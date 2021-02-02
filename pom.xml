@@ -19,6 +19,7 @@
         <module>latke-core</module>
         <module>latke-repository-h2</module>
         <module>latke-repository-mysql</module>
+        <module>latke-repository-postgresql</module>
     </modules>
 
     <organization>
@@ -85,6 +86,18 @@
             <id>mainlove</id>
             <name>mainlove</name>
             <url>https://ld246.com/member/mainlove</url>
+            <roles>
+                <role>Committer</role>
+            </roles>
+            <organization>B3log</organization>
+            <organizationUrl>https://b3log.org</organizationUrl>
+            <timezone>+8</timezone>
+        </developer>
+
+        <developer>
+            <id>Gakkiyomi2019</id>
+            <name>Gakkiyomi</name>
+            <url>https://ld246.com/member/Gakkiyomi2019</url>
             <roles>
                 <role>Committer</role>
             </roles>

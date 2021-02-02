@@ -18,7 +18,10 @@ import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.repository.RepositoryException;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.postgresql.util.PGobject;
 
 import java.io.IOException;
 import java.sql.*;
@@ -30,9 +33,10 @@ import java.util.Map;
 /**
  * JDBC utilities.
  *
+ * @author <a href="https://ld246.com/member/Gakkiyomi2019">Gakkiyomi</a>
  * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Jun 20, 2020
+ * @version 2.0.0.2, Feb 2, 2021
  */
 public final class JdbcUtil {
 
@@ -199,6 +203,18 @@ public final class JdbcUtil {
                         }
 
                         ret.put(definition.getName(), str);
+                    } else if (v instanceof PGobject) {
+                        final PGobject pGobject = (PGobject) v;
+                        if ("jsonb".equals(pGobject.getType()) || "json".equals(pGobject.getType())) {
+                            final String jsonStr = pGobject.getValue();
+                            try {
+                                final JSONArray jsonArray = new JSONArray(jsonStr);
+                                ret.put(definition.getName(), jsonArray);
+                            } catch (JSONException e) {
+                                final JSONObject jsonObject = new JSONObject(jsonStr);
+                                ret.put(definition.getName(), jsonObject);
+                            }
+                        }
                     } else {
                         ret.put(definition.getName(), v);
                     }

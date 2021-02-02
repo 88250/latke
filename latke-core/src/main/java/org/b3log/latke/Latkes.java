@@ -35,8 +35,9 @@ import java.util.concurrent.Executors;
 /**
  * Latke framework configuration utility facade.
  *
+ * @author <a href="https://ld246.com/member/Gakkiyomi2019">Gakkiyomi</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.1.18, Jun 20, 2020
+ * @version 2.11.1.19, Feb 2, 2021
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -952,6 +953,10 @@ public final class Latkes {
          * H2.
          */
         H2,
+        /**
+         * PostgreSQL.
+         */
+        POSTGRESQL,
     }
 
     /**

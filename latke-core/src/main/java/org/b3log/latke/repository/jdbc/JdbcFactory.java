@@ -24,6 +24,7 @@ import java.util.Map;
 /**
  * JDBC Factory.
  *
+ * @author <a href="https://ld246.com/member/Gakkiyomi2019">Gakkiyomi</a>
  * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 2.0.0.3, Jun 20, 2020
@@ -48,6 +49,7 @@ public final class JdbcFactory implements JdbcDatabase {
     static {
         SOLUTIONS.put(Latkes.RuntimeDatabase.MYSQL, "org.b3log.latke.repository.mysql.MySQLJdbcDatabaseSolution");
         SOLUTIONS.put(Latkes.RuntimeDatabase.H2, "org.b3log.latke.repository.h2.H2JdbcDatabaseSolution");
+        SOLUTIONS.put(Latkes.RuntimeDatabase.POSTGRESQL, "org.b3log.latke.repository.postgresql.PostgreSQLJdbcDatabaseSolution");
     }
 
     /**

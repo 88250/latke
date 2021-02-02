@@ -29,8 +29,9 @@ import java.util.Map;
  * the {@link #AbstractRepository(java.lang.String) constructor}..
  * </p>
  *
+ * @author <a href="https://ld246.com/member/Gakkiyomi2019">Gakkiyomi</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.3.0.4, Jun 20, 2020
+ * @version 2.3.0.5, Feb 2, 2021
  */
 public abstract class AbstractRepository implements Repository {
 
@@ -62,6 +63,9 @@ public abstract class AbstractRepository implements Repository {
                 case MYSQL:
                 case H2:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.jdbc.JdbcRepository");
+                    break;
+                case POSTGRESQL:
+                    repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.postgresql.PostgreSQLJdbcRepository");
                     break;
                 case NONE:
                     repositoryClass = (Class<Repository>) Class.forName("org.b3log.latke.repository.NoneRepository");
