@@ -22,6 +22,7 @@ import org.b3log.latke.repository.jdbc.util.RepositoryDefinition;
 import org.b3log.latke.repository.postgresql.mapping.BooleanMapping;
 import org.b3log.latke.repository.postgresql.mapping.DateMapping;
 import org.b3log.latke.repository.postgresql.mapping.IntMapping;
+import org.b3log.latke.repository.postgresql.mapping.JsonMapping;
 import org.b3log.latke.repository.postgresql.mapping.JsonbMapping;
 import org.b3log.latke.repository.postgresql.mapping.LongMapping;
 import org.b3log.latke.repository.postgresql.mapping.NumberMapping;
@@ -55,7 +56,7 @@ public class PostgreSQLJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution
         registerType("double", new NumberMapping());
         registerType("String", new StringMapping());
         registerType("Jsonb", new JsonbMapping());
-        registerType("Json", new JsonbMapping());
+        registerType("Json", new JsonMapping());
         registerType("Date", new DateMapping());
     }
 
