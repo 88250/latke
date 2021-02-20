@@ -13,7 +13,7 @@ public class BooleanMapping implements Mapping {
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(definition.getName()).append(" BOOLEAN");
+        sqlBuilder.append("\"").append(definition.getName()).append("\"").append(" BOOLEAN");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }

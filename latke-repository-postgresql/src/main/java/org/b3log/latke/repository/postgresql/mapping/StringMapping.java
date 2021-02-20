@@ -12,7 +12,7 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 public class StringMapping implements Mapping {
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
-        final StringBuilder sqlBuilder = new StringBuilder(definition.getName());
+        final StringBuilder sqlBuilder = new StringBuilder("\"" + definition.getName() + "\"");
         if (null == definition.getLength()) {
             definition.setLength(0);
         }

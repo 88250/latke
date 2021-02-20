@@ -13,7 +13,7 @@ public class JsonbMapping implements Mapping {
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(definition.getName()).append(" jsonb ");
+        sqlBuilder.append("\"").append(definition.getName()).append("\"").append(" jsonb ");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }

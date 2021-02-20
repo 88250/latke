@@ -185,11 +185,11 @@ public class PostgreSQLJdbcRepository implements Repository {
         while (keys.hasNext()) {
             key = keys.next();
             if (isFirst) {
-                paraBuilder.append("(").append(key);
+                paraBuilder.append("(").append("\"").append(key).append("\"");
                 argBuilder.append("(?");
                 isFirst = false;
             } else {
-                paraBuilder.append(",").append(key);
+                paraBuilder.append(",").append("\"").append(key).append("\"");
                 argBuilder.append(",?");
             }
 
@@ -206,7 +206,7 @@ public class PostgreSQLJdbcRepository implements Repository {
             }
         }
 
-        sqlBuilder.append("INSERT INTO ").append(getName()).append(paraBuilder).append(" VALUES ").append(argBuilder);
+        sqlBuilder.append("INSERT INTO ").append("\"").append(getName()).append("\"").append(paraBuilder).append(" VALUES ").append(argBuilder);
         return ret;
     }
 
@@ -263,16 +263,16 @@ public class PostgreSQLJdbcRepository implements Repository {
         while (keys.hasNext()) {
             key = keys.next();
             if (isFirst) {
-                propertyBuilder.append(" SET ").append(key).append(" = ?");
+                propertyBuilder.append(" SET ").append("\"").append(key).append("\"").append(" = ?");
                 isFirst = false;
             } else {
-                propertyBuilder.append(", ").append(key).append(" = ?");
+                propertyBuilder.append(", ").append("\"").append(key).append("\"").append(" = ?");
             }
 
             paramList.add(needUpdateJsonObject.get(key));
         }
 
-        sqlBuilder.append("UPDATE ").append(getName()).append(propertyBuilder).append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
+        sqlBuilder.append("UPDATE ").append("\"").append(getName()).append("\"").append(propertyBuilder).append(" WHERE ").append("\"").append(JdbcRepositories.keyName).append("\"").append(" = ?");
         paramList.add(id);
     }
 
@@ -325,10 +325,10 @@ public class PostgreSQLJdbcRepository implements Repository {
         final Connection connection = getConnection();
         try {
             if (Repositories.isSoftDelete()) {
-                sqlBuilder.append("UPDATE ").append(getName()).append(" SET ").append(JdbcRepositories.softDeleteFieldName).append(" = 1").
-                        append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+                sqlBuilder.append("UPDATE ").append(getName()).append(" SET ").append("\"").append(JdbcRepositories.softDeleteFieldName).append("\"").append(" = 1").
+                        append(" WHERE ").append("\"").append(JdbcRepositories.keyName).append("\"").append(" = '").append(id).append("'");
             } else {
-                sqlBuilder.append("DELETE FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+                sqlBuilder.append("DELETE FROM ").append("\"").append(getName()).append("\"").append(" WHERE ").append("\"").append(JdbcRepositories.keyName).append("\"").append(" = '").append(id).append("'");
             }
             JdbcUtil.executeSql(sqlBuilder.toString(), connection, debug);
         } catch (final Exception e) {
@@ -345,7 +345,7 @@ public class PostgreSQLJdbcRepository implements Repository {
             throw new RepositoryException("Invoking remove() outside a transaction");
         }
 
-        final StringBuilder deleteSQLBuilder = new StringBuilder("DELETE FROM ").append(getName());
+        final StringBuilder deleteSQLBuilder = new StringBuilder("DELETE FROM ").append("\"").append(getName()).append("\"");
         final List<Object> paramList = new ArrayList<>();
         final StringBuilder filterSqlBuilder = new StringBuilder();
         buildWhere(filterSqlBuilder, paramList, query.getFilter());
@@ -368,9 +368,9 @@ public class PostgreSQLJdbcRepository implements Repository {
         final StringBuilder sqlBuilder = new StringBuilder();
         final Connection connection = getConnection();
         try {
-            sqlBuilder.append("SELECT * FROM ").append(getName()).append(" WHERE ").append(JdbcRepositories.keyName).append(" = ?");
+            sqlBuilder.append("SELECT * FROM ").append("\"").append(getName()).append("\"").append(" WHERE ").append("\"").append(JdbcRepositories.keyName).append("\"").append(" = ?");
             if (Repositories.isSoftDelete()) {
-                sqlBuilder.append(" AND ").append(JdbcRepositories.softDeleteFieldName).append(" = 0");
+                sqlBuilder.append(" AND ").append("\"").append(JdbcRepositories.softDeleteFieldName).append("\"").append(" = 0");
             }
             final ArrayList<Object> paramList = new ArrayList<>();
             paramList.add(id);

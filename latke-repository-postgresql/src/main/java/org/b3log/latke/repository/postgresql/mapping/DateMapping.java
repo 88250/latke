@@ -12,7 +12,8 @@ import org.b3log.latke.repository.jdbc.util.FieldDefinition;
 public class DateMapping implements Mapping {
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
-        final StringBuilder sqlBuilder = new StringBuilder(definition.getName()).append(" TIMESTAMP");
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("\"").append(" TIMESTAMP").append("\"");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }

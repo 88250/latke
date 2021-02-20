@@ -13,7 +13,7 @@ public class IntMapping implements Mapping {
     @Override
     public String toDataBaseString(final FieldDefinition definition) {
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(definition.getName()).append(" INT");
+        sqlBuilder.append("\"").append(definition.getName()).append("\"").append(" INT");
         if (!definition.getNullable()) {
             sqlBuilder.append(" NOT NULL");
         }

@@ -55,9 +55,9 @@ public class PostgreSQLJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution
         registerType("long", new LongMapping());
         registerType("double", new NumberMapping());
         registerType("String", new StringMapping());
-        registerType("Jsonb", new JsonbMapping());
-        registerType("Json", new JsonMapping());
-        registerType("Date", new DateMapping());
+        registerType("jsonb", new JsonbMapping());
+        registerType("json", new JsonMapping());
+        registerType("date", new DateMapping());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class PostgreSQLJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution
         try (final Connection connection = Connections.getConnection();
              final Statement statement = connection.createStatement()) {
             try {
-                statement.execute("SELECT 1 FROM " + tableName + " LIMIT 1");
+                statement.execute("SELECT 1 FROM \"" + tableName + "\" LIMIT 1");
             } catch (final Throwable e) {
                 return false;
             }
@@ -79,7 +79,7 @@ public class PostgreSQLJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution
     @Override
     public String queryPage(final int start, final int end, final String selectSql, final String filterSql, final String orderBySql, final String tableName) {
         final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(selectSql).append(" FROM ").append(tableName);
+        sqlBuilder.append(selectSql).append(" FROM ").append("\"").append(tableName).append("\"");
         if (StringUtils.isNotBlank(filterSql)) {
             sqlBuilder.append(" WHERE ").append(filterSql);
         }
@@ -90,12 +90,12 @@ public class PostgreSQLJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution
 
     @Override
     public String getRandomlySql(final String tableName, final int fetchSize) {
-        return "SELECT * FROM " + tableName + " ORDER BY RANDOM() LIMIT " + fetchSize;
+        return "SELECT * FROM \"" + tableName + "\" ORDER BY RANDOM() LIMIT " + fetchSize;
     }
 
     @Override
     protected void createTableHead(final StringBuilder createTableSqlBuilder, final RepositoryDefinition repositoryDefinition) {
-        createTableSqlBuilder.append("CREATE TABLE IF NOT EXISTS ").append(repositoryDefinition.getName()).append("(");
+        createTableSqlBuilder.append("CREATE TABLE IF NOT EXISTS ").append("\"").append(repositoryDefinition.getName()).append("\"").append("(");
     }
 
     @Override
@@ -140,7 +140,7 @@ public class PostgreSQLJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution
             } else {
                 sqlBuilder.append(",");
             }
-            sqlBuilder.append(fieldDefinition.getName());
+            sqlBuilder.append("\"").append(fieldDefinition.getName()).append("\"");
         }
         sqlBuilder.append(")");
         return sqlBuilder.toString();
@@ -152,13 +152,13 @@ public class PostgreSQLJdbcDatabaseSolution extends AbstractJdbcDatabaseSolution
 
         final String description = repositoryDefinition.getDescription();
         if (StringUtils.isNotBlank(description)) {
-            createTableSqlBuilder.append("\ncomment on TABLE ").append(repositoryDefinition.getName()).append(" is ").append("'").append(description).append("';");
+            createTableSqlBuilder.append("\ncomment on TABLE ").append("\"").append(repositoryDefinition.getName()).append("\"").append(" is ").append("'").append(description).append("';");
         }
         final List<FieldDefinition> keys = repositoryDefinition.getKeys();
         if (null != keys && !keys.isEmpty()) {
             for (FieldDefinition key : keys) {
                 if (StringUtils.isNotBlank(key.getDescription()))
-                    createTableSqlBuilder.append("\ncomment on COLUMN ").append(repositoryDefinition.getName()).append(".").append(key.getName()).append(" is ").append("'").append(key.getDescription()).append("';");
+                    createTableSqlBuilder.append("\ncomment on COLUMN ").append("\"").append(repositoryDefinition.getName()).append("\"").append(".").append("\"").append(key.getName()).append("\"").append(" is ").append("'").append(key.getDescription()).append("';");
             }
         }
     }
