@@ -214,6 +214,8 @@ public final class JdbcUtil {
                                 final JSONObject jsonObject = new JSONObject(jsonStr);
                                 ret.put(definition.getName(), jsonObject);
                             }
+                        }  else if ("inet".equals(pGobject.getType()) || "cidr".equals(pGobject.getType()) || "macaddr".equals(pGobject.getType())) {
+                            ret.put(definition.getName(), pGobject.getValue());
                         }
                     } else {
                         ret.put(definition.getName(), v);
