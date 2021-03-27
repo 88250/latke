@@ -11,15 +11,16 @@
  */
 package org.b3log.latke.util;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
-import java.util.StringTokenizer;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Command execution utilities.
@@ -43,13 +44,20 @@ public final class Execs {
      * @return execution output, returns {@code null} if execution failed
      */
     public static String exec(final String cmd, final long timeout) {
-        final StringTokenizer st = new StringTokenizer(cmd);
-        final String[] cmds = new String[st.countTokens()];
-        for (int i = 0; st.hasMoreTokens(); i++) {
-            cmds[i] = st.nextToken();
+        final CommandLine cmdLine = CommandLine.parse(cmd);
+        final DefaultExecutor executor = new DefaultExecutor();
+        final ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
+        executor.setWatchdog(watchdog);
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        final PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+        try {
+            executor.setStreamHandler(streamHandler);
+            executor.execute(cmdLine);
+            return outputStream.toString("UTF-8");
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Exec [" + cmd + "] failed", e);
+            return "";
         }
-
-        return exec(cmds, timeout);
     }
 
     /**
@@ -60,27 +68,25 @@ public final class Execs {
      * @return execution output, returns {@code null} if execution failed
      */
     public static String exec(final String[] cmds, final long timeout) {
-        try {
-            final Process process = new ProcessBuilder(cmds).redirectErrorStream(true).start();
-            final StringWriter writer = new StringWriter();
-            new Thread(() -> {
-                try {
-                    IOUtils.copy(process.getInputStream(), writer, "UTF-8");
-                } catch (final Exception e) {
-                    LOGGER.log(Level.ERROR, "Reads input stream failed: " + e.getMessage());
-                }
-            }).start();
-
-            if (!process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
-                LOGGER.log(Level.WARN, "Executes commands [" + Arrays.toString(cmds) + "] timeout");
-                process.destroy();
+        final CommandLine cmdLine = new CommandLine(cmds[0]);
+        if (1 < cmds.length) {
+            for (int i = 1; i < cmds.length; i++) {
+                cmdLine.addArgument(cmds[i]);
             }
+        }
 
-            return writer.toString();
+        final DefaultExecutor executor = new DefaultExecutor();
+        final ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
+        executor.setWatchdog(watchdog);
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        final PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+        try {
+            executor.setStreamHandler(streamHandler);
+            executor.execute(cmdLine);
+            return outputStream.toString();
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Executes commands [" + Arrays.toString(cmds) + "] failed", e);
-
-            return null;
+            LOGGER.log(Level.ERROR, "Exec [" + Arrays.toString(cmds) + "] failed", e);
+            return "";
         }
     }
 
