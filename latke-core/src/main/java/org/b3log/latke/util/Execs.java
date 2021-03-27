@@ -37,30 +37,6 @@ public final class Execs {
     private static final Logger LOGGER = LogManager.getLogger(Execs.class);
 
     /**
-     * Executes the specified command with the specified timeout.
-     *
-     * @param cmd     the specified command
-     * @param timeout the specified timeout
-     * @return execution output, returns {@code null} if execution failed
-     */
-    public static String exec(final String cmd, final long timeout) {
-        final CommandLine cmdLine = CommandLine.parse(cmd);
-        final DefaultExecutor executor = new DefaultExecutor();
-        final ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
-        executor.setWatchdog(watchdog);
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        final PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
-        try {
-            executor.setStreamHandler(streamHandler);
-            executor.execute(cmdLine);
-            return outputStream.toString("UTF-8");
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Exec [" + cmd + "] failed", e);
-            return "";
-        }
-    }
-
-    /**
      * Executes the specified commands with the specified timeout.
      *
      * @param cmds    the specified commands
@@ -71,7 +47,7 @@ public final class Execs {
         final CommandLine cmdLine = new CommandLine(cmds[0]);
         if (1 < cmds.length) {
             for (int i = 1; i < cmds.length; i++) {
-                cmdLine.addArgument(cmds[i]);
+                cmdLine.addArgument(cmds[i], false);
             }
         }
 
