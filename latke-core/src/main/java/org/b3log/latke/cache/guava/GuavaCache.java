@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * Guava cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.1.0.0, Apr 28, 2020
+ * @version 2.2.0.0, Apr 13, 2021
  * @since 2.4.48
  */
 public final class GuavaCache extends AbstractCache {
@@ -73,5 +73,10 @@ public final class GuavaCache extends AbstractCache {
     @Override
     public void clear() {
         cache.invalidateAll();
+    }
+
+    @Override
+    public int size() {
+        return (int) cache.size();
     }
 }

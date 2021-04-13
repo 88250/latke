@@ -22,7 +22,7 @@ import java.util.Collection;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 3.2.0.0, Apr 28, 2020
+ * @version 3.3.0.0, Apr 13, 2021
  */
 public interface Cache {
 
@@ -94,4 +94,9 @@ public interface Cache {
      * Clear all cached objects.
      */
     void clear();
+
+    /**
+     * Gets count of objects.
+     */
+    int size();
 }

@@ -29,7 +29,7 @@ import java.util.Set;
  * Redis cache.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, Apr 28, 2020
+ * @version 1.3.0.0, Apr 13, 2021
  * @since 2.3.13
  */
 public final class RedisCache extends AbstractCache {
@@ -137,6 +137,17 @@ public final class RedisCache extends AbstractCache {
             jedis.del(keys.toArray(new String[]{}));
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Clear cache failed", e);
+        }
+    }
+
+    @Override
+    public int size() {
+        try (final Jedis jedis = Connections.getJedis()) {
+            final Set<String> keys = jedis.keys(getKeyPrefix() + "*");
+            return keys.size();
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Clear cache failed", e);
+            return 0;
         }
     }
 
