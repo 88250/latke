@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.1, Jun 20, 2020
+ * @version 2.0.1.0, Dec 6, 2021
  */
 public final class JdbcRepository implements Repository {
 
@@ -374,6 +374,9 @@ public final class JdbcRepository implements Repository {
         final Map<String, JSONObject> ret = new HashMap<>();
         for (final String id : ids) {
             final JSONObject jsonObject = get(id);
+            if (null == jsonObject) {
+                continue;
+            }
             ret.put(jsonObject.optString(JdbcRepositories.keyName), jsonObject);
         }
         return ret;
