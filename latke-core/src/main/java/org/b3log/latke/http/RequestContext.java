@@ -11,6 +11,7 @@
  */
 package org.b3log.latke.http;
 
+import com.google.common.net.UrlEscapers;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,6 @@ import org.b3log.latke.http.renderer.JsonRenderer;
 import org.b3log.latke.util.Requests;
 import org.json.JSONObject;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.2.0.0, Jun 19, 2020
+ * @version 2.2.1.0, Dec 12, 2021
  * @since 2.4.34
  */
 public final class RequestContext {
@@ -333,7 +333,7 @@ public final class RequestContext {
      */
     public void sendRedirect(final String location) {
         try {
-            response.sendRedirect(new URI(location).toASCIIString());
+            response.sendRedirect(UrlEscapers.urlFragmentEscaper().escape(location));
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Sends redirect [" + location + "] failed: " + e.getMessage());
         }
