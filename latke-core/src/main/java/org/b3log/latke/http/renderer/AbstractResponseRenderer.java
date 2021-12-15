@@ -11,7 +11,7 @@
  */
 package org.b3log.latke.http.renderer;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.b3log.latke.http.RequestContext;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.plugin.AbstractPlugin;

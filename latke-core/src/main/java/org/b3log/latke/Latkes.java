@@ -12,7 +12,7 @@
 package org.b3log.latke;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
  * Latke framework configuration utility facade.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.1.22, Dec 12, 2021
+ * @version 2.11.1.23, Dec 15, 2021
  * @see #init()
  * @see #shutdown()
  * @see #getServePath()
@@ -57,7 +57,7 @@ public final class Latkes {
     /**
      * Version.
      */
-    public static final String VERSION = "3.4.17";
+    public static final String VERSION = "3.4.18";
 
     /**
      * Application startup time millisecond.
