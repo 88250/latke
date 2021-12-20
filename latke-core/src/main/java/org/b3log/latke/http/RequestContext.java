@@ -23,6 +23,7 @@ import org.b3log.latke.http.renderer.JsonRenderer;
 import org.b3log.latke.util.Requests;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.Map;
  * HTTP request context.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.2.1.0, Dec 12, 2021
+ * @version 2.2.2.0, Dec 20, 2021
  * @since 2.4.34
  */
 public final class RequestContext {
@@ -333,7 +334,13 @@ public final class RequestContext {
      */
     public void sendRedirect(final String location) {
         try {
-            response.sendRedirect(UrlEscapers.urlFragmentEscaper().escape(location));
+            String loc;
+            try {
+                loc = new URI(location).toASCIIString();
+            } catch (final Throwable t) {
+                loc = UrlEscapers.urlFragmentEscaper().escape(location);
+            }
+            response.sendRedirect(loc);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Sends redirect [" + location + "] failed: " + e.getMessage());
         }
