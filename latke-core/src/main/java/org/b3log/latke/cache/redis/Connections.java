@@ -26,7 +26,7 @@ import java.util.Set;
  * Redis connection utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.1, Dec 9, 2019
+ * @version 1.1.0.2, Jan 14, 2022
  * @since 2.3.13
  */
 public final class Connections {
