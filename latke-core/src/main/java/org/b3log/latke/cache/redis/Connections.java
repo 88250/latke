@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.util.CollectionUtils;
 import redis.clients.jedis.*;
+import redis.clients.jedis.util.Pool;
 
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public final class Connections {
     /**
      * Pool.
      */
-    private static JedisPoolAbstract pool;
+    private static Pool<Jedis> pool;
 
     static {
         try {
