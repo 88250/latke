@@ -15,9 +15,6 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -26,15 +23,10 @@ import java.util.Arrays;
  * Command execution utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.0.0, Nov 25, 2018
+ * @version 2.0.0.1, Jan 14, 2022
  * @since 1.0.0
  */
 public final class Execs {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = LogManager.getLogger(Execs.class);
 
     /**
      * Executes the specified commands with the specified timeout.
@@ -42,8 +34,9 @@ public final class Execs {
      * @param cmds    the specified commands
      * @param timeout the specified timeout in milliseconds
      * @return execution output, returns {@code null} if execution failed
+     * @throws Exception exception
      */
-    public static String exec(final String[] cmds, final long timeout) {
+    public static String exec(final String[] cmds, final long timeout) throws Exception {
         final CommandLine cmdLine = new CommandLine(cmds[0]);
         if (1 < cmds.length) {
             for (int i = 1; i < cmds.length; i++) {
@@ -61,8 +54,7 @@ public final class Execs {
             executor.execute(cmdLine);
             return outputStream.toString();
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Exec [" + Arrays.toString(cmds) + "] failed", e);
-            return "";
+            throw new Exception("Exec [" + Arrays.toString(cmds) + "] failed", e);
         }
     }
 
