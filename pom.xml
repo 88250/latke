@@ -45,8 +45,8 @@
         <netty.version>4.1.49.Final</netty.version>
         <tika.version>2.1.0</tika.version>
 
-        <hikaricp.version>4.0.3</hikaricp.version>
-        <jedis.version>3.7.0</jedis.version>
+        <hikaricp.version>5.0.1</hikaricp.version>
+        <jedis.version>4.0.1</jedis.version>
         <guava.version>31.0.1-jre</guava.version>
 
         <license-maven-plugin.version>3.0</license-maven-plugin.version>
