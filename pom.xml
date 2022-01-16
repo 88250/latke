@@ -4,12 +4,11 @@
     Version: 1.4.0.4, Jan 16, 2022
     Author: Liang Ding
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b3log</groupId>
     <artifactId>latke-parent</artifactId>
-    <version>3.4.23-SNAPSHOT</version>
+    <version>3.4.23</version>
     <packaging>pom</packaging>
     <name>Latke Parent</name>
     <url>https://github.com/88250/latke</url>
@@ -65,7 +64,7 @@
         <connection>scm:git:git@github.com:88250/latke.git</connection>
         <developerConnection>scm:git:git@github.com:88250/latke.git</developerConnection>
         <url>git@github.com:88250/latke.git</url>
-        <tag>HEAD</tag>
+        <tag>latke-parent-3.4.23</tag>
     </scm>
 
     <developers>
