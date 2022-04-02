@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.URLs;
 import org.json.JSONObject;
 
@@ -32,7 +33,7 @@ import java.util.*;
  * HTTP request.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Oct 17, 2020
+ * @version 1.1.0.0, Apr 2, 2022
  * @since 3.0.0
  */
 public class Request {
@@ -139,6 +140,40 @@ public class Request {
         attrs.put(name, value);
     }
 
+    /**
+     * Gets the Internet Protocol (IP) address of the end-client that sent the specified request.
+     * <p>
+     * It will try to get HTTP header "Ali-CDN-Real-IP", "CF-Connecting-IP", "X-forwarded-for" and "X-Real-IP" from the
+     * last proxy to get the request first, if not found, try to get it directly by {@link Request#getRemoteAddr()}.
+     * </p>
+     *
+     * @return the IP address of the end-client sent the specified request
+     */
+    public String getRealRemoteAddr() {
+        String ret = getHeader("Ali-CDN-Real-IP");
+        if (StringUtils.isNotBlank(ret)) {
+            return ret;
+        }
+
+        ret = getHeader("CF-Connecting-IP");
+        if (StringUtils.isNotBlank(ret)) {
+            return ret;
+        }
+
+        ret = getHeader("X-Forwarded-For");
+        if (StringUtils.isBlank(ret)) {
+            ret = getHeader("X-Real-IP");
+            if (StringUtils.isBlank(ret)) {
+                return getRemoteAddr();
+            }
+        }
+
+        final String[] parts = StringUtils.split(ret, ",");
+        ret = parts[parts.length - 1];
+        ret = StringUtils.trim(ret);
+        return ret;
+    }
+
     public String getRemoteAddr() {
         String ret = ctx.channel().remoteAddress().toString();
         if (StringUtils.startsWith(ret, "/")) {
@@ -227,7 +262,7 @@ public class Request {
             }
             bytes = org.apache.commons.codec.binary.StringUtils.getBytesUtf8(content);
         } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Parses request [uri=" + req.uri() + ", remoteAddr=" + getRemoteAddr() + ", body=" + bytes + "] failed: " + e.getMessage());
+            LOGGER.log(Level.ERROR, "Parses request [uri=" + req.uri() + ", remoteAddr=" + Requests.getRemoteAddr(this) + ", body=" + bytes + "] failed: " + e.getMessage());
         }
     }
 

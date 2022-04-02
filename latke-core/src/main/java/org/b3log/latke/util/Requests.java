@@ -24,7 +24,7 @@ import java.util.Iterator;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="https://ld246.com/member/e">Dongxu Wang</a>
- * @version 3.1.0.1, Apr 2, 2021
+ * @version 3.1.0.2, Apr 2, 2022
  */
 public final class Requests {
 
@@ -98,28 +98,7 @@ public final class Requests {
      * @return the IP address of the end-client sent the specified request
      */
     public static String getRemoteAddr(final Request request) {
-        String ret = request.getHeader("Ali-CDN-Real-IP");
-        if (StringUtils.isNotBlank(ret)) {
-            return ret;
-        }
-
-        ret = request.getHeader("CF-Connecting-IP");
-        if (StringUtils.isNotBlank(ret)) {
-            return ret;
-        }
-
-        ret = request.getHeader("X-Forwarded-For");
-        if (StringUtils.isBlank(ret)) {
-            ret = request.getHeader("X-Real-IP");
-            if (StringUtils.isBlank(ret)) {
-                return request.getRemoteAddr();
-            }
-        }
-
-        final String[] parts = StringUtils.split(ret, ",");
-        ret = parts[parts.length - 1];
-        ret = StringUtils.trim(ret);
-        return ret;
+        return request.getRealRemoteAddr();
     }
 
     /**
