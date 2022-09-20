@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.1.0, Dec 6, 2021
+ * @version 2.0.2.0, Sep 20, 2022
  */
 public final class JdbcRepository implements Repository {
 
@@ -311,13 +311,16 @@ public final class JdbcRepository implements Repository {
         final StringBuilder sqlBuilder = new StringBuilder();
         final Connection connection = getConnection();
         try {
+            final List<Object> paramList = new ArrayList<>();
+            paramList.add(id);
             if (Repositories.isSoftDelete()) {
-                sqlBuilder.append("UPDATE ").append(getName()).append(" SET `").append(JdbcRepositories.softDeleteFieldName).append("` = 1").
-                        append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+                sqlBuilder.append("UPDATE `").append(getName()).append("` SET `").append(JdbcRepositories.softDeleteFieldName).
+                        append("` = 1 WHERE ").append(JdbcRepositories.keyName).append(" = ?");
             } else {
-                sqlBuilder.append("DELETE FROM ").append("`").append(getName()).append("`").append(" WHERE ").append(JdbcRepositories.keyName).append(" = '").append(id).append("'");
+                sqlBuilder.append("DELETE FROM `").append(getName()).append("` WHERE ").
+                        append(JdbcRepositories.keyName).append(" = ?");
             }
-            JdbcUtil.executeSql(sqlBuilder.toString(), connection, debug);
+            JdbcUtil.executeSql(sqlBuilder.toString(), paramList, connection, debug);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Removes a record [id=" + id + "] failed", e);
 
