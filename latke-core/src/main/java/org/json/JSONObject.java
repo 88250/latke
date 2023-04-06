@@ -2034,7 +2034,7 @@ public class JSONObject {
                         return false;
                     }
                 } else if (valueThis instanceof JSONArray) {
-                    if (!((JSONArray)valueThis).isJSONsimilar(valueOther)) {
+                    if (!((JSONArray)valueThis).isJSONSimilar(valueOther)) {
                         return false;
                     }
                 } else if (!valueThis.equals(valueOther)) {
