@@ -77,20 +77,6 @@ public interface Cache {
     JSONObject get(final String key);
 
     /**
-     * Removes a object by the specified key.
-     *
-     * @param key the specified key
-     */
-    void remove(final String key);
-
-    /**
-     * Remove objects by the specified keys.
-     *
-     * @param keys the specified keys
-     */
-    void remove(final Collection<String> keys);
-
-    /**
      * Clear all cached objects.
      */
     void clear();

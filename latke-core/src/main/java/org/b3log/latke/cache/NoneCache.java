@@ -52,14 +52,6 @@ public final class NoneCache extends AbstractCache {
     }
 
     @Override
-    public void remove(final String key) {
-    }
-
-    @Override
-    public void remove(final Collection<String> keys) {
-    }
-
-    @Override
     public void clear() {
     }
 

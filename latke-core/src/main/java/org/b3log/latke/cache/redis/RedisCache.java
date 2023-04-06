@@ -102,7 +102,6 @@ public final class RedisCache extends AbstractCache {
         }
     }
 
-    @Override
     public void remove(final String key) {
         try (final Jedis jedis = Connections.getJedis()) {
             jedis.del(getKeyPrefix() + key);
@@ -111,7 +110,6 @@ public final class RedisCache extends AbstractCache {
         }
     }
 
-    @Override
     public void remove(final Collection<String> keys) {
         final List<String> cacheKeys = new ArrayList<>(keys.size());
         final String keyPrefix = getKeyPrefix();

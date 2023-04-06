@@ -60,12 +60,10 @@ public final class GuavaCache extends AbstractCache {
         return cache.getIfPresent(key);
     }
 
-    @Override
     public void remove(final String key) {
         cache.invalidate(key);
     }
 
-    @Override
     public void remove(final Collection<String> keys) {
         cache.invalidateAll(keys);
     }
