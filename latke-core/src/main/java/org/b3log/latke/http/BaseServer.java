@@ -133,38 +133,4 @@ public abstract class BaseServer {
             pipeline.addLast(new ServerHandler());
         }
     }
-
-    public static class Responses {
-        private HttpResponse res;
-        private Set<Cookie> cookies;
-        private byte[] content;
-
-        public String getHeader(final String name) {
-            return res.headers().get(name);
-        }
-
-        public String getContentType() {
-            return res.headers().get(HttpHeaderNames.CONTENT_TYPE);
-        }
-
-        public Iterator<String> getHeaderNames() {
-            return res.headers().names().iterator();
-        }
-
-        public Set<Cookie> getCookies() {
-            return cookies;
-        }
-
-        public void setCookies(final Set<Cookie> cookies) {
-            this.cookies = cookies;
-        }
-
-        public String getString() {
-            return StringUtils.newStringUtf8(content);
-        }
-
-        public byte[] getBytes() {
-            return content;
-        }
-    }
 }
