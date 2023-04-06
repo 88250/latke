@@ -229,6 +229,41 @@ public class XML {
         }
     }
 
+    public static boolean tokenIsBANG(char c, XMLTokener x, Object token, String string, JSONObject context, int i){
+        c = x.next();
+        if (c == '-') {
+            if (x.next() == '-') {
+                x.skipPast("-->");
+                return false;
+            }
+            x.back();
+        } else if (c == '[') {
+            token = x.nextToken();
+            if ("CDATA".equals(token)) {
+                if (x.next() == '[') {
+                    string = x.nextCDATA();
+                    if (string.length() > 0) {
+                        context.accumulate("content", string);
+                    }
+                    return false;
+                }
+            }
+            throw x.syntaxError("Expected 'CDATA['");
+        }
+        i = 1;
+        do {
+            token = x.nextMeta();
+            if (token == null) {
+                throw x.syntaxError("Missing '>' after '<!'.");
+            } else if (token == LT) {
+                i += 1;
+            } else if (token == GT) {
+                i -= 1;
+            }
+        } while (i > 0);
+        return false;
+    }
+
     /**
      * Scan the content following the named tag, attaching it to the context.
      * 
@@ -243,10 +278,10 @@ public class XML {
      */
     private static boolean parse(XMLTokener x, JSONObject context, String name, boolean keepStrings)
             throws JSONException {
-        char c;
-        int i;
+        char c = 0;
+        int i = 0;
         JSONObject jsonobject = null;
-        String string;
+        String string = null;
         String tagName;
         Object token;
 
@@ -265,38 +300,7 @@ public class XML {
         // <!
 
         if (token == BANG) {
-            c = x.next();
-            if (c == '-') {
-                if (x.next() == '-') {
-                    x.skipPast("-->");
-                    return false;
-                }
-                x.back();
-            } else if (c == '[') {
-                token = x.nextToken();
-                if ("CDATA".equals(token)) {
-                    if (x.next() == '[') {
-                        string = x.nextCDATA();
-                        if (string.length() > 0) {
-                            context.accumulate("content", string);
-                        }
-                        return false;
-                    }
-                }
-                throw x.syntaxError("Expected 'CDATA['");
-            }
-            i = 1;
-            do {
-                token = x.nextMeta();
-                if (token == null) {
-                    throw x.syntaxError("Missing '>' after '<!'.");
-                } else if (token == LT) {
-                    i += 1;
-                } else if (token == GT) {
-                    i -= 1;
-                }
-            } while (i > 0);
-            return false;
+            return tokenIsBANG(c, x, token, string, context, i);
         } else if (token == QUEST) {
 
             // <?
