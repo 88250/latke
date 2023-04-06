@@ -1588,9 +1588,6 @@ public class JSONObject {
      * implementations and interfaces has the annotation. Returns the depth of the
      * annotation in the hierarchy.
      *
-     * @param <A>
-     *            type of the annotation
-     *
      * @param m
      *            method to check
      * @param annotationClass
@@ -2037,7 +2034,7 @@ public class JSONObject {
                         return false;
                     }
                 } else if (valueThis instanceof JSONArray) {
-                    if (!((JSONArray)valueThis).similar(valueOther)) {
+                    if (!((JSONArray)valueThis).isJSONsimilar(valueOther)) {
                         return false;
                     }
                 } else if (!valueThis.equals(valueOther)) {
