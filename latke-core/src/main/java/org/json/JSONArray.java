@@ -1224,7 +1224,7 @@ public class JSONArray implements Iterable<Object> {
      * @param other The other JSONArray
      * @return true if they are equal
      */
-    public boolean isJSONSimilar(Object other) {
+    public boolean isJSONArraySimilar(Object other) {
         if (!(other instanceof JSONArray)) {
             return false;
         }
@@ -1246,7 +1246,7 @@ public class JSONArray implements Iterable<Object> {
                     return false;
                 }
             } else if (valueThis instanceof JSONArray) {
-                if (!((JSONArray)valueThis).isJSONSimilar(valueOther)) {
+                if (!((JSONArray)valueThis).isJSONArraySimilar(valueOther)) {
                     return false;
                 }
             } else if (!valueThis.equals(valueOther)) {
