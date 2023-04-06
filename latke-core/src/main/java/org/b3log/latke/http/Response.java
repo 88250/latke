@@ -65,10 +65,6 @@ public class Response {
         return commited;
     }
 
-    public String getHeader(final String name) {
-        return res.headers().get(name);
-    }
-
     public void addHeader(final String name, final String value) {
         res.headers().add(name, value);
     }
@@ -81,38 +77,14 @@ public class Response {
         res.setStatus(HttpResponseStatus.valueOf(status));
     }
 
-    public String getContentType() {
-        return res.headers().get(HttpHeaderNames.CONTENT_TYPE);
-    }
-
     public void setContentType(final String contentType) {
         res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
-    }
-
-    public Iterator<String> getHeaderNames() {
-        return res.headers().names().iterator();
     }
 
     public void addCookie(final Cookie cookie) {
         final String name = cookie.getName();
         cookies.removeIf(c -> c.getName().equals(cookie.getName()));
         cookies.add(cookie);
-    }
-
-    public Set<Cookie> getCookies() {
-        return cookies;
-    }
-
-    public void setCookies(final Set<Cookie> cookies) {
-        this.cookies = cookies;
-    }
-
-    public String getString() {
-        return StringUtils.newStringUtf8(content);
-    }
-
-    public byte[] getBytes() {
-        return content;
     }
 
     public void sendError0(final int status) {

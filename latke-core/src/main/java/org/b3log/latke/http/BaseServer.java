@@ -20,18 +20,23 @@ import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.unix.DomainSocketAddress;
 import io.netty.channel.unix.ServerDomainSocketChannel;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.Log4J2LoggerFactory;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -126,6 +131,40 @@ public abstract class BaseServer {
             pipeline.addLast(new HttpObjectAggregator(1024 * 1024 * 64));
             pipeline.addLast(new WebSocketHandler());
             pipeline.addLast(new ServerHandler());
+        }
+    }
+
+    public static class Responses {
+        private HttpResponse res;
+        private Set<Cookie> cookies;
+        private byte[] content;
+
+        public String getHeader(final String name) {
+            return res.headers().get(name);
+        }
+
+        public String getContentType() {
+            return res.headers().get(HttpHeaderNames.CONTENT_TYPE);
+        }
+
+        public Iterator<String> getHeaderNames() {
+            return res.headers().names().iterator();
+        }
+
+        public Set<Cookie> getCookies() {
+            return cookies;
+        }
+
+        public void setCookies(final Set<Cookie> cookies) {
+            this.cookies = cookies;
+        }
+
+        public String getString() {
+            return StringUtils.newStringUtf8(content);
+        }
+
+        public byte[] getBytes() {
+            return content;
         }
     }
 }
