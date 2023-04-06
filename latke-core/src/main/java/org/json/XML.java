@@ -402,10 +402,14 @@ public class XML {
             }
         }
     }
-    
+
+    public static boolean checkIndex(String string){
+        return (string.indexOf('.') > -1 || string.indexOf('e') > -1
+                || string.indexOf('E') > -1 || "-0".equals(string));
+    }
     /**
      * This method is the same as {@link JSONObject#stringToValue(String)}.
-     * 
+     *
      * @param string String to convert
      * @return JSON value of this string or the string
      */
@@ -435,8 +439,7 @@ public class XML {
             try {
                 // if we want full Big Number support this block can be replaced with:
                 // return stringToNumber(string);
-                if (string.indexOf('.') > -1 || string.indexOf('e') > -1
-                        || string.indexOf('E') > -1 || "-0".equals(string)) {
+                if (checkIndex(string)) {
                     Double d = Double.valueOf(string);
                     if (!d.isInfinite() && !d.isNaN()) {
                         return d;
