@@ -23,7 +23,7 @@ import java.util.Map;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Jun 12, 2020
+ * @version 1.0.1.2, Jun 10, 2023
  * @since 2.4.4
  */
 public final class Times {
@@ -84,34 +84,65 @@ public final class Times {
         final long diff = System.currentTimeMillis() - time;
         long r;
 
+        String label;
         if (diff > YEAR_UNIT) {
             r = diff / YEAR_UNIT;
-            return r + " " + langs.get("yearsAgoLabel");
+            if (1 == r) {
+                label = langs.get("yearAgoLabel");
+            } else {
+                label = langs.get("yearsAgoLabel");
+            }
+            return r + " " + label;
         }
 
         if (diff > MONTH_UNIT) {
             r = diff / MONTH_UNIT;
-            return r + " " + langs.get("monthsAgoLabel");
+            if (1 == r) {
+                label = langs.get("monthAgoLabel");
+            } else {
+                label = langs.get("monthsAgoLabel");
+            }
+            return r + " " + label;
         }
 
         if (diff > WEEK_UNIT) {
             r = diff / WEEK_UNIT;
-            return r + " " + langs.get("weeksAgoLabel");
+            if (1 == r) {
+                label = langs.get("weekAgoLabel");
+            } else {
+                label = langs.get("weeksAgoLabel");
+            }
+            return r + " " + label;
         }
 
         if (diff > DAY_UNIT) {
             r = diff / DAY_UNIT;
-            return r + " " + langs.get("daysAgoLabel");
+            if (1 == r) {
+                label = langs.get("dayAgoLabel");
+            } else {
+                label = langs.get("daysAgoLabel");
+            }
+            return r + " " + label;
         }
 
         if (diff > HOUR_UNIT) {
             r = diff / HOUR_UNIT;
-            return r + " " + langs.get("hoursAgoLabel");
+            if (1 == r) {
+                label = langs.get("hourAgoLabel");
+            } else {
+                label = langs.get("hoursAgoLabel");
+            }
+            return r + " " + label;
         }
 
         if (diff > MINUTE_UNIT) {
             r = diff / MINUTE_UNIT;
-            return r + " " + langs.get("minutesAgoLabel");
+            if (1 == r) {
+                label = langs.get("minuteAgoLabel");
+            } else {
+                label = langs.get("minutesAgoLabel");
+            }
+            return r + " " + label;
         }
         return langs.get("justNowLabel");
     }
