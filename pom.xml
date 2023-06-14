@@ -46,7 +46,7 @@
 
         <hikaricp.version>5.0.1</hikaricp.version>
         <jedis.version>4.2.3</jedis.version>
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
 
         <license-maven-plugin.version>3.0</license-maven-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
