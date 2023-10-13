@@ -3,7 +3,7 @@
 <br><br>
 一款以 JSON 为主的 Java Web 框架
 <br><br>
-<a title="Build Status" target="_blank" href="https://github.com/88250/latke/actions/workflows/ci.yml"><img src="https://img.shields.io/github/workflow/status/88250/latke/Build%20Test?style=flat-square"></a>
+<a title="Build Status" target="_blank" href="https://github.com/88250/latke/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/88250/latke/ci.yml?style=flat-square"></a>
 <a title="MulanPSL2" target="_blank" href="https://license.coscl.org.cn/MulanPSL2"><img src="http://img.shields.io/badge/license-MulanPSL2-orange.svg?style=flat-square"></a>
 <a title="Maven Central" target="_blank" href="https://repo1.maven.org/maven2/org/b3log/latke-parent"><img src="https://img.shields.io/maven-central/v/org.b3log/latke-parent?style=flat-square&color=blueviolet"></a>
 <a title="Hits" target="_blank" href="https://github.com/88250/hits"><img src="https://hits.b3log.org/88250/latke.svg"></a>
