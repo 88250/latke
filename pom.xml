@@ -41,7 +41,7 @@
         <commons-exec.version>1.3</commons-exec.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <log4j2.version>2.20.0</log4j2.version>
-        <netty.version>4.1.100.Final</netty.version>
+        <netty.version>4.1.108.Final</netty.version>
         <tika.version>2.8.0</tika.version>
 
         <hikaricp.version>5.0.1</hikaricp.version>
