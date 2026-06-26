@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke Repository (H2).
-    Version: 2.1.1.6, Oct 13, 2023
+    Version: 2.1.1.7, Jun 26, 2026
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.b3log</groupId>
         <artifactId>latke-parent</artifactId>
-        <version>3.4.31-SNAPSHOT</version>
+        <version>3.5.0</version>
     </parent>
 
     <dependencies>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.2.224</version>
+            <version>2.4.240</version>
         </dependency>
 
     </dependencies>
