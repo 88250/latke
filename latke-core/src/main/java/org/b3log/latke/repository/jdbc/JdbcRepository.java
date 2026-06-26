@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="https://ld246.com/member/mainlove">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.0.2.0, Sep 20, 2022
+ * @version 2.0.3.0, Jun 26, 2026
  */
 public final class JdbcRepository implements Repository {
 
@@ -491,8 +491,12 @@ public final class JdbcRepository implements Repository {
         ret.put(Pagination.PAGINATION_PAGE_COUNT, pageCnt);
         ret.put(Pagination.PAGINATION_RECORD_COUNT, recordCnt);
 
-        final int start = (currentPageNum - 1) * pageSize;
-        final int end = start + pageSize;
+        // 用 long 计算偏移量以避免 (currentPageNum - 1) * pageSize 的 int 溢出（负值会导致 MySQL "LIMIT -xxx" 语法错误）
+        final long startL = (long) (currentPageNum - 1) * pageSize;
+        final long endL = startL + pageSize;
+        // 钳制为非负，越界页码回退到第 0 偏移（返回空结果），绝不产生负 LIMIT
+        final int start = startL < 0 ? 0 : (int) Math.min(startL, Integer.MAX_VALUE);
+        final int end = endL < 0 ? start + pageSize : (int) Math.min(endL, Integer.MAX_VALUE);
         sqlBuilder.append(JdbcFactory.getInstance().queryPage(start, end, selectBuilder.toString(), whereBuilder.toString(), orderByBuilder.toString(), getName()));
         return ret;
     }

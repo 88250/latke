@@ -21,9 +21,15 @@ import java.util.List;
  * Paginator utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, Jul 16, 2019
+ * @version 1.2.1.0, Jun 26, 2026
  */
 public final class Paginator {
+
+    /**
+     * 最大页码上限护栏。防止恶意/爬虫传入超大页码导致分页偏移量 (page-1)*size 整数溢出，
+     * 进而引发负 LIMIT SQL 语法错误或参数越界。十万页远超任何真实分页场景。
+     */
+    private static final int MAX_PAGE_NUM = 100000;
 
     /**
      * Gets the current page number from the query string "p" of the specified context.
@@ -54,6 +60,10 @@ public final class Paginator {
 
         if (1 > ret) {
             ret = 1;
+        }
+
+        if (ret > MAX_PAGE_NUM) {
+            ret = MAX_PAGE_NUM;
         }
 
         return ret;
