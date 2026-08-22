@@ -112,7 +112,7 @@ public final class Crypts {
 
             return new String(result, StandardCharsets.UTF_8);
         } catch (final Exception e) {
-            LOGGER.log(Level.WARN, "Decrypt failed");
+//            LOGGER.log(Level.WARN, "Decrypt failed");
 
             return null;
         }
