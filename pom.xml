@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Latke parent POM.
-    Version: 1.4.0.8, Jun 26, 2026
+    Version: 1.4.0.9, Sep 9, 2026
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -35,19 +35,20 @@
     </licenses>
 
     <properties>
-        <freemarker.version>2.3.34</freemarker.version>
+        <freemarker.version>2.3.35</freemarker.version>
         <commons-io.version>2.22.0</commons-io.version>
         <commons-lang.version>3.20.0</commons-lang.version>
-        <commons-codec.version>1.22.0</commons-codec.version>
+        <commons-codec.version>1.22.1</commons-codec.version>
         <commons-exec.version>1.6.0</commons-exec.version>
-        <javassist.version>3.32.0-GA</javassist.version>
-        <log4j2.version>2.26.0</log4j2.version>
-        <netty.version>4.2.15.Final</netty.version>
-        <tika.version>3.3.1</tika.version>
+        <javassist.version>3.33.0-GA</javassist.version>
+        <log4j2.version>2.26.1</log4j2.version>
+        <netty.version>4.2.17.Final</netty.version>
+        <tika.version>3.3.2</tika.version>
+        <h2.version>2.5.250</h2.version>
 
         <hikaricp.version>7.1.0</hikaricp.version>
-        <jedis.version>7.5.2</jedis.version>
-        <guava.version>33.6.0-jre</guava.version>
+        <jedis.version>7.5.3</jedis.version>
+        <guava.version>33.7.1-jre</guava.version>
 
         <license-maven-plugin.version>5.0.0</license-maven-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
@@ -55,7 +56,7 @@
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <testng.version>7.9.0</testng.version>
+        <testng.version>7.12.0</testng.version>
 
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
@@ -145,7 +146,7 @@
 
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
+                <artifactId>log4j-slf4j2-impl</artifactId>
                 <version>${log4j2.version}</version>
             </dependency>
 
