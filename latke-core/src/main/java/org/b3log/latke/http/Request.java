@@ -253,9 +253,10 @@ public class Request {
     void parseForm() {
         try {
             final String content = (req.content().toString(CharsetUtil.UTF_8));
-            if (StringUtils.startsWithIgnoreCase(content, "%7B")) {
-                json = new JSONObject(URLs.decode(content));
-            } else if (StringUtils.startsWithIgnoreCase(content, "{")) {
+            final String trimmedContent = StringUtils.trim(content);
+            if (StringUtils.startsWithIgnoreCase(trimmedContent, "%7B")) {
+                json = new JSONObject(URLs.decode(trimmedContent));
+            } else if (StringUtils.startsWith(trimmedContent, "{")) {
                 json = new JSONObject(content);
             } else {
                 parseAttrs(content, false);
